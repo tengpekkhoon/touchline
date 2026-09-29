@@ -249,7 +249,15 @@
     if (club.sim === 'full') {
       const lim = FM.S.rules.foreignLimit;
       const foreign = pool.filter((p) => p.nat !== club.nat).sort((a, b) => b.ca - a.ca);
-      if (foreign.length > lim) { const cut = new Set(foreign.slice(lim).map((p) => p.id)); pool = pool.filter((p) => !cut.has(p.id)); }
+      if (foreign.length > lim) {
+        let keep = foreign.slice(0, lim);
+        // With no fit domestic keeper, one of the places goes to the best foreign goalkeeper (else an outfielder ends up in goal)
+        const domesticGK = pool.some((p) => p.pos === 'GK' && p.nat === club.nat);
+        const gk = !domesticGK && !keep.some((p) => p.pos === 'GK') && foreign.find((p) => p.pos === 'GK');
+        if (gk && lim > 0) keep = keep.slice(0, lim - 1).concat(gk);
+        const kept = new Set(keep.map((p) => p.id));
+        pool = pool.filter((p) => p.nat === club.nat || kept.has(p.id));
+      }
     }
     const used = new Set();
     const xi = new Array(slots.length).fill(null);
