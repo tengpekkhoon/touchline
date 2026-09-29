@@ -1,0 +1,194 @@
+# Touchline — Feature List
+
+Sep 29, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/dcc1d812-21cc-47af-86dd-67235bca8506)
+
+Every feature from the game design document, with what is playable in the prototype today and what is still to come. Status and phase match [ROADMAP.md](ROADMAP.md).
+
+## In the game
+
+132 features are playable in the web prototype today. Build = the build that added it.
+
+| Area | Feature | Build |
+| --- | --- | --- |
+| Match | Top-down pitch with 22 moving dots, ball and visible pressing lines | Prototype 1 |
+| Match | Highlights every 20–40 seconds with slow motion and goal moments | Prototype 1 |
+| Match | Tactical prompts voiced by staff (analyst tips, chasing, protecting, pinned back, fatigue, injury, red card) | Prototype 1 |
+| Match | Half-time team talk; personalities react differently | Prototype 1 |
+| Match | Live xG, possession and momentum bar | Prototype 1 |
+| Match | Substitutions and in-game tactic changes | Prototype 1 |
+| Match | Speed controls, instant result, sim to half-time, sim to end | Prototype 3 |
+| Post-match | Ratings, heat map, passing network, key moments | Prototype 1 |
+| Post-match | Shot map, xG race, chance types, player stats, analyst insights | Prototype 3 |
+| Tactics | 6 formations, build-up, pressing, inverted full-backs, named roles | Prototype 1 |
+| Tactics | Tactical familiarity that grows with matches and camps | Prototype 3 |
+| Players | Attributes, potential, morale, wage, value, form, contract | Prototype 1 |
+| Players | Traits and hidden personality | Prototype 1 |
+| Players | Renewals, transfer listing, release with settlement | Prototype 3 |
+| Scouting | Scouts with regional strengths | Prototype 1 |
+| Scouting | Word-based reports revealed gradually with knowledge | Prototype 1 |
+| Scouting | Moneyball flag from the analytics department | Prototype 1 |
+| Scouting | Region or league assignments with potential, fee and focus filters | Prototype 3 |
+| Scouting | A–D grades, Sign/Loan/Monitor/Avoid, scout quotes, report filters | Prototype 3 |
+| Scouting | Target versus your starter comparison | Prototype 3 |
+| Transfers | Offers, counter-offers, wage demands, windows, AI bids for your players | Prototype 1 |
+| Transfers | Fine-grained fee and wage steppers, exact input, contract length | Prototype 3 |
+| Transfers | International AI market, marquee raids, veterans moving abroad | Prototype 2 |
+| Transfers | Transfer Centre with cross-border flows | Prototype 2 |
+| Transfers | Loans in and out; AI development loans | Prototype 3 |
+| Transfers | Free agents signable any time with a signing-on bonus | Prototype 3 |
+| Youth | Academy intakes shaped by nation and facility | Prototype 1 |
+| Youth | Development by age, training, coaching, minutes, personality | Prototype 1 |
+| Club | Club identities, fan culture, chants, derbies, board objectives | Prototype 1 |
+| Club | Facility upgrades that take weeks and cost money | Prototype 1 |
+| Club | Finances: gate, TV, sponsorship, wages, prize money | Prototype 1 |
+| Club | Staff hire and fire with ability effects; vacant roles | Prototype 3 |
+| Club | Assistant notes and scout picks | Prototype 3 |
+| Season | Season preview: predicted table, title odds, best XI | Prototype 3 |
+| Season | Pre-season friendlies and training camps | Prototype 3 |
+| Competitions | Premier Division and Championship: promotion, relegation, playoffs | Prototype 1 |
+| Competitions | Foreign league: La Primera (Spain) | Prototype 2 |
+| Competitions | Domestic cups: seeded knockouts, extra time, penalties | Prototype 2 |
+| Competitions | Continental Champions Cup with data-driven qualification | Prototype 2 |
+| World | Realistic nationality mixes across 28 nations | Prototype 3 |
+| World | Living world: sackings, takeovers, administration, rule changes, stadiums | Prototype 1 |
+| Stories | Story feed: headlines, fan posts, press conferences, dressing room | Prototype 1 |
+| Stories | Shareable Instagram-style story cards (PNG export) | Prototype 1 |
+| Legacy | Hall of Fame, Football Archive, legends returning as managers | Prototype 1 |
+| Career | Manager reputation, identity tags, sacking and job offers | Prototype 1 |
+| Setup | New career with world rules and a random-club option | Prototype 3 |
+| UX | Mobile-first swipe UI, dark and light themes, 3 save slots | Prototype 1 |
+| Match | Fluid motion: pace-limited movement, off-the-ball runs, dribbles, lofted passes, keeper dives, celebrations | Prototype 4 |
+| Club | Board confidence tied to expectations; objectives scale with each club | Prototype 4 |
+| Club | Finances: revenue tracks reputation, merit payments | Prototype 4 |
+| Competitions | England League One and Spain La Segunda (promotion, relegation, playoffs) | Prototype 4 |
+| Competitions | Germany (Erste Liga), France (Première Ligue), Brazil (Série Nacional) | Prototype 4 |
+| Competitions | Domestic cups in all five nations | Prototype 4 |
+| Competitions | 16-club European cup with quarter-finals; Copa Continental (South America) | Prototype 4 |
+| International | National teams, Elo world ranking, two international breaks a season | Prototype 4 |
+| International | World Championship every 4 years; continental championships in between | Prototype 4 |
+| International | Caps, first-cap stories, International screen and nation squads | Prototype 4 |
+| World | Unique player names from larger name pools | Prototype 4 |
+| Setup | Large saves stored in IndexedDB | Prototype 4 |
+| Competitions | Light and minimal simulation tiers: Italy, Portugal, Netherlands, Argentina, USA, Japan (light); Mexico, Korea, Thailand, Nigeria, Morocco, Serbia (minimal) | Alpha 1 |
+| Competitions | Asian, African and North American champions cups; mid-season Club World Cup | Alpha 1 |
+| Competitions | Two-legged knockouts and playoff semi-finals; optional away-goals rule | Alpha 1 |
+| International | Qualifying groups, double-header breaks, summer finals as calendar days | Alpha 1 |
+| Career | National team jobs alongside your club: call-ups, tactics, live matches | Alpha 1 |
+| Career | Coaching licences (B → A → Pro) unlock bigger jobs and faster familiarity | Alpha 1 |
+| Players | Contract clauses: squad status, signing-on fee, appearance and goal bonuses, release clause, yearly rise, relegation cut | Alpha 1 |
+| Players | Agent personalities that set demands, patience and fees; walk-outs | Alpha 1 |
+| Transfers | Release clauses you can pay, and rivals can pay for your players | Alpha 1 |
+| Players | One-to-one talks and tracked promises that move morale and squad trust | Alpha 1 |
+| Players | Player-requested meetings (unhappy with minutes, wants a raise) | Alpha 1 |
+| Club | Board meetings, mid-season review and five-game ultimatums | Alpha 1 |
+| UX | Next match: sim straight to your next fixture | Alpha 1 |
+| Squad | Match fitness bar and percentage on squad, picker and tactics pitch; auto-pick rests tired players | Alpha 1 polish |
+| Squad | Current rating number on squad rows; sort (rating, fitness, age, wage, contract, form) and filters | Alpha 1 polish |
+| Squad | Contract end on squad rows; expiry reminders with one-tap talks; no automatic renewals | Alpha 1 polish |
+| Tactics | Changing formation keeps tactical familiarity | Alpha 1 polish |
+| Match | Before kick-off reminders: bans one booking away, tired starters, out of position, expiring contracts | Alpha 1 polish |
+| League | Team overview from any league or group table: record, system, results, honours, squad | Alpha 1 polish |
+| UX | Home icon jumps straight to the bid, press conference or meeting that needs you | Alpha 1 polish |
+| Scouting | Dismiss scout reports individually or all C/D grades at once | Alpha 1 polish |
+| Setup | Compact save format (~3 MB, about 45% smaller); older saves still load | Alpha 1 polish |
+| Platform | Installable web app: manifest, icons, service worker, bundled fonts, plays offline | Alpha 1 polish |
+| Settings | Settings toggles for the season-preview popup and haptics | Alpha 1 polish |
+| UX | Haptic tap on buttons | Alpha 1 polish |
+| Scouting | Longer names in scout report rows (recommendation moves to the second line) | Alpha 1 polish |
+| Transfers | Release clause shown on scouting and transfer-list rows | Alpha 1 polish |
+| Match | Opponent's last result on the home match card | Alpha 1 polish |
+| Tactics | Toast after Auto-pick: how many players were rested for fitness | Alpha 1 polish |
+| Match | "Level on aggregate" in the extra-time banner for second legs | Alpha 1 polish |
+| Scouting | Undo a dismissed report ("Dismissed" filter + Restore) | Alpha 1 polish |
+| Scouting | Compare button on each report row | Alpha 1 polish |
+| Squad | Rating-change arrows (▲/▼) on squad rows | Alpha 1 polish |
+| League | Stats across all leagues: top scorers, assists and ratings | Alpha 1 polish |
+| League | Head-to-head against a club on its team overview (this season) | Alpha 1 polish |
+| League | Full fixture list on the team overview | Alpha 1 polish |
+| UX | "Next match" skip tells you when the transfer window opens or closes | Alpha 1 polish |
+| Club | Wage and bonus spend broken down on the Finances tab | Alpha 1 polish |
+| Transfers | Negotiation remembers the agent's last demand and shows your progress | Alpha 1 polish |
+| UX | New-item dots in the feed and "Clear read" (open decisions never cleared) | Alpha 1 polish |
+| Tactics | Tactics pitch labels never overlap (keeper and edge players kept clear) | Alpha 1 polish |
+| Competitions | Clinched / eliminated markers in continental groups | Alpha 1 polish |
+| Squad | Captain choice: armband lifts the team, a Leader softens defeats and steadies team talks, morale reactions to changes | Alpha 1 polish |
+| Match | Pre-match team talk with an assistant's pick; reactions depend on favourites/underdogs and the occasion | Alpha 1 polish |
+| Stories | Matchday digest card after each league round: our result, table movers, all results, star of the round | Alpha 1 polish |
+| Match | Penalty, free-kick and corner takers used by the match engine (direct free kicks, delivered corners, shootout order) | Alpha 1 polish |
+| Setup | Save migrations: older saves upgrade automatically, original kept as a backup | Mobile readiness 2 |
+| Setup | Compressed backup export/import (.touchline file), from Settings or the title screen | Mobile readiness 2 |
+| Platform | Saves as real files in the native app (atomic writes) | Mobile readiness 2 |
+| Performance | Matchday simulation in a Web Worker with a progress overlay | Mobile readiness 2 |
+| Platform | Autosave when the app goes to the background; live matches pause | Mobile readiness 2 |
+| UX | Back button closes sheets and returns home; safe areas, keyboard, portrait lock on phones, wider tablet layout | Mobile readiness 2 |
+| Platform | Native haptics, share sheet and themed status bar (web fallbacks) | Mobile readiness 2 |
+| Tooling | Production build (minified, hashed) and headless regression test | Mobile readiness 2 |
+| Platform | Capacitor 8 Android and iOS projects | Mobile readiness 2 |
+| Transfers | Transfer fee (or free / loan) on every club spell in the player's career | Small features |
+| Squad | Captain's C badge on squad rows and on the armband wearer in live matches | Small features |
+| Post-match | Set-piece goals in the match summary (corners, free kicks, penalties) | Small features |
+| Stories | Matchday digest names the league's in-form and out-of-form regulars | Small features |
+| Club | Team-talk record on the Manager tab: how each talk landed and your most reliable one | Small features |
+| Setup | Last-backup date in Settings and a once-a-season backup reminder at the season review | Small features |
+| Club | Club records on the Club tab: biggest win and defeat, record signing and sale, all-time top scorer and most appearances (history included) | Small features |
+| Stories | Record-breaking news: club records, all-time top scorer and appearance records, world-record transfers | Small features |
+| League | All-time head-to-head against each club on its team overview (every competition, last six meetings) | Small features |
+| Rivalries | Rivalry heat: knockouts and red cards between two clubs build into "A new rivalry is emerging" and then a full rivalry (bigger game, more cards); rivalries cool if not fed | Small features |
+| Awards | Player of the Month in your league every four matchdays: a feed card, a morale lift and an honour on the player card | Small features |
+| Medical | Injury history on the player card with a recurring-problem warning (known for other clubs' players once well scouted) | Small features |
+| World | World News filter chips under World: Everything · Transfers · Managers · Competitions · International · Records | Small features |
+| Managers | Manager movements: vacancies filled by poaching a successful manager from a smaller club (whose club then needs a new one), rehiring an out-of-work manager, or a new face; every move is on the manager's career and the team overview ("since 2026 · previously Ashford Wanderers") | Small features |
+| Stadiums | Stadium milestones: every ground has an opening year and a capacity history on the Club tab; expansions are recorded and your club gets a story card | Small features |
+| Career | Start unemployed: a career with no club and a modest reputation; offers from clubs in your range arrive over the first weeks | Long-term pass |
+| Career | Out of work after a sacking: the world keeps going, up to three offers at a time (about a week each), "Wait for an offer", national team jobs carry on | Long-term pass |
+| Setup | Long saves stay lean and fast: slimmer retired-player records (save format v6), staff age and retire, forgotten records pruned | Long-term pass |
+
+## Yet to be added
+
+39 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+
+Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
+
+Design principle from here: don't make the game deeper by adding more screens — make the things it already has remember what happened. Transfers, managers' successes, clubs that keep fighting for trophies, youngsters who become legends and rule changes all leave a trace the world can refer back to.
+
+| Area | Feature | Phase |
+| --- | --- | --- |
+| Editor | Database and world editor — architecture first, UI after. World (countries, cities, continents, rules) · Clubs (clubs, stadiums, facilities, finances, rivalries) · Players (attributes, contracts, personalities, nationalities) · Staff (managers, coaches, scouts, agents) · Competitions (leagues, cups, continental, international) · Rules (promotion/relegation, registration, foreign players, transfer windows, points, playoffs, prize money) · History (historical starts, events, scenarios, alternate history) | Alpha 2 |
+| History | Historical eras from 1992 with era-appropriate rules | Alpha 2 |
+| History | Alternate-history setup and scenario creator | Alpha 2 |
+| Youth | University draft, graduates, scholarships, overseas trials | Alpha 2 |
+| Legacy | Player career timeline: every club with dates, fee, appearances, goals, trophies, awards, injuries and caps — transfers never disappear | Alpha 2 |
+| Legacy | Player biographies: academy prospect → debut → breakthrough → big move → awards → return to childhood club → retirement → coaching; the archive writes stories from them ("The $8M signing who became the club's greatest-ever striker") | Alpha 2 |
+| Legacy | Retired players as owners, pundits and academy coaches | Alpha 2 |
+| Managers | Managerial ecosystem: every manager has a tactical identity, preferred formations, personality, age, career history, trophies and relationships, and moves between clubs and countries (your former assistant at a giant, a player you coached as national-team manager, a former player as your successor) | Alpha 2 |
+| Rivalries | Dynamic rivalries: new ones emerge from repeated knockouts, title races, direct transfers and controversial incidents ("A new rivalry is emerging", fan chants), grow into major rivalries, and old ones cool down | Alpha 2 |
+| World | World News screen, a daily/weekly destination: sackings, record transfers, wonderkids, takeovers, rule changes, continental and international results; filters Transfers · Managers · Competitions · Clubs · International · Records | Alpha 2 |
+| Relationships | Player relationships that emerge naturally — friendships, mentors, rivals for a place — plus bonds with the manager, coaches, rivals and former clubs; they move morale, form and transfer decisions | Alpha 2 |
+| Records | Records the world can break. Club: biggest win and defeat, record signing and sale, most appearances, goals and trophies, longest unbeaten run. Player: most goals, assists and caps, youngest debut, oldest player, fastest goal, most trophies. World: biggest transfer, highest-scoring game, longest unbeaten run, most successful club, highest attendance | Alpha 2 |
+| Economics | Deeper football economics: TV rights deals, sponsorship changes, shirt sales and merchandising, ticket prices and attendance, stadium expansion, wealthy owners, debt, takeover attempts, economic crises, transfer instalments, sell-on clauses — and different financial models by country and league | Alpha 2 |
+| Community | Database and scenario export / import — the infrastructure for community sharing | Alpha 2 |
+| Stories | Club podcasts, rival-fan arguments, richer press conferences | Alpha 2 |
+| World | Football World screen: browse continents and nations (more nations, e.g. China, Saudi Arabia, Australia, Singapore) with league reputation, coefficient, richest clubs, best players, transfer activity, continental performance, national-team strength, youth production and average attendance | Living world |
+| Clubs | Club ecosystems: an evolving identity (playing style, recruitment, develop-and-sell), supporter profile, infrastructure ratings (academy, training, analytics) and a club history timeline — all drifting with what the club does (years of buying veterans → a veteran club; always selling its stars → a stepping-stone reputation) | Living world |
+| Clubs | Club philosophy: board statements (develop young players, attacking football, financial sustainability, qualify for Europe) that drive board patience, transfer budgets, youth investment, supporter expectations, manager evaluations, recruitment and job offers; the manager can reshape it over time | Living world |
+| Staff | Deeper staff: coaching philosophy, personality, preferred tactics, specialist knowledge, reputation, ambition, loyalty, wage demands and relationships — and staff politics (assistant, head coach, sporting director and academy director disagreeing about the same 19-year-old) | Living world |
+| Tactics | Tactical evolution: each era's systems (libero and 4-4-2 → 4-2-3-1 and pressing → inverted full-backs and positional play) emerge from what successful managers do rather than a script; your manager can start a trend | Living world |
+| Youth | National youth pathways: Brazil (academies → state championships → pro clubs), England (academies → U18/U21 → loans), Japan (school → university → league), USA (high school → college → draft), Africa (academies → local clubs → European moves); scouting works differently in each | Living world |
+| Agents | Agents as characters: client networks, preferred clubs, negotiating styles, reputations and relationships with managers and sporting directors ("This agent represents 7 promising South American teenagers") | Living world |
+| Media | Media ecosystem: newspapers with biases, fan podcasts, transfer journalists of varying reliability, rumours that aren't always true, and fan forums reacting to transfers, tactics, results, players and board decisions | Living world |
+| Medical | Injuries as events: injury history, recurring problems, rehabilitation, medical staff quality, workload and recovery, surgery decisions — and dilemmas like "Risk him for the derby?" | Living world |
+| Stadiums | Stadium histories: opening year, expansions, new stands, moving grounds, renaming after a club legend | Living world |
+| Platform | Compile and test the native apps on Android and iOS devices; app icons and splash screens | Mobile readiness |
+| Match | Live passing network and heat map during the match | Beta |
+| Performance | Profile and optimise simulation for 30+ full leagues | Beta |
+| Business | Apple Developer and Google Play accounts; TestFlight / Play internal testing builds | Beta |
+| Platform | Cloud saves (iCloud / Play Games or own server) with a rule for conflicting saves | Beta |
+| UX | Onboarding and first-time tutorial | Beta |
+| UX | Accessibility: system text size, screen-reader labels on emoji-only buttons, light-theme contrast | Beta |
+| Platform | Crash reporting (e.g. Sentry); minimal or no analytics | Beta |
+| Cosmetics | Stadium themes, retro kits, extra save slots | Beta |
+| Business | Store release at $9.99–$14.99 with regional pricing | 1.0 |
+| Business | DLC, cosmetics and extra save slots through Apple/Google billing (e.g. RevenueCat) | 1.0 |
+| Business | Store listing: screenshots, description, age rating, privacy policy | 1.0 |
+| Community | Sharing databases, leagues, scenarios and graphics | Post-launch |
+| DLC | Historical database packs | Post-launch |

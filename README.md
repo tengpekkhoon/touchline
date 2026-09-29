@@ -1,0 +1,113 @@
+# TOUCHLINE — mobile football manager (prototype)
+
+Full design: [docs/GAME_DESIGN_DOCUMENT.md](docs/GAME_DESIGN_DOCUMENT.md) · [docs/ROADMAP.md](docs/ROADMAP.md) · [docs/FEATURES.md](docs/FEATURES.md).
+
+A playable vertical slice: **204 clubs in 20 leagues across 16 nations, in three simulation tiers** — full (England 3 tiers, Spain 2, Germany, France, Brazil), light (Italy, Portugal, Netherlands, Argentina, USA, Japan) and minimal (Mexico, Korea, Thailand, Nigeria, Morocco, Serbia) — with domestic cups, five continental cups, a Club World Cup, international football with 29 national teams and qualifiers, a live match engine, and the story-driven world around it.
+
+## Run it
+
+No build step. Serve the folder and open it at phone width (or on a phone on the same network):
+
+```bash
+python -m http.server 5173
+```
+
+Then open http://localhost:5173. Saves go to IndexedDB in the browser, or to real files in the native app (3 slots, autosave after every matchday and whenever the app goes to the background). Older saves are upgraded automatically (the original is kept as a backup); only saves from before Alpha 1 can't be. Club → Settings exports a compressed `.touchline` backup and imports one (also from the title screen).
+
+## Develop, test, build
+
+The source runs as-is — no build is needed to play or develop. Node tooling (`npm install` once) adds:
+
+```bash
+npm test
+```
+
+Headless regression test: two seasons with a seeded RNG through the same code the app uses (including the Web Worker's JSON hand-off), then invariants, save pack/unpack and save migrations. About a minute; exits non-zero on failure. `npm run test:quick` plays one season.
+
+```bash
+npm run build
+```
+
+Minified production build in `dist/`: `sim.min.js` (engine, also loaded by the simulation worker) + `ui.min.js`, content-hashed URLs and a regenerated service worker. Preview it with `npm run serve:dist`.
+
+**Save format changes:** bump `FM.SAVE_VERSION` in `js/core.js` and add a migration to `MIG` in `js/save.js` (from the previous version). Never edit a shipped migration; `npm test` checks every version has an upgrade path.
+
+### Native app (Capacitor 8)
+
+`android/` and `ios/` are Capacitor projects that package `dist/`. `npm run cap:sync` builds and copies the web app into both.
+
+- **Android:** needs Android Studio (Android SDK) and JDK 21. `npm run android` opens the project; build or run it from there.
+- **iOS:** needs a Mac with Xcode. Copy the project over, run `npm install`, then `npm run ios`.
+- The app id is `app.touchline.manager` (change it in `capacitor.config.json` before the first store upload). App icons and splash screens are still Capacitor's defaults.
+- In the app, saves are files in the app's private data folder (written to a temp file, then renamed); haptics, share and the status bar use the native plugins; the Android back button closes the top-most sheet; phones are locked to portrait (tablets rotate).
+
+### Install it as an app (offline)
+
+Touchline is an installable web app: it has a manifest, app icons and a service worker, and bundles its fonts, so once it has loaded it plays with no internet connection.
+
+- **On this computer:** open http://localhost:5173 in Chrome or Edge and use *Install* (address bar icon, or Club → Settings → Install as an app).
+- **On a phone:** browsers only allow installing and offline play over **https**, so the game has to be hosted — any static host works (GitHub Pages, Netlify, Cloudflare Pages); just upload the folder. Then Android: Chrome menu → *Install app*; iPhone: Safari → Share → *Add to Home Screen*. Over plain `http://` on your local network the game still runs, but can't be installed or go offline.
+- **Updating:** the service worker fetches fresh files whenever you're online and only falls back to its cache when offline, so edits show up on the next load. When you **add** a new file, add it to the `FILES` list in `sw.js` and bump `CACHE`.
+
+## What's in the slice
+
+| Brief pillar | In the prototype |
+|---|---|
+| **Match engine** | Top-down pitch, 22 moving dots, visible pressing lines, ball carrier labels. Minute-by-minute sim; highlights slow down (~every 20–40s at 1×). Live xG, possession, momentum bars, 1×/2×/4× speed, instant result. |
+| **Tactical prompts** | Analyst insights, chasing the game, protecting a lead, "pinned back", tired legs, injuries, red cards, half-time team talk (personalities react differently). Assistant has a personality and sometimes disagrees. |
+| **Tactical depth** | 6 formations (back 3/4/5), build-up (Short/Direct/Counter/Possession), pressing (High/Mid/Low), inverted full-backs, roles (Segundo Volante, Carrilero, Mezzala, Inverted Winger, False 9, Libero…), each with engine effects. |
+| **Players** | 1–20 attributes, CA/PA stars, morale, wage, value, contract, form, traits (Big Game Player, Injury Prone, Late Bloomer, Loyal, Mercenary, Leader, Fair-Weather…), hidden attributes + personality. Radar, form chart, heat map, career history. |
+| **Scouting** | Scouts with regional strengths. Assignments by region or league, filtered by position, age, minimum potential, max fee and focus (undervalued / wonderkids / ready now). Reports are graded A–D, with a Sign / Loan / Monitor / Avoid recommendation, the scout's own words and gradual reveal of personality, injuries and hidden attributes. Target-versus-your-starter comparison. Nationality mixes per league are realistic (28 nations). Fees and wages use fine-grained steppers and exact input. |
+| **Youth** | Annual intake shaped by academy level and nationality (Japan = technicians, Brazil = flair, Serbia = defenders, France = athletes). Development depends on age, training facilities, professionalism, minutes and Late Bloomer. |
+| **Competitions** | 20 leagues in three simulation tiers (full engine / light statistical model / minimal scores-only), promotion, relegation and playoffs, five domestic cups (seeded knockouts with byes, extra time and penalties). Continental Champions Cup (Europe, 16 clubs), Copa Continental, Asian Champions Cup, African Champions League and North American Champions Cup, all fed by data-driven `qualify` rules, plus a mid-season Club World Cup for last season's finalists. Knockouts and playoff semi-finals can be two-legged, with an optional away-goals rule. |
+| **Transfers** | Offers, counter-offers, loyal/ambitious refusals, windows, rumours, AI bids for your players. Contract packages: wage, length, squad status, signing-on fee, appearance and goal bonuses, release clause, yearly rise, relegation wage cut. Agents with personalities (Shark, Pragmatic, Family, Showman, Rookie) set demands, patience and fees; release clauses can be paid — by you or by rivals. International market, marquee raids, veterans abroad, Transfer Centre. |
+| **Club identity** | 204 fictional clubs, each with an identity: Oil-Backed, Historic Giant, Fan-Owned, Youth-Focused, Selling Club, Fallen Giant. Board objectives, fan culture, chants, traditions, derbies. |
+| **Stories** | Feed of newspaper headlines, fan social posts (with rival fans on derby day), press conferences with choices, dressing-room events. Instagram-style **shareable story cards** export as 1080×1350 PNG ("26-year-old Brazilian winger scores on debut"). |
+| **Living world** | AI sackings, takeovers, administration and points deductions, stadium expansions, rule changes (subs, homegrown rules, TV deals), retirements, legends returning as managers. |
+| **People** | One-to-one talks (praise, criticism, promises of minutes, a new contract, a debut, not being sold, or permission to leave). Promises are tracked, kept or broken, and move morale and squad trust. Players ask for meetings when unhappy or underpaid. Board meetings (transfer funds, owner-funded facilities, patience, a youth project), a mid-season review and five-game ultimatums. |
+| **International** | 29 national teams, Elo ranking, qualifying groups in the season before a tournament, two double-header breaks, and the summer finals played as calendar days. Take a national team job alongside your club: pick call-ups, set tactics, play the matches live; failing to qualify ends it. Coaching licences (B → A → Pro) unlock bigger jobs. |
+| **Career** | Start with a club or start unemployed. Out of work (from the start or after a sacking), the world keeps playing and clubs in your reputation range make offers that come and go; a national team job carries on. |
+| **Legacy** | Hall of Fame (top scorers, appearances, academy graduates, cult heroes, biggest sales + seeded historic legends), Football Archive per season, manager identity tags (Youth Developer, Giant Killer…), sacking and job offers. |
+| **World editor (taste)** | Set points for a win, subs, foreign-player limits, two-legged ties and away goals at new game. Competitions use data-driven rules (`promote`/`relegate`/`playoff` relationships in `js/world.js`), not hardcoded leagues. |
+| **Staff** | Hire and fire an assistant, coach, analyst, physio, sporting director and up to 5 scouts from a market that refreshes each season. Ability has effects: development speed, injury length, analysis depth, negotiated fees. Vacant roles fall to a caretaker. |
+| **Advice** | The assistant's notes on the Squad tab cover lineup issues, fatigue, unhappy players, youngsters ready to play, loan candidates, weak areas, expiring contracts and deadwood, with one-tap actions. Scouts' picks on the Scouting hub. |
+| **Season preview** | Predicted table, predicted finish, bookmaker title odds, pre-season best XI, key man, one to watch. |
+| **Pre-season** | 3 days before matchday 1: book friendlies (home gate / away fee) or camps (fitness, tactical, youth, commercial tour). Tactical familiarity grows with matches and camps. |
+| **Loans & free agents** | Loan in (wage share + optional fee), loan out (offers from AI clubs), AI development loans; loans end at season end. Free agents sign any time for a signing-on bonus. |
+| **Post-match** | Summary, analyst insights (xG verdict, chance sources, half comparison, impact of your tactical change, fatigue, pressing), shot map, xG race, chance-type table, per-player stats, ratings, shape. |
+| **Matchday** | Captain choice (armband boost, Leader effects), penalty / free-kick / corner takers used by the engine, pre-match team talk with the assistant's pick, weekly matchday digest in the feed. |
+| **The world remembers** | Club records and record-breaking news (club, all-time, world transfer), all-time head-to-heads, rivalries that emerge from knockouts and red cards and cool if not fed, Player of the Month, injury histories, transfer fees on career timelines, managers who move between clubs, stadium histories, World News filters. |
+| **Saves & platform** | Installable offline web app; saves upgrade automatically between versions; compressed backup export/import; matchday simulation in a Web Worker; autosave when backgrounded; back button, safe areas, haptics and share sheet; Capacitor projects for Android and iOS. |
+| **UI** | Mobile-first, swipe between tabs, bottom sheets, dark/light theme. |
+
+## Code map
+
+```
+js/core.js       utilities, namespace
+js/data.js       nations, clubs, traits, formations, roles, scouting phrases
+js/world.js      world generation, player model, XI selection, competitions, calendar
+js/engine.js     match engine (incl. aggregate/away goals), commentary, tactical prompts
+js/season.js     matchday loop, development, youth, finances, season end
+js/cups.js       domestic knockouts, continental groups + (two-legged) knockouts, Club World Cup
+js/intl.js       national teams, Elo, qualifiers, summer finals, national team jobs
+js/tiers.js      light and minimal simulation tiers
+js/contracts.js  agents, contract clauses, negotiation model, release clauses, bonuses
+js/people.js     player talks and promises, meetings, board, coaching licences
+js/advice.js     assistant notes, scout picks, season preview, staff market
+js/matchmotion.js  fluid on-pitch movement for the live match
+js/scouting.js   scouting knowledge + transfers
+js/stories.js    news feed, story cards, living-world events
+js/ui-*.js       shell, components, screens
+js/matchview.js  live pitch renderer + post-match analysis
+js/ui-alpha.js   negotiation, talks, boardroom, licences, national team screens
+js/matchday.js   captain, set-piece takers, pre-match team talk, matchday digest
+js/records.js    club records, head-to-heads, rivalry heat, Player of the Month, injury history, manager moves, stadiums
+js/save.js       save format, migrations, storage backends (files / IndexedDB), backup export/import
+js/simrun.js     runs matchday simulation in the Web Worker (js/sim-worker.js) with a progress overlay
+js/native.js     Capacitor plugins with web fallbacks, back button, background autosave, boot
+tools/           sim-test.mjs (regression test), build.mjs (production build)
+```
+
+## Not yet built (next candidates)
+
+See [docs/ROADMAP.md](docs/ROADMAP.md). Next is Alpha 2: the database and world editor, historical eras and scenarios, the youth pathway, player and manager career histories, relationships, deeper economics and database export/import. The Living world backlog follows (Football World screen, club philosophy, deeper staff, tactical evolution, agents, media, injuries as events); device builds come before Beta.

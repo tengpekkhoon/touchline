@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#0a0e14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Touchline">
+  <meta name="description" content="A mobile-first football management game. Your club. Your stories. Your history.">
+  <title>Touchline — Football Manager</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <!-- Game fonts are bundled for offline play. The emoji font is an online-only extra for Windows flags; phones use their own emoji. -->
+  <link rel="stylesheet" href="css/fonts.css?v=40">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css?v=40">
+</head>
+<body>
+  <div id="app"></div>
+  <script src="js/core.js?v=40"></script>
+  <script src="js/data.js?v=40"></script>
+  <script src="js/world.js?v=40"></script>
+  <script src="js/engine.js?v=40"></script>
+  <script src="js/season.js?v=40"></script>
+  <script src="js/cups.js?v=40"></script>
+  <script src="js/intl.js?v=40"></script>
+  <script src="js/tiers.js?v=40"></script>
+  <script src="js/contracts.js?v=40"></script>
+  <script src="js/people.js?v=40"></script>
+  <script src="js/scouting.js?v=40"></script>
+  <script src="js/stories.js?v=40"></script>
+  <script src="js/advice.js?v=40"></script>
+  <script src="js/matchday.js?v=40"></script>
+  <script src="js/records.js?v=40"></script>
+  <script src="js/save.js?v=40"></script>
+  <script src="js/ui-core.js?v=40"></script>
+  <script src="js/ui-screens.js?v=40"></script>
+  <script src="js/matchview.js?v=40"></script>
+  <script src="js/matchmotion.js?v=40"></script>
+  <script src="js/ui-extra.js?v=40"></script>
+  <script src="js/ui-alpha.js?v=40"></script>
+  <script src="js/simrun.js?v=40"></script>
+  <script src="js/native.js?v=40"></script>
+  <script>FM.UI.boot();</script>
+  <script>
+    // Offline + installable: the service worker only runs on https or localhost — and never inside the
+    // native app, which ships its files in the package (a cache there would outlive app updates)
+    const nativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+    if (!nativeApp && 'serviceWorker' in navigator && (location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname))) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch((e) => console.warn('Service worker not registered', e)));
+    }
+  </script>
+</body>
+</html>

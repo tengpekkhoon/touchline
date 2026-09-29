@@ -1,0 +1,13 @@
+{
+  "appId": "app.touchline.manager",
+  "appName": "Touchline",
+  "webDir": "dist",
+  "backgroundColor": "#0a0e14",
+  "android": { "backgroundColor": "#0a0e14" },
+  "ios": { "backgroundColor": "#0a0e14", "contentInset": "never" },
+  "plugins": {
+    "SplashScreen": { "launchAutoHide": false, "backgroundColor": "#0a0e14", "showSpinner": false },
+    "StatusBar": { "style": "DARK", "backgroundColor": "#0a0e14", "overlaysWebView": false },
+    "Keyboard": { "resize": "native", "resizeOnFullScreen": true }
+  }
+}
