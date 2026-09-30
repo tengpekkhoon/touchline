@@ -114,7 +114,7 @@
       </div>
       ${cupPills(c)}
       <div class="card flat"><div class="row"><div class="h3 grow">Objectives</div>${C.form(row.form)}</div>${objs.map((o) => `<div class="row small" style="margin-top:8px"><span>${o.ok ? '✅' : '⏳'}</span><span class="grow">${esc(o.text)}</span><span class="dim">${esc(o.status)}</span></div>`).join('')}</div>
-      <div class="sec"><div class="h3">The Feed</div><span class="dim small">${s.news.filter((n) => !n.read).length ? `${s.news.filter((n) => !n.read).length} new · ` : ''}${s.news.length} stories</span>${s.news.some((n) => n.read && !UI.isOpenDecision(n)) ? `<button class="btn sm" style="margin-left:8px" data-act="clearRead">Clear read</button>` : ''}</div>
+      <div class="sec"><div class="h3">The Feed</div><span class="dim small">${s.news.filter((n) => !n.read).length ? `${s.news.filter((n) => !n.read).length} new · ` : ''}${s.news.length} stories</span>${s.news.some((n) => n.read && !UI.isOpenDecision(n)) ? `<button class="btn sm" style="margin-left:8px" data-act="clearRead">Remove read stories</button>` : ''}</div>
       ${chips('feed', [
         ['club', 'My Club'],
         ['reply', waiting ? `🔔 Needs reply (${waiting})` : 'Needs reply'],
@@ -148,7 +148,10 @@
     const t = `${n.title || ''} ${n.kicker || ''}`,
       out = [];
     if (n.cat) out.push(n.cat);
-    if (['transfer', 'rumour'].includes(n.type) || /transfer|signs for|joins|\bfee\b|\bloan\b|release clause/i.test(t))
+    if (
+      ['transfer', 'roundup', 'rumour'].includes(n.type) ||
+      /transfer|signs for|joins|\bfee\b|\bloan\b|release clause/i.test(t)
+    )
       out.push('transfers');
     if (/manager|\bsack|appoint|part ways|takes over|dugout|leaves \w.* for /i.test(t)) out.push('managers');
     if (/international|national team|world championship|qualif|\bcaps?\b|summer finals|nations/i.test(t))
@@ -176,11 +179,11 @@
       items = items.filter(
         (n) =>
           n.clubId !== cid &&
-          ['headline', 'world', 'brief', 'award', 'story', 'transfer', 'rumour'].includes(n.type) &&
+          ['headline', 'world', 'brief', 'award', 'story', 'transfer', 'roundup', 'rumour'].includes(n.type) &&
           (w === 'all' || UI.newsCats(n).includes(w)),
       );
     }
-    if (f === 'transfers') items = items.filter((n) => ['transfer', 'rumour', 'bid'].includes(n.type));
+    if (f === 'transfers') items = items.filter((n) => ['transfer', 'roundup', 'rumour', 'bid'].includes(n.type));
     items = items.filter((n) => !n.quiet || f === 'club');
     if (!items.length)
       return `<div class="empty">${f === 'reply' ? 'Nothing is waiting for your reply.' : f === 'world' && UI.sub.wnews !== 'all' ? 'No world news on this topic yet.' : 'Nothing here yet. Play some football.'}</div>`;
@@ -198,6 +201,11 @@
   }
   // Open decisions are never cleared: a live bid, an unanswered press conference or meeting
   UI.isOpenDecision = FM.News.isOpen;
+  UI.acts.roundupAll = (d) => {
+    const n = S().news.find((x) => x.id === d.id);
+    if (n) n.open = true;
+    UI.render();
+  };
   UI.acts.clearRead = () => {
     const s = S(),
       before = s.news.length;
@@ -208,6 +216,7 @@
   };
 
   const TYPE = {
+    roundup: ['🔁', 'Transfer round-up'],
     headline: ['📰', 'Headline'],
     social: ['💬', 'Fans'],
     story: ['', ''],
@@ -235,6 +244,17 @@
       return `<div class="story" style="--c1:${c.colors[0]};--c2:${c.colors[1]}"><div class="bg"></div><button class="share" data-act="share" data-id="${n.id}" aria-label="Share">⤴</button><div class="in"><span class="kick">${esc(n.kicker)}</span>${n.pid && P(n.pid) ? `<div class="tiny b" style="margin-top:10px;opacity:.85" data-act="player" data-id="${n.pid}">${C.flag(P(n.pid).nat)} ${esc(W.name(P(n.pid)))} ›</div>` : ''}<div class="big">${esc(n.big)}</div><div class="st">${esc(n.title)}</div><div class="ss">${esc(n.sub)}</div><div class="foot"><span>TOUCHLINE STORIES</span><span>${esc(c.short)} · ${n.year}</span></div></div></div>`;
     }
     if (n.type === 'digest' && n.data) return digestCard(n, when);
+    if (n.type === 'roundup') {
+      const shown = n.open ? n.deals : n.deals.slice(0, 8);
+      return `<div class="news" data-nid="${n.id}"><div class="nh">${n._new ? '<span class="dot" title="New"></span>' : ''}🔁 Transfer round-up<span class="grow"></span><span class="tiny dim">${when}</span></div><div class="nb"><div class="nt">${n.deals.length} deal${n.deals.length === 1 ? '' : 's'} around the world</div>${shown
+        .map(
+          (d) =>
+            `<div class="row small tap" data-act="player" data-id="${d.pid}" style="padding:5px 0;border-top:1px solid var(--line);gap:8px">${d.c && CL(d.c) ? C.crest(CL(d.c), 16) : ''}<span class="grow ellip">${esc(d.t)}</span></div>`,
+        )
+        .join(
+          '',
+        )}${n.deals.length > shown.length ? `<button class="btn sm" style="margin-top:8px" data-act="roundupAll" data-id="${n.id}">Show all ${n.deals.length}</button>` : ''}</div></div>`;
+    }
     const [ic, lab] = TYPE[n.type] || ['•', n.type];
     const c = n.clubId && CL(n.clubId);
     let head = `<div class="nh">${n._new ? '<span class="dot" title="New"></span>' : ''}${ic} ${n.type === 'headline' ? `<span class="paper">${esc(n.paper || 'The Daily Touchline')}</span>` : lab}<span class="grow"></span>${c ? C.crest(c, 16) : ''}<span>${when}</span></div>`;
@@ -2000,6 +2020,17 @@
       <div class="card"><div class="row"><div class="grow"><div class="h3">Season preview popup</div><div class="small dim">Show it automatically in pre-season (it's always on the Home screen)</div></div><div class="seg" style="width:120px"><button class="${!s.settings.skipPreview ? 'on' : ''}" data-act="setFlag" data-k="skipPreview" data-v="0">On</button><button class="${s.settings.skipPreview ? 'on' : ''}" data-act="setFlag" data-k="skipPreview" data-v="1">Off</button></div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Haptics</div><div class="small dim">A light tap on every button (phones that support it)</div></div><div class="seg" style="width:120px"><button class="${!s.settings.noHaptics ? 'on' : ''}" data-act="setFlag" data-k="noHaptics" data-v="0">On</button><button class="${s.settings.noHaptics ? 'on' : ''}" data-act="setFlag" data-k="noHaptics" data-v="1">Off</button></div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Matchday digest</div><div class="small dim">A round-up card in the feed after every league matchday</div></div><div class="seg" style="width:120px"><button class="${!s.settings.noDigest ? 'on' : ''}" data-act="setFlag" data-k="noDigest" data-v="0">On</button><button class="${s.settings.noDigest ? 'on' : ''}" data-act="setFlag" data-k="noDigest" data-v="1">Off</button></div></div></div>
+      <div class="card"><div class="row"><div class="grow"><div class="h3">Currency</div><div class="small dim">Auto uses your club's: £ in Britain, € in the eurozone, $ elsewhere</div></div></div><div class="seg" style="margin-top:8px">${[
+        ['auto', 'Auto'],
+        ['GBP', '£'],
+        ['EUR', '€'],
+        ['USD', '$'],
+      ]
+        .map(
+          ([v, l]) =>
+            `<button class="${(s.settings.currency || 'auto') === v ? 'on' : ''}" data-act="currency" data-v="${v}">${l}</button>`,
+        )
+        .join('')}</div></div>
       <div class="card"><div class="h3">World rules</div><div class="small muted" style="margin-top:6px;line-height:1.6">Points for a win: <b>${s.rules.win}</b> · Subs: <b>${s.rules.subs}</b> · Foreign players in squad: <b>${W.foreignLimitText()}</b><br>Rules may change as the football world evolves.</div></div>
       ${UI.installCard()}
       <div class="card"><div class="row"><div class="grow"><div class="h3">Save slot ${UI.slot}</div><div class="small dim">Autosaves after every matchday and whenever you leave the app · ${esc(FM.Save.backend())}</div></div><button class="btn sm" data-act="saveNow">Save now</button></div>
@@ -2008,6 +2039,11 @@
       <button class="btn block" data-act="toTitle" style="margin-bottom:10px">Main menu</button>
       <div class="tiny dim center" style="margin-top:14px;line-height:1.6">TOUCHLINE prototype · one-time purchase · no energy · no packs · no pay-to-win</div>`;
   }
+  UI.acts.currency = (d) => {
+    S().settings.currency = d.v;
+    UI.save();
+    UI.render();
+  };
   UI.acts.theme = (d) => {
     S().settings.theme = d.v;
     try {

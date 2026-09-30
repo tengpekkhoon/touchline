@@ -901,6 +901,21 @@
       this.motm = motm;
     }
 
+    // Full-match passing as the TV graphics would show it. The engine only simulates the passes that matter
+    // (passCount, ~150 a side); a real side makes 350–650, so the total is read from possession and build-up style,
+    // with small match-to-match variation from the simulated count, and accuracy from possession, style and passing.
+    passStats(k) {
+      const sd = this.sides[k],
+        poss = this.result().poss[k],
+        T = sd.tactic;
+      const style = { Possession: 1.15, Short: 1.05, Direct: 0.85, Counter: 0.8 }[T.buildup] || 1;
+      // ~500 at 50% possession, ~700 at 72%, ~300 at 28%; style nudges it, the simulated count adds ±5%
+      const total = Math.round((150 + 7 * poss) * Math.sqrt(style) * (0.95 + (sd.passCount % 11) / 100));
+      const xi = sd.xi.filter(Boolean),
+        passing = xi.length ? xi.reduce((s, p) => s + p.attrs.passing, 0) / xi.length : 12;
+      const acc = Math.round(U.clamp(78 + (poss - 50) * 0.35 + (style - 1) * 20 + (passing - 12) * 1.4, 62, 92));
+      return { total, acc };
+    }
     result() {
       const [H, A] = this.sides;
       const tot = (H.possAcc || 1) + (A.possAcc || 1);

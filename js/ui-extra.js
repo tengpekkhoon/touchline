@@ -484,7 +484,7 @@
       .join('');
     const objs = FM.Season.objectives(c);
     UI.sheet(
-      `<div class="hero" style="--c1:${c.colors[0]};--c2:${c.colors[1]}"><div class="tag">${FM.Season.seasonLabel()} preview · ${esc(pv.comp.name)}</div><div class="row" style="margin-top:10px"><div class="grow"><div class="small" style="opacity:.85">Predicted finish</div><div class="h1" style="font-size:54px">${U.ordinal(pv.pos)}</div></div>${C.crest(c, 60)}</div><div class="small" style="opacity:.92;margin-top:6px">“${esc(pv.verdict)}” — ${esc(pv.who)}</div></div>
+      `<div class="hero" style="--c1:${c.colors[0]};--c2:${c.colors[1]}"><div class="tag">${FM.Season.seasonLabel()} preview · ${esc(pv.comp.name)}</div><div class="row" style="margin-top:10px"><div class="grow"><div class="small" style="opacity:.85">Predicted finish</div><div class="h1" style="font-size:54px">${U.ordinal(pv.pos)}</div></div>${C.crest(c, 60)}</div><div class="small" style="opacity:.92;margin-top:6px">“${esc(pv.verdict)}” — ${esc(pv.who)}</div><div class="tiny" style="opacity:.8;margin-top:4px">Your assistant's prediction. The board expects ${U.ordinal(FM.Season.expectedPos(c))}.</div></div>
       <div class="card"><div class="h3">Board expects</div>${objs.map((o) => `<div class="small" style="margin-top:6px">• ${esc(o.text)}</div>`).join('')}</div>
       <div class="card"><div class="h3">Title odds</div>${pv.odds.map((o) => `<div class="row small" style="padding:5px 0">${C.crest(CL(o.id), 18)}<span class="grow ${W.isUser(o.id) ? 'b' : ''}">${esc(CL(o.id).name)}</span><b>${o.odds}</b></div>`).join('')}</div>
       <div class="card"><div class="h3">Predicted table</div><table class="t" style="margin-top:6px">${pv.rows.map((r, i) => `<tr class="${W.isUser(r.id) ? 'me' : ''}"><td>${i + 1}</td><td class="l"><div class="row" style="gap:6px">${C.crest(CL(r.id), 16)}<span class="ellip">${esc(CL(r.id).name)}</span></div></td><td class="dim">${Math.round(FM.Advice.teamRating(r.id))}</td></tr>`).join('')}</table><div class="tiny dim" style="margin-top:6px">Number = average ability of each side's best XI. Your assistant's read — a better assistant predicts more accurately.</div></div>
@@ -640,9 +640,9 @@
       ])}
       <div class="h3" style="margin-top:6px">Max fee</div>${chipRow('as', 'maxFee', a.maxFee, [
         [0, 'Any'],
-        [1e6, '$1M'],
-        [5e6, '$5M'],
-        [1.5e7, '$15M'],
+        [1e6, U.money(1e6)],
+        [5e6, U.money(5e6)],
+        [1.5e7, U.money(1.5e7)],
         [Math.max(1e5, U.roundMoney(bud)), `Budget (${U.money(bud)})`],
       ])}
       <div class="h3" style="margin-top:6px">Focus</div>${chipRow('as', 'focus', a.focus, [
@@ -1014,10 +1014,12 @@
     return `<table class="t"><tr><th class="l">Type</th><th>${esc(H.club.short)}</th><th>xG</th><th>${esc(A.club.short)}</th><th>xG</th></tr>${types.map((t) => `<tr><td class="l">${TYPE_NAME[t]}</td><td>${a[t] ? `${a[t].n}${a[t].g ? ` (${a[t].g}⚽)` : ''}` : '–'}</td><td class="dim">${a[t] ? a[t].xg.toFixed(2) : '–'}</td><td>${b[t] ? `${b[t].n}${b[t].g ? ` (${b[t].g}⚽)` : ''}` : '–'}</td><td class="dim">${b[t] ? b[t].xg.toFixed(2) : '–'}</td></tr>`).join('')}</table>`;
   };
   MV.statTable = function (sd, compact) {
+    // each player's share of the team's full passing total (the engine simulates only the passes that matter)
+    const scale = MV.m && sd.passCount ? MV.m.passStats(sd.idx).total / sd.passCount : 1;
     const rows = Object.keys(sd.mins)
       .map((pid) => ({ p: P(pid), s: sd.ps[pid] || {}, r: sd.rating[pid], min: sd.mins[pid], st: sd.st[pid] }))
       .sort((a, b) => b.r - a.r);
-    return `<div class="card"><div class="row b small" style="margin-bottom:6px">${C.crest(sd.club, 18)} ${esc(sd.club.name)}</div><table class="t"><tr><th class="l">Player</th><th>Min</th><th>Pas</th><th>KP</th><th>Sh</th><th>Tk</th><th>En</th><th>Rt</th></tr>${rows.map((x) => `<tr><td class="l ellip" style="max-width:96px">${esc(x.p ? x.p.ln : '?')}${x.p && x.p.id === MV.m.motm ? ' ⭐' : ''}</td><td class="dim">${x.min}</td><td>${x.s.pass || 0}</td><td>${x.s.kp || 0}</td><td>${x.s.sh || 0}${x.s.sot ? `<span class="dim">/${x.s.sot}</span>` : ''}</td><td>${x.s.tk || 0}</td><td style="color:${x.st < 45 ? 'var(--bad)' : x.st < 65 ? 'var(--warn)' : 'var(--ink2)'}">${Math.round(x.st)}</td><td>${C.rating(x.r)}</td></tr>`).join('')}</table>${compact ? '' : '<div class="tiny dim" style="margin-top:6px">Pas passes · KP key passes · Sh shots/on target · Tk possession won · En energy at the end</div>'}</div>`;
+    return `<div class="card"><div class="row b small" style="margin-bottom:6px">${C.crest(sd.club, 18)} ${esc(sd.club.name)}</div><table class="t"><tr><th class="l">Player</th><th>Min</th><th>Pas</th><th>KP</th><th>Sh</th><th>Tk</th><th>En</th><th>Rt</th></tr>${rows.map((x) => `<tr><td class="l ellip" style="max-width:96px">${esc(x.p ? x.p.ln : '?')}${x.p && x.p.id === MV.m.motm ? ' ⭐' : ''}</td><td class="dim">${x.min}</td><td>${Math.round((x.s.pass || 0) * scale)}</td><td>${x.s.kp || 0}</td><td>${x.s.sh || 0}${x.s.sot ? `<span class="dim">/${x.s.sot}</span>` : ''}</td><td>${x.s.tk || 0}</td><td style="color:${x.st < 45 ? 'var(--bad)' : x.st < 65 ? 'var(--warn)' : 'var(--ink2)'}">${Math.round(x.st)}</td><td>${C.rating(x.r)}</td></tr>`).join('')}</table>${compact ? '' : '<div class="tiny dim" style="margin-top:6px">Pas passes · KP key passes · Sh shots/on target · Tk possession won · En energy at the end</div>'}</div>`;
   };
   // Analyst insights — a better analyst says more (and more precisely)
   MV.insights = function (m) {
@@ -1121,11 +1123,14 @@
       '🗺️',
       `${zone(me.heat)}% of our touches came in the final third${zone(me.heat) < 25 ? ' — we struggled to get into dangerous areas' : zone(me.heat) > 38 ? ' — we pinned them back' : ''}.`,
     ]);
-    if (me.passCount && op.passCount)
+    {
+      const mp = m.passStats(us).total,
+        op2 = m.passStats(1 - us).total;
       out.push([
         '🔁',
-        `Passes: ${me.passCount} vs ${op.passCount}. ${me.passCount > op.passCount * 1.3 ? 'We dominated the ball.' : op.passCount > me.passCount * 1.3 ? 'They had far more of it.' : 'An even contest for control.'}`,
+        `Passes: ${mp} vs ${op2}. ${mp > op2 * 1.3 ? 'We dominated the ball.' : op2 > mp * 1.3 ? 'They had far more of it.' : 'An even contest for control.'}`,
       ]);
+    }
     if (a.vacant)
       out.unshift(['🪑', "No Head of Analytics — this is the caretaker's best effort. Hire one for deeper analysis."]);
     return out.slice(0, n + (a.vacant ? 1 : 0));

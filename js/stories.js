@@ -25,6 +25,18 @@
     },
     add(n) {
       const S = FM.S;
+      // The day's ordinary transfers and loans elsewhere go into one Transfer round-up (big deals keep their own story)
+      if (n.type === 'transfer' && !n.big && !FM.News.isClub(n, S.user && S.user.clubId)) {
+        let r = S.news.find((x) => x.type === 'roundup' && x.day === S.day && x.year === S.year);
+        if (!r) {
+          r = { id: FM.nextId('n'), day: S.day, year: S.year, read: false, type: 'roundup', deals: [] };
+          S.news.unshift(r);
+        }
+        r.deals.push({ t: n.title, pid: n.pid, c: n.clubId });
+        r.title = `Transfer round-up: ${r.deals.length} deal${r.deals.length === 1 ? '' : 's'}`;
+        r.read = false;
+        return r;
+      }
       const item = { id: FM.nextId('n'), day: S.day, year: S.year, read: false, ...n };
       S.news.unshift(item);
       if (S.news.length > 2 * FM.News.CAP) FM.News.trim(S);
@@ -645,7 +657,15 @@
     if (f.marquee) title = `${to.name} raid ${land(from)} for ${W.name(p)} in ${U.money(fee)} deal`;
     if (f.veteran) title = `Veteran ${W.name(p)} seals move to ${land(to)}'s ${to.name}`;
     const body = `${describe(p)} ${from ? `joins from ${from.name}${f.intl ? ` (${land(from)})` : ''}` : 'was a free agent'}.${f.veteran ? ' One last adventure abroad.' : f.intl ? ` A new country, a new league: ${D.NATIONS[from.nat].flag} → ${D.NATIONS[to.nat].flag}` : ''}`;
-    FM.News.add({ type: 'transfer', title, body, pid: p.id, clubId: to.id, intl: f.intl });
+    FM.News.add({
+      type: 'transfer',
+      title,
+      body,
+      pid: p.id,
+      clubId: to.id,
+      intl: f.intl,
+      big: f.marquee || fee >= 2e7,
+    });
     if (f.marquee && fee >= 1.5e7 && !involvesUser)
       St.share({
         kicker: 'MARQUEE SIGNING',

@@ -15,7 +15,7 @@ const W = FM.W,
   Sea = FM.Season,
   U = FM.U;
 
-W.newWorld({ win: 3, subs: 5, foreignLimit: 6, twoLegs: true, awayGoals: false });
+W.newWorld({ win: 3, subs: 5, twoLegs: true, awayGoals: false }); // default rules (no foreign-player limit)
 const S = FM.S;
 const track = new Map(); // id -> { p, pa0, arc, from: 'intake' | 'world', traj: {age: ca} }
 const add = (p, from) =>

@@ -20,7 +20,7 @@ if (args.set)
     FM.CAL[k] = +v;
   }
 
-W.newWorld({ win: 3, subs: 5, foreignLimit: 6, twoLegs: true, awayGoals: false });
+W.newWorld({ win: 3, subs: 5, twoLegs: true, awayGoals: false }); // default rules (no foreign-player limit)
 Sea.init();
 W.takeCharge(Object.values(FM.S.clubs).find((c) => c.comp === 'D1' && c.rep < 75).id, 'Calibration');
 W.seedLegends();

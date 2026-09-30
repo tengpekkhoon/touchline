@@ -581,21 +581,10 @@
   W.pickXI = function (clubId, tactic, squad) {
     const slots = D.FORMATIONS[tactic.formation];
     const club = FM.clubOf(clubId);
-    let pool = (squad || (club.sim === 'nation' ? FM.Intl.squad(club.code) : W.squad(clubId))).filter(W.available);
-    // Registration rule: cap foreign players in the matchday squad (best ones kept)
-    if (club.sim === 'full') {
-      const lim = FM.S.rules.foreignLimit;
-      const foreign = pool.filter((p) => p.nat !== club.nat).sort((a, b) => b.ca - a.ca);
-      if (foreign.length > lim) {
-        let keep = foreign.slice(0, lim);
-        // With no fit domestic keeper, one of the places goes to the best foreign goalkeeper (else an outfielder ends up in goal)
-        const domesticGK = pool.some((p) => p.pos === 'GK' && p.nat === club.nat);
-        const gk = !domesticGK && !keep.some((p) => p.pos === 'GK') && foreign.find((p) => p.pos === 'GK');
-        if (gk && lim > 0) keep = keep.slice(0, lim - 1).concat(gk);
-        const kept = new Set(keep.map((p) => p.id));
-        pool = pool.filter((p) => p.nat === club.nat || kept.has(p.id));
-      }
-    }
+    const pool = (squad || (club.sim === 'nation' ? FM.Intl.squad(club.code) : W.squad(clubId))).filter(W.available);
+    // Registration rule: at most rules.foreignLimit foreign players in the matchday squad (XI and bench)
+    const cap = club.sim === 'full' ? FM.S.rules.foreignLimit : Infinity;
+    const foreign = (p) => p.nat !== club.nat;
     const used = new Set();
     const xi = new Array(slots.length).fill(null);
     if (tactic.lineup) {
@@ -663,10 +652,34 @@
         }
       }
     }
-    // Bench: a keeper, then cover for defence, midfield and attack, then the best of the rest
+    // Over the foreign limit: take out the foreign starter whose best domestic replacement costs the least at his
+    // position, until the XI is within it (so the cap costs a little quality, not a keeper at wing-back)
+    const slotVal = (p, i) =>
+      !p || (slots[i].t === 'GK') !== (p.pos === 'GK') ? 0 : W.effAt(p, slots[i].t) * W.fitnessPick(p);
+    while (xi.filter((p) => p && foreign(p)).length > cap) {
+      let pick = null;
+      xi.forEach((p, i) => {
+        if (!p || !foreign(p)) return;
+        const sub = pool
+          .filter((q) => !used.has(q.id) && !foreign(q))
+          .reduce((b, q) => (slotVal(q, i) > slotVal(b, i) ? q : b), null);
+        const loss = slotVal(p, i) - slotVal(sub, i) + (sub ? 0 : 1e6);
+        if (!pick || loss < pick.loss) pick = { i, sub, loss };
+      });
+      if (!pick || !pick.sub) break; // no domestic player left to bring in
+      used.delete(xi[pick.i].id);
+      used.add(pick.sub.id);
+      xi[pick.i] = pick.sub;
+    }
+    let foreignLeft = cap - xi.filter((p) => p && foreign(p)).length;
+    // Bench: a keeper, then cover for defence, midfield and attack, then the best of the rest (within the limit)
     const rest = pool.filter((p) => !used.has(p.id)).sort((a, b) => b.ca - a.ca);
     const bench = [];
-    const add = (p) => p && !bench.includes(p) && bench.length < 9 && bench.push(p);
+    const add = (p) => {
+      if (!p || bench.includes(p) || bench.length >= 9 || (foreign(p) && foreignLeft <= 0)) return;
+      bench.push(p);
+      if (foreign(p)) foreignLeft--;
+    };
     add(rest.find((p) => p.pos === 'GK'));
     for (const g of ['DEF', 'MID', 'ATT']) add(rest.find((p) => D.POS_GROUP[p.pos] === g));
     for (const p of rest) if (p.pos !== 'GK') add(p);
@@ -830,7 +843,7 @@
       rules: {
         win: opts.win || 3,
         subs: opts.subs || 5,
-        foreignLimit: opts.foreignLimit ?? 6,
+        foreignLimit: opts.foreignLimit ?? W.NO_LIMIT, // like the real Premier League: no cap unless chosen
         twoLegs: opts.twoLegs ?? true,
         awayGoals: !!opts.awayGoals,
       },
@@ -980,7 +993,7 @@
   W.newManager = function (who, rep, nat) {
     const S = FM.S,
       prof = typeof who === 'string' ? { name: who } : who || {};
-    const mgrName = prof.fn || prof.ln ? `${prof.fn || ''} ${prof.ln || ''}`.trim() : prof.name || 'Alex Morgan';
+    const mgrName = prof.fn || prof.ln ? `${prof.fn || ''} ${prof.ln || ''}`.trim() : prof.name || 'New Manager';
     const scouts = [
       W.genStaff('Scout', 'ARG', {
         ability: 15,

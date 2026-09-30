@@ -42,6 +42,11 @@
             ? 'They go long early. Our centre-backs must win the first ball.'
             : 'A well-balanced side. Control midfield and we control the game.';
     const heat = !derby && FM.Records.heat(me.id, opp.id);
+    // Starters playing out of position (the fit bar on the tactics screen shows the same), loudly, before kick-off
+    const slots = D.FORMATIONS[myTactic.formation];
+    const outOfPos = xi
+      .map((p, i) => p && { p, t: slots[i].t, fit: W.fitAt(p, slots[i].t) })
+      .filter((x) => x && x.fit < 0.8);
     UI.sheet(
       `${derby ? `<div class="warnline" style="color:#ff6b6b;background:rgba(255,80,80,.12)">⚔️ ${esc(me.derby)} — the fans will never forget this one, win or lose.</div>` : heat >= FM.Records.EMERGING ? `<div class="warnline">🔥 ${heat >= FM.Records.RIVALRY ? `${esc(opp.name)} are rivals now` : `A rivalry is building with ${esc(opp.name)}`} — expect a big crowd and a few crunching tackles.</div>` : ''}
       <div class="row" style="justify-content:space-around;text-align:center;margin:6px 0 12px"><div>${C.crest(CL(fx.h), 56)}<div class="small b">${esc(CL(fx.h).name)}</div></div><div class="h2">VS</div><div>${C.crest(CL(fx.a), 56)}<div class="small b">${esc(CL(fx.a).name)}</div></div></div>
@@ -60,6 +65,7 @@
           )
           .join(' · ')}</div>
         ${unavailable.length ? `<div class="small" style="margin-top:8px;color:var(--bad)">Unavailable: ${unavailable.map((p) => esc(p.ln) + (p.inj ? ' 🚑' : ' 🟥')).join(', ')}</div>` : ''}</div>
+      ${outOfPos.length ? `<div class="warnline" style="color:#ff6b6b;background:rgba(255,80,80,.12)">⚠️ ${outOfPos.length} out of position: ${outOfPos.map((x) => `${esc(x.p.ln)} (${x.p.pos} at ${x.t})`).join(', ')}.${s.rules.foreignLimit < W.NO_LIMIT && xi.filter((p) => p && p.nat !== me.nat).length >= s.rules.foreignLimit ? ` The ${s.rules.foreignLimit}-foreign-player limit is filled.` : ''} Check your XI in Tactics.</div>` : ''}
       ${MV.reminders(fx, xi.filter(Boolean), nt)}
       ${MV.talkCard(fx)}
       <button class="btn pri block" data-act="kickoff" style="margin-top:4px">▶ Watch live</button>
@@ -142,7 +148,10 @@
   };
   UI.acts.kickoff = () => {
     UI.closeAllSheets();
-    MV.start(FM.Season.userFixture(), false);
+    const fx = FM.Season.userFixture();
+    FM.Season.startUserMatch(fx);
+    UI.save();
+    MV.start(fx, false);
   };
   UI.acts.instant = () => {
     UI.closeAllSheets();
@@ -813,6 +822,13 @@
   // ---------------- Post-match ----------------
   MV.post = function () {
     const m = MV.m;
+    // The result counts from the final whistle: applied and saved now, not when you leave the post-match screens
+    if (!MV.applied) {
+      FM.Season.applyUserMatch(m);
+      delete FM.S.user.live;
+      MV.applied = true;
+      UI.save();
+    }
     cancelAnimationFrame(MV._raf);
     window.removeEventListener('resize', MV.resize);
     document.getElementById('matchOv')?.remove();
@@ -897,7 +913,7 @@
               .join(' · ')}</div>`
           : '';
       body.innerHTML = `${motm ? `<div class="card row">${C.pos(motm)}<div class="grow"><div class="tiny dim b">PLAYER OF THE MATCH</div><div class="b">${esc(W.name(motm))}</div></div>${C.rating(m.sides.find((s) => s.rating[motm.id] != null).rating[motm.id])}</div>` : ''}
-        <div class="card">${sbar('Possession', res.poss[0], res.poss[1], (v) => v + '%')}${sbar('Expected goals (xG)', res.xg[0], res.xg[1], (v) => v.toFixed(2))}${sbar('Shots', res.shots[0], res.shots[1])}${sbar('On target', res.sot[0], res.sot[1])}${spg[0].length + spg[1].length ? sbar('Set-piece goals', spg[0].length, spg[1].length) + spNote : ''}${sbar('Passes', H.passCount, A.passCount)}${sbar('Yellow cards', Object.keys(H.yc).length, Object.keys(A.yc).length)}</div>
+        <div class="card">${sbar('Possession', res.poss[0], res.poss[1], (v) => v + '%')}${sbar('Expected goals (xG)', res.xg[0], res.xg[1], (v) => v.toFixed(2))}${sbar('Shots', res.shots[0], res.shots[1])}${sbar('On target', res.sot[0], res.sot[1])}${spg[0].length + spg[1].length ? sbar('Set-piece goals', spg[0].length, spg[1].length) + spNote : ''}${sbar('Passes', m.passStats(0).total, m.passStats(1).total)}${sbar('Pass accuracy', m.passStats(0).acc, m.passStats(1).acc, (v) => v + '%')}${sbar('Yellow cards', Object.keys(H.yc).length, Object.keys(A.yc).length)}</div>
         <div class="card"><div class="h3" style="margin-bottom:6px">Key moments</div>${m.events
           .filter((e) => ['goal', 'red', 'injury', 'sub', 'pens'].includes(e.k) || (e.k === 'chance' && e.big))
           .map(
@@ -970,12 +986,13 @@
     if (UI.simBusy) return;
     document.getElementById('postOv')?.remove();
     MV.promptLog = [];
-    // Our result is applied here; the rest of the world's day runs in the simulation worker
-    FM.Season.applyUserMatch(m);
+    // Our result was applied at full time (MV.post); the rest of the world's day runs in the simulation worker
+    if (!MV.applied) FM.Season.applyUserMatch(m);
+    MV.applied = false;
     MV.m = null;
     const r = await FM.SimRunner.run('day');
     const summary = r && r.summary;
-    UI.sub.feed = 'all';
+    UI.sub.feed = 'club';
     UI.tab = 'home';
     UI.afterDay(summary);
     document.getElementById('main').scrollTop = 0;

@@ -45,18 +45,37 @@
       } while (p > L);
       return k - 1;
     },
+    // Display currency: amounts are kept in dollars and shown in the club's currency (settings.currency 'auto'),
+    // or a chosen one: £ for British clubs, € in the eurozone, $ elsewhere, converted at fixed rates
+    currency() {
+      const S = FM.S;
+      if (!S || !S.user) return FM.U.CURRENCIES.USD;
+      let k = (S.settings && S.settings.currency) || 'auto';
+      if (k === 'auto') {
+        const c = S.user.clubId && S.clubs[S.user.clubId];
+        const nat = (c && c.nat) || S.user.nat;
+        k = ['ENG', 'SCO', 'WAL'].includes(nat)
+          ? 'GBP'
+          : ['ESP', 'GER', 'FRA', 'ITA', 'POR', 'NED', 'BEL', 'IRL', 'AUT', 'GRE', 'CRO'].includes(nat)
+            ? 'EUR'
+            : 'USD';
+      }
+      return FM.U.CURRENCIES[k] || FM.U.CURRENCIES.USD;
+    },
+    CURRENCIES: { USD: { sym: '$', rate: 1 }, GBP: { sym: '£', rate: 0.79 }, EUR: { sym: '€', rate: 0.92 } },
     // Money with enough precision to tell $6.35M from $6.4M
     money(v) {
-      const s = v < 0 ? '-' : '';
-      v = Math.abs(v);
+      const s = v < 0 ? '-' : '',
+        { sym: $, rate } = FM.U.currency();
+      v = Math.abs(v) * rate;
       const trim = (x, d) => {
         const t = x.toFixed(d);
         return t.includes('.') ? t.replace(/\.?0+$/, '') : t;
       };
-      if (v >= 1e9) return s + '$' + trim(v / 1e9, 2) + 'B';
-      if (v >= 1e6) return s + '$' + trim(v / 1e6, v >= 1e8 ? 0 : v >= 1e7 ? 1 : 2) + 'M';
-      if (v >= 1e3) return s + '$' + trim(v / 1e3, v >= 1e5 ? 0 : 1) + 'K';
-      return s + '$' + Math.round(v);
+      if (v >= 1e9) return s + $ + trim(v / 1e9, 2) + 'B';
+      if (v >= 1e6) return s + $ + trim(v / 1e6, v >= 1e8 ? 0 : v >= 1e7 ? 1 : 2) + 'M';
+      if (v >= 1e3) return s + $ + trim(v / 1e3, v >= 1e5 ? 0 : 1) + 'K';
+      return s + $ + Math.round(v);
     },
     // Realistic fee granularity: $1K steps under $100K, $10K under $10M, $50K under $50M, then $100K
     roundMoney(v) {

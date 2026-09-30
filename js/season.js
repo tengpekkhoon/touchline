@@ -490,7 +490,13 @@
     if (cc) out.push({ id: 'cc', text: `Reach the ${cc.name} semi-finals`, cc: cc.id });
     return out.map((o) => ({ ...o, ...Sea.objProgress(o, club) }));
   };
+  // Progress on a board objective. Until three league games are played nothing counts as achieved yet (⏳).
   Sea.objProgress = function (o, club) {
+    const r = objProgressRaw(o, club);
+    if (club.comp && Sea.gamesPlayed(club.id) < 3 && r.ok) r.ok = false;
+    return r;
+  };
+  const objProgressRaw = function (o, club) {
     const S = FM.S,
       row = S.comps[club.comp].table[club.id],
       pos = W.position(club.id);
@@ -529,13 +535,41 @@
     }
     if (o.id === 'pos2') {
       const exp = Sea.expectedPos(club);
-      return { ok: pos <= exp, status: `${U.ordinal(pos)} (expected ${U.ordinal(exp)})` };
+      return { ok: pos <= exp, status: `${U.ordinal(pos)} (board expects ${U.ordinal(exp)})` };
     }
     return { ok: false, status: '' };
   };
 
   // Apply the user's finished match on its own, so the rest of the day can be simulated elsewhere
   // (Web Worker). Sea.advance(null) then skips the fixture because it already has a result.
+  // A match you started but never finished (the app closed or reloaded mid-match) is completed with a quick
+  // simulation driven by the seed saved at kick-off, so every reload gives the same result: no free re-rolls.
+  Sea.startUserMatch = function (fx) {
+    FM.S.user.live = { fx: fx.id, seed: Math.floor(Math.random() * 2 ** 31) };
+  };
+  Sea.resolveLive = function () {
+    const live = FM.S.user && FM.S.user.live;
+    if (!live) return null;
+    delete FM.S.user.live;
+    const fx = Sea.userFixture();
+    if (!fx || fx.id !== live.fx || fx.res) return null;
+    let s = live.seed;
+    const real = Math.random;
+    Math.random = () => {
+      s = (s + 0x6d2b79f5) | 0;
+      let t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    let m;
+    try {
+      m = FM.quickSim(fx, !!fx.ko);
+      Sea.applyUserMatch(m);
+    } finally {
+      Math.random = real;
+    }
+    return m;
+  };
   Sea.applyUserMatch = function (m) {
     const S = FM.S,
       fx = Sea.userFixture(),
@@ -602,7 +636,6 @@
       W.employed() === employed0 &&
       !newOffer() &&
       Sea.today() &&
-      (Sea.today().type !== 'pre' || !W.employed()) &&
       n < (W.employed() ? 12 : 21) &&
       !Sea.pendingDecision()
     );

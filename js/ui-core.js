@@ -266,6 +266,19 @@
         UI.save();
         setTimeout(() => UI.toast(`Save upgraded to the latest format (v${from} → v${FM.Save.VERSION})`, 3200), 400);
       }
+      const left = FM.Season.resolveLive();
+      if (left) {
+        UI.save();
+        const r = left.result();
+        setTimeout(
+          () =>
+            UI.toast(
+              `The match you left was played to the end: ${FM.clubOf(left.o.h).name} ${r.hg}–${r.ag} ${FM.clubOf(left.o.a).name}`,
+              4500,
+            ),
+          500,
+        );
+      }
       return true;
     } catch (e) {
       console.warn('load failed', e);
@@ -383,7 +396,7 @@
   // Out of work, only actions that make sense without a club run (anything club-bound — offers, talks, tactics,
   // old feed decisions — would reach for a club that isn't there). A whitelist fails safe: a toast, never a crash.
   const OUT_OF_WORK_OK =
-    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqFilter)$/;
+    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|roundupAll|currency|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqFilter)$/;
   // A club badge anywhere opens that club's overview, except where choosing the club is the point of the button,
   // and not during a match
   const CREST_KEEP = /^(ngClub|ngRandom|clubView|clubGoMine|takeJob)$/;
@@ -478,7 +491,7 @@
     fav: '',
     avatar: { e: '🧑', bg: '#1f6feb' },
     club: null,
-    rules: { win: 3, subs: 5, foreignLimit: 6, twoLegs: 1, awayGoals: 0 },
+    rules: { win: 3, subs: 5, foreignLimit: W.NO_LIMIT, twoLegs: 1, awayGoals: 0 },
     slot: 1,
   };
   // A career needs a manager's name: flag the empty fields and say which (updates as you type once shown)
@@ -497,8 +510,8 @@
     return missing.map(([k]) => k);
   };
   const ngProfile = () => ({
-    fn: NG.fn.trim() || 'Alex',
-    ln: NG.ln.trim() || 'Morgan',
+    fn: NG.fn.trim() || 'New', // only if the name check is bypassed; not a real person's name
+    ln: NG.ln.trim() || 'Manager',
     nat: NG.nat,
     fav: NG.fav || null,
     avatar: NG.avatar,
@@ -557,7 +570,7 @@
               `<div class="small b" style="color:${cols[i]};margin:16px 0 8px;letter-spacing:1px">${D.NATIONS[nat].flag} ${names[cid].toUpperCase()} · ${D.NATIONS[nat].name.toUpperCase()}</div>${D[key].map((r) => row(r, tier[cid])).join('')}`,
           ).join('');
         })()}
-        <div class="actions" style="position:sticky;bottom:0;padding:14px 0 4px;background:linear-gradient(transparent,#06090d 30%)"><button class="btn block" data-act="ngRandom">🎲 Choose random club</button><button class="btn block" data-act="ngUnemployed">🧳 Start unemployed — wait for offers</button><button class="btn pri block" data-act="ngNext" ${NG.club && NG.club !== 'none' ? '' : 'disabled'}>${NG.club && NG.club !== 'none' ? `Continue with ${esc(D.allClubRows().find((r) => 'c_' + r[1] === NG.club)[0])} →` : 'World rules →'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
+        <div class="actions" style="position:sticky;bottom:0;padding:14px 0 4px;background:#06090d;box-shadow:0 -18px 14px -6px #06090d"><button class="btn block" data-act="ngRandom">🎲 Choose random club</button><button class="btn block" data-act="ngUnemployed">🧳 Start unemployed — wait for offers</button><button class="btn pri block" data-act="ngNext" ${NG.club && NG.club !== 'none' ? '' : 'disabled'}>${NG.club && NG.club !== 'none' ? `Continue with ${esc(D.allClubRows().find((r) => 'c_' + r[1] === NG.club)[0])} →` : 'World rules →'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     } else {
       const label = (k, v) => (k === 'foreignLimit' && v >= W.NO_LIMIT ? 'No limit' : v);
       const seg = (k, vals, lbl) =>
