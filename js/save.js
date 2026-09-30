@@ -94,7 +94,7 @@
         for (const k in T.sp) if (T.sp[k] && !(has(T.sp[k]) && s.players[T.sp[k]].clubId === u.clubId)) T.sp[k] = null;
     }
     if (u && Array.isArray(u.shortlist)) u.shortlist = u.shortlist.filter(has);
-    if (Array.isArray(s.news) && s.news.length > 160) s.news.length = 160;
+    if (Array.isArray(s.news) && s.news.length > 2 * FM.News.CAP) FM.News.trim(s);
     return s;
   };
 

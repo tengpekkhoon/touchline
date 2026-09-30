@@ -1980,3 +1980,17 @@ main {
   backdrop-filter: none;
   animation: none;
 }
+.crest[data-club] {
+  cursor: pointer;
+}
+.match .crest[data-club] {
+  cursor: default;
+}
+.assign-sheet .as-nat {
+  width: 100%;
+  margin: 6px 0 4px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card2);
+}

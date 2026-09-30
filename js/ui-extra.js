@@ -561,7 +561,17 @@
     UI.go('club');
   };
 
-  UI._as = { type: 'region', region: 'SAM', comp: 'ES1', pos: 'any', maxAge: 23, minStars: 0, maxFee: 0, focus: 'any' };
+  UI._as = {
+    type: 'region',
+    region: 'SAM',
+    comp: 'ES1',
+    pos: 'any',
+    nat: 'any',
+    maxAge: 23,
+    minStars: 0,
+    maxFee: 0,
+    focus: 'any',
+  };
   UI.acts.assignScout = (d) => {
     UI._as.scout = d.id;
     const a = S().user.assignments.find((x) => x.scout === d.id && x.type !== 'player');
@@ -574,6 +584,13 @@
       sc = s.staff[a.scout || s.user.scouts[0]];
     a.scout = sc.id;
     const bud = club().budget;
+    // Nationality: the nations of the chosen region, or the nationalities actually playing in the chosen league
+    const natOpts = (
+      a.type === 'region'
+        ? Object.keys(D.NATIONS).filter((k) => D.NATIONS[k].region === a.region)
+        : [...new Set(s.comps[a.comp].clubs.flatMap((id) => W.squad(id).map((p) => p.nat)))]
+    ).sort((x, y) => D.NATIONS[x].name.localeCompare(D.NATIONS[y].name));
+    if (a.nat !== 'any' && !natOpts.includes(a.nat)) a.nat = 'any';
     const html = `<div class="row small" style="margin-bottom:6px">${C.flag(sc.nat)} <b>${esc(sc.fn + ' ' + sc.ln)}</b><span class="dim">· judging ${sc.judge}/20</span></div>
       <div class="seg">${[
         ['region', 'By region'],
@@ -606,6 +623,7 @@
         ['MID', 'MID'],
         ['ATT', 'ATT'],
       ])}
+      <div class="h3" style="margin-top:6px">Nationality</div><select id="as-nat" class="as-nat"><option value="any">Any nationality</option>${natOpts.map((k) => `<option value="${k}" ${a.nat === k ? 'selected' : ''}>${D.NATIONS[k].flag} ${esc(D.NATIONS[k].name)}</option>`).join('')}</select>
       <div class="h3" style="margin-top:6px">Max age</div>${chipRow('as', 'maxAge', a.maxAge, [
         [19, '≤19'],
         [21, '≤21'],
@@ -637,6 +655,8 @@
       ${s.user.assignments.some((x) => x.scout === sc.id) ? `<button class="btn block" data-act="stopAssign" style="margin-top:8px">Stop current assignment</button>` : ''}`;
     if (document.querySelector('.sheet-wrap .assign-sheet')) UI.refreshSheet(`<div class="assign-sheet">${html}</div>`);
     else UI.sheet(`<div class="assign-sheet">${html}</div>`, { title: 'Scouting assignment' });
+    const nat = document.querySelector('.assign-sheet #as-nat');
+    if (nat) nat.addEventListener('change', () => (UI._as.nat = nat.value));
   };
   UI.acts.as = (d) => {
     const num = ['maxAge', 'minStars', 'maxFee'].includes(d.k);
@@ -645,7 +665,15 @@
   };
   UI.acts.doAssign = () => {
     const a = UI._as;
-    const spec = { type: a.type, pos: a.pos, maxAge: a.maxAge, minStars: a.minStars, maxFee: a.maxFee, focus: a.focus };
+    const spec = {
+      type: a.type,
+      pos: a.pos,
+      nat: a.nat,
+      maxAge: a.maxAge,
+      minStars: a.minStars,
+      maxFee: a.maxFee,
+      focus: a.focus,
+    };
     if (a.type === 'region') spec.region = a.region;
     else spec.comp = a.comp;
     FM.Scouting.assign(a.scout, spec);
@@ -1193,7 +1221,7 @@
     const h = T(g.h),
       a = T(g.a),
       bold = (id) => (focus && id === focus ? 'font-weight:800' : '');
-    return `<div class="row small" style="padding:7px 0;border-top:1px solid var(--line)"><span class="grow ellip" style="text-align:right;${bold(g.h)}">${esc(h.name)} ${C.flag(h.code)}</span><b style="min-width:48px;text-align:center">${g.hg}–${g.ag}</b><span class="grow ellip" style="${bold(g.a)}">${C.flag(a.code)} ${esc(a.name)}</span></div><div class="tiny dim center" style="margin-top:-2px">${esc(g.label)}${g.pens ? ` · pens ${g.pens[0]}–${g.pens[1]}` : ''}</div>`;
+    return `<div class="row small" style="padding:7px 0;border-top:1px solid var(--line)"><span class="grow ellip tap" style="text-align:right;${bold(g.h)}" data-act="nation" data-id="${g.h}">${esc(h.name)} ${C.flag(h.code)}</span><b style="min-width:48px;text-align:center">${g.hg}–${g.ag}</b><span class="grow ellip tap" style="${bold(g.a)}" data-act="nation" data-id="${g.a}">${C.flag(a.code)} ${esc(a.name)}</span></div><div class="tiny dim center" style="margin-top:-2px">${esc(g.label)}${g.pens ? ` · pens ${g.pens[0]}–${g.pens[1]}` : ''}</div>`;
   };
   UI.intlView = function () {
     const s = S(),

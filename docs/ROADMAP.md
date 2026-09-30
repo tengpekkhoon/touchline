@@ -90,17 +90,17 @@ Playtest feedback grouped into seven batches, in working order; most important f
 
 *2 · Quick interface wins*
 
-- [ ] Home feed shows only items about your club; world items stay in World News (S–M)
-- [ ] Button to see must-respond messages (S)
-- [ ] Tap a club name or badge anywhere to open the club overview (M)
-- [ ] Club overview: squad first, then the next five fixtures (S)
-- [ ] Transfer history in the club overview (S)
-- [ ] International screen: tap a country to see its squad (S)
-- [ ] Current matchday shown on more screens (S)
-- [ ] "No limit" option for foreign players (S)
-- [ ] Nationality as a scouting criterion (S)
-- [ ] "Fan culture" section becomes "Club culture" (S)
-- [ ] More crest designs in real club colours (M)
+- [x] Home feed shows only items about your club; world items stay in World News (S–M)
+- [x] Button to see must-respond messages (S)
+- [x] Tap a club name or badge anywhere to open the club overview (M)
+- [x] Club overview: squad first, then the next five fixtures (S)
+- [x] Transfer history in the club overview (S)
+- [x] International screen: tap a country to see its squad (S)
+- [x] Current matchday shown on more screens (S)
+- [x] "No limit" option for foreign players (S)
+- [x] Nationality as a scouting criterion (S)
+- [x] "Fan culture" section becomes "Club culture" (S)
+- [x] More crest designs in real club colours (M)
 
 *3 · Realism of existing systems*
 

@@ -5,12 +5,29 @@
     D = FM.D,
     W = FM.W;
 
+  // News about your club and news about the wider game are capped separately (100 each), so a busy transfer
+  // window can't push your own club's stories off the end; a decision still waiting on you is kept over older items
+  const CLUB_TYPES = ['press', 'bid', 'report', 'youth', 'dressing', 'board', 'meeting', 'medical', 'contracts'];
   FM.News = {
+    CAP: 100,
+    isClub: (n, clubId) => (clubId != null && n.clubId === clubId) || CLUB_TYPES.includes(n.type),
+    isOpen: (n) =>
+      (n.type === 'bid' && n.data && n.data.status === 'open') ||
+      ((n.type === 'press' || n.type === 'meeting' || n.type === 'medical') && !n.resolved),
+    trim(S) {
+      const cid = S.user && S.user.clubId;
+      // open decisions take their club places first; the oldest other club items make room for them
+      let club = S.news.filter(FM.News.isOpen).length,
+        world = 0;
+      S.news = S.news.filter((n) =>
+        FM.News.isOpen(n) ? true : FM.News.isClub(n, cid) ? ++club <= FM.News.CAP : ++world <= FM.News.CAP,
+      );
+    },
     add(n) {
       const S = FM.S;
       const item = { id: FM.nextId('n'), day: S.day, year: S.year, read: false, ...n };
       S.news.unshift(item);
-      if (S.news.length > 160) S.news.length = 160;
+      if (S.news.length > 2 * FM.News.CAP) FM.News.trim(S);
       return item;
     },
   };
@@ -969,6 +986,7 @@
           ];
         },
         () => {
+          if (S.rules.foreignLimit >= W.NO_LIMIT) return null; // you chose no limit: the federation leaves it be
           S.rules.foreignLimit = U.pick([4, 5, 6, 8]);
           return [
             `New homegrown rule: max ${S.rules.foreignLimit} foreign players in a matchday squad`,
@@ -981,8 +999,8 @@
           return [`Record TV deal for ${lg.name}`, `${lg.name} clubs will receive 20% more broadcast income.`];
         },
       ];
-      const [t, b] = U.pick(options)();
-      FM.News.add({ type: 'world', title: t, body: b, big: true });
+      const change = U.pick(options)();
+      if (change) FM.News.add({ type: 'world', title: change[0], body: change[1], big: true });
     }
   };
 })();

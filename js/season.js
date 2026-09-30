@@ -27,7 +27,11 @@
     const c = W.employed() && W.userClub(),
       comp = c && FM.S.comps[c.comp];
     const k = comp ? W.roundOn(comp, cal.round) : -1;
-    return k >= 0 ? `Matchday ${k + 1}` : comp ? 'Other leagues play' : `Matchday ${cal.round + 1}`;
+    return k >= 0
+      ? `Matchday ${k + 1}/${comp.fixtures.length}`
+      : comp
+        ? 'Other leagues play'
+        : `Matchday ${cal.round + 1}`;
   };
   Sea.windowOpen = () => {
     const c = Sea.today();

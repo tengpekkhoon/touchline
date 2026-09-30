@@ -6,7 +6,7 @@
     W = FM.W;
   const UI = (FM.UI = {
     tab: 'home',
-    sub: { squad: 'list', scout: 'scouts', league: null, club: 'overview', feed: 'all' },
+    sub: { squad: 'list', scout: 'scouts', league: null, club: 'overview', feed: 'club' },
     acts: {},
   });
   const esc = U.esc;
@@ -14,19 +14,46 @@
 
   // ---------------- Components ----------------
   const C = (UI.C = {});
+  // Club badge in the club's own two colours: a shape and a pattern picked from its id (the same every time).
+  // 4 shapes × 11 patterns; on busy patterns the initials get a dark outline so they stay readable.
+  const CREST_SHAPES = [
+    'M20 1.5 L38 7.5 V22 C38 34 29 41 20 44.5 C11 41 2 34 2 22 V7.5 Z', // classic shield
+    'M20 4 A19 19 0 1 1 19.99 4 Z', // round badge
+    'M3 3 H37 V20 C37 33 28 40 20 44.5 C12 40 3 33 3 20 Z', // flat-topped heater
+    'M6 2 H34 Q38 2 38 6 V31 Q38 35 34 37.5 L20 44.5 L6 37.5 Q2 35 2 31 V6 Q2 2 6 2 Z', // rounded plaque
+  ];
+  const CREST_PATTERNS = [
+    [(c) => `<path d="M20 2 L37 8 V16 H3 V8Z" fill="${c}"/>`, false], // top band
+    [
+      (c) =>
+        `<rect x="10" y="0" width="6" height="46" fill="${c}"/><rect x="24" y="0" width="6" height="46" fill="${c}"/>`,
+      true,
+    ], // twin stripes
+    [(c) => `<path d="M3 30 L37 10 V18 L3 38Z" fill="${c}"/>`, true], // sash
+    [(c) => `<rect x="20" y="0" width="20" height="46" fill="${c}"/>`, true], // halves
+    [
+      (c) =>
+        `<rect y="6" width="40" height="6" fill="${c}"/><rect y="18" width="40" height="6" fill="${c}"/><rect y="30" width="40" height="6" fill="${c}"/>`,
+      true,
+    ], // hoops
+    [(c) => `<rect width="20" height="23" fill="${c}"/><rect x="20" y="23" width="20" height="23" fill="${c}"/>`, true], // quarters
+    [
+      (c) => [5, 12.5, 20, 27.5, 35].map((x) => `<rect x="${x - 1}" width="2" height="46" fill="${c}"/>`).join(''),
+      true,
+    ], // pinstripes
+    [(c) => `<rect x="14" width="12" height="46" fill="${c}"/>`, true], // centre stripe
+    [(c) => `<rect x="16" width="8" height="46" fill="${c}"/><rect y="17" width="40" height="8" fill="${c}"/>`, true], // cross
+    [(c) => `<path d="M0 4 L20 20 L40 4 V13 L20 29 L0 13Z" fill="${c}"/>`, true], // chevron
+    [(c) => `<rect y="35" width="40" height="11" fill="${c}"/>`, false], // bottom band
+  ];
   C.crest = function (club, size = 36) {
     if (!club) return '';
     const [c1, c2] = club.colors,
-      pat = U.hash(club.id) % 4,
-      ink = U.ink(c1);
-    const pats = [
-      `<path d="M20 2 L37 8 V16 H3 V8Z" fill="${c2}"/>`,
-      `<rect x="10" y="0" width="6" height="46" fill="${c2}"/><rect x="24" y="0" width="6" height="46" fill="${c2}"/>`,
-      `<path d="M3 30 L37 10 V18 L3 38Z" fill="${c2}"/>`,
-      `<rect x="20" y="0" width="20" height="46" fill="${c2}"/>`,
-    ];
+      h = U.hash(club.id),
+      shape = CREST_SHAPES.at(h % CREST_SHAPES.length),
+      [pattern, busy] = CREST_PATTERNS.at(Math.floor(h / CREST_SHAPES.length) % CREST_PATTERNS.length);
     const id = 'cl' + club.id;
-    return `<svg class="crest" width="${size}" height="${Math.round(size * 1.15)}" viewBox="0 0 40 46"><defs><clipPath id="${id}"><path d="M20 1.5 L38 7.5 V22 C38 34 29 41 20 44.5 C11 41 2 34 2 22 V7.5 Z"/></clipPath></defs><g clip-path="url(#${id})"><rect width="40" height="46" fill="${c1}"/>${pats[pat]}</g><path d="M20 1.5 L38 7.5 V22 C38 34 29 41 20 44.5 C11 41 2 34 2 22 V7.5 Z" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/><text x="20" y="31" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="11.5" fill="${pat === 3 ? '#fff' : ink}" stroke="${pat === 3 || pat === 1 ? 'rgba(0,0,0,.45)' : 'none'}" stroke-width=".6" paint-order="stroke">${esc(club.short)}</text></svg>`;
+    return `<svg class="crest" data-club="${esc(club.id)}" width="${size}" height="${Math.round(size * 1.15)}" viewBox="0 0 40 46"><defs><clipPath id="${id}"><path d="${shape}"/></clipPath></defs><g clip-path="url(#${id})"><rect width="40" height="46" fill="${c1}"/>${pattern(c2)}</g><path d="${shape}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/><text x="20" y="31" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="11.5" fill="${busy ? '#fff' : U.ink(c1)}" stroke="${busy ? 'rgba(0,0,0,.5)' : 'none'}" stroke-width=".7" paint-order="stroke">${esc(club.short)}</text></svg>`;
   };
   C.stars = function (lo, hi = lo, pot = null) {
     const a = (Math.round(lo * 2) / 2 / 5) * 100,
@@ -313,11 +340,7 @@
     const S = FM.S,
       club = W.userClub();
     TABS.forEach(([k]) => $('#nav-' + k).classList.toggle('on', k === UI.tab));
-    const unread = S.news.filter(
-      (n) =>
-        (n.type === 'bid' && n.data.status === 'open') ||
-        ((n.type === 'press' || n.type === 'meeting' || n.type === 'medical') && !n.resolved),
-    ).length;
+    const unread = S.news.filter(FM.News.isOpen).length;
     $('#nav-home').querySelector('.badge')?.remove();
     if (unread) $('#nav-home').insertAdjacentHTML('beforeend', `<span class="badge">${unread}</span>`);
     const cal = FM.Season.today();
@@ -340,9 +363,15 @@
                 : cal.stage === 'F'
                   ? 'Playoff final'
                   : 'Playoff semis';
+    // On a cup, continental or international day, still show how far the league season has got
+    const lc = club && S.comps[club.comp];
+    const mdAll =
+      cal && cal.type !== 'league' && cal.type !== 'pre' && lc && lc.fixtures
+        ? `${md} · MD ${FM.Season.gamesPlayed(club.id)}/${lc.fixtures.length} played`
+        : md;
     const nt = !club && S.user.nation && S.nteams && S.nteams[S.user.nation];
     $('#topbar').innerHTML = club
-      ? `${C.crest(club, 30)}<div class="t-main"><div class="t-title">${esc(club.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${md}${FM.Season.windowOpen() ? ' · <span style="color:var(--acc)">Window open</span>' : ''}</div></div><div class="money">${U.money(club.balance)}</div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`
+      ? `${C.crest(club, 30)}<div class="t-main"><div class="t-title">${esc(club.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${mdAll}${FM.Season.windowOpen() ? ' · <span style="color:var(--acc)">Window open</span>' : ''}</div></div><div class="money">${U.money(club.balance)}</div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`
       : `${C.avatar(S.user, 32)}<div class="t-main"><div class="t-title">${esc(S.user.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${md} · <span style="color:var(--warn)">Out of work</span>${nt ? ` · ${esc(nt.name)}` : ''}</div></div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`;
     // Squad and scouting belong to a club; out of work they explain themselves instead
     const html = !club && ['squad', 'scout'].includes(UI.tab) ? UI.noClubView(UI.tab) : UI.screens[UI.tab]();
@@ -355,7 +384,18 @@
   // old feed decisions — would reach for a club that isn't there). A whitelist fails safe: a toast, never a crash.
   const OUT_OF_WORK_OK =
     /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqFilter)$/;
+  // A club badge anywhere opens that club's overview, except where choosing the club is the point of the button,
+  // and not during a match
+  const CREST_KEEP = /^(ngClub|ngRandom|clubView|clubGoMine|takeJob)$/;
   document.addEventListener('click', (e) => {
+    const crest = e.target.closest('svg.crest[data-club]');
+    if (crest && FM.S && FM.S.clubs && FM.S.clubs[crest.dataset.club] && !crest.closest('#matchOv')) {
+      const host = crest.closest('[data-act]');
+      if (!host || !CREST_KEEP.test(host.dataset.act)) {
+        e.preventDefault();
+        return UI.clubSheet(crest.dataset.club);
+      }
+    }
     const el = e.target.closest('[data-act]');
     if (!el) return;
     const fn = UI.acts[el.dataset.act];
@@ -519,8 +559,9 @@
         })()}
         <div class="actions" style="position:sticky;bottom:0;padding:14px 0 4px;background:linear-gradient(transparent,#06090d 30%)"><button class="btn block" data-act="ngRandom">🎲 Choose random club</button><button class="btn block" data-act="ngUnemployed">🧳 Start unemployed — wait for offers</button><button class="btn pri block" data-act="ngNext" ${NG.club && NG.club !== 'none' ? '' : 'disabled'}>${NG.club && NG.club !== 'none' ? `Continue with ${esc(D.allClubRows().find((r) => 'c_' + r[1] === NG.club)[0])} →` : 'World rules →'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     } else {
+      const label = (k, v) => (k === 'foreignLimit' && v >= W.NO_LIMIT ? 'No limit' : v);
       const seg = (k, vals, lbl) =>
-        `<div class="small" style="color:#9fb0c5;margin:16px 0 6px">${lbl}</div><div class="seg">${vals.map((v) => `<button class="${NG.rules[k] === v ? 'on' : ''}" data-act="ngRule" data-k="${k}" data-v="${v}">${v}</button>`).join('')}</div>`;
+        `<div class="small" style="color:#9fb0c5;margin:16px 0 6px">${lbl}</div><div class="seg">${vals.map((v) => `<button class="${NG.rules[k] === v ? 'on' : ''}" data-act="ngRule" data-k="${k}" data-v="${v}">${label(k, v)}</button>`).join('')}</div>`;
       const tog = (k, lbl, on, off) =>
         `<div class="small" style="color:#9fb0c5;margin:16px 0 6px">${lbl}</div><div class="seg">${[
           [1, on],
@@ -532,7 +573,7 @@
           )
           .join('')}</div>`;
       body = `<div class="h1" style="margin-top:4vh">World rules</div><div class="tag">A taste of the World Editor. Change football before it begins.</div>
-        ${seg('win', [3, 2], 'Points for a win')}${seg('subs', [3, 5], 'Substitutions per match')}${seg('foreignLimit', [4, 6, 9], 'Max foreign players in a matchday squad')}
+        ${seg('win', [3, 2], 'Points for a win')}${seg('subs', [3, 5], 'Substitutions per match')}${seg('foreignLimit', [4, 6, 9, W.NO_LIMIT], 'Max foreign players in a matchday squad')}
         ${tog('twoLegs', 'Continental knockouts and playoff semi-finals', 'Two legs', 'Single match')}${tog('awayGoals', 'Away goals rule (two-legged ties)', 'On', 'Off')}
         <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">30 leagues in 25 nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One, the Segunda División, Serie A, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. Five continental cups feed a Club World Cup. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
         ${NG.club === 'none' ? '<div class="small" style="color:#c8ff3d;margin-top:14px;line-height:1.5">🧳 You start out of work, with a modest reputation. Clubs in your range will make offers over the first weeks — the struggling ones first.</div>' : ''}

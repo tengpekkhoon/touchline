@@ -338,16 +338,11 @@
   };
 
   // ======================= Home icon jumps to what needs attention =======================
-  UI.pendingNews = () =>
-    S().news.filter(
-      (n) =>
-        (n.type === 'bid' && n.data.status === 'open') ||
-        ((n.type === 'press' || n.type === 'meeting' || n.type === 'medical') && !n.resolved),
-    );
+  UI.pendingNews = () => S().news.filter(FM.News.isOpen);
   UI.acts.tab = (d) => {
     const pend = d.tab === 'home' ? UI.pendingNews() : [];
     if (!pend.length) return UI.go(d.tab);
-    UI.sub.feed = 'all';
+    UI.sub.feed = W.employed() ? 'reply' : 'all';
     UI.go('home');
     const n = pend[0];
     const el = document.querySelector(`#main [data-nid="${n.id}"]`);
@@ -380,12 +375,10 @@
     const sq = W.squad(id).sort((a, b) => b.ca - a.ca);
     const { xi } = W.pickXI(id, tac);
     const avg = Math.round(U.avg(xi.filter(Boolean), (p) => p.ca));
-    const next = comp ? comp.fixtures.flat().find((f) => !f.res && (f.h === id || f.a === id)) : null;
-    // Every fixture this season: league rounds in order, then cup and continental ties
+    // This season's league rounds (for the matchday labels) and cup and continental ties
     const mine = (f) => f && (f.h === id || f.a === id);
     const leagueFx = comp ? comp.fixtures.map((rd, i) => ({ f: rd.find(mine), i })).filter((x) => x.f) : [];
     const cupFx = FM.Cups.allFixtures().filter((f) => mine(f) && f.comp !== c.comp);
-    const allFx = leagueFx.map((x) => x.f).concat(cupFx);
     const roundOf = new Map(leagueFx.map((x) => [x.f, x.i]));
     const fxWhere = (f) =>
       roundOf.has(f)
@@ -426,12 +419,66 @@
       ? `<div class="card"><div class="row"><div class="h3 grow">All-time head-to-head</div><span class="small b">P${at.p} · ${at.w}W ${at.d}D ${at.l}L · ${at.gf}–${at.ga}</span></div>
       ${at.last.map(([y, gf, ga, home, comp, pens]) => `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)"><span class="dim" style="width:44px">${y}</span><span class="pill" style="min-width:26px;text-align:center;color:${gf > ga ? 'var(--good)' : gf < ga ? 'var(--bad)' : 'var(--ink3)'}">${gf > ga ? 'W' : gf < ga ? 'L' : 'D'}</span><span class="grow" style="margin-left:8px">${gf}–${ga}${pens ? ` (${pens[0]}–${pens[1]} pens)` : ''} ${home ? 'home' : 'away'}</span><span class="tiny dim ellip" style="max-width:40%">${esc(s.comps[comp] ? s.comps[comp].name : '')}</span></div>`).join('')}</div>`
       : '';
+    // The next five fixtures in date order: walk the calendar from today (a cup round shows once it's drawn)
+    const upcoming = [];
+    for (let d = s.day; d < s.calendar.length && upcoming.length < 5; d++) {
+      const cal = s.calendar[d];
+      let fs = [];
+      if (cal.type === 'league' && comp) fs = W.roundFixtures(comp, cal.round) || [];
+      else if (cal.type === 'cup')
+        fs = cal.comps.flatMap((cid) => {
+          const cc = s.comps[cid];
+          if (cc.groups && cal.stage && cal.stage[0] === 'G')
+            return cc.groups.flatMap((g) => g.fixtures[+cal.stage.slice(1) - 1] || []);
+          return cupFx.filter((f) => f.comp === cid);
+        });
+      for (const f of fs) if (mine(f) && !f.res && !upcoming.includes(f)) upcoming.push(f);
+    }
+    const vsRow = (f) =>
+      `<div class="row small" style="padding:8px 0;border-top:1px solid var(--line)"><span class="grow ellip" style="text-align:right;${f.h === id ? 'font-weight:700' : ''}">${esc(s.clubs[f.h].name)}</span>${C.crest(s.clubs[f.h], 18)}<b style="min-width:44px;text-align:center" class="dim">v</b>${C.crest(s.clubs[f.a], 18)}<span class="grow ellip" style="${f.a === id ? 'font-weight:700' : ''}">${esc(s.clubs[f.a].name)}</span></div>`;
+    const nextCard = upcoming.length
+      ? `<div class="card"><div class="h3">Next fixtures</div>${upcoming.map((f) => `<div class="tiny dim" style="padding-top:6px">${esc(fxWhere(f))}</div>${vsRow(f)}`).join('')}</div>`
+      : '';
+    // Transfer history: permanent moves in and out, newest first, from the players' career timelines
+    const moves = [];
+    for (const p of Object.values(s.players)) {
+      const sp = p.career.spells;
+      sp.forEach((x, i) => {
+        if (!x.signed || x.loan) return;
+        const prev = sp
+          .slice(0, i)
+          .reverse()
+          .find((q) => !q.loan);
+        if (x.c === id) moves.push({ y: x.from, p, dir: 'in', other: prev && prev.c, fee: x.fee });
+        else if (prev && prev.c === id) moves.push({ y: x.from, p, dir: 'out', other: x.c, fee: x.fee });
+      });
+    }
+    moves.sort((a, b) => b.y - a.y);
+    const feeText = (m) => (m.fee == null ? '' : m.fee ? U.money(m.fee) : 'Free');
+    const movesCard = moves.length
+      ? `<div class="card"><div class="row"><div class="h3 grow">Transfer history</div><span class="tiny dim">${moves.filter((m) => m.dir === 'in').length} in · ${moves.filter((m) => m.dir === 'out').length} out</span></div>${moves
+          .slice(0, 12)
+          .map(
+            (m) =>
+              `<div class="row small tap" data-act="player" data-id="${m.p.id}" style="padding:7px 0;border-top:1px solid var(--line);gap:8px"><span class="dim" style="width:38px">${m.y}</span><span style="color:${m.dir === 'in' ? 'var(--good)' : 'var(--bad)'};width:30px" class="tiny b">${m.dir === 'in' ? 'IN' : 'OUT'}</span><span class="grow ellip">${esc(W.name(m.p))} <span class="dim tiny">${m.p.pos}</span><div class="tiny dim ellip">${m.other && s.clubs[m.other] ? `${m.dir === 'in' ? 'from' : 'to'} ${esc(s.clubs[m.other].name)}` : m.dir === 'in' ? 'free agent' : ''}</div></span><b class="small">${feeText(m)}</b></div>`,
+          )
+          .join('')}</div>`
+      : '';
     const groups = [
       ['GK', 'Goalkeepers'],
       ['DEF', 'Defenders'],
       ['MID', 'Midfielders'],
       ['ATT', 'Attackers'],
     ];
+    const squadHtml = `<div class="sec"><div class="h3">Squad</div><span class="dim small">${sq.length} players</span></div>
+      ${groups
+        .map(([g, l]) => {
+          const ps = sq.filter((p) => D.POS_GROUP[p.pos] === g);
+          return ps.length
+            ? `<div class="small b dim" style="margin:8px 2px 2px">${l.toUpperCase()}</div><div class="card flat list" style="padding:4px 12px">${ps.map((p) => C.playerRow(p, xi.includes(p) ? ' · <span style="color:var(--acc)">XI</span>' : '')).join('')}</div>`
+            : '';
+        })
+        .join('')}`;
     const html = `<div class="hero" style="--c1:${c.colors[0]};--c2:${c.colors[1]}"><div class="row">${C.crest(c, 58)}<div class="grow"><div class="h2">${esc(c.name)}</div><div class="small" style="opacity:.9;margin-top:4px">${C.flag(c.nat)} ${comp ? `${esc(comp.name)} · ${U.ordinal(W.position(id))}` : 'No league'}</div><div style="margin-top:8px"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0">${I.icon} ${I.label}</span> <span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0">Rep ${Math.round(c.rep)}</span></div></div></div></div>
       ${W.isUser(id) ? `<button class="btn block" style="margin-bottom:10px" data-act="clubGoMine">This is your club → Club tab</button>` : ''}
       <div class="kpis"><div class="kpi"><div class="v">${row ? row.pts : '—'}</div><div class="l">Points</div></div><div class="kpi"><div class="v">${row ? `${row.w}-${row.d}-${row.l}` : '—'}</div><div class="l">W-D-L</div></div><div class="kpi"><div class="v">${avg || '—'}</div><div class="l">XI rating</div></div></div>
@@ -443,9 +490,11 @@
         ${rivalTag ? `<div class="row small" style="margin-top:6px"><span class="grow muted">With your club</span><b>${rivalTag}</b></div>` : ''}
         ${row ? `<div class="row small" style="margin-top:6px"><span class="grow muted">Form</span>${C.form(row.form)}</div>` : ''}
         ${c.sim && c.sim !== 'full' ? `<div class="tiny dim" style="margin-top:8px">${FM.Tiers.ICON[c.sim]} ${FM.Tiers.LABEL[c.sim]}</div>` : ''}</div>
+      ${squadHtml}
+      ${nextCard}
+      ${movesCard}
       ${h2h.length ? `<div class="card"><div class="row"><div class="h3 grow">Head-to-head this season</div>${h2hRec}</div>${h2h.map((f) => `<div class="tiny dim" style="padding-top:6px">${esc(fxWhere(f))}</div>${f.res ? UI.fxLine(f) : `<div class="row small" style="padding:8px 0;border-top:1px solid var(--line)"><span class="grow ellip" style="text-align:right">${esc(s.clubs[f.h].name)}</span><b style="min-width:44px;text-align:center">v</b><span class="grow ellip">${esc(s.clubs[f.a].name)}</span></div>`}`).join('')}</div>` : ''}
       ${allTimeCard}
-      ${allFx.length ? `<div class="card"><div class="row"><div class="h3 grow">Fixtures</div><span class="tiny dim">${allFx.filter((f) => f.res).length} played · ${allFx.filter((f) => !f.res).length} to come</span></div>${allFx.map((f) => `<div class="tiny dim" style="padding-top:6px">${esc(fxWhere(f))}${f === next ? ' · <b style="color:var(--acc)">next</b>' : ''}</div>${f.res ? UI.fxLine(f) : `<div class="row small" style="padding:8px 0;border-top:1px solid var(--line)"><span class="grow ellip" style="text-align:right;${f.h === id ? 'font-weight:700' : ''}">${esc(s.clubs[f.h].name)}</span>${C.crest(s.clubs[f.h], 18)}<b style="min-width:44px;text-align:center" class="dim">v</b>${C.crest(s.clubs[f.a], 18)}<span class="grow ellip" style="${f.a === id ? 'font-weight:700' : ''}">${esc(s.clubs[f.a].name)}</span></div>`}`).join('')}</div>` : ''}
       ${
         Object.keys(c.titles || {}).length
           ? `<div class="card"><div class="h3">Honours</div>${Object.entries(c.titles)
@@ -455,16 +504,7 @@
               )
               .join('')}</div>`
           : ''
-      }
-      <div class="sec"><div class="h3">Squad</div><span class="dim small">${sq.length} players</span></div>
-      ${groups
-        .map(([g, l]) => {
-          const ps = sq.filter((p) => D.POS_GROUP[p.pos] === g);
-          return ps.length
-            ? `<div class="small b dim" style="margin:8px 2px 2px">${l.toUpperCase()}</div><div class="card flat list" style="padding:4px 12px">${ps.map((p) => C.playerRow(p, xi.includes(p) ? ' · <span style="color:var(--acc)">XI</span>' : '')).join('')}</div>`
-            : '';
-        })
-        .join('')}`;
+      }`;
     UI.sheet(html, { full: true, title: esc(c.name) });
   };
   UI.acts.clubGoMine = () => {
@@ -692,7 +732,7 @@
     `<table class="t">${W.sortedTable({ table: tb })
       .map(
         (r, i) =>
-          `<tr class="${i < mark ? 'zone-up' : ''} ${r.id === hl ? 'me' : ''}"><td>${i + 1}</td><td class="l"><span class="ellip">${C.flag(T(r.id).code)} ${esc(T(r.id).name)}</span></td><td>${r.p}</td><td>${r.gd > 0 ? '+' : ''}${r.gd}</td><td class="b">${r.pts}</td></tr>`,
+          `<tr class="tap ${i < mark ? 'zone-up' : ''} ${r.id === hl ? 'me' : ''}" data-act="nation" data-id="${r.id}"><td>${i + 1}</td><td class="l"><span class="ellip">${C.flag(T(r.id).code)} ${esc(T(r.id).name)}</span></td><td>${r.p}</td><td>${r.gd > 0 ? '+' : ''}${r.gd}</td><td class="b">${r.pts}</td></tr>`,
       )
       .join('')}</table>`;
   const origIntl = UI.intlView;
@@ -713,7 +753,7 @@
           .map((id) => {
             const n = T(id),
               ok = FM.Intl.canTake(n);
-            return `<div class="row small" style="padding:8px 0;border-top:1px solid var(--line)"><span style="font-size:22px">${C.flag(n.code)}</span><div class="grow"><div class="b">${esc(n.name)}</div><div class="tiny dim">World #${FM.Intl.ranked().indexOf(n) + 1} · needs ${FM.Intl.badgeNeeded(n)}${ok.ok ? '' : ' · ' + esc(ok.why)}</div></div><button class="btn sm ${ok.ok ? 'pri' : ''}" data-act="ntTake" data-id="${id}" ${ok.ok ? '' : 'disabled'}>Apply</button></div>`;
+            return `<div class="row small" style="padding:8px 0;border-top:1px solid var(--line)"><span style="font-size:22px">${C.flag(n.code)}</span><div class="grow"><div class="b tap" data-act="nation" data-id="${id}">${esc(n.name)} <span class="tiny dim">· squad ›</span></div><div class="tiny dim">World #${FM.Intl.ranked().indexOf(n) + 1} · needs ${FM.Intl.badgeNeeded(n)}${ok.ok ? '' : ' · ' + esc(ok.why)}</div></div><button class="btn sm ${ok.ok ? 'pri' : ''}" data-act="ntTake" data-id="${id}" ${ok.ok ? '' : 'disabled'}>Apply</button></div>`;
           })
           .join('') || '<div class="small dim" style="margin-top:6px">No vacancies right now.</div>'
       }<div class="tiny dim" style="margin-top:8px">You keep your club job. National teams play in the international breaks and the summer finals; failing to qualify ends the job.</div></div>`;
@@ -728,7 +768,7 @@
           .filter(Boolean)
           .map(
             (f) =>
-              `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)"><span class="pill">${UI.stagePill(f.po.split(' · ').pop())}</span><span class="grow ellip" style="text-align:right">${esc(T(f.h).name)} ${C.flag(T(f.h).code)}</span><b style="min-width:44px;text-align:center">${f.res ? `${f.res.hg}–${f.res.ag}` : 'v'}</b><span class="grow ellip">${C.flag(T(f.a).code)} ${esc(T(f.a).name)}</span></div>${f.res && f.res.pens ? `<div class="tiny dim center">pens ${f.res.pens[0]}–${f.res.pens[1]}</div>` : ''}`,
+              `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)"><span class="pill">${UI.stagePill(f.po.split(' · ').pop())}</span><span class="grow ellip" style="text-align:right" data-act="nation" data-id="${f.h}">${esc(T(f.h).name)} ${C.flag(T(f.h).code)}</span><b style="min-width:44px;text-align:center">${f.res ? `${f.res.hg}–${f.res.ag}` : 'v'}</b><span class="grow ellip" data-act="nation" data-id="${f.a}">${C.flag(T(f.a).code)} ${esc(T(f.a).name)}</span></div>${f.res && f.res.pens ? `<div class="tiny dim center">pens ${f.res.pens[0]}–${f.res.pens[1]}</div>` : ''}`,
           )
           .join('')}</div>`,
         )

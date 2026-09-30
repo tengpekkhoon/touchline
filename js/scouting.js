@@ -81,6 +81,7 @@
   Sc.focusLabel = (a) => {
     const where = a.type === 'league' ? FM.S.comps[a.comp].name : D.REGIONS[a.region];
     const bits = [a.pos === 'any' ? 'all positions' : a.pos, `≤${a.maxAge}`];
+    if (a.nat && a.nat !== 'any') bits.push(`${D.NATIONS[a.nat].name} only`);
     if (a.minStars) bits.push(`${a.minStars}★+ potential`);
     if (a.maxFee) bits.push(`under ${U.money(a.maxFee)}`);
     if (a.focus && a.focus !== 'any')
@@ -108,6 +109,7 @@
             !dis[p.id] &&
             (a.type === 'league' ? p.clubId && S.clubs[p.clubId].comp === a.comp : Sc.region(p) === a.region) &&
             (a.pos === 'any' || D.POS_GROUP[p.pos] === a.pos) &&
+            (!a.nat || a.nat === 'any' || p.nat === a.nat) &&
             W.age(p) <= a.maxAge &&
             (!a.minStars || W.stars(Sc.scoutPA(scout, p)) >= a.minStars) &&
             (!a.maxFee || FM.Transfers.askPrice(p) <= a.maxFee * 1.1),

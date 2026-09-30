@@ -103,6 +103,9 @@
     const row = s.comps[c.comp].table[c.id];
     const pos = W.position(c.id);
     const objs = FM.Season.objectives(c);
+    // The home feed is about your club; the wider game lives under World (older saves may remember another tab)
+    if (!['club', 'reply', 'world'].includes(UI.sub.feed)) UI.sub.feed = 'club';
+    const waiting = s.news.filter(UI.isOpenDecision).length;
     return `${hero}
       <div class="kpis">
         <div class="kpi"><div class="v">${U.ordinal(pos)}</div><div class="l">${s.comps[c.comp].short} · ${row.pts} pts</div></div>
@@ -113,11 +116,9 @@
       <div class="card flat"><div class="row"><div class="h3 grow">Objectives</div>${C.form(row.form)}</div>${objs.map((o) => `<div class="row small" style="margin-top:8px"><span>${o.ok ? '✅' : '⏳'}</span><span class="grow">${esc(o.text)}</span><span class="dim">${esc(o.status)}</span></div>`).join('')}</div>
       <div class="sec"><div class="h3">The Feed</div><span class="dim small">${s.news.filter((n) => !n.read).length ? `${s.news.filter((n) => !n.read).length} new · ` : ''}${s.news.length} stories</span>${s.news.some((n) => n.read && !UI.isOpenDecision(n)) ? `<button class="btn sm" style="margin-left:8px" data-act="clearRead">Clear read</button>` : ''}</div>
       ${chips('feed', [
-        ['all', 'All'],
         ['club', 'My Club'],
-        ['stories', 'Stories'],
+        ['reply', waiting ? `🔔 Needs reply (${waiting})` : 'Needs reply'],
         ['world', 'World'],
-        ['transfers', 'Transfers'],
       ])}
       ${UI.sub.feed === 'world' ? chips('wnews', WNEWS) : ''}
       ${feed()}`;
@@ -166,12 +167,8 @@
       f = UI.sub.feed,
       cid = club() ? club().id : null;
     let items = s.news;
-    if (f === 'club')
-      items = items.filter(
-        (n) =>
-          n.clubId === cid ||
-          ['press', 'bid', 'report', 'youth', 'dressing', 'board', 'meeting', 'medical', 'contracts'].includes(n.type),
-      );
+    if (f === 'club') items = items.filter((n) => FM.News.isClub(n, cid));
+    if (f === 'reply') items = items.filter(UI.isOpenDecision);
     if (f === 'stories') items = items.filter((n) => n.type === 'story');
     if (f === 'world') {
       // World News: everything about other clubs and the wider game, filtered by topic
@@ -186,7 +183,7 @@
     if (f === 'transfers') items = items.filter((n) => ['transfer', 'rumour', 'bid'].includes(n.type));
     items = items.filter((n) => !n.quiet || f === 'club');
     if (!items.length)
-      return `<div class="empty">${f === 'world' && UI.sub.wnews !== 'all' ? 'No world news on this topic yet.' : 'Nothing here yet. Play some football.'}</div>`;
+      return `<div class="empty">${f === 'reply' ? 'Nothing is waiting for your reply.' : f === 'world' && UI.sub.wnews !== 'all' ? 'No world news on this topic yet.' : 'Nothing here yet. Play some football.'}</div>`;
     // New since you last looked: a dot on the card; everything shown now counts as read
     const shown = items.slice(0, 40);
     shown.forEach((n) => {
@@ -200,9 +197,7 @@
     return html;
   }
   // Open decisions are never cleared: a live bid, an unanswered press conference or meeting
-  UI.isOpenDecision = (n) =>
-    (n.type === 'bid' && n.data && n.data.status === 'open') ||
-    ((n.type === 'press' || n.type === 'meeting' || n.type === 'medical') && !n.resolved);
+  UI.isOpenDecision = FM.News.isOpen;
   UI.acts.clearRead = () => {
     const s = S(),
       before = s.news.length;
@@ -412,7 +407,7 @@
 
   // Out of work: offers from clubs in your reputation range, time passing while you wait, the world's news
   function unemployedView() {
-    if (UI.sub.feed === 'club') UI.sub.feed = 'all';
+    if (UI.sub.feed === 'club' || UI.sub.feed === 'reply') UI.sub.feed = 'all';
     const s = S(),
       u = s.user,
       un = u.unemployed || {},
@@ -472,7 +467,7 @@
     });
     UI.closeAllSheets();
     UI.tab = 'home';
-    UI.sub.feed = 'all';
+    UI.sub.feed = 'club';
     UI.save();
     UI.render();
     UI.toast(`Welcome to ${CL(d.id).name}`);
@@ -638,7 +633,7 @@
             })
             .join('')
         : `<div class="card flat list" style="padding:4px 12px">${list.map((p) => C.playerRow(p, extra(p), contractTag(p, q.sort === 'contract'))).join('')}</div>`;
-    return `<div class="row small dim" style="margin:0 2px 8px"><span>${sq.length} players</span><span>·</span><span>Wages ${U.money(U.sum(sq, (p) => p.wage))}/wk</span><span class="grow"></span><span>Foreign ${foreign} (max ${S().rules.foreignLimit} in squad)</span></div>
+    return `<div class="row small dim" style="margin:0 2px 8px"><span>${sq.length} players</span><span>·</span><span>Wages ${U.money(U.sum(sq, (p) => p.wage))}/wk</span><span class="grow"></span><span>Foreign ${foreign} (${W.foreignLimitText()} in squad)</span></div>
       ${expiring ? `<button class="warnline tap" style="width:100%;text-align:left;border:0" data-act="sqFilter" data-v="expiring">⏳ ${expiring} contract${expiring === 1 ? '' : 's'} expire this season — unsigned players leave on a free. Show them ›</button>` : ''}
       <div class="small b dim" style="margin:4px 2px 0">SORT</div>${chipsRow('sqSort', q.sort, SQ_SORT)}<div class="small b dim" style="margin:0 2px">SHOW</div>${chipsRow('sqFilter', q.filter, SQ_FILTER)}
       ${list.length ? body : '<div class="empty">No players match this filter.</div>'}`;
@@ -1421,7 +1416,7 @@
   UI.stagePill = stagePill;
   function fxLine(f) {
     const r = f.res;
-    return `<div class="row small tap" style="padding:8px 0;border-top:1px solid var(--line)" ${r ? `data-act="matchReport" data-id="${f.id}"` : ''}>${f.po && !f.group ? `<span class="pill">${stagePill(f.po)}</span>` : ''}<span class="grow ellip" style="text-align:right;${W.isUser(f.h) ? 'font-weight:800' : ''}">${esc(CL(f.h).name)}</span>${C.crest(CL(f.h), 18)}<b style="min-width:44px;text-align:center">${r ? `${r.hg}–${r.ag}` : 'v'}</b>${C.crest(CL(f.a), 18)}<span class="grow ellip" style="${W.isUser(f.a) ? 'font-weight:800' : ''}">${esc(CL(f.a).name)}</span></div>${r && (r.pens || r.agg) ? `<div class="tiny dim center">${r.agg ? `agg ${r.agg[0]}–${r.agg[1]}${r.pens ? '' : r.agg[0] === r.agg[1] && r.win != null ? ' · away goals' : ''}` : ''}${r.agg && r.pens ? ' · ' : ''}${r.pens ? `pens ${r.pens[0]}–${r.pens[1]}` : ''}</div>` : ''}`;
+    return `<div class="row small tap" style="padding:8px 0;border-top:1px solid var(--line)" ${r ? `data-act="matchReport" data-id="${f.id}"` : ''}>${f.po && !f.group ? `<span class="pill">${stagePill(f.po)}</span>` : ''}<span class="grow ellip" style="text-align:right;${W.isUser(f.h) ? 'font-weight:800' : ''}" data-act="clubView" data-id="${f.h}">${esc(CL(f.h).name)}</span>${C.crest(CL(f.h), 18)}<b style="min-width:44px;text-align:center">${r ? `${r.hg}–${r.ag}` : 'v'}</b>${C.crest(CL(f.a), 18)}<span class="grow ellip" style="${W.isUser(f.a) ? 'font-weight:800' : ''}" data-act="clubView" data-id="${f.a}">${esc(CL(f.a).name)}</span></div>${r && (r.pens || r.agg) ? `<div class="tiny dim center">${r.agg ? `agg ${r.agg[0]}–${r.agg[1]}${r.pens ? '' : r.agg[0] === r.agg[1] && r.win != null ? ' · away goals' : ''}` : ''}${r.agg && r.pens ? ' · ' : ''}${r.pens ? `pens ${r.pens[0]}–${r.pens[1]}` : ''}</div>` : ''}`;
   }
   UI.fxLine = fxLine;
   function fixturesView() {
@@ -1751,7 +1746,7 @@
       .filter((r) => r.key !== 'scout')
       .map((r) => FM.Staff.get(r.key));
     return `<div class="hero" style="--c1:${c.colors[0]};--c2:${c.colors[1]}"><div class="row">${C.crest(c, 64)}<div class="grow"><div class="h1">${esc(c.name)}</div><div class="small" style="opacity:.85;margin-top:4px">${esc(c.stadium.name)} · ${c.stadium.cap.toLocaleString()}</div><div style="margin-top:8px"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0">${I.icon} ${I.label}</span> <span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0">Rep ${Math.round(c.rep)}</span></div></div></div></div>
-      <div class="card"><div class="h3">Fan culture</div><div class="small muted" style="margin-top:6px;line-height:1.5">${esc(I.fans)}</div>
+      <div class="card"><div class="h3">Club culture</div><div class="row small" style="margin-top:6px;gap:6px"><span>${I.icon}</span><b>${esc(I.label)}</b></div><div class="small muted" style="margin-top:4px;line-height:1.5">${esc(I.fans)}</div>
         <div class="phrase" style="margin-top:8px"><span>🎵</span><span>${esc(c.chant)}</span></div><div class="phrase"><span>🏟️</span><span>${esc(c.tradition)}</span></div>
         ${c.rival ? `<div class="phrase"><span>⚔️</span><span>The <b>${esc(c.derby)}</b> vs ${esc(CL(c.rival).name)}</span></div>` : ''}
         <div class="row small" style="margin-top:10px"><span style="width:90px" class="dim">Fan mood</span><div class="grow">${C.bar(c.fanMood, C.moodColor(c.fanMood))}</div></div>
@@ -2002,7 +1997,7 @@
       <div class="card"><div class="row"><div class="grow"><div class="h3">Season preview popup</div><div class="small dim">Show it automatically in pre-season (it's always on the Home screen)</div></div><div class="seg" style="width:120px"><button class="${!s.settings.skipPreview ? 'on' : ''}" data-act="setFlag" data-k="skipPreview" data-v="0">On</button><button class="${s.settings.skipPreview ? 'on' : ''}" data-act="setFlag" data-k="skipPreview" data-v="1">Off</button></div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Haptics</div><div class="small dim">A light tap on every button (phones that support it)</div></div><div class="seg" style="width:120px"><button class="${!s.settings.noHaptics ? 'on' : ''}" data-act="setFlag" data-k="noHaptics" data-v="0">On</button><button class="${s.settings.noHaptics ? 'on' : ''}" data-act="setFlag" data-k="noHaptics" data-v="1">Off</button></div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Matchday digest</div><div class="small dim">A round-up card in the feed after every league matchday</div></div><div class="seg" style="width:120px"><button class="${!s.settings.noDigest ? 'on' : ''}" data-act="setFlag" data-k="noDigest" data-v="0">On</button><button class="${s.settings.noDigest ? 'on' : ''}" data-act="setFlag" data-k="noDigest" data-v="1">Off</button></div></div></div>
-      <div class="card"><div class="h3">World rules</div><div class="small muted" style="margin-top:6px;line-height:1.6">Points for a win: <b>${s.rules.win}</b> · Subs: <b>${s.rules.subs}</b> · Foreign players in squad: <b>${s.rules.foreignLimit}</b><br>Rules may change as the football world evolves.</div></div>
+      <div class="card"><div class="h3">World rules</div><div class="small muted" style="margin-top:6px;line-height:1.6">Points for a win: <b>${s.rules.win}</b> · Subs: <b>${s.rules.subs}</b> · Foreign players in squad: <b>${W.foreignLimitText()}</b><br>Rules may change as the football world evolves.</div></div>
       ${UI.installCard()}
       <div class="card"><div class="row"><div class="grow"><div class="h3">Save slot ${UI.slot}</div><div class="small dim">Autosaves after every matchday and whenever you leave the app · ${esc(FM.Save.backend())}</div></div><button class="btn sm" data-act="saveNow">Save now</button></div>
         <div class="row" style="gap:8px;margin-top:12px"><button class="btn sm grow" data-act="exportSave">⬆️ Export backup</button><button class="btn sm grow" data-act="importSave">⬇️ Import backup</button></div>

@@ -219,7 +219,9 @@ const bad = Object.values(S.players).filter(
     (!Number.isFinite(p.ca) || Object.values(p.attrs).some((v) => !Number.isFinite(v) || v < 1 || v > 20.5)),
 );
 check(bad.length === 0, `${bad.length} players with invalid attributes (e.g. ${bad[0] && bad[0].id})`);
-check(S.news.length > 0 && S.news.length <= 160, `feed has ${S.news.length} items`);
+check(S.news.length > 0 && S.news.length <= 2 * FM.News.CAP, `feed has ${S.news.length} items`);
+const clubNews = S.news.filter((n) => FM.News.isClub(n, S.user.clubId)).length;
+check(clubNews > 20, `only ${clubNews} club items kept in the feed`);
 // Records: our club's match records, all-time head-to-heads, player of the month, injury histories
 const recs = S.records || {},
   managed = new Set(S.user.history.map((h) => h.club));

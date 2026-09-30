@@ -552,6 +552,8 @@
   });
 
   // Picks an XI (respecting a saved user lineup when valid) and a bench
+  W.NO_LIMIT = 99; // rules.foreignLimit value for "no limit on foreign players"
+  W.foreignLimitText = () => (FM.S.rules.foreignLimit >= W.NO_LIMIT ? 'no limit' : `max ${FM.S.rules.foreignLimit}`);
   W.pickXI = function (clubId, tactic, squad) {
     const slots = D.FORMATIONS[tactic.formation];
     const club = FM.clubOf(clubId);
