@@ -312,6 +312,52 @@
     const s = p.clubId && FM.S.clubs[p.clubId];
     return !!s && s.comp === c.comp && s.rep >= c.rep - 10;
   };
+  // A club short of players (under its squad size, with a position below the tier's numbers) buys one for the
+  // thinnest position while the window is open. Returns true if it signed someone. Free agents fill whatever is
+  // still missing once the window has shut (Sea.freeAgents).
+  T.fillGap = function (c, sq, market) {
+    if (sq.length >= W.squadTarget(c)) return false;
+    const want = D.SQUAD_TIER[c.sim] || D.SQUAD_TIER.full;
+    const short = Object.keys(want)
+      .map((pos) => ({ pos, gap: want[pos] - sq.filter((p) => p.pos === pos && !p.loan).length }))
+      .filter((x) => x.gap > 0)
+      .sort((a, b) => b.gap - a.gap)[0];
+    if (!short) return false;
+    const lvl = W.levelFor(c.rep),
+      foreignFull = T.foreignCount(c) >= FM.S.rules.foreignLimit + 3;
+    const pool = market.filter(
+      (p) =>
+        p.pos === short.pos &&
+        p.clubId &&
+        p.clubId !== c.id &&
+        p.ca >= lvl - 12 &&
+        p.ca <= lvl + 4 &&
+        FM.S.clubs[p.clubId].rep < c.rep + 3 &&
+        !rivalSale(p, c) &&
+        T.askPrice(p) * premium(p, c) <= c.budget &&
+        !(foreignFull && p.nat !== c.nat),
+    );
+    if (!pool.length) return false;
+    const p = U.wpick(pool, (x) => Math.pow(x.ca, 3) * (W.age(x) <= 25 ? 1.25 : 1));
+    T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c)), T.wageDemand(p, c));
+    return true;
+  };
+  // Good free agents don't stay unemployed: once the window has shut, the best club that needs him and can pay
+  // signs him (clubs look for transfers first while it is open)
+  T.aiTopFreeAgents = function () {
+    const full = Object.values(FM.S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id));
+    Object.values(FM.S.players)
+      .filter((p) => !p.clubId && !p.retired && W.age(p) <= 33)
+      .sort((a, b) => b.ca - a.ca)
+      .slice(0, Math.max(1, Math.round((2 * full.length) / 110)))
+      .forEach((p) => {
+        const suitors = full
+          .filter((c) => W.levelFor(c.rep) >= p.ca - 8 && W.levelFor(c.rep) <= p.ca + 4 && W.squad(c.id).length < 26)
+          .sort((a, b) => b.rep - a.rep);
+        const c = suitors[0];
+        if (c && Math.random() < 0.6 * W.dayScale()) T.execute(p, c.id, 0, T.wageDemand(p, c));
+      });
+  };
   T.aiWindow = function () {
     const S = FM.S;
     const full = Object.values(S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id));
@@ -329,6 +375,7 @@
       .slice(0, Math.round(T.AI_SHOPPERS * k))
       .forEach((c) => {
         const sq = W.squad(c.id);
+        if (T.fillGap(c, sq, market)) return; // squad gaps come first, while the window is open
         if (sq.length >= W.squadTarget(c) + 5) return;
         const spots = Object.keys(STARTERS)
           .map((g) => ({ g, v: starterLevel(sq, g) }))
@@ -365,19 +412,6 @@
         }
         T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c)), T.wageDemand(p, c));
         T.offload(c, D.POS_GROUP[p.pos], full);
-      });
-
-    // Good free agents don't stay unemployed: the best club that needs him and can pay signs him
-    Object.values(S.players)
-      .filter((p) => !p.clubId && !p.retired && W.age(p) <= 33)
-      .sort((a, b) => b.ca - a.ca)
-      .slice(0, Math.max(1, Math.round((2 * full.length) / 110)))
-      .forEach((p) => {
-        const suitors = full
-          .filter((c) => W.levelFor(c.rep) >= p.ca - 8 && W.levelFor(c.rep) <= p.ca + 4 && W.squad(c.id).length < 26)
-          .sort((a, b) => b.rep - a.rep);
-        const c = suitors[0];
-        if (c && Math.random() < 0.6 * W.dayScale()) T.execute(p, c.id, 0, T.wageDemand(p, c));
       });
 
     // Marquee raid: a giant prises the best young talent out of another country

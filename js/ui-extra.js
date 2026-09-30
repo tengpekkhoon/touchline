@@ -502,7 +502,7 @@
       s = S();
     const newCount = Object.values(s.user.reports).filter((r) => r.isNew).length;
     const win = FM.Season.windowOpen();
-    const head = `<div class="card flat row" style="padding:10px 14px"><span style="font-size:20px">${win ? '🟢' : '🔴'}</span><div class="grow"><div class="b small">Transfer window ${win ? 'OPEN' : 'closed'}</div><div class="tiny dim">${win ? 'Transfers and loans can be completed.' : 'Opens pre-season and matchdays 12–14. Free agents can sign any time.'}</div></div><div class="col" style="align-items:flex-end"><div class="tiny dim">Budget</div><b>${U.money(club().budget)}</b></div></div>`;
+    const head = `<div class="card flat row" style="padding:10px 14px"><span style="font-size:20px">${win ? '🟢' : '🔴'}</span><div class="grow"><div class="b small">Transfer window ${win ? 'OPEN' : 'closed'}</div><div class="tiny dim">${win ? 'Transfers and loans can be completed.' : 'Opens pre-season and matchdays 12–14. Until then only free agents can sign.'}</div></div><div class="col" style="align-items:flex-end"><div class="tiny dim">Budget</div><b>${U.money(club().budget)}</b></div></div>`;
     const tabs = [
       ['hub', 'Hub'],
       ['reports', `Reports${newCount ? ` (${newCount})` : ''}`],
@@ -769,7 +769,7 @@
     let ps = Object.values(S().players).filter((p) => !p.clubId && !p.retired);
     if (q.pos !== 'any') ps = ps.filter((p) => D.POS_GROUP[p.pos] === q.pos);
     ps = ps.map((p) => ({ p, v: FM.Scouting.view(p) })).sort((a, b) => b.v.score - a.v.score || b.p.ca - a.p.ca);
-    return `<div class="small muted" style="margin:0 2px 8px">Out-of-contract players can sign any time — no fee, but they want a signing-on bonus and slightly higher wages. Scout them to see what you're getting.</div>
+    return `<div class="small muted" style="margin:0 2px 8px">Out-of-contract players can sign any time, window open or not — no fee, but they want a signing-on bonus and slightly higher wages. Scout them to see what you're getting.</div>
       ${chipRow('fq', 'pos', q.pos, [
         ['any', 'All'],
         ['GK', 'GK'],

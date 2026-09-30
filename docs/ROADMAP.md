@@ -84,7 +84,7 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Error message when a new save has no manager name (S)
 - [x] Captaincy doesn't switch automatically (S)
 - [x] Players who just signed or renewed don't want to move (S–M)
-- [ ] Match ratings follow the result: a losing team rates lower on average (M) — measured: losers already average ~1 point lower in the full engine; waiting on an example of where it looks wrong
+- [x] Transfers and loans only while the window is open; free agents any time. AI clubs fill squad gaps with transfers in the window and fall back on free agents once it shuts (S–M)
 - [x] Fan reactions judged against expectations: a draw with a better team isn't bad news; a loss to a much better team is neutral (M)
 - [x] Career-shape test (`npm run test:regens`) deterministic under a fixed seed (S–M)
 
@@ -113,7 +113,6 @@ Playtest feedback grouped into seven batches, in working order; most important f
 *4 · Transfer market depth*
 
 - [ ] Warning X days before the transfer deadline, and a deadline-day event (M)
-- [ ] Sign players before the window opens; the move completes when it opens (M)
 - [ ] Trials for free agents (M)
 - [ ] Act when loanees aren't played enough: recall, or complain to the borrowing club (M)
 - [ ] Contract and transfer negotiation with back-and-forth (L)
