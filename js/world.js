@@ -1064,6 +1064,7 @@
       old.tactic = JSON.parse(JSON.stringify(u.tactic)); // the club keeps playing the way it was set up
       delete old.tactic.lineup;
       delete old.tactic.capt;
+      delete old.tactic.captAuto;
       delete old.tactic.sp;
       if (FM.Records) FM.Records.managerJoined(successor, old.id);
       u.history.push({ club: old.id, left: S.year, reason });
@@ -1234,6 +1235,7 @@
     askedRaise: 'ar',
     injRisk: 'ir',
     arc: 'ac',
+    settled: 'st',
   };
   const UNKEY = Object.fromEntries(Object.entries(KEYS).map(([k, v]) => [v, k]));
   const DEFAULTS = {

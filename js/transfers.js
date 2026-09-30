@@ -7,6 +7,10 @@
     W = FM.W;
 
   const T = (FM.Transfers = {});
+  // A player who has just moved or signed a new contract is settled for a year: he doesn't talk about leaving,
+  // and clubs don't try to prise him away (p.settled = the day index it ends, same day next season)
+  T.settle = (p) => (p.settled = FM.Season.dayIndex() + 1000);
+  T.isSettled = (p) => p.settled != null && FM.Season.dayIndex() < p.settled;
   // A club's five best players (cached per matchday: the AI market asks this for thousands of players)
   let keyCache = { k: null, m: null };
   T.isKey = function (p) {
@@ -167,15 +171,17 @@
     const S = FM.S,
       p = S.players[pid],
       club = W.userClub();
-    if (p.clubId && !FM.Season.windowOpen())
-      return {
-        ok: false,
-        msg: 'The transfer window is closed. It reopens mid-season (matchday 12) and in pre-season. Free agents can be signed any time.',
-      };
+    if (p.loan && W.isUser(p.loan.from))
+      return { ok: false, msg: `${W.name(p)} is already your player, on loan at ${S.clubs[p.clubId].name}.` };
     if (p.loan)
       return {
         ok: false,
         msg: `He's on loan at ${S.clubs[p.clubId].name}. Try again when he returns to ${S.clubs[p.loan.from].name}.`,
+      };
+    if (p.clubId && !FM.Season.windowOpen())
+      return {
+        ok: false,
+        msg: 'The transfer window is closed. It reopens mid-season (matchday 12) and in pre-season. Free agents can be signed any time.',
       };
     if (fee > club.budget) return { ok: false, msg: `That exceeds your transfer budget of ${U.money(club.budget)}.` };
     const seller = p.clubId && S.clubs[p.clubId];
@@ -190,6 +196,8 @@
         return { ok: false, counter: ask, msg: `${seller.name} want ${U.money(ask)}. Close, but not enough.` };
     }
     // Player's view
+    if (seller && T.isSettled(p) && !W.hasTrait(p, 'Mercenary'))
+      return { ok: false, msg: `${W.name(p)} has only just committed to ${seller.name} and isn't looking to move.` };
     if (seller && W.hasTrait(p, 'Loyal') && T.isKey(p) && fee < T.userAsk(p) * 1.4)
       return { ok: false, msg: `${W.name(p)} is loyal to ${seller.name} and won't consider the move.` };
     if (seller && seller.rep > club.rep + 10 && p.hid.amb >= 12)
@@ -234,6 +242,7 @@
     p.morale = Math.min(100, p.morale + 10);
     p.listed = false;
     p.wantsOut = false;
+    T.settle(p);
     if (!W.isUser(toId)) FM.Contracts.aiDeal(p, to);
     if (W.isUser(toId)) {
       S.user.knowledge[p.id] = 100;
@@ -307,7 +316,13 @@
     const S = FM.S;
     const full = Object.values(S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id));
     const market = Object.values(S.players).filter(
-      (p) => !p.retired && !p.loan && !W.isUser(p.clubId) && W.age(p) >= 19 && W.age(p) <= (p.pos === 'GK' ? 31 : 29),
+      (p) =>
+        !p.retired &&
+        !p.loan &&
+        !W.isUser(p.clubId) &&
+        !T.isSettled(p) &&
+        W.age(p) >= 19 &&
+        W.age(p) <= (p.pos === 'GK' ? 31 : 29),
     );
     const k = W.dayScale() * (full.length / 110); // per-day quotas tuned on 110 clubs and 22 league days
     U.shuffle(full)
@@ -375,6 +390,7 @@
             p.clubId &&
             !p.loan &&
             !W.isUser(p.clubId) &&
+            !T.isSettled(p) &&
             nationOf(p.clubId) !== g.nat &&
             S.clubs[p.clubId].rep < g.rep &&
             W.age(p) <= 24 &&
@@ -479,7 +495,7 @@
   T.aiBidsForUser = function () {
     const S = FM.S,
       uc = W.userClub();
-    const sq = W.squad(uc.id).filter((p) => !p.loan);
+    const sq = W.squad(uc.id).filter((p) => !p.loan && (p.listed || !T.isSettled(p)));
     const listed = sq.filter((p) => p.listed);
     if (!listed.length && Math.random() > 0.3) return;
     const target = listed.length
@@ -527,7 +543,7 @@
     n.data.status = 'rejected';
     if (FM.People.onBidRejected(p, n.data.fee))
       return `Bid rejected. ${W.name(p)} feels betrayed — you promised to let him go for the right offer.`;
-    if (!W.hasTrait(p, 'Loyal') && p.hid.amb >= 13) {
+    if (!W.hasTrait(p, 'Loyal') && p.hid.amb >= 13 && !T.isSettled(p)) {
       p.morale = Math.max(0, p.morale - 15);
       return `Bid rejected. ${W.name(p)} is unhappy — he wanted the move.`;
     }

@@ -98,6 +98,12 @@
   UI.acts.offer = (d) => {
     const p = P(d.id),
       c = club();
+    if (p.loan && W.isUser(p.loan.from))
+      return UI.toast(`${W.name(p)} is your player, on loan at ${CL(p.clubId).name} until the end of the season.`);
+    if (p.loan)
+      return UI.toast(
+        `${W.name(p)} is on loan at ${CL(p.clubId).name}. Try again when he returns to ${CL(p.loan.from).name}.`,
+      );
     const mode = p.clubId && !p.loan && FM.Scouting.view(p).rec === 'Loan' ? 'loan' : 'transfer';
     UI._offer = {
       pid: p.id,

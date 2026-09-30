@@ -18,15 +18,23 @@
     p.ca / 40;
   Md.leadWord = (p) =>
     p.hid.lead >= 16 ? 'Inspirational' : p.hid.lead >= 13 ? 'Strong leader' : p.hid.lead >= 9 ? 'Steady' : 'Quiet';
-  // A club's captain: the manager's pick while he's at the club, otherwise the natural choice
+  // A club's captain: the manager's pick while he's at the club, otherwise the natural choice. At your club the
+  // squad's choice sticks (tactic.captAuto) until he leaves or you let the squad choose again, so the armband
+  // doesn't drift from week to week as form and ability change.
   Md.captainOf = function (clubId) {
     const T = W.isUser(clubId) ? FM.S.user.tactic : null;
-    const p = T && T.capt && P(T.capt);
-    if (p && p.clubId === clubId && !p.retired) return p;
+    const at = (id) => {
+      const p = id && P(id);
+      return p && p.clubId === clubId && !p.retired ? p : null;
+    };
+    const mine = T && (at(T.capt) || at(T.captAuto));
+    if (mine) return mine;
     const sq = W.squad(clubId)
       .sort((a, b) => b.ca - a.ca)
       .slice(0, 16);
-    return sq.sort((a, b) => Md.captainScore(b) - Md.captainScore(a))[0] || null;
+    const natural = sq.sort((a, b) => Md.captainScore(b) - Md.captainScore(a))[0] || null;
+    if (T) T.captAuto = natural && natural.id;
+    return natural;
   };
   // The armband on the pitch: the club captain if he plays, otherwise the best leader on the field
   Md.armband = function (sd, onPitch) {

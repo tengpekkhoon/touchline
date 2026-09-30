@@ -44,6 +44,13 @@
     NOR: 'Norwegian',
     CRO: 'Croatian',
     ITA: 'Italian',
+    MEX: 'Mexican',
+    TUR: 'Turkish',
+    CZE: 'Czech',
+    GRE: 'Greek',
+    POL: 'Polish',
+    AUT: 'Austrian',
+    SUI: 'Swiss',
   };
   const NOUN = {
     GK: 'goalkeeper',
@@ -56,7 +63,10 @@
     ST: 'striker',
   };
   const PAPERS = ['The Daily Touchline', 'Football Weekly', 'The Terrace Times', 'Evening Sports Post'];
-  const describe = (p) => `${W.age(p)}-year-old ${DEMONYM[p.nat]} ${NOUN[p.pos]}`;
+  const describe = (p) =>
+    DEMONYM[p.nat]
+      ? `${W.age(p)}-year-old ${DEMONYM[p.nat]} ${NOUN[p.pos]}`
+      : `${W.age(p)}-year-old ${NOUN[p.pos]} from ${D.NATIONS[p.nat].name}`;
   FM.Stories = { describe, DEMONYM, NOUN };
   const St = FM.Stories;
   const C = (id) => FM.S.clubs[id];
@@ -156,28 +166,53 @@
         .replace('{mgr}', mgr)
         .replace('{opp}', opp.name)
         .replace('{rival}', opp.short);
-    const pool = won
-      ? [
-          'What a performance!!! {best} you absolute legend 🔥',
-          "{score}. GET IN!!! {mgr} knows exactly what he's doing",
-          "Best I've seen us play in years. Proper football 👏",
-          '{best} is levels above this league. Do NOT sell him.',
-          'Three points, clean shirts, happy days 😎',
-        ]
-      : lost
+    const xiAvg = (sd) => U.avg(sd.xi.filter(Boolean), (p) => p.ca);
+    const exp = FM.Season.expected(xiAvg(me), xiAvg(op), side === 0, !!fx.neutral),
+      surprise = (won ? 1 : lost ? 0 : 0.5) - exp;
+    const pool =
+      won && exp >= 0.65
         ? [
-            "Embarrassing. {worst} shouldn't be anywhere near the XI",
-            '{mgr} out? Too early to say but that was dire.',
-            'Nothing about that was good enough. Nothing.',
-            "Players don't look like they care 😡",
-            'Paid £40 to watch that. Never again (see you next week)',
+            'Job done. Never in doubt 👍',
+            '{score}, as it should be. On to the next one',
+            'Professional. {best} was different class',
+            'Expected the three points and got them. No complaints',
           ]
-        : [
-            "Point's a point I suppose 🤷",
-            "Should've won that. {worst} was poor again.",
-            'xG says we deserved more. Frustrating.',
-            '{best} was the only one who turned up today',
-          ];
+        : lost && exp <= 0.35
+          ? [
+              'Always going to be tough against {opp}. Heads up',
+              'Lost, but we gave them a game. Nothing to be ashamed of',
+              "{opp} are a level above us right now. That's football",
+              "Didn't expect much from this one tbh. Bigger games coming",
+            ]
+          : !won && !lost && exp <= 0.45
+            ? [
+                "A point against {opp}? I'll take that all day 👏",
+                'Great point. {best} was immense',
+                'Nobody gave us a chance. Proud of the lads today',
+                "That's a point gained, not two dropped",
+              ]
+            : won
+              ? [
+                  'What a performance!!! {best} you absolute legend 🔥',
+                  "{score}. GET IN!!! {mgr} knows exactly what he's doing",
+                  "Best I've seen us play in years. Proper football 👏",
+                  '{best} is levels above this league. Do NOT sell him.',
+                  'Three points, clean shirts, happy days 😎',
+                ]
+              : lost
+                ? [
+                    "Embarrassing. {worst} shouldn't be anywhere near the XI",
+                    '{mgr} out? Too early to say but that was dire.',
+                    'Nothing about that was good enough. Nothing.',
+                    "Players don't look like they care 😡",
+                    'Paid £40 to watch that. Never again (see you next week)',
+                  ]
+                : [
+                    "Point's a point I suppose 🤷",
+                    "Should've won that. {worst} was poor again.",
+                    'xG says we deserved more. Frustrating.',
+                    '{best} was the only one who turned up today',
+                  ];
     U.shuffle(pool)
       .slice(0, 3)
       .forEach((t) => posts.push({ h: handle(), t: fill(t), likes: U.randi(12, 2400) }));
@@ -202,7 +237,7 @@
       title: `Fans react: ${club.short} ${gf}–${ga} ${opp.short}`,
       posts,
       clubId: club.id,
-      mood: won ? 'up' : lost ? 'down' : 'flat',
+      mood: surprise > 0.15 ? 'up' : surprise < -0.15 ? 'down' : 'flat',
     });
 
     // Shareable story cards

@@ -79,14 +79,14 @@ Playtest feedback grouped into seven batches, in working order; most important f
 
 *1 · Bugs and wrong behaviour*
 
-- [ ] Players described as "undefined" in news (e.g. "undefined striker makes international debut") (S)
-- [ ] No offers for your own players who are out on loan (S)
-- [ ] Error message when a new save has no manager name (S)
-- [ ] Captaincy doesn't switch automatically (S)
-- [ ] Players who just signed or renewed don't want to move (S–M)
-- [ ] Match ratings follow the result: a losing team rates lower on average (M)
-- [ ] Fan reactions judged against expectations: a draw with a better team isn't bad news; a loss to a much better team is neutral (M)
-- [ ] Career-shape test (`npm run test:regens`) deterministic under a fixed seed (S–M)
+- [x] Players described as "undefined" in news (e.g. "undefined striker makes international debut") (S)
+- [x] No offers for your own players who are out on loan (S)
+- [x] Error message when a new save has no manager name (S)
+- [x] Captaincy doesn't switch automatically (S)
+- [x] Players who just signed or renewed don't want to move (S–M)
+- [ ] Match ratings follow the result: a losing team rates lower on average (M) — measured: losers already average ~1 point lower in the full engine; waiting on an example of where it looks wrong
+- [x] Fan reactions judged against expectations: a draw with a better team isn't bad news; a loss to a much better team is neutral (M)
+- [x] Career-shape test (`npm run test:regens`) deterministic under a fixed seed (S–M)
 
 *2 · Quick interface wins*
 

@@ -1542,6 +1542,14 @@ table.t tr.zone-down td:first-child {
   gap: 8px;
   margin-top: 14px;
 }
+.title .ng-names input.bad {
+  border-color: var(--bad);
+}
+.title .ng-err {
+  margin-top: 8px;
+  color: var(--bad);
+  font-size: 13px;
+}
 .avgrid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);

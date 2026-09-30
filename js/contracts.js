@@ -224,6 +224,7 @@
       FM.Season.spend('agent', agentFee);
     }
     p.wantsOut = false;
+    FM.Transfers.settle(p);
     delete (s.user.neg || {})[p.id];
     if (W.isUser(club.id) && ['key', 'regular'].includes(t.status))
       FM.People.promise(p, 'status', { status: t.status });
@@ -241,15 +242,22 @@
         ok: false,
         msg: `${W.name(p)}'s agent has broken off talks. Try again in ${Co.patience(p).until - s.day} matchday(s).`,
       };
+    if (p.loan && W.isUser(p.loan.from))
+      return { ok: false, msg: `${W.name(p)} is already your player, on loan at ${s.clubs[p.clubId].name}.` };
+    if (p.loan)
+      return {
+        ok: false,
+        msg: `He's on loan at ${s.clubs[p.clubId].name}. Try again when he returns to ${s.clubs[p.loan.from].name}.`,
+      };
     if (p.clubId && !FM.Season.windowOpen())
       return {
         ok: false,
         msg: 'The transfer window is closed. It reopens mid-season (matchday 12) and in pre-season. Free agents can be signed any time.',
       };
-    if (p.loan)
+    if (p.clubId && T.isSettled(p) && !W.hasTrait(p, 'Mercenary'))
       return {
         ok: false,
-        msg: `He's on loan at ${s.clubs[p.clubId].name}. Try again when he returns to ${s.clubs[p.loan.from].name}.`,
+        msg: `${W.name(p)} has only just committed to ${s.clubs[p.clubId].name} and isn't looking to move.`,
       };
     if (fee > club.budget) return { ok: false, msg: `That exceeds your transfer budget of ${U.money(club.budget)}.` };
     const seller = p.clubId && s.clubs[p.clubId];
@@ -375,7 +383,9 @@
       );
       if (!buyers.length) continue;
       const b = U.pick(buyers);
-      const willing = W.hasTrait(p, 'Mercenary') || p.hid.amb >= 11 || b.rep > uc.rep + 3 || p.wantsOut;
+      const willing =
+        !FM.Transfers.isSettled(p) &&
+        (W.hasTrait(p, 'Mercenary') || p.hid.amb >= 11 || b.rep > uc.rep + 3 || p.wantsOut);
       if (!willing) {
         FM.News.add({
           type: 'club',

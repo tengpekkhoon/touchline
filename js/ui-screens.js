@@ -36,7 +36,7 @@
         U.avg(W.pickXI(t.id, W.isUser(t.id) ? s.user.tactic : t.tactic).xi.filter(Boolean), (p) => p.ca);
       const us = str(me),
         them = str(opp);
-      const pw = U.clamp(0.36 + (us - them) / 25 + (fx.neutral ? 0 : home ? 0.06 : -0.04), 0.08, 0.85);
+      const pw = FM.Season.winChance(us, them, home, fx.neutral);
       const compName = fx.intl ? 'International' : s.comps[fx.comp].name;
       const f1 = fx.first && FM.Cups.findFixture(fx.first);
       const aggNote =
@@ -759,6 +759,7 @@
     UI.closeSheet();
     if (!d.id) {
       T.capt = null;
+      T.captAuto = null; // the squad chooses afresh
       UI.save();
       UI.render();
       return UI.toast('The squad will pick the captain');

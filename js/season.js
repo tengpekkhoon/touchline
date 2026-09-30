@@ -33,6 +33,17 @@
     const c = Sea.today();
     return !!c && c.type !== 'playoff' && c.type !== 'tourn' && D.WINDOW_ROUNDS.includes(Sea.baseRound());
   };
+  // Pre-match odds from the two sides' strength (average ability of the XI, or a club's level from its reputation).
+  // winChance is the "Win chance" on the home screen; expected = what the result was expected to be worth
+  // (win 1, draw 0.5, loss 0), which fans and the press judge the actual result against.
+  Sea.winChance = (us, them, home, neutral) =>
+    U.clamp(0.36 + (us - them) / 25 + (neutral ? 0 : home ? 0.06 : -0.04), 0.08, 0.85);
+  Sea.expected = (us, them, home, neutral) => {
+    const w = Sea.winChance(us, them, home, neutral),
+      l = Sea.winChance(them, us, !home, neutral),
+      d = Math.max(0.1, 1 - w - l);
+    return (w + d / 2) / (w + d + l);
+  };
   Sea.seasonLabel = () => `${FM.S.year}/${String((FM.S.year + 1) % 100).padStart(2, '0')}`;
 
   // Fixtures played on the current day (creates playoff ties lazily)
@@ -246,11 +257,13 @@
         winner.rep = Math.min(99, winner.rep + 1);
       }
     }
-    // fan mood (AI too)
+    // fan mood (AI too): the result against what was expected, judged by the clubs' standing (±5 for a 50–50 game)
     [hc, ac].forEach((c, k) => {
       const w = k ? res.ag > res.hg : res.hg > res.ag,
         l = k ? res.hg > res.ag : res.ag > res.hg;
-      c.fanMood = U.clamp(c.fanMood + (w ? 5 : l ? -5 : 0) * (derby ? 2 : 1), 0, 100);
+      const opp = k ? hc : ac;
+      const exp = Sea.expected(W.levelFor(c.rep), W.levelFor(opp.rep), !k, !!fx.neutral);
+      c.fanMood = U.clamp(c.fanMood + ((w ? 1 : l ? 0 : 0.5) - exp) * 10 * (derby ? 2 : 1), 0, 100);
     });
     FM.Contracts.matchBonuses(fx, res, m.sides);
     FM.Records.onMatch(fx, res);
@@ -1272,6 +1285,7 @@
         } else if (Sea.aiRenews(p, c)) {
           p.contract = S.year + (W.age(p) >= 31 ? 1 : U.randi(1, 3));
           p.wage = Math.max(p.wage, W.wageFor(p));
+          FM.Transfers.settle(p);
         } else {
           W.spell(p).to = S.year - 1;
           p.clubId = null;

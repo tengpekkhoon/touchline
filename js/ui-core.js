@@ -441,6 +441,21 @@
     rules: { win: 3, subs: 5, foreignLimit: 6, twoLegs: 1, awayGoals: 0 },
     slot: 1,
   };
+  // A career needs a manager's name: flag the empty fields and say which (updates as you type once shown)
+  const nameError = () => {
+    const fields = [
+      ['fn', 'first name', NG.fn],
+      ['ln', 'last name', NG.ln],
+    ];
+    const missing = fields.filter(([, , v]) => !v.trim());
+    fields.forEach(([k, , v]) => $('#ng-' + k).classList.toggle('bad', !v.trim()));
+    const err = $('#ng-err');
+    err.textContent = missing.length
+      ? `Enter your ${missing.map(([, label]) => label).join(' and ')} to start your career.`
+      : '';
+    err.hidden = !missing.length;
+    return missing.map(([k]) => k);
+  };
   const ngProfile = () => ({
     fn: NG.fn.trim() || 'Alex',
     ln: NG.ln.trim() || 'Morgan',
@@ -466,7 +481,7 @@
       ).join('');
       body = `<div class="h1" style="margin-top:4vh">Who are you?</div><div class="tag">Every legend starts somewhere.</div>
         <div class="row" style="gap:14px;margin-top:18px;align-items:center">${C.avatar({ avatar: NG.avatar }, 64)}<div class="grow"><div class="b" id="ng-preview" style="font-size:18px">${esc(`${NG.fn} ${NG.ln}`.trim() || 'Your name')}</div><div class="small" style="color:#9fb0c5">${C.flag(NG.nat)} ${esc(D.NATIONS[NG.nat].name)}${favName ? ` · ❤️ ${esc(favName)}` : ''}</div></div></div>
-        <div class="ng-names"><input type="text" id="ng-fn" placeholder="First name" maxlength="16" value="${esc(NG.fn)}" autocomplete="given-name"><input type="text" id="ng-ln" placeholder="Last name" maxlength="20" value="${esc(NG.ln)}" autocomplete="family-name"></div>
+        <div class="ng-names"><input type="text" id="ng-fn" placeholder="First name" maxlength="16" value="${esc(NG.fn)}" autocomplete="given-name"><input type="text" id="ng-ln" placeholder="Last name" maxlength="20" value="${esc(NG.ln)}" autocomplete="family-name"></div><div class="ng-err" id="ng-err" role="alert" hidden></div>
         <div class="ng-label">Country <span style="color:#6f7f96">· your own national team will know your name</span></div>
         <select id="ng-nat">${nations.map(([k, n]) => `<option value="${k}" ${NG.nat === k ? 'selected' : ''}>${n.flag} ${esc(n.name)}</option>`).join('')}</select>
         <div class="ng-label">Favourite club <span style="color:#6f7f96">· managing them is a homecoming; their rivals won't forget</span></div>
@@ -529,6 +544,9 @@
       const el = $('#ng-preview');
       if (el) el.textContent = `${NG.fn} ${NG.ln}`.trim() || 'Your name';
     };
+    const clearNameError = () => {
+      if (!$('#ng-err').hidden) nameError();
+    };
     const fn = $('#ng-fn'),
       ln = $('#ng-ln'),
       nat = $('#ng-nat'),
@@ -536,11 +554,13 @@
     if (fn)
       fn.addEventListener('input', () => {
         NG.fn = fn.value;
+        clearNameError();
         preview();
       });
     if (ln)
       ln.addEventListener('input', () => {
         NG.ln = ln.value;
+        clearNameError();
         preview();
       });
     if (nat)
@@ -575,8 +595,8 @@
   };
   UI.acts.ngNext = () => {
     if (NG.step === 0) {
-      if (!NG.fn.trim()) NG.fn = 'Alex';
-      if (!NG.ln.trim()) NG.ln = 'Morgan';
+      const missing = nameError();
+      if (missing.length) return $('#ng-' + missing[0]).focus();
     }
     if (NG.step === 1 && !NG.club) return;
     NG.step++;

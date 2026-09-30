@@ -9,7 +9,8 @@ const args = parseArgs();
 const YEARS = +(args.years || 20),
   SEED = +(args.seed || 7),
   INTAKES = +(args.intakes || 5);
-const { FM } = loadSim(SEED);
+const { FM, ctx } = loadSim(SEED);
+const random = ctx.Math.random; // the simulation's seeded generator: the host's Math.random would make runs differ
 const W = FM.W,
   Sea = FM.Season,
   U = FM.U;
@@ -46,7 +47,7 @@ for (let y = 0; y < YEARS; y++) {
   }
   S.year++;
   for (const t of track.values())
-    if (!t.p.retired && W.age(t.p) >= 30 && Math.random() < Sea.retireChance(t.p)) {
+    if (!t.p.retired && W.age(t.p) >= 30 && random() < Sea.retireChance(t.p)) {
       t.p.retired = true;
       t.retired = W.age(t.p) - 1;
     }

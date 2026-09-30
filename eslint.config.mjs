@@ -16,6 +16,20 @@ export default [
     languageOptions: { sourceType: 'module', globals: { ...globals.node } },
   },
   {
+    // Seeded runs must only draw from the simulation's generator (ctx.Math.random from tools/harness.mjs)
+    files: ['tools/**/*.mjs'],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'Math',
+          property: 'random',
+          message: "Use the simulation's seeded ctx.Math.random (tools/harness.mjs).",
+        },
+      ],
+    },
+  },
+  {
     rules: {
       'no-unused-vars': ['warn', { args: 'none', caughtErrors: 'none' }],
       'no-empty': ['error', { allowEmptyCatch: true }],
