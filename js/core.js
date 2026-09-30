@@ -12,7 +12,8 @@
     sum: (arr, f = (x) => x) => arr.reduce((s, x) => s + f(x), 0),
     avg: (arr, f = (x) => x) => (arr.length ? U.sum(arr, f) / arr.length : 0),
     gauss(mean = 0, sd = 1) {
-      let u = 0, v = 0;
+      let u = 0,
+        v = 0;
       while (!u) u = Math.random();
       while (!v) v = Math.random();
       return mean + sd * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
@@ -36,15 +37,22 @@
     },
     poisson(l) {
       const L = Math.exp(-l);
-      let k = 0, p = 1;
-      do { k++; p *= Math.random(); } while (p > L);
+      let k = 0,
+        p = 1;
+      do {
+        k++;
+        p *= Math.random();
+      } while (p > L);
       return k - 1;
     },
     // Money with enough precision to tell $6.35M from $6.4M
     money(v) {
       const s = v < 0 ? '-' : '';
       v = Math.abs(v);
-      const trim = (x, d) => { const t = x.toFixed(d); return t.includes('.') ? t.replace(/\.?0+$/, '') : t; };
+      const trim = (x, d) => {
+        const t = x.toFixed(d);
+        return t.includes('.') ? t.replace(/\.?0+$/, '') : t;
+      };
       if (v >= 1e9) return s + '$' + trim(v / 1e9, 2) + 'B';
       if (v >= 1e6) return s + '$' + trim(v / 1e6, v >= 1e8 ? 0 : v >= 1e7 ? 1 : 2) + 'M';
       if (v >= 1e3) return s + '$' + trim(v / 1e3, v >= 1e5 ? 0 : 1) + 'K';
@@ -55,10 +63,17 @@
       const step = v < 1e5 ? 1e3 : v < 1e7 ? 1e4 : v < 5e7 ? 5e4 : 1e5;
       return Math.round(v / step) * step;
     },
-    moneyStep(v) { return v < 1e5 ? 1e3 : v < 1e6 ? 5e3 : v < 1e7 ? 1e4 : v < 5e7 ? 5e4 : 1e5; },
-    esc: (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])),
+    moneyStep(v) {
+      return v < 1e5 ? 1e3 : v < 1e6 ? 5e3 : v < 1e7 ? 1e4 : v < 5e7 ? 5e4 : 1e5;
+    },
+    esc: (s) =>
+      String(s ?? '').replace(
+        /[&<>"']/g,
+        (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+      ),
     ordinal(n) {
-      const s = ['th', 'st', 'nd', 'rd'], v = n % 100;
+      const s = ['th', 'st', 'nd', 'rd'],
+        v = n % 100;
       return n + (s[(v - 20) % 10] || s[v] || s[0]);
     },
     hash(str) {
@@ -69,7 +84,9 @@
     // Contrast-aware text colour for a background hex
     ink(hex) {
       const c = hex.replace('#', '');
-      const r = parseInt(c.substr(0, 2), 16), g = parseInt(c.substr(2, 2), 16), b = parseInt(c.substr(4, 2), 16);
+      const r = parseInt(c.substr(0, 2), 16),
+        g = parseInt(c.substr(2, 2), 16),
+        b = parseInt(c.substr(4, 2), 16);
       return (r * 299 + g * 587 + b * 114) / 1000 > 150 ? '#0b0f14' : '#ffffff';
     },
     // Grammar helpers

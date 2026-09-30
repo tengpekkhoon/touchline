@@ -11,7 +11,10 @@ export default [
   },
   { files: ['js/sim-worker.js'], languageOptions: { globals: { ...globals.worker } } },
   { files: ['sw.js'], languageOptions: { sourceType: 'script', globals: { ...globals.serviceworker } } },
-  { files: ['tools/**/*.mjs', 'eslint.config.mjs'], languageOptions: { sourceType: 'module', globals: { ...globals.node } } },
+  {
+    files: ['tools/**/*.mjs', 'eslint.config.mjs'],
+    languageOptions: { sourceType: 'module', globals: { ...globals.node } },
+  },
   {
     rules: {
       'no-unused-vars': ['warn', { args: 'none', caughtErrors: 'none' }],

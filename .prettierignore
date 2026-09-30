@@ -1,0 +1,11 @@
+node_modules/
+dist/
+android/
+ios/
+fonts/
+icons/
+docs/
+*.md
+package-lock.json
+.claude/
+package.json
