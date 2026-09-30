@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-146 features are playable in the web prototype today. Build = the build that added it.
+151 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -156,6 +156,11 @@ Every feature from the game design document, with what is playable in the protot
 | Clubs | Real club names in all 20 leagues with real colours, cities, stadiums and capacities, and real derbies; ratings, identities and finances are the game's own | Real clubs and free agents |
 | Transfers | Free agents are mostly lower-league standard; a top-quality free agent is rare (usually a veteran star whose contract wasn't renewed) | Real clubs and free agents |
 | Competitions | Real league and competition names at real league sizes (401 clubs in 20 leagues; MLS and Argentina in their real shorter formats); every league runs August to May on one shared calendar | Real leagues |
+| Setup | Manager profile at a new career: first and last name, country, favourite club and avatar; your country's national team knows you, your favourite club is a homecoming (their rivals' fans are wary) and its big moments reach your feed | Manager profile and lighter lower leagues |
+| Competitions | League One and the Segunda División use the light simulation (faster seasons); clubs change tier with promotion and relegation, the club you manage is always fully simulated, and lower-league clubs still play in the domestic cups | Manager profile and lighter lower leagues |
+| Competitions | Dynamic simulation tiers: your league and the leagues directly above and below always play in the full engine; every other league runs at its own tier | World expansion and dynamic tiers |
+| Competitions | Ten more leagues in minimal simulation in UEFA coefficient order (Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland) with real clubs and derbies; six new nations and national teams | World expansion and dynamic tiers |
+| Players | Larger name pools for every nation (40+ first names, 43+ surnames each), fewer repeated names, real-player combinations blocked | World expansion and dynamic tiers |
 
 ## Yet to be added
 

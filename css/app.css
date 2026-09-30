@@ -265,6 +265,16 @@ table.t tr.zone-down td:first-child { box-shadow: inset 3px 0 0 var(--bad); }
 .clubpick { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; background: #111823; border: 1px solid #223044; margin-bottom: 8px; color: #fff; width: 100%; text-align: left; }
 .clubpick.on { border-color: #c8ff3d; box-shadow: 0 0 0 2px rgba(200,255,61,.25); }
 .title input[type=text] { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid #243042; background: #0f151e; color: #fff; font-size: 16px; }
+.title select { width: 100%; padding: 13px 12px; border-radius: 14px; border: 1px solid #243042; background: #0f151e; color: #fff; font-size: 16px; }
+.title .ng-label { color: #9fb0c5; margin: 14px 0 6px; font-size: 13px; }
+.title .ng-names { display: flex; gap: 8px; margin-top: 14px; }
+.avgrid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+.avpick { aspect-ratio: 1; border-radius: 12px; border: 1px solid #223044; background: #111823; font-size: 22px; display: grid; place-items: center; padding: 0; }
+.avpick.on { border-color: #c8ff3d; box-shadow: 0 0 0 2px rgba(200,255,61,.25); }
+.swatches { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; padding: 0; }
+.swatch.on { border-color: #fff; box-shadow: 0 0 0 2px #c8ff3d; }
+.avatar { border-radius: 50%; display: grid; place-items: center; flex: none; line-height: 1; }
 .title .seg { background: #0f151e; border-color: #243042; }
 .title .seg button { color: #9fb0c5; }
 .title .seg button.on { background: #c8ff3d; color: #0b0f14; }

@@ -298,7 +298,7 @@
     for (const cid in e.comps) {
       const x = e.comps[cid], ch = C(x.champion);
       // Story cards for the full-simulation leagues and your own; one round-up for the rest of the world
-      if (x.sim && x.sim !== 'full' && cid !== (W.userClub() || {}).comp) { abroad.push(`${D.NATIONS[x.nat].flag} ${x.name}: ${ch.name}${x.topScorer ? ` · top scorer ${x.topScorer.name} (${x.topScorer.goals})` : ''}`); continue; }
+      if (!W.homeLeague(x) && cid !== (W.userClub() || {}).comp) { abroad.push(`${D.NATIONS[x.nat].flag} ${x.name}: ${ch.name}${x.topScorer ? ` · top scorer ${x.topScorer.name} (${x.topScorer.goals})` : ''}`); continue; }
       St.share({ kicker: 'CHAMPIONS', title: `${ch.name} are ${x.name} champions`, sub: `${e.label}. Title number ${ch.titles[cid]}.${x.topScorer ? ` Golden Boot: ${x.topScorer.name} (${x.topScorer.goals}).` : ''}`, big: '🏆', clubId: ch.id });
       if (x.poty) FM.News.add({ type: 'award', title: `${x.name} Player of the Season: ${x.poty.name}`, body: `Average rating ${x.poty.avg} for ${C(x.poty.club).name}.${x.ypoty ? ` Young Player: ${x.ypoty.name}.` : ''}`, pid: x.poty.pid, clubId: x.poty.club });
       if (x.playoffWinner) FM.News.add({ type: 'headline', paper: U.pick(PAPERS), title: `${C(x.playoffWinner).name} win the playoff final`, body: 'Promotion secured in the most dramatic way possible.', clubId: x.playoffWinner });

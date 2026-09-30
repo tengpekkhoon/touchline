@@ -94,6 +94,12 @@ const S = FM.S;
 const gpm = stats.goals / stats.matches;
 check(gpm > 2.3 && gpm < 3.8, `goals per match ${gpm.toFixed(2)} outside 2.3–3.8`);
 check(Number.isFinite(S.era) && S.era >= 0.85 && S.era <= 1.15, `tactical equilibrium factor ${S.era} missing or outside 0.85–1.15`);
+// Simulation tiers follow the league after promotion and relegation (League One is light, the Championship full);
+// the club you manage is always fully simulated
+const wrongSim = Object.values(S.clubs).filter((c) => c.comp && S.comps[c.comp] && c.sim !== (W.isUser(c.id) ? 'full' : S.comps[c.comp].sim));
+check(wrongSim.length === 0, `${wrongSim.length} clubs on the wrong simulation tier (e.g. ${wrongSim[0] && wrongSim[0].name})`);
+if (W.employed()) { const my = S.comps[W.userClub().comp], R = my.rules || {}; const near = [my.id, R.promote && R.promote.to, R.relegate && R.relegate.to].filter(Boolean); check(near.every((id) => S.comps[id].sim === 'full'), `your league or a neighbour is not fully simulated (${near.map((id) => id + ':' + S.comps[id].sim).join(', ')})`); }
+check((S.comps.CUPENG.clubs || []).length === S.comps.D1.clubs.length + S.comps.D2.clubs.length + S.comps.D3.clubs.length, 'FA Cup is missing English league clubs');
 for (const c of Object.values(S.clubs)) {
   if (c.sim !== 'full') continue;
   const n = W.squad(c.id).length;

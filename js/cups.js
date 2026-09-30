@@ -30,9 +30,11 @@
   Cu.decides = (f) => f.leg !== 1;
 
   // qualified: { CC: [clubIds], ... } from last season's tables, or null in the first season
+  // A domestic cup's entrants: every club in that nation's leagues, fully or lightly simulated (League One is in the FA Cup)
+  Cu.entrants = (c) => Object.values(S().clubs).filter((x) => x.nat === c.nat && x.comp && S().comps[x.comp] && S().comps[x.comp].nat === c.nat && x.sim !== 'minimal');
   Cu.setupSeason = function (qualified) {
     for (const c of W.cups()) {
-      c.clubs = Object.values(S().clubs).filter((x) => x.sim === 'full' && x.nat === c.nat).sort((a, b) => b.rep - a.rep).map((x) => x.id);
+      c.clubs = Cu.entrants(c).sort((a, b) => b.rep - a.rep).map((x) => x.id);
       c.rounds = []; c.winner = null; c.runnerUp = null;
     }
     for (const c of W.continentals()) {

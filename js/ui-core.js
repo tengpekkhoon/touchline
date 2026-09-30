@@ -32,6 +32,8 @@
   };
   C.pos = (p) => `<span class="pos ${D.POS_GROUP[p.pos]}">${p.pos}</span>`;
   C.flag = (nat) => D.NATIONS[nat] ? D.NATIONS[nat].flag : '🏳️';
+  // The manager's avatar (older careers without one get a neutral face)
+  C.avatar = (user, size = 40) => { const a = (user && user.avatar) || { e: '🧑‍💼', bg: '#243042' }; return `<div class="avatar" style="width:${size}px;height:${size}px;background:${a.bg};font-size:${Math.round(size * 0.58)}px">${a.e}</div>`; };
   C.vcls = (v) => (v >= 16 ? 'v-e' : v >= 13 ? 'v-g' : v >= 9 ? 'v-m' : 'v-p');
   C.fitColor = (f) => (f >= 90 ? 'var(--good)' : f >= 75 ? 'var(--acc2)' : f >= 60 ? 'var(--warn)' : 'var(--bad)');
   C.fit = (f) => `<div class="fitbar"><i style="width:${f}%;background:${C.fitColor(f)}"></i></div>`;
@@ -210,7 +212,7 @@
     const md = !cal ? '' : cal.type === 'league' ? FM.Season.matchdayLabel(cal) : cal.type === 'cup' ? (cal.world ? 'Club World Cup' : cal.stage ? 'Continental night' : 'Cup day') : cal.type === 'pre' ? `Pre-season ${cal.idx + 1}/${FM.D.PRESEASON_DAYS}` : cal.type === 'intl' ? 'International break' : cal.type === 'tourn' ? 'Summer finals' : cal.stage === 'F' ? 'Playoff final' : 'Playoff semis';
     const nt = !club && S.user.nation && S.nteams && S.nteams[S.user.nation];
     $('#topbar').innerHTML = club ? `${C.crest(club, 30)}<div class="t-main"><div class="t-title">${esc(club.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${md}${FM.Season.windowOpen() ? ' · <span style="color:var(--acc)">Window open</span>' : ''}</div></div><div class="money">${U.money(club.balance)}</div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`
-      : `<div style="width:30px;height:34px;display:grid;place-items:center;font-size:22px">🧳</div><div class="t-main"><div class="t-title">${esc(S.user.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${md} · <span style="color:var(--warn)">Out of work</span>${nt ? ` · ${esc(nt.name)}` : ''}</div></div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`;
+      : `${C.avatar(S.user, 32)}<div class="t-main"><div class="t-title">${esc(S.user.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${md} · <span style="color:var(--warn)">Out of work</span>${nt ? ` · ${esc(nt.name)}` : ''}</div></div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`;
     // Squad and scouting belong to a club; out of work they explain themselves instead
     const html = !club && ['squad', 'scout'].includes(UI.tab) ? UI.noClubView(UI.tab) : UI.screens[UI.tab]();
     $('#main').innerHTML = `<div class="screen ${anim || ''}">${html}</div>`;
@@ -220,7 +222,7 @@
   // ---------------- Event delegation ----------------
   // Out of work, only actions that make sense without a club run (anything club-bound — offers, talks, tactics,
   // old feed decisions — would reach for a club that isn't there). A whitelist fails safe: a toast, never a crash.
-  const OUT_OF_WORK_OK = /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed)|matchReport|share|clearRead|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqFilter)$/;
+  const OUT_OF_WORK_OK = /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqFilter)$/;
   document.addEventListener('click', (e) => {
     const el = e.target.closest('[data-act]');
     if (!el) return;
@@ -270,7 +272,8 @@
     UI.mount();
   };
 
-  const NG = { step: 0, name: '', club: null, rules: { win: 3, subs: 5, foreignLimit: 6, twoLegs: 1, awayGoals: 0 }, slot: 1 };
+  const NG = { step: 0, fn: '', ln: '', nat: 'ENG', fav: '', avatar: { e: '🧑', bg: '#1f6feb' }, club: null, rules: { win: 3, subs: 5, foreignLimit: 6, twoLegs: 1, awayGoals: 0 }, slot: 1 };
+  const ngProfile = () => ({ fn: NG.fn.trim() || 'Alex', ln: NG.ln.trim() || 'Morgan', nat: NG.nat, fav: NG.fav || null, avatar: NG.avatar });
   UI.acts.newCareer = () => {
     NG.step = 0;
     const free = [1, 2, 3].find((n) => !UI.slotMeta(n));
@@ -281,9 +284,20 @@
     const app = $('#app');
     let body = '';
     if (NG.step === 0) {
-      body = `<div class="h1" style="margin-top:6vh">Who are you?</div><div class="tag">Every legend starts somewhere.</div>
-        <div class="sp"></div><input type="text" id="ng-name" placeholder="Manager name" maxlength="28" value="${esc(NG.name)}">
-        <div class="sp"></div><div class="small" style="color:#9fb0c5;margin:14px 0 6px">Save slot</div>
+      const nations = Object.entries(D.NATIONS).sort((a, b) => a[1].name.localeCompare(b[1].name));
+      const favName = NG.fav && (D.LEAGUES.flatMap((l) => D[l.clubs]).find((r) => 'c_' + r[1] === NG.fav) || [])[0];
+      const favOpts = D.LEAGUES.map((l) => `<optgroup label="${esc(l.name)} · ${esc(D.NATIONS[l.nat].name)}">${D[l.clubs].map((r) => `<option value="c_${r[1]}" ${NG.fav === 'c_' + r[1] ? 'selected' : ''}>${esc(r[0])}</option>`).join('')}</optgroup>`).join('');
+      body = `<div class="h1" style="margin-top:4vh">Who are you?</div><div class="tag">Every legend starts somewhere.</div>
+        <div class="row" style="gap:14px;margin-top:18px;align-items:center">${C.avatar({ avatar: NG.avatar }, 64)}<div class="grow"><div class="b" id="ng-preview" style="font-size:18px">${esc(`${NG.fn} ${NG.ln}`.trim() || 'Your name')}</div><div class="small" style="color:#9fb0c5">${C.flag(NG.nat)} ${esc(D.NATIONS[NG.nat].name)}${favName ? ` · ❤️ ${esc(favName)}` : ''}</div></div></div>
+        <div class="ng-names"><input type="text" id="ng-fn" placeholder="First name" maxlength="16" value="${esc(NG.fn)}" autocomplete="given-name"><input type="text" id="ng-ln" placeholder="Last name" maxlength="20" value="${esc(NG.ln)}" autocomplete="family-name"></div>
+        <div class="ng-label">Country <span style="color:#6f7f96">· your own national team will know your name</span></div>
+        <select id="ng-nat">${nations.map(([k, n]) => `<option value="${k}" ${NG.nat === k ? 'selected' : ''}>${n.flag} ${esc(n.name)}</option>`).join('')}</select>
+        <div class="ng-label">Favourite club <span style="color:#6f7f96">· managing them is a homecoming; their rivals won't forget</span></div>
+        <select id="ng-fav"><option value="">No favourite club</option>${favOpts}</select>
+        <div class="ng-label">Avatar</div>
+        <div class="avgrid">${W.AVATARS.map((e) => `<button class="avpick ${NG.avatar.e === e ? 'on' : ''}" data-act="ngAvatar" data-e="${e}" aria-label="Avatar ${e}">${e}</button>`).join('')}</div>
+        <div class="swatches">${W.AVATAR_BG.map((bg) => `<button class="swatch ${NG.avatar.bg === bg ? 'on' : ''}" style="background:${bg}" data-act="ngAvatarBg" data-bg="${bg}" aria-label="Avatar background"></button>`).join('')}</div>
+        <div class="ng-label">Save slot</div>
         <div class="seg">${[1, 2, 3].map((n) => `<button class="${NG.slot === n ? 'on' : ''}" data-act="ngSlot" data-n="${n}">Slot ${n}${UI.slotMeta(n) ? ' (overwrite)' : ''}</button>`).join('')}</div>
         <div class="actions"><button class="btn pri block" data-act="ngNext">Choose your club →</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     } else if (NG.step === 1) {
@@ -303,18 +317,25 @@
       body = `<div class="h1" style="margin-top:4vh">World rules</div><div class="tag">A taste of the World Editor. Change football before it begins.</div>
         ${seg('win', [3, 2], 'Points for a win')}${seg('subs', [3, 5], 'Substitutions per match')}${seg('foreignLimit', [4, 6, 9], 'Max foreign players in a matchday squad')}
         ${tog('twoLegs', 'Continental knockouts and playoff semi-finals', 'Two legs', 'Single match')}${tog('awayGoals', 'Away goals rule (two-legged ties)', 'On', 'Off')}
-        <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">20 leagues in 16 nations, in three simulation tiers. Full: England (3 tiers), Spain (2), Germany, France, Brazil — every match in the engine, and these are the clubs you can manage. Light: Italy, Portugal, the Netherlands, Argentina, the USA and Japan — every fixture played by a fast statistical model. Minimal: Mexico, Korea, Thailand, Nigeria, Morocco and Serbia — scores only, squads for scouting. Five continental cups feed a Club World Cup. National teams play qualifiers and friendlies in two double-header breaks, with the World Championship every four years and continental championships in between.</div>
+        <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">30 leagues in 25 nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One, the Segunda División, Serie A, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. Five continental cups feed a Club World Cup. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
         ${NG.club === 'none' ? '<div class="small" style="color:#c8ff3d;margin-top:14px;line-height:1.5">🧳 You start out of work, with a modest reputation. Clubs in your range will make offers over the first weeks — the struggling ones first.</div>' : ''}
         <div class="actions"><button class="btn pri block" data-act="ngStart">${NG.club === 'none' ? 'Start career — no club yet 🧳' : 'Start career ⚽'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     }
     app.innerHTML = `<div class="title">${body}</div>`;
-    const inp = $('#ng-name');
-    if (inp) inp.addEventListener('input', () => (NG.name = inp.value));
+    // Profile fields update as you type; the preview line follows along
+    const preview = () => { const el = $('#ng-preview'); if (el) el.textContent = `${NG.fn} ${NG.ln}`.trim() || 'Your name'; };
+    const fn = $('#ng-fn'), ln = $('#ng-ln'), nat = $('#ng-nat'), fav = $('#ng-fav');
+    if (fn) fn.addEventListener('input', () => { NG.fn = fn.value; preview(); });
+    if (ln) ln.addEventListener('input', () => { NG.ln = ln.value; preview(); });
+    if (nat) nat.addEventListener('change', () => { NG.nat = nat.value; UI.newCareer(); });
+    if (fav) fav.addEventListener('change', () => { NG.fav = fav.value; UI.newCareer(); });
   };
   UI.acts.ngSlot = (d) => { NG.slot = +d.n; UI.newCareer(); };
+  UI.acts.ngAvatar = (d) => { NG.avatar = { ...NG.avatar, e: d.e }; UI.newCareer(); };
+  UI.acts.ngAvatarBg = (d) => { NG.avatar = { ...NG.avatar, bg: d.bg }; UI.newCareer(); };
   UI.acts.ngBack = () => { if (NG.step === 0) UI.title(); else { NG.step--; UI.newCareer(); } };
   UI.acts.ngNext = () => {
-    if (NG.step === 0 && !NG.name.trim()) NG.name = 'Alex Morgan';
+    if (NG.step === 0) { if (!NG.fn.trim()) NG.fn = 'Alex'; if (!NG.ln.trim()) NG.ln = 'Morgan'; }
     if (NG.step === 1 && !NG.club) return;
     NG.step++; UI.newCareer();
   };
@@ -340,10 +361,10 @@
       FM.Season.init();
       if (NG.club === 'none') {
         // A career without a club: a modest reputation and offers from the lower leagues
-        W.newManager(NG.name.trim() || 'Alex Morgan', 38, 'ENG');
+        W.newManager(ngProfile(), 38, NG.nat);
         if (!FM.S.staffPool) W.refreshStaffPool();
         W.goUnemployed('start');
-      } else W.takeCharge(NG.club, NG.name.trim() || 'Alex Morgan');
+      } else W.takeCharge(NG.club, ngProfile());
       W.seedLegends();
       FM.Stories.welcome();
       UI.slot = NG.slot;

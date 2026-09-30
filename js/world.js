@@ -96,7 +96,7 @@
     return nameSet.has(n);
   };
   W.claimName = (n) => { W.nameTaken(n); nameSet.add(n); };
-  const REAL_NAMES = new Set(['Gerard Moreno', 'Pau Torres', 'Fernando Torres', 'Raúl García', 'Diego López', 'Íñigo Martínez', 'Marcos Alonso', 'Carlos Soler', 'Mikel Merino', 'Jordi Alba', 'David Villa', 'David Silva', 'Unai Simón', 'Mikel Oyarzabal', 'Álvaro Morata', 'Dani Olmo', 'Borja Iglesias', 'Nacho Fernández', 'Jon Guridi', 'Aitor Paredes', 'Luis Suárez', 'Luis Díaz', 'Juan Cuadrado', 'Christian Eriksen', 'Bruno Fernandes', 'Rui Patrício', 'Joel Matip', 'Ryan Gravenberch', 'Tyler Adams', 'Josh Sargent', 'Harry Wilson', 'Tom Lockyer', 'Andrew Robertson', 'Scott McTominay', 'Kevin Mbabu', 'Ante Budimir', 'Marco Asensio', 'Kenji Watanabe', 'Leandro Paredes', 'Nicolás Otamendi', 'Lucas Ocampos', 'Rodrigo De Paul', 'Kasper Dolberg', 'Christian Nørgaard', 'Mats Hummels', 'Luca Waldschmidt', 'Leon Goretzka', 'Kai Havertz', 'Paul Pogba', 'Louis Saha', 'Noah Okafor', 'Theo Walcott', 'Jack Wilshere', 'Harry Maguire', 'Henry Onyekuru', 'Sergio Ramos', 'Kyle Walker', 'Emiliano Martínez', 'Lautaro Martínez', 'Nicolás González', 'Julián Álvarez', 'Lucas Silva', 'Thiago Silva', 'Gabriel Jesus', 'Rodrigo Moreno', 'Dani Carvajal', 'Marcos Llorente', 'Hugo Ekitike', 'Jordan Henderson', 'Harry Kane', 'Declan Rice', 'Mason Mount', 'Luke Shaw', 'Aaron Ramsdale', 'Kieran Trippier', 'Callum Wilson', 'Conor Gallagher', 'Wataru Endo', 'Takumi Minamino', 'Daichi Kamada', 'Min-jae Kim', 'Kylian Mbappé', 'Theo Hernández', 'Victor Osimhen', 'Samuel Chukwueze', 'Dušan Vlahović', 'Aleksandar Mitrović', 'Nikola Milenković', 'Chanathip Songkrasin', 'Theerathon Bunmathan', 'Javier Hernández', 'Hirving Lozano', 'Raúl Jiménez', 'Andrés Guardado', 'Guillermo Ochoa', 'Héctor Herrera', 'Edson Álvarez', 'Carlos Vela', 'Rafael Márquez', 'Jesús Corona', 'Diego Lainez', 'Orbelín Pineda', 'Uriel Antuna', 'Santiago Giménez', 'César Montes', 'Julián Quiñones', 'Alexis Vega', 'Luis Romo', 'Luis Chávez', 'Jorge Sánchez', 'Carlos Rodríguez', 'Héctor Moreno', 'Miguel Layún']);
+  const REAL_NAMES = new Set(['Nuno Mendes', 'Enzo Fernández', 'Cristian Romero', 'Lisandro Martínez', 'Nahuel Molina', 'Harvey Barnes', 'Piotr Zieliński', 'Rúben Dias', 'Bernardo Silva', 'Kevin De Bruyne', 'Erling Haaland', 'Martin Ødegaard', 'Luka Modrić', 'Christian Pulisic', 'Achraf Hakimi', 'Sadio Mané', 'Mohammed Kudus', 'Thomas Müller', 'Joshua Kimmich', 'Florian Wirtz', 'Leroy Sané', 'Arda Güler', 'Hakan Çalhanoğlu', 'Dušan Tadić', 'Sergej Milinković-Savić', 'Filip Kostić', 'Nemanja Matić', 'Emil Forsberg', 'Gerard Moreno', 'Pau Torres', 'Fernando Torres', 'Raúl García', 'Diego López', 'Íñigo Martínez', 'Marcos Alonso', 'Carlos Soler', 'Mikel Merino', 'Jordi Alba', 'David Villa', 'David Silva', 'Unai Simón', 'Mikel Oyarzabal', 'Álvaro Morata', 'Dani Olmo', 'Borja Iglesias', 'Nacho Fernández', 'Jon Guridi', 'Aitor Paredes', 'Luis Suárez', 'Luis Díaz', 'Juan Cuadrado', 'Christian Eriksen', 'Bruno Fernandes', 'Rui Patrício', 'Joel Matip', 'Ryan Gravenberch', 'Tyler Adams', 'Josh Sargent', 'Harry Wilson', 'Tom Lockyer', 'Andrew Robertson', 'Scott McTominay', 'Kevin Mbabu', 'Ante Budimir', 'Marco Asensio', 'Kenji Watanabe', 'Leandro Paredes', 'Nicolás Otamendi', 'Lucas Ocampos', 'Rodrigo De Paul', 'Kasper Dolberg', 'Christian Nørgaard', 'Mats Hummels', 'Luca Waldschmidt', 'Leon Goretzka', 'Kai Havertz', 'Paul Pogba', 'Louis Saha', 'Noah Okafor', 'Theo Walcott', 'Jack Wilshere', 'Harry Maguire', 'Henry Onyekuru', 'Sergio Ramos', 'Kyle Walker', 'Emiliano Martínez', 'Lautaro Martínez', 'Nicolás González', 'Julián Álvarez', 'Lucas Silva', 'Thiago Silva', 'Gabriel Jesus', 'Rodrigo Moreno', 'Dani Carvajal', 'Marcos Llorente', 'Hugo Ekitike', 'Jordan Henderson', 'Harry Kane', 'Declan Rice', 'Mason Mount', 'Luke Shaw', 'Aaron Ramsdale', 'Kieran Trippier', 'Callum Wilson', 'Conor Gallagher', 'Wataru Endo', 'Takumi Minamino', 'Daichi Kamada', 'Min-jae Kim', 'Kylian Mbappé', 'Theo Hernández', 'Victor Osimhen', 'Samuel Chukwueze', 'Dušan Vlahović', 'Aleksandar Mitrović', 'Nikola Milenković', 'Chanathip Songkrasin', 'Theerathon Bunmathan', 'Javier Hernández', 'Hirving Lozano', 'Raúl Jiménez', 'Andrés Guardado', 'Guillermo Ochoa', 'Héctor Herrera', 'Edson Álvarez', 'Carlos Vela', 'Rafael Márquez', 'Jesús Corona', 'Diego Lainez', 'Orbelín Pineda', 'Uriel Antuna', 'Santiago Giménez', 'César Montes', 'Julián Quiñones', 'Alexis Vega', 'Luis Romo', 'Luis Chávez', 'Jorge Sánchez', 'Carlos Rodríguez', 'Héctor Moreno', 'Miguel Layún']);
   W.genPlayer = function ({ nat, pos, age, ca, pa, clubId = null, youthClub = null }) {
     const N = D.NATIONS[nat];
     const hid = {};
@@ -380,7 +380,7 @@
     const at = (map) => { const out = {}; for (const [k, v] of Object.entries(map)) { let r = W.scaleRound(+k); while (out[r] !== undefined) r++; out[r] = v; } return out; };
     const CC = at(D.CC_AFTER), CWC = at(D.CWC_AFTER), INTL = at(D.INTL_AFTER);
     // Domestic cup days: enough rounds for the biggest cup (byes even out the first round), spread through the season
-    const biggest = Math.max(2, ...W.cups().map((c) => Object.values(S.clubs).filter((x) => x.sim === 'full' && x.nat === c.nat).length));
+    const biggest = Math.max(2, ...W.cups().map((c) => FM.Cups.entrants(c).length));
     const cupDays = Math.max(Object.keys(D.CUP_AFTER).length, Math.ceil(Math.log2(biggest)));
     const CUP = {}, c0 = W.scaleRound(1), c1 = W.scaleRound(19);
     for (let i = 0; i < cupDays; i++) { let r = Math.round(c0 + (i * (c1 - c0)) / Math.max(1, cupDays - 1)); while (CUP[r]) r++; CUP[r] = 'DC'; }
@@ -469,15 +469,19 @@
 
   // Attach the human manager to a club
   // The manager's own profile, independent of any club (a new career creates it; it survives every job)
-  W.newManager = function (mgrName, rep, nat) {
-    const S = FM.S;
+  // who: a name, or a profile { fn, ln, nat, fav, avatar: { e, bg } } from the new-career screen
+  W.newManager = function (who, rep, nat) {
+    const S = FM.S, prof = typeof who === 'string' ? { name: who } : who || {};
+    const mgrName = (prof.fn || prof.ln) ? `${prof.fn || ''} ${prof.ln || ''}`.trim() : prof.name || 'Alex Morgan';
     const scouts = [
       W.genStaff('Scout', 'ARG', { ability: 15, regions: { SAM: 0.95, EUR: 0.45, ENG: 0.55, NAM: 0.35, ASIA: 0.15, AFR: 0.3 }, judge: 15, note: 'Excellent in Argentina & Brazil. Poor in Asia.' }),
       W.genStaff('Scout', 'JPN', { ability: 13, regions: { ASIA: 0.95, ENG: 0.4, EUR: 0.35, NAM: 0.4, SAM: 0.2, AFR: 0.2 }, judge: 13, note: 'Knows every academy in Japan, Korea & Thailand.' }),
       W.genStaff('Scout', 'ENG', { ability: 12, regions: { ENG: 0.9, EUR: 0.7, AFR: 0.55, NAM: 0.3, SAM: 0.3, ASIA: 0.25 }, judge: 12, note: 'Domestic expert with a good European network.' }),
     ];
     S.user = {
-      name: mgrName, clubId: null, rep: Math.round(rep), joined: S.year, badges: 'Continental B',
+      name: mgrName, fn: prof.fn || mgrName.split(' ')[0], ln: prof.ln || mgrName.split(' ').slice(1).join(' '), nat: prof.nat || nat,
+      favClub: prof.fav && S.clubs[prof.fav] ? prof.fav : null, avatar: prof.avatar || null,
+      clubId: null, rep: Math.round(rep), joined: S.year, badges: 'Continental B',
       stats: { games: 0, w: 0, d: 0, l: 0, youthDebuts: 0, giantKills: 0, promotions: 0, trophies: 0, bought: 0, sold: 0 },
       history: [], scouts: scouts.map((s) => s.id), assignments: [], knowledge: {}, reports: {}, shortlist: [],
       staff: {
@@ -489,6 +493,35 @@
     };
     return S.user;
   };
+  // A club's simulation tier follows its league (promotion from League One makes it fully simulated, and so on),
+  // except the club you manage, which is always fully simulated: finances, squad size, records, the lot
+  W.syncSim = function (c) {
+    const comp = c && c.comp && FM.S.comps[c.comp];
+    if (c) c.sim = W.isUser(c.id) ? 'full' : comp && comp.sim ? comp.sim : c.sim;
+  };
+  // Your league, the league above it and the league below it always play in the full engine (a light league becomes
+  // full the moment it matters to you: relegated from the Premier League, League One is suddenly next door). Every
+  // other league runs at its base tier from the data. Re-applied when you take a job, lose one, and after promotion
+  // and relegation.
+  W.applySimFocus = function () {
+    const S = FM.S, uc = W.employed() && W.userClub(), my = uc && S.comps[uc.comp];
+    const focus = new Set();
+    if (my) {
+      focus.add(my.id);
+      const r = my.rules || {};
+      if (r.promote) focus.add(r.promote.to);
+      if (r.relegate) focus.add(r.relegate.to);
+    }
+    for (const c of W.leagues()) {
+      if (!c.baseSim) c.baseSim = (D.LEAGUES.find((l) => l.id === c.id) || {}).sim || c.sim;
+      c.sim = focus.has(c.id) && c.baseSim !== 'minimal' ? 'full' : c.baseSim;
+    }
+    Object.values(S.clubs).forEach(W.syncSim);
+  };
+  // Avatars for the manager profile
+  W.AVATARS = ['🧑', '👨', '👩', '🧔', '👨‍🦱', '👩‍🦱', '👨‍🦰', '👩‍🦰', '👱', '👱‍♀️', '👨‍🦳', '👩‍🦳', '🧑‍🦲', '👴', '👵', '🧑🏽', '👨🏾', '👩🏿', '🧔🏻', '👨🏼‍🦱', '👩🏽‍🦱', '🧑🏿‍🦲', '🧢', '🎩'];
+  W.AVATAR_BG = ['#1f6feb', '#c8102e', '#0b8a3e', '#6a1b9a', '#f59e0b', '#0f172a', '#e11d48', '#0891b2'];
+  W.homeLeague = (x) => !x.sim || x.sim === 'full' || D.LEAGUES.some((l) => l.nat === x.nat && l.sim === 'full');
   W.employed = () => !!(FM.S.user && FM.S.user.clubId && FM.S.clubs[FM.S.user.clubId]);
   // Out of work (sacked, resigned, or a career that starts without a club): the old club hires a successor,
   // time keeps passing, and job offers arrive through FM.Season.jobMarket
@@ -509,6 +542,7 @@
       if ((n.type === 'press' || n.type === 'meeting') && !n.resolved) { n.resolved = '—'; n.reply = 'You left the club before answering.'; }
     });
     u.clubId = null; u.sacked = false; u.nation = u.nation || null;
+    W.applySimFocus(); // leagues return to their own tiers
     u.unemployed = { since: S.year, day: S.day, from: old ? old.id : null, reason };
     u.tactic = W.newTactic(); u.preseason = {}; u.offers = []; u.lastMatch = null; u.building = null;
     u.neg = {}; u.talks = {}; u.contractRem = null;
@@ -518,6 +552,7 @@
     const S = FM.S, club = S.clubs[clubId];
     if (isNew) W.newManager(mgrName, club.rep * 0.55, club.nat);
     S.user.clubId = clubId;
+    W.applySimFocus(); // your league and its neighbours in the full engine
     S.user.history.push({ club: clubId, from: S.year });
     // A new job wipes the slate: promises, talks and board business belonged to the old club
     (S.user.promises || []).forEach((x) => { if (x.state === 'open') { x.state = 'void'; x.closed = S.day; } });
@@ -528,6 +563,15 @@
     if (club.manager && S.staff[club.manager] && FM.Records) FM.Records.managerLeft(S.staff[club.manager], clubId);
     club.manager = null;
     club.boardConf = 70;
+    // Your favourite club: a homecoming buys goodwill; its rivals' fans will take some winning over
+    const fav = S.user.favClub && S.clubs[S.user.favClub];
+    if (fav && fav.id === clubId) {
+      club.fanMood = Math.min(100, club.fanMood + 12); club.boardConf += 8;
+      if (FM.Stories) FM.Stories.share({ kicker: 'HOMECOMING', title: `${S.user.name} takes charge of boyhood club ${club.name}`, sub: 'The supporters know one of their own when they see one.', big: '❤️', clubId });
+    } else if (fav && club.rival === fav.id) {
+      club.fanMood = Math.max(0, club.fanMood - 10);
+      if (FM.News) FM.News.add({ type: 'dressing', title: 'Fans wary of the new manager', body: `Supporters haven't forgotten that ${S.user.name} grew up following ${fav.name}. Results will have to do the talking.`, clubId });
+    }
     S.user.joinedClubYear = S.year;
     S.user.tactic = club.tactic;
     if (S.user.tactic.fam == null) S.user.tactic.fam = 55; // tactical familiarity 0–100

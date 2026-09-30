@@ -415,9 +415,10 @@
     u.offers = (u.offers || []).filter((o) => o.until > now && S.clubs[o.id]);
     if (u.offers.length >= 3 || (!initial && Math.random() > 0.3)) return;
     const taken = new Set(u.offers.map((o) => o.id)), justLeft = u.unemployed && u.unemployed.since === S.year ? u.unemployed.from : null;
-    const pool = Object.values(S.clubs).filter((c) => c.sim === 'full' && c.comp && !taken.has(c.id) && c.id !== justLeft && c.rep <= u.rep + 14 && c.rep >= u.rep - 30);
+    const lower = (c) => c.sim === 'light' && S.comps[c.comp] && S.comps[c.comp].tier > 1 && S.comps[c.comp].nat === c.nat && ['ENG', 'ESP'].includes(c.nat); // League One, Segunda
+    const pool = Object.values(S.clubs).filter((c) => (c.sim === 'full' || lower(c)) && c.comp && !taken.has(c.id) && c.id !== justLeft && c.rep <= u.rep + 14 && c.rep >= u.rep - 30);
     for (let i = initial ? 3 : 1; i > 0 && pool.length; i--) {
-      const c = U.wpick(pool, (x) => (100 - x.boardConf) + 20 - Math.abs(x.rep - u.rep) * 0.5);
+      const c = U.wpick(pool, (x) => ((100 - x.boardConf) + 20 - Math.abs(x.rep - u.rep) * 0.5) * (x.id === u.favClub ? 3 : 1)); // your boyhood club keeps an eye on you
       pool.splice(pool.indexOf(c), 1);
       u.offers.push({ id: c.id, until: now + U.randi(5, 10), why: c.boardConf < 45 ? 'struggling' : c.rep > u.rep + 5 ? 'step up' : 'fresh start' });
       if (!initial) FM.News.add({ type: 'board', title: `Job offer: ${c.name} want you as manager`, body: `${c.boardConf < 45 ? 'Results have been poor and the board want a change.' : 'The board think you are the right person to take the club forward.'} The offer stands for about a week.`, clubId: c.id });
@@ -804,6 +805,8 @@
       c.rep = U.clamp(c.rep + (S.comps[to].tier < S.comps[from].tier ? 4 : -5), 20, 99);
     });
 
+    W.applySimFocus(); // after promotion and relegation: your (possibly new) league and its neighbours go full
+    Sea.favClubNews(entry);
     // User evaluation (out of work: the season is recorded, but there is nothing to judge)
     if (!club) {
       S.archive.push(entry);
@@ -852,6 +855,14 @@
     delete S.eraLog;
     if (!e || e.n < 200) return;
     S.era = U.clamp((S.era || 1) * Math.pow(FM.CAL.targetGoals / (e.g / e.n), 0.6), 0.85, 1.15);
+  };
+  // Your boyhood club's big moments reach your feed (unless you manage it — then they're your moments)
+  Sea.favClubNews = function (entry) {
+    const S = FM.S, id = S.user && S.user.favClub, c = id && S.clubs[id];
+    if (!c || W.isUser(id)) return;
+    const won = Object.values(entry.comps).filter((x) => x.champion === id).map((x) => x.name).concat(Object.values(entry.cups || {}).filter((x) => x.winner === id).map((x) => x.name));
+    const line = won.length ? `They won the ${won.join(' and the ')}. Somewhere, you're smiling.` : entry.promoted.includes(id) ? 'They won promotion — a good day to have grown up a fan.' : entry.relegated.includes(id) ? 'They were relegated. It still hurts.' : null;
+    if (line) FM.News.add({ type: 'club', title: `Your boyhood club: ${c.name}`, body: line, clubId: id });
   };
   Sea.newSeason = function (entry) {
     const S = FM.S;

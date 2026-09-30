@@ -287,8 +287,9 @@
   I.canTake = function (t) {
     const u = S().user;
     const badgeOk = D.BADGES.indexOf(u.badges) >= D.BADGES.indexOf(I.badgeNeeded(t));
-    const repOk = u.rep >= t.rep - 30;
-    return { ok: badgeOk && repOk, why: !badgeOk ? `Requires a ${I.badgeNeeded(t)} licence` : !repOk ? `Your reputation (${Math.round(u.rep)}) is too low — they want ${t.rep - 30}+` : '' };
+    const need = t.rep - 30 - (u.nat === t.code ? 8 : 0); // your own country will take a chance on one of its own
+    const repOk = u.rep >= need;
+    return { ok: badgeOk && repOk, why: !badgeOk ? `Requires a ${I.badgeNeeded(t)} licence` : !repOk ? `Your reputation (${Math.round(u.rep)}) is too low — they want ${need}+` : '' };
   };
   I.refreshJobs = function () {
     const s = S();
@@ -296,7 +297,10 @@
     // Four vacancies: two from the lower half of the ranking (realistic first jobs), two from anywhere
     const low = U.shuffle(pool.slice().sort((a, b) => a.elo - b.elo).slice(0, Math.ceil(pool.length / 2))).slice(0, 2);
     const rest = U.shuffle(pool.filter((t) => !low.includes(t))).slice(0, 2);
-    s.ntJobs = low.concat(rest).map((t) => t.id).sort((a, b) => T(b).elo - T(a).elo);
+    let jobs = low.concat(rest);
+    const home = s.user && s.user.nat && s.nteams['n_' + s.user.nat];
+    if (home && s.user.nation !== home.id && !jobs.includes(home) && Math.random() < 0.35) jobs = jobs.slice(0, 3).concat(home); // your own country comes calling now and then
+    s.ntJobs = jobs.map((t) => t.id).sort((a, b) => T(b).elo - T(a).elo);
   };
   I.takeJob = function (id) {
     const s = S(), u = s.user, t = T(id);

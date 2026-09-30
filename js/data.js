@@ -196,7 +196,7 @@
       BRA: ['Gustavo Leonardo Guilherme Vitor Eduardo Marcelo Renan Danilo Paulo Anderson Douglas Fabrício Luan Murilo Otávio Raul Samuel Yuri Arthur Henrique',
         'Araújo, Cardoso, Martins, Freitas, Teixeira, Correia, Azevedo, Monteiro, Mendes, Batista, Cavalcanti, Duarte, Farias, Lacerda, Macedo, Nogueira, Peixoto, Queiroz, Siqueira, Vieira, Fonseca, Andrade'],
       ARG: ['Ezequiel Leandro Joaquín Ramiro Maximiliano Bruno Thiago Alan Ignacio Federico Lucas Mateo Marcos Rodrigo Cristian Hernán',
-        'Gómez, Pérez, Sánchez, Ramírez, Torres, Flores, Ruiz, Castro, Ortiz, Molina, Silva, Rojas, Vega, Giménez, Aguirre, Cabrera, Ledesma, Quiroga, Ponce, Villalba, Peralta, Godoy'],
+        'Gómez, Pérez, Sánchez, Ramírez, Torres, Flores, Ruiz, Castro, Ortiz, Molina, Rojas, Vega, Giménez, Aguirre, Cabrera, Ledesma, Quiroga, Ponce, Villalba, Peralta, Godoy'],
       JPN: ['Takuma Kazuki Ryota Naoki Shun Yusuke Kenji Tomoya Hayato Riku Sora Itsuki Kosuke Taichi Genki Shuto',
         'Hayashi, Shimizu, Yamaguchi, Mori, Ikeda, Hashimoto, Ishikawa, Ogawa, Okada, Fujita, Goto, Kondo, Murakami, Nishimura, Sakamoto, Aoki, Fukuda, Maeda'],
       KOR: ['Min-ho Hyun-woo Seung-min Jin-su Tae-yang Dong-won Kyung-ho Young-jae Sung-hoon Jun-seo Ha-neul Si-woo',
@@ -743,15 +743,191 @@
     ['Chabab Mohammédia', 'SCC', 'Mohammédia', '#E30613', '#000000', 'fan', 46], ['JS Soualem', 'JSS', 'Soualem', '#003DA5', '#FFFFFF', 'fan', 46],
   ];
 
+  // ---------- More nations: the next European leagues by coefficient ----------
+  addN('TUR', 'Turkey', '🇹🇷', 'EUR', 'Passionate, direct and aggressive', { workRate: 1.5, strength: 1, dribbling: 1 },
+    'Emre Burak Mert Can Arda Kerem Oğuz Barış Cengiz Hakan Ozan Yusuf Berkay Serdar Umut Ömer Kaan Efe Alper Onur Tolga Cenk Volkan Egemen Selim Furkan Batuhan Enes Doğukan Halil Semih Kerim Ahmet Mehmet Ali Deniz Tuna Uğur Eren Irfan',
+    'Yılmaz, Kaya, Demir, Şahin, Çelik, Yıldız, Yıldırım, Öztürk, Aydın, Özdemir, Arslan, Doğan, Kılıç, Aslan, Çetin, Kara, Koç, Kurt, Özkan, Şimşek, Polat, Korkmaz, Karaca, Erdem, Güneş, Aktaş, Bulut, Keskin, Ünal, Tekin, Akın, Uçar, Gül, Avcı, Taş, Sarı, Coşkun, Bozkurt, Kaplan, Özer, Tunç, Durmaz, Başaran, Karagöz, Ekici, Ateş, Işık, Soylu');
+  addN('CZE', 'Czechia', '🇨🇿', 'EUR', 'Industrious and well-drilled', { workRate: 1.5, positioning: 1, stamina: 1 },
+    'Jan Jakub Tomáš Lukáš Ondřej Adam Matěj Filip Vojtěch David Petr Martin Michal Pavel Daniel Václav Josef Radim Tadeáš Šimon Dominik Marek Vladimír Antonín Štěpán Jiří Roman Aleš Libor Patrik Denis Robin Kryštof Vít Zdeněk Karel Hynek Mojmír Dalibor Bořek',
+    'Novák, Svoboda, Novotný, Dvořák, Černý, Procházka, Kučera, Veselý, Horák, Němec, Pokorný, Marek, Pospíšil, Hájek, Jelínek, Král, Růžička, Beneš, Fiala, Sedláček, Doležal, Zeman, Kolář, Navrátil, Čermák, Urban, Vaněk, Blažek, Kříž, Kovář, Bartoš, Vlček, Polák, Musil, Kopecký, Šimek, Konečný, Malý, Holub, Štěpánek, Kadlec, Staněk, Soukup, Holý, Bureš, Jaroš, Richter, Moravec');
+  addN('GRE', 'Greece', '🇬🇷', 'EUR', 'Organised, resilient defenders', { positioning: 1.5, tackling: 1.5, strength: 1 },
+    'Giorgos Dimitris Nikos Kostas Giannis Christos Vasilis Panagiotis Thanasis Michalis Stelios Sotiris Antonis Manolis Lefteris Apostolos Charalampos Konstantinos Alexandros Stavros Spyros Andreas Petros Pavlos Ilias Theodoros Fotis Marios Anastasios Evangelos Tasos Vangelis Lazaros Savvas Aris Achilleas Zisis Orestis Anestis Prodromos',
+    'Papadopoulos, Papadakis, Georgiou, Oikonomou, Pappas, Vlachos, Nikolaidis, Dimitriou, Konstantinidis, Karagiannis, Athanasiou, Christodoulou, Ioannidis, Makris, Vasileiou, Antoniou, Papanikolaou, Alexiou, Stavrou, Kyriakidis, Theodorou, Michailidis, Economou, Lazaridis, Panagiotou, Spanos, Katsaros, Mavridis, Tsakalos, Zervas, Anagnostou, Sotiriou, Galanis, Petridis, Chatzis, Rigas, Voulgaris, Kontos, Tzavaras, Liakos, Marinos, Kalogeropoulos, Lamprou');
+  addN('POL', 'Poland', '🇵🇱', 'EUR', 'Strong, honest and direct', { strength: 1.5, workRate: 1.5, finishing: 1 },
+    'Jakub Kacper Szymon Mateusz Bartosz Kamil Michał Paweł Piotr Krzysztof Tomasz Łukasz Dawid Adrian Marcin Patryk Damian Sebastian Przemysław Grzegorz Wojciech Maciej Filip Karol Hubert Oskar Igor Mikołaj Dominik Antoni Wiktor Jan Adam Konrad Rafał Arkadiusz Norbert Kornel Bartłomiej Radosław',
+    'Nowak, Kowalski, Wiśniewski, Wójcik, Kowalczyk, Kamiński, Lewandowicz, Zieliński, Szymański, Woźniak, Dąbrowski, Kozłowski, Jankowski, Mazur, Kwiatkowski, Krawczyk, Kaczmarek, Piotrowski, Grabowski, Zając, Pawłowski, Michalski, Król, Wieczorek, Jabłoński, Wróbel, Nowakowski, Majewski, Olszewski, Stępień, Malinowski, Jaworski, Adamczyk, Dudek, Nowicki, Pawlak, Górski, Witkowski, Walczak, Sikora, Baran, Rutkowski, Michalak, Szewczyk, Ostrowski, Tomaszewski, Pietrzak, Duda');
+  addN('AUT', 'Austria', '🇦🇹', 'EUR', 'High-energy pressers', { workRate: 2, stamina: 1.5, pace: 0.5 },
+    'Lukas David Florian Tobias Julian Stefan Christoph Dominik Philipp Matthias Andreas Michael Patrick Alexander Marco Kevin Fabian Maximilian Simon Sebastian Raphael Nicolas Konrad Leopold Valentin Moritz Jakob Elias Felix Samuel Benedikt Lorenz Clemens Paul Nico Marcel Manuel Thomas Georg Severin',
+    'Gruber, Huber, Bauer, Wagner, Müller, Pichler, Steiner, Moser, Mayer, Hofer, Leitner, Berger, Fuchs, Eder, Fischer, Schmid, Winkler, Weber, Schwarz, Maier, Schneider, Reiter, Mayr, Schmidt, Wimmer, Egger, Brunner, Lang, Baumgartner, Auer, Binder, Lechner, Wolf, Wallner, Aigner, Ebner, Koller, Lehner, Haas, Schuster, Holzer, Kogler, Resch, Strasser, Pölzl, Grill, Posch, Seidl');
+  addN('SUI', 'Switzerland', '🇨🇭', 'EUR', 'Tidy, versatile and composed', { composure: 1.5, passing: 1, positioning: 1 },
+    'Luca Noah Leon Nico Jan Fabian Kevin Yannick Cédric Florian Joël Silvan Remo Dario Marco Loris Nils Andrin Gian Ramon Mauro Samuel Timo Reto Beat Michel Simon Jonas Elias Lars Levin Aurèle Matteo Bastien Gaël Théo Kilian Ruben Dominik Pascal',
+    'Müller, Meier, Schmid, Keller, Weber, Huber, Schneider, Meyer, Steiner, Fischer, Gerber, Brunner, Baumann, Frei, Zimmermann, Moser, Widmer, Wyss, Graf, Roth, Suter, Baumgartner, Kälin, Bühler, Aebischer, Zbinden, Marti, Lüthi, Gisler, Egli, Imhof, Studer, Ammann, Hofmann, Kunz, Blaser, Bachmann, Hess, Rossier, Favre, Perrin, Bonvin, Morand, Rochat, Chappuis, Bernasconi, Rossi, Bianchi');
+  Object.assign(FM.D.NT_COLORS, { TUR: ['#E30A17', '#FFFFFF'], CZE: ['#D7141A', '#11457E'], GRE: ['#0D5EAF', '#FFFFFF'], POL: ['#FFFFFF', '#DC143C'], AUT: ['#ED2939', '#FFFFFF'], SUI: ['#D52B1E', '#FFFFFF'] });
+  // ---------- Bigger name pools: more combinations, fewer repeats across a 10,000-player world ----------
+  FM.D.addNames = (c, fn, ln) => { const N = FM.D.NATIONS[c]; fn.split(' ').forEach((x) => x && !N.fn.includes(x) && N.fn.push(x)); ln.split(',').map((x) => x.trim()).forEach((x) => x && !N.ln.includes(x) && N.ln.push(x)); };
+  FM.D.addNames('ENG', 'Josh Adam Liam Max Leo Oscar Freddie Harvey Louis Toby Finley Henry Jake Theo Bradley Craig Dean Elliot Ellis Gary Jason Josh Kai Kieran Lee Matt Neil Owen Paul Reggie Rob Rory Scott Sean Stuart Wes Zach Ashley Ricky',
+    'Allen, Bailey, Baker, Barker, Bates, Bell, Booth, Bradley, Brooks, Burton, Chapman, Cole, Collins, Cox, Dale, Dawson, Dixon, Ellis, Farrell, Fisher, Ford, Foster, Graham, Grant, Hall, Harper, Hart, Hayes, Hill, Holmes, Hunt, Hunter, Jennings, Kay, Kerr, Lane, Lawson, Lloyd, Mason, Miles, Moss, Nash, Nicholls, Norris, Parsons, Payne, Perry, Pope, Porter, Reid, Reynolds, Richards, Robson, Russell, Saunders, Simpson, Slater, Spencer, Stone, Summers, Tate, Thornton, Tucker, Vaughan, Wade, Watts, Wells, Wheeler, Whitehead, Wilkinson, Woods, Yates');
+  FM.D.addNames('BRA', 'Arthur Enzo Davi Heitor Bernardo Samuel Miguel Guilherme Gustavo Leonardo Henrique Eduardo Murilo Otávio Renan Anderson Alisson Douglas Fabrício Gérson Hugo Jean Kauã Luan Marcos Nathan Paulo Rafinha Ronaldo Tales Vitor Wendel Yago Ygor Danilo Emerson Juninho Lucca Andrey Kaique',
+    'Araújo, Cardoso, Castro, Correia, Cunha, Fernandes, Freitas, Martins, Mendes, Monteiro, Nunes, Pinto, Ramos, Reis, Rodrigues, Santana, Soares, Teixeira, Vieira, Andrade, Batista, Campos, Cavalcanti, Duarte, Farias, Figueiredo, Lopes, Machado, Marques, Medeiros, Melo, Miranda, Moreira, Nogueira, Pires, Queiroz, Sales, Siqueira, Tavares');
+  FM.D.addNames('ARG', 'Alejandro Bruno Carlos Cristian Damián Ezequiel Fernando Germán Guido Ignacio Joaquín Juan Leandro Lucas Luciano Marcos Martín Mauro Maximiliano Nahuel Pablo Ramiro Rodrigo Thiago Alan Axel Benjamín Bautista Brian Claudio Enzo Exequiel Federico Gastón Hernán Jonathan Lisandro Milton Walter Luca',
+    'Pérez, Gómez, Ruiz, Torres, Suárez, Castro, Molina, Ortiz, Silva, Rojas, Morales, Núñez, Ríos, Vega, Ramos, Luna, Ferreyra, Giménez, Cabrera, Aguirre, Paz, Quiroga, Villalba, Juárez, Godoy, Ledesma, Figueroa, Coronel, Peralta, Arce, Bustos, Carrizo, Maidana, Ojeda, Páez, Rivero, Toledo, Vera, Zárate, Cáceres');
+  FM.D.addNames('JPN', 'Asahi Daichi Eita Fumiya Hikaru Hinata Hiroto Jun Kazuya Keisuke Koki Kyosuke Makoto Masaki Minato Naoya Reo Ryusei Satoshi Shinji Shunsuke Soma Taiga Takeru Tatsuya Tomoki Tsubasa Wataru Yamato Yudai Yuma Yusei Akira Ayumu Haruki Issei Kento Rikuto Shinya',
+    'Abe, Arai, Fujii, Hasegawa, Hirano, Honda, Ishii, Iwasaki, Kaneko, Kikuchi, Kinoshita, Kubo, Maruyama, Masuda, Matsuda, Miura, Miyazaki, Morita, Nakagawa, Nakano, Nakajima, Noguchi, Ota, Saito, Sakai, Sato, Shibata, Sugiyama, Takagi, Takeda, Tamura, Ueda, Uchida, Wada, Yamazaki, Yano, Yokoyama, Kojima, Hayashida, Nagai');
+  FM.D.addNames('KOR', 'Chan-woo Dae-hyun Eun-su Gi-hyun Gyu-min Hae-won Ho-jun Hyeon-seok In-beom Ja-cheol Jae-sung Jeong-ho Ji-hwan Jin-woo Jong-hyun Joo-won Kyu-ri Min-jae Min-kyu Myung-jae Sang-min Se-hun Seok-ju Seung-ho Sung-min Tae-hwan Won-jun Woo-young Yeong-jae Yong-woo Young-min Hyung-min Chul-soo Kwang-hyun Jun-young',
+    'Hwang, Im, Heo, Yoo, Go, Yang, Son, Noh, Ha, Kwak, Sung, Cha, Joo, Woo, Min, Jin, Na, Ji, Um, Byun, Chae, Pyo, Gil, Ma, Do, Yeo, Ok, Seol');
+  FM.D.addNames('THA', 'Adisak Anucha Apisit Boonsong Chakrit Chalermchai Ekkachai Jirawat Kasem Kiattisak Korrawit Manop Nattawut Niran Panupong Pattara Phichit Pongsakorn Rattapong Sakda Somchai Sompong Sukree Surachet Tanaboon Teerasil Thitiphan Tossapol Umpol Vorawut Wanchai Wisarut Yutthana Charyl Poramet Kritsana',
+    'Anantasak, Buakhao, Chanthong, Charoensuk, Duangkaew, Intharat, Jantarasuk, Kaewkla, Khamsing, Lertsak, Meesuk, Nakprasert, Onsri, Panyasiri, Phetchara, Prasertsri, Ruangsri, Saelim, Sangthong, Siriwat, Somboon, Suwannarat, Tangsakul, Thongchai, Udomsak, Wattanachai, Wiriya, Yenphan, Kaewmanee, Boonkerd');
+  FM.D.addNames('SRB', 'Aleksa Andrej Bojan Branko Darko Dejan Dimitrije Goran Ivan Jovan Lazar Luka Marko Matija Miloš Mladen Nemanja Novak Pavle Radoš Relja Sava Srđan Stefan Uroš Vasilije Vukašin Zoran Željko Bogdan Danilo Igor Ljubomir Mirko Ognjen',
+    'Aleksić, Antić, Bogdanović, Cvetković, Despotović, Đurić, Gajić, Jevtić, Krstić, Lazić, Maksimović, Mladenović, Novaković, Pantić, Perić, Radonjić, Rakić, Savić, Spasić, Stevanović, Stojković, Tomić, Veljković, Vukić, Zečević, Živanović, Jović, Marinković, Milovanović, Radenković');
+  FM.D.addNames('FRA', 'Alexis Aurélien Bastien Cédric Corentin Damien Dylan Florian Gaëtan Guillaume Jordan Julien Kévin Lenny Loïc Malo Marius Nicolas Olivier Quentin Rémi Romain Sacha Tanguy Valentin Victor Yann Youssouf Ismaël Kylian Warren Désiré Randal Eduardo Tanguy Boubacar Souleymane Amadou',
+    'Barbier, Bertrand, Blanchard, Boyer, Brun, Caron, Clément, Colin, David, Denis, Dumont, Dupont, Fabre, Fournier, Gaillard, Guerin, Henry, Joly, Lambert, Lefèvre, Lemoine, Marchand, Masson, Mathieu, Meunier, Michel, Muller, Nicolas, Perrin, Petit, Renard, Richard, Rivière, Roussel, Roy, Simon, Thomas, Vidal, Kanté, Koné, Touré, Konaté, Doucouré, Sakho, Coulibaly, Keita');
+  FM.D.addNames('ESP', 'Aarón Adrián Andrés Antonio Arnau Brais Cristian Enrique Ernesto Francisco Gerardo Guillermo Héctor Ismael Jaime José Juanma Julen Lucas Manuel Mateo Nico Rafa Ramón Rodrigo Samu Santi Tomás Xabi Yeray Ander Beñat Gorka Iñaki Joan Martí Pol Roger Xavi Hugo',
+    'Aguilar, Bravo, Caballero, Cámara, Carmona, Crespo, Domínguez, Durán, Escudero, Esteban, Ferrer, Gallardo, Giménez, Guzmán, Hidalgo, Lara, Luque, Manzano, Marín, Mora, Nieto, Ortiz, Pastor, Quintero, Ramírez, Reyes, Robles, Rojas, Sáez, Salas, Sanz, Soler, Soto, Varela, Vázquez, Velasco, Zamora, Arrieta, Goikoetxea, Larrañaga');
+  FM.D.addNames('NGA', 'Abdullahi Akinwale Babatunde Chidera Chinedu Daniel David Ebuka Ejike Friday Godwin Ibrahim Innocent Jamiu Kingsley Kunle Michael Nnamdi Obafemi Oluwaseun Promise Raphael Rasheed Sadiq Seun Simeon Stanley Terem Tobi Umar Wale Yakubu Zaidu Calvin Cyriel Ademola Alhassan',
+    'Abubakar, Adeleke, Afolayan, Agu, Aina, Akinyemi, Amadi, Anyanwu, Dike, Ekwueme, Ibekwe, Igwe, Kalu, Mohammed, Nwachukwu, Nwankwo, Obasi, Odion, Ogbonna, Okeke, Oyelaran, Sule, Umar, Yusuf, Ezenwa, Adeniyi, Chima, Emenike, Ogundipe, Olatunji, Onyeama, Uzoma, Babalola, Ezeh, Nnadi');
+  FM.D.addNames('POR', 'Alexandre Álvaro Artur Bernardo Carlos Daniel Duarte Eduardo Fábio Filipe Gabriel Henrique Hélder Ivo Joaquim Jorge Leonardo Lourenço Manuel Marco Mário Paulo Renato Rodrigo Rui Salvador Samuel Sérgio Simão Tomé Vasco Xavier Gustavo Dinis Otávio',
+    'Almeida, Alves, Amaral, Andrade, Araújo, Azevedo, Batista, Borges, Brito, Campos, Castro, Cruz, Cunha, Dias, Esteves, Faria, Fernandes, Freitas, Guerreiro, Henriques, Leal, Leite, Loureiro, Macedo, Machado, Magalhães, Marques, Monteiro, Nogueira, Nunes, Pacheco, Paiva, Reis, Salgado, Seixas, Silva, Simões, Vaz, Vieira');
+  FM.D.addNames('NED', 'Bart Boy Calvin Cody Dirk Emil Gijs Hidde Jan Jens Jort Jurriën Kenneth Lucas Mats Max Micky Nathan Owen Pepijn Quinten Rens Robin Roel Ruud Sepp Sjoerd Teun Thom Tijjani Vincent Wessel Xavi Youri Zeno',
+    'Boer, Bosch, van Dijk, van der Linden, Hoekstra, Huisman, Jacobs, de Graaf, de Groot, de Haan, de Koning, de Leeuw, Maas, Martens, Peters, Post, Scholten, Timmermans, van Beek, van Dam, van Dongen, van Loon, van Vliet, Verbeek, Verhoeven, Vink, Zwart, Koster, Evers, Brand, Veenstra, Wolters, Schouten');
+  FM.D.addNames('GER', 'Alexander Andreas Anton Ben Christian Daniel Dennis Dominik Elias Emil Finn Frederik Hannes Jakob Janik Johannes Jonathan Justin Karl Kevin Lars Lennart Linus Malte Mats Matthias Max Nils Ole Oskar Pascal Robin Sebastian Simon Stefan Thomas Timo Tom Vincent Yannick',
+    'Albrecht, Arnold, Baumann, Beck, Böhm, Brandt, Busch, Dietrich, Engel, Friedrich, Fuchs, Graf, Günther, Haas, Hahn, Heinrich, Herrmann, Horn, Jung, Keller, Kraus, Kühn, Lehmann, Lorenz, Ludwig, Maier, Martin, Möller, Otto, Pohl, Roth, Sauer, Schäfer, Scholz, Schubert, Schulz, Schwarz, Seidel, Simon, Sommer, Stein, Thomas, Vogt, Werner, Winkler, Ziegler');
+  FM.D.addNames('BEL', 'Aster Bram Charles Cyriel Dante Dries Elias Emile Ferre Hugo Ilias Jarne Jonas Julien Kevin Leander Loïs Louis Mats Mauro Michiel Noah Olivier Pieter Quinten Rune Simon Tom Toon Warre Xander Yari Zeno Arthur Alexis',
+    'Bogaert, Claeys, Cools, De Backer, De Clercq, De Cock, De Coster, Dewaele, De Wilde, Dubois, Dupont, Geerts, Hendrickx, Lemmens, Leroy, Lambert, Mertens, Moens, Nys, Segers, Simons, Smets, Stevens, Van Acker, Van den Broeck, Van Hoof, Vandamme, Verhaegen, Verstraete, Vervoort, Wuyts, Lefebvre, Mathieu');
+  FM.D.addNames('IRL', 'Adam Ben Bobby Callum Cillian Colm Conal Dáire Darren Declan Diarmuid Donal Eamon Fiachra Gavin James Jake John Kyle Luke Mark Mikey Odhran Padraig Peter Rian Rory Seamus Tiernan Tom Troy',
+    'Boyle, Brady, Burke, Carroll, Clarke, Coleman, Collins, Connolly, Cullen, Cunningham, Dempsey, Doyle, Dunne, Egan, Flanagan, Flynn, Foley, Gorman, Harrington, Healy, Hennessy, Horgan, Joyce, Keogh, Lawlor, Lynch, Maguire, Mahon, McGrath, Molloy, Mulligan, Nugent, Regan, Ryan, Sweeney, Tierney, Whelan');
+  FM.D.addNames('SCO', 'Aaron Alan Allan Barry Billy Brian Cammy Chris Colin Darren David Declan Gary Gordon Hamish Iain Jamie John Kenny Kevin Kieran Lawrence Lyall Malcolm Neil Rory Ruaridh Shaun Stephen Steven Stewart Tommy',
+    'Adam, Bain, Black, Brown, Campbell, Christie, Cooper, Dickson, Docherty, Donaldson, Ferguson, Forrest, Gray, Johnston, Kelly, Kennedy, Lawson, Mackay, Maclean, McLean, Miller, Mitchell, Taylor, Boyd, Craig, Dunlop, Fleming, Hay, Kirk, Lindsay, Ogilvie, Rennie, Wallace');
+  FM.D.addNames('WAL', 'Aaron Ben Brennan Chris Connor Daniel David Ethan Gethin Harri Iolo Jac Jonny Jordan Kieffer Lloyd Mark Neco Nathan Rabbi Sion Sorba Wes Joe Ellis Rubin',
+    'Allen, Collins, Cooper, Davies, Hughes, Jenkins, King, Lawrence, Moore, Price, Roberts, Taylor, Thomas, Watkins, Wilson, Hopkins, Richards, Bowen, Howells, Jarvis, Lloyd, Meredith, Nash, Probert, Rowlands');
+  FM.D.addNames('URU', 'Agustín Álvaro Bruno Carlos Cristian Damián Diego Felipe Fernando Gabriel Guillermo Ignacio Jonathan Juan Leonardo Lucas Luis Manuel Marcelo Nahuel Pablo Rodrigo Ronald Thiago Valentín Walter Alexis Christian Kevin Federico',
+    'Acosta, Aguirre, Cáceres, Canobbio, Cardozo, Giménez, González, Hernández, López, Martínez, Olivera, Rodríguez, Rosas, Sánchez, Silva, Torres, Varela, Viera, Villar, Zalazar, Bueno, Cabrera, Duarte, Etchegaray, Lemos, Machado, Nández, Pintos, Quintana, Sosa');
+  FM.D.addNames('COL', 'Alexis Andrés Brayan Carlos Cristian Daniel David Deiver Diego Duván Edwin Eduardo Faustino Frank Gustavo Harold Jaminton Jhon Jhonatan Johan Jorge José Juan Kevin Luis Mateo Miguel Nicolás Richard Santiago Sebastián Steven Wílmar Yerson',
+    'Barrios, Campaz, Carrascal, Castillo, Durán, Fabra, Guerrero, Hurtado, Lerma, Machado, Montero, Muñoz, Palacios, Quintero, Ríos, Rodríguez, Sánchez, Uribe, Valoy, Vargas, Arboleda, Bermúdez, Cárdenas, Escobar, Gaitán, Londoño, Mejía, Osorio, Restrepo, Zuluaga');
+  FM.D.addNames('SEN', 'Abdoulaye Alioune Amadou Bamba Boulaye Cherif Dame Djibril Édouard El Hadji Fodé Formose Habibou Ismaïla Kalidou Krépin Lamine Mame Mbaye Moustapha Nampalys Nicolas Pathé Sadio Salif Samba Seydou Souleymane Youssouf Idrissa Iliman',
+    'Baldé, Cissokho, Coly, Diagne, Diakhaby, Diarra, Diaw, Dieye, Diouf, Gassama, Gueye, Kanté, Keïta, Ndoye, Sabaly, Sall, Sané, Sène, Sidibé, Sonko, Tall, Wagué, Ndour, Ngom, Samb, Seye, Thiaw, Tine, Wade');
+  FM.D.addNames('GHA', 'Abdul Alexander Andrew Antoine Baba Benjamin Bernard Christopher Dennis Derrick Elisha Enoch Eric Ernest Evans Francis Frederick Gideon Ibrahim Inaki Jonathan Jordan Kamaldeen Kingsley Majeed Mohammed Mubarak Osman Patrick Razak Salis Thomas Tariq',
+    'Addo, Aidoo, Ampem, Annan, Asamoah, Badu, Bukari, Nuamah, Nyarko, Ofosu, Frimpong, Gyasi, Issahaku, Lamptey, Sulemana, Amankwah, Boahen, Dankwa, Fosu, Kusi, Manu, Nketiah, Obeng, Sarfo, Tawiah, Twumasi, Wiredu, Yamoah, Zakari');
+  FM.D.addNames('CIV', 'Abdoul Adama Alain Amad Arthur Bakary Christian Didier Emmanuel Éric Evann Franck Gervais Guéla Hamed Ibrahim Jean-Michaël Jonathan Karim Lassina Maxwel Nicolas Odilon Oumar Salomon Sébastien Sékou Simon Willy Yaya',
+    'Adingra, Aké, Boga, Deli, Diakité, Fofana, Konan, Kouamé, Ouattara, Sangaré, Singo, Soumahoro, Touré, Yao, Agba, Assi, Beugré, Dago, Ehui, Gnahoré, Kacou, Loba, N\'Guessan, Tanoh, Yeboué, Zadi');
+  FM.D.addNames('MAR', 'Abdelhamid Abderrazak Achraf Adil Ahmed Anas Azzedine Brahim Chadi Driss Eliesse Hakim Ibrahim Imran Ismael Jawad Khalid Mounir Mohamed Munir Nordin Noussair Othmane Rachid Romain Sofiane Selim Yahia Yassine Younes Zakaria',
+    'Aboukhlal, Adli, Attiat-Allah, Chair, Dari, El Khannouss, El Yamiq, Ezzalzouli, Ouahabi, Rahimi, Sabiri, Zaroury, Belhanda, Fajr, Louza, Amrani, Bakkali, Cherkaoui, El Ouardi, Fikri, Hamdaoui, Jabri, Kharbouch, Mouline, Nejjari, Sefrioui, Tounsi, Zeroual');
+  FM.D.addNames('USA', 'Alex Andrew Anthony Benjamin Blake Brian Cameron Carter Chase Christian Clint Daniel DeAndre Dylan Eric Ethan Gabriel Jacob Jalen Jonathan Joshua Julian Justin Landon Logan Malik Mark Owen Paxten Reggie Ricardo Sergiño Timothy Walker Weston Yunus',
+    'Anderson, Cannon, Carter, Evans, Ferreira, Hall, Horvath, Lewis, Long, Martinez, Morris, Nelson, Robinson, Scally, Turner, Wright, Zimmerman, Barnes, Cooper, Brooks, Campbell, Collins, Edwards, Fisher, Graham, Hughes, Kelly, Murphy, Perez, Ross, Sanders, Stewart, Ward, Wood');
+  FM.D.addNames('DEN', 'Alexander Andreas Casper Daniel Elias Gustav Jacob Jens Joakim Jonas Kristoffer Lasse Lucas Malthe Marcus Martin Morten Nikolaj Oliver Pierre-Emile Rasmus Sebastian Simon Thomas Troels Victor William Yussuf Asger Silas Mathias',
+    'Andersen, Christensen, Damsgaard, Frandsen, Gregersen, Isaksen, Jakobsen, Kristiansen, Lindstrøm, Olesen, Stryger, Winther, Østergaard, Hermansen, Mikkelsen, Bang, Dam, Enevoldsen, Fog, Gade, Holst, Juhl, Krogh, Lund, Mogensen, Nørregaard, Overgaard, Riis, Schou, Thygesen');
+  FM.D.addNames('NOR', 'Alexander Andreas Anders Birger Bjørn Daniel Erling Fredrik Gustav Hans Harald Jens Jo Johannes Julian Kasper Kristoffer Leo Lars Marius Martin Morten Oscar Patrick Per Sebastian Sondre Stefan Thomas Tor Torbjørn Vetle',
+    'Aasgaard, Ajer, Berge, Bjørkan, Hanche-Olsen, Hauge, Holm, Jensen, Larsen, Meling, Nyland, Pedersen, Selvik, Solbakken, Strandberg, Thorsby, Tangvik, Skaug, Eggen, Aune, Bakke, Brenden, Fjeld, Grønli, Hovland, Lie, Ness, Rønning, Sæther, Tveit');
+  FM.D.addNames('CRO', 'Andrej Antonio Bruno Damir Darko Dario Davor Domagoj Hrvoje Igor Ivo Josip Kristijan Lovro Luka Marin Martin Mateo Matija Mislav Niko Nikola Robert Roko Stjepan Tomislav Vedran Zvonimir Luka Petar Borna',
+    'Blažević, Bošnjak, Brajković, Bralić, Crnković, Čović, Dragić, Filipović, Galović, Grubišić, Herceg, Ivanković, Jakovljević, Jukić, Katić, Klarić, Kovač, Lončar, Lukić, Mikulić, Novak, Pavlović, Perković, Polić, Radošević, Sertić, Šarić, Tomić, Vidović, Vrdoljak, Zovko');
+  FM.D.addNames('ITA', 'Alberto Alessio Antonio Carlo Claudio Cristiano Daniele Diego Enrico Fabio Federico Gabriele Gaetano Giovanni Giuseppe Jacopo Luigi Mattia Michele Mirko Nicola Paolo Raffaele Roberto Salvatore Samuele Sandro Tommaso Umberto Valerio Vincenzo Christian Destiny',
+    'Amato, Barone, Basile, Benedetti, Bernardi, Bruno, Cattaneo, Coppola, D\'Angelo, De Luca, De Rosa, Farina, Fiore, Giordano, Grasso, Guerra, Mancini, Mariani, Marchetti, Messina, Monti, Morelli, Neri, Orlando, Palumbo, Parisi, Pellegrini, Riva, Rizzo, Ruggiero, Sala, Santoro, Serra, Silvestri, Testa, Valentini, Vitale');
+  FM.D.addNames('MEX', 'Adrián Alan Alejandro Armando Brian César Christian Daniel Eduardo Efraín Emmanuel Érick Fidel Gilberto Guillermo Hugo Isaac Israel Jesús Jonathan Jorge Kevin Luis Manuel Mario Osvaldo Pablo Rogelio Sebastián Tomás Ulises',
+    'Aguirre, Arteaga, Ayala, Beltrán, Cabrera, Campos, Delgado, Espinoza, Estrada, Fuentes, Galindo, Herrera, Lara, Leyva, Lozano, Macías, Medina, Montes, Navarro, Ochoa, Pérez, Quiñones, Ramos, Ríos, Rosales, Salcedo, Sandoval, Tapia, Valdez, Vega, Zavala');
+
+  // ---------- More minimal leagues: the next European leagues by UEFA coefficient ----------
+  FM.D.CLUBS_BE1 = [
+    ['Club Brugge', 'CLB2', 'Bruges', '#0E4DA4', '#000000', 'giant', 68], ['Union Saint-Gilloise', 'USG', 'Brussels', '#FFDD00', '#0033A0', 'selling', 64],
+    ['Anderlecht', 'AND2', 'Brussels', '#4B2C85', '#FFFFFF', 'giant', 65], ['KRC Genk', 'GNK', 'Genk', '#003DA5', '#FFFFFF', 'youth', 63],
+    ['KAA Gent', 'GNT', 'Ghent', '#003DA5', '#FFFFFF', 'historic', 61], ['Royal Antwerp', 'ANT', 'Antwerp', '#E30613', '#FFFFFF', 'oil', 61],
+    ['Standard Liège', 'STL2', 'Liège', '#E30613', '#FFFFFF', 'fallen', 59], ['Cercle Brugge', 'CER2', 'Bruges', '#00843D', '#000000', 'youth', 56],
+    ['KV Mechelen', 'KVM', 'Mechelen', '#FFDD00', '#E30613', 'fan', 56], ['KVC Westerlo', 'WES', 'Westerlo', '#FFDD00', '#003DA5', 'oil', 55],
+    ['Sporting Charleroi', 'CHL', 'Charleroi', '#000000', '#FFFFFF', 'fan', 55], ['OH Leuven', 'OHL', 'Leuven', '#FFFFFF', '#00843D', 'fan', 54],
+    ['Sint-Truiden', 'STV2', 'Sint-Truiden', '#FFDD00', '#003DA5', 'selling', 53], ['FCV Dender', 'DEN2', 'Denderleeuw', '#E30613', '#FFFFFF', 'fan', 51],
+    ['Zulte Waregem', 'ZWA', 'Waregem', '#E30613', '#00843D', 'fan', 51], ['RAAL La Louvière', 'RAAL', 'La Louvière', '#00843D', '#FFFFFF', 'fan', 50],
+  ];
+  FM.D.CLUBS_TR1 = [
+    ['Galatasaray', 'GAL', 'Istanbul', '#A90432', '#FDB912', 'giant', 72], ['Fenerbahçe', 'FEN', 'Istanbul', '#FFED00', '#004A9F', 'giant', 71],
+    ['Beşiktaş', 'BJK', 'Istanbul', '#000000', '#FFFFFF', 'giant', 67], ['Trabzonspor', 'TS', 'Trabzon', '#7A1E3A', '#6CABDD', 'historic', 63],
+    ['İstanbul Başakşehir', 'IBFK', 'Istanbul', '#F47920', '#0B1F4B', 'oil', 60], ['Samsunspor', 'SAM2', 'Samsun', '#E30613', '#FFFFFF', 'fan', 57],
+    ['Göztepe', 'GOZ', 'İzmir', '#FFDD00', '#E30613', 'fan', 56], ['Eyüpspor', 'EYP', 'Istanbul', '#6A1B9A', '#FFDD00', 'oil', 55],
+    ['Kasımpaşa', 'KAS2', 'Istanbul', '#003DA5', '#FFFFFF', 'fan', 54], ['Çaykur Rizespor', 'RIZ', 'Rize', '#00843D', '#003DA5', 'fan', 54],
+    ['Konyaspor', 'KON', 'Konya', '#00843D', '#FFFFFF', 'fan', 54], ['Antalyaspor', 'ANT2', 'Antalya', '#E30613', '#FFFFFF', 'fan', 53],
+    ['Alanyaspor', 'ALY', 'Alanya', '#F47920', '#00843D', 'fan', 53], ['Gaziantep FK', 'GAZ', 'Gaziantep', '#E30613', '#000000', 'fan', 53],
+    ['Kayserispor', 'KAY', 'Kayseri', '#FFDD00', '#E30613', 'fan', 52], ['Kocaelispor', 'KOC', 'İzmit', '#00843D', '#000000', 'fan', 52],
+    ['Gençlerbirliği', 'GEN2', 'Ankara', '#E30613', '#000000', 'youth', 51], ['Fatih Karagümrük', 'FKG', 'Istanbul', '#E30613', '#000000', 'fan', 51],
+  ];
+  FM.D.CLUBS_CZ1 = [
+    ['Slavia Prague', 'SLA2', 'Prague', '#E30613', '#FFFFFF', 'giant', 64], ['Sparta Prague', 'SPA', 'Prague', '#8A1538', '#FFFFFF', 'giant', 63],
+    ['Viktoria Plzeň', 'PLZ', 'Plzeň', '#E30613', '#003DA5', 'historic', 61], ['Baník Ostrava', 'BAN2', 'Ostrava', '#6CABDD', '#FFFFFF', 'fan', 56],
+    ['Sigma Olomouc', 'SIG', 'Olomouc', '#003DA5', '#FFFFFF', 'youth', 53], ['Slovan Liberec', 'LIB2', 'Liberec', '#FFFFFF', '#003DA5', 'youth', 53],
+    ['Hradec Králové', 'HKR', 'Hradec Králové', '#000000', '#FFDD00', 'fan', 51], ['Mladá Boleslav', 'MBO', 'Mladá Boleslav', '#003DA5', '#FFFFFF', 'selling', 51],
+    ['Bohemians 1905', 'BOH', 'Prague', '#00843D', '#FFFFFF', 'fan', 50], ['FK Jablonec', 'JAB', 'Jablonec nad Nisou', '#00843D', '#000000', 'fan', 50],
+    ['FK Teplice', 'TEP', 'Teplice', '#FFDD00', '#003DA5', 'fan', 49], ['FK Pardubice', 'PAR2', 'Pardubice', '#E30613', '#FFFFFF', 'fan', 48],
+    ['MFK Karviná', 'KAR', 'Karviná', '#00843D', '#FFFFFF', 'fan', 48], ['1. FC Slovácko', 'SLO2', 'Uherské Hradiště', '#003DA5', '#FFFFFF', 'fan', 48],
+    ['Dukla Prague', 'DUK', 'Prague', '#FFDD00', '#8A1538', 'historic', 47], ['FC Zlín', 'ZLN', 'Zlín', '#FFDD00', '#000000', 'fan', 47],
+  ];
+  FM.D.CLUBS_GR1 = [
+    ['Olympiacos', 'OLY2', 'Piraeus', '#E30613', '#FFFFFF', 'giant', 68], ['Panathinaikos', 'PAO', 'Athens', '#00843D', '#FFFFFF', 'giant', 64],
+    ['AEK Athens', 'AEK', 'Athens', '#FFDD00', '#000000', 'giant', 64], ['PAOK', 'PAOK', 'Thessaloniki', '#000000', '#FFFFFF', 'historic', 65],
+    ['Aris Thessaloniki', 'ARI', 'Thessaloniki', '#FFDD00', '#000000', 'fan', 57], ['OFI Crete', 'OFI', 'Heraklion', '#000000', '#FFFFFF', 'fan', 53],
+    ['Atromitos', 'ATR', 'Peristeri', '#003DA5', '#FFFFFF', 'fan', 52], ['Asteras Tripolis', 'AST', 'Tripoli', '#FFDD00', '#003DA5', 'fan', 51],
+    ['Panetolikos', 'PNT', 'Agrinio', '#FFDD00', '#003DA5', 'fan', 50], ['Volos NFC', 'VOL2', 'Volos', '#E30613', '#003DA5', 'fan', 50],
+    ['Levadiakos', 'LEV2', 'Livadeia', '#00843D', '#FFFFFF', 'fan', 49], ['Kifisia', 'KIF', 'Kifisia', '#003DA5', '#FFFFFF', 'fan', 49],
+    ['AEL Larissa', 'AEL', 'Larissa', '#8A1538', '#FFFFFF', 'historic', 48], ['Panserraikos', 'PSR', 'Serres', '#E30613', '#FFFFFF', 'fan', 48],
+  ];
+  FM.D.CLUBS_NO1 = [
+    ['Bodø/Glimt', 'BOD', 'Bodø', '#FFDD00', '#000000', 'youth', 63], ['SK Brann', 'BRA2', 'Bergen', '#E30613', '#FFFFFF', 'fan', 58],
+    ['Viking FK', 'VIK', 'Stavanger', '#003DA5', '#FFFFFF', 'historic', 57], ['Rosenborg', 'RBK', 'Trondheim', '#FFFFFF', '#000000', 'giant', 58],
+    ['Molde', 'MOL', 'Molde', '#003DA5', '#FFFFFF', 'historic', 58], ['Sarpsborg 08', 'S08', 'Sarpsborg', '#003DA5', '#FFFFFF', 'fan', 51],
+    ['Fredrikstad', 'FFK', 'Fredrikstad', '#FFFFFF', '#E30613', 'historic', 51], ['Tromsø IL', 'TIL', 'Tromsø', '#E30613', '#FFFFFF', 'fan', 51],
+    ['Sandefjord', 'SAF2', 'Sandefjord', '#003DA5', '#FFFFFF', 'fan', 49], ['KFUM Oslo', 'KFU', 'Oslo', '#003DA5', '#FFFFFF', 'fan', 49],
+    ['HamKam', 'HAM', 'Hamar', '#00843D', '#FFFFFF', 'fan', 48], ['Kristiansund', 'KBK', 'Kristiansund', '#003DA5', '#FFFFFF', 'fan', 48],
+    ['Vålerenga', 'VIF', 'Oslo', '#003DA5', '#E30613', 'historic', 52], ['Bryne', 'BRY', 'Bryne', '#E30613', '#FFFFFF', 'fan', 46],
+    ['Strømsgodset', 'SIF', 'Drammen', '#003DA5', '#FFFFFF', 'fan', 48], ['FK Haugesund', 'FKH', 'Haugesund', '#003DA5', '#FFFFFF', 'fan', 47],
+  ];
+  FM.D.CLUBS_PL1 = [
+    ['Lech Poznań', 'LPO', 'Poznań', '#003DA5', '#FFFFFF', 'giant', 60], ['Raków Częstochowa', 'RAK', 'Częstochowa', '#E30613', '#003DA5', 'oil', 59],
+    ['Jagiellonia Białystok', 'JAG', 'Białystok', '#FFDD00', '#E30613', 'fan', 58], ['Legia Warsaw', 'LEG2', 'Warsaw', '#FFFFFF', '#00843D', 'giant', 60],
+    ['Pogoń Szczecin', 'POG', 'Szczecin', '#003DA5', '#8A1538', 'fan', 55], ['Górnik Zabrze', 'GOR', 'Zabrze', '#FFFFFF', '#003DA5', 'historic', 54],
+    ['Cracovia', 'CRA2', 'Kraków', '#E30613', '#FFFFFF', 'fan', 53], ['Widzew Łódź', 'WID', 'Łódź', '#E30613', '#FFFFFF', 'oil', 53],
+    ['GKS Katowice', 'GKS', 'Katowice', '#FFDD00', '#00843D', 'fan', 51], ['Zagłębie Lubin', 'ZAG', 'Lubin', '#F47920', '#00843D', 'youth', 52],
+    ['Piast Gliwice', 'PIA', 'Gliwice', '#003DA5', '#E30613', 'fan', 52], ['Motor Lublin', 'MOT', 'Lublin', '#FFDD00', '#003DA5', 'fan', 50],
+    ['Korona Kielce', 'KOR', 'Kielce', '#FFDD00', '#E30613', 'fan', 50], ['Radomiak Radom', 'RAD2', 'Radom', '#00843D', '#FFFFFF', 'fan', 50],
+    ['Lechia Gdańsk', 'LGD', 'Gdańsk', '#00843D', '#FFFFFF', 'fallen', 50], ['Arka Gdynia', 'ARK', 'Gdynia', '#FFDD00', '#003DA5', 'fan', 48],
+    ['Wisła Płock', 'WPL', 'Płock', '#003DA5', '#FFFFFF', 'fan', 49], ['Termalica Nieciecza', 'TER', 'Nieciecza', '#F47920', '#000000', 'fan', 47],
+  ];
+  FM.D.CLUBS_DK1 = [
+    ['FC Copenhagen', 'FCK', 'Copenhagen', '#FFFFFF', '#003DA5', 'giant', 64], ['FC Midtjylland', 'FCM2', 'Herning', '#000000', '#E30613', 'selling', 62],
+    ['Brøndby IF', 'BIF', 'Brøndby', '#FFDD00', '#003DA5', 'historic', 58], ['AGF', 'AGF', 'Aarhus', '#FFFFFF', '#003DA5', 'fan', 56],
+    ['FC Nordsjælland', 'FCN', 'Farum', '#E30613', '#FFFFFF', 'youth', 56], ['Randers FC', 'RFC', 'Randers', '#003DA5', '#FFFFFF', 'fan', 52],
+    ['Silkeborg IF', 'SIL', 'Silkeborg', '#E30613', '#FFFFFF', 'youth', 52], ['Viborg FF', 'VFF', 'Viborg', '#00843D', '#FFFFFF', 'fan', 51],
+    ['Odense BK', 'OB', 'Odense', '#003DA5', '#FFFFFF', 'fallen', 51], ['Sønderjyske', 'SJF', 'Haderslev', '#003DA5', '#FFFFFF', 'fan', 49],
+    ['Vejle BK', 'VBK', 'Vejle', '#E30613', '#FFFFFF', 'fan', 49], ['FC Fredericia', 'FCF', 'Fredericia', '#E30613', '#FFFFFF', 'fan', 48],
+  ];
+  FM.D.CLUBS_AT1 = [
+    ['Red Bull Salzburg', 'RBS', 'Salzburg', '#FFFFFF', '#E30613', 'oil', 64], ['Sturm Graz', 'STU', 'Graz', '#000000', '#FFFFFF', 'historic', 61],
+    ['Rapid Wien', 'RAP2', 'Vienna', '#00843D', '#FFFFFF', 'giant', 58], ['Austria Wien', 'FAK', 'Vienna', '#6A1B9A', '#FFFFFF', 'historic', 56],
+    ['LASK', 'LASK', 'Linz', '#000000', '#FFFFFF', 'fan', 56], ['Wolfsberger AC', 'WAC2', 'Wolfsberg', '#000000', '#F47920', 'fan', 51],
+    ['TSV Hartberg', 'HAR', 'Hartberg', '#003DA5', '#FFFFFF', 'fan', 49], ['Blau-Weiß Linz', 'BWL', 'Linz', '#003DA5', '#FFFFFF', 'fan', 49],
+    ['WSG Tirol', 'WSG', 'Wattens', '#00843D', '#FFFFFF', 'fan', 48], ['SCR Altach', 'ALT', 'Altach', '#000000', '#FFDD00', 'fan', 48],
+    ['Grazer AK', 'GAK', 'Graz', '#E30613', '#FFFFFF', 'fallen', 47], ['SV Ried', 'RIE2', 'Ried im Innkreis', '#000000', '#00843D', 'fan', 47],
+  ];
+  FM.D.CLUBS_CH1 = [
+    ['FC Basel', 'BAS', 'Basel', '#E30613', '#003DA5', 'giant', 62], ['BSC Young Boys', 'YB', 'Bern', '#FFDD00', '#000000', 'giant', 62],
+    ['Servette FC', 'SER', 'Geneva', '#8A1538', '#FFFFFF', 'historic', 56], ['FC Lugano', 'LUG', 'Lugano', '#000000', '#FFFFFF', 'oil', 56],
+    ['FC Luzern', 'LUZ', 'Lucerne', '#003DA5', '#FFFFFF', 'youth', 53], ['FC St. Gallen', 'STG', 'St. Gallen', '#00843D', '#FFFFFF', 'fan', 53],
+    ['FC Zürich', 'FCZ', 'Zurich', '#FFFFFF', '#003DA5', 'historic', 54], ['Grasshopper Club', 'GCZ', 'Zurich', '#003DA5', '#FFFFFF', 'fallen', 51],
+    ['Lausanne-Sport', 'LS', 'Lausanne', '#003DA5', '#FFFFFF', 'oil', 52], ['FC Sion', 'SIO', 'Sion', '#FFFFFF', '#E30613', 'fan', 51],
+    ['FC Winterthur', 'WIN', 'Winterthur', '#E30613', '#FFFFFF', 'fan', 49], ['FC Thun', 'THU', 'Thun', '#E30613', '#FFFFFF', 'fan', 49],
+  ];
+  FM.D.CLUBS_SC1 = [
+    ['Celtic', 'CEL2', 'Glasgow', '#00843D', '#FFFFFF', 'giant', 70], ['Rangers', 'RAN2', 'Glasgow', '#1B458F', '#FFFFFF', 'giant', 68],
+    ['Heart of Midlothian', 'HEA', 'Edinburgh', '#8A1538', '#FFFFFF', 'historic', 56], ['Aberdeen', 'ABE', 'Aberdeen', '#E30613', '#FFFFFF', 'historic', 56],
+    ['Hibernian', 'HIB', 'Edinburgh', '#00843D', '#FFFFFF', 'historic', 55], ['Motherwell', 'MOT2', 'Motherwell', '#FFB81C', '#8A1538', 'fan', 50],
+    ['Dundee United', 'DUN2', 'Dundee', '#F47920', '#000000', 'fan', 51], ['Kilmarnock', 'KIL', 'Kilmarnock', '#003DA5', '#FFFFFF', 'fan', 50],
+    ['St Mirren', 'SMI', 'Paisley', '#000000', '#FFFFFF', 'fan', 50], ['Dundee', 'DND', 'Dundee', '#0B1F4B', '#FFFFFF', 'fan', 49],
+    ['Livingston', 'LIV2', 'Livingston', '#FFDD00', '#000000', 'fan', 47], ['Falkirk', 'FAL', 'Falkirk', '#0B1F4B', '#FFFFFF', 'fan', 47],
+  ];
+
   // Every league, data-driven, at its real size. repBand = the reputation range a league's clubs drift toward.
   // rules.rounds caps the fixture list where the real format isn't a full double round-robin (MLS: 34 games; Argentina: one round-robin).
   // Continental places: Europe 16 (ENG/ESP/GER/ITA 3, FRA 2, POR 1, NED 1); South America 8; Asia, Africa, North America 8 each.
   FM.D.LEAGUES = [
     { id: 'D1', nat: 'ENG', name: 'Premier League', short: 'PL', tier: 1, sim: 'full', clubs: 'CLUBS_D1', repBand: [88, 61], rules: { relegate: { to: 'D2', n: 3 }, qualify: { to: 'CC', n: 3 } } },
     { id: 'D2', nat: 'ENG', name: 'EFL Championship', short: 'CH', tier: 2, sim: 'full', clubs: 'CLUBS_D2', repBand: [61, 47], rules: { promote: { to: 'D1', auto: 2, playoff: [3, 6] }, relegate: { to: 'D3', n: 3 } } },
-    { id: 'D3', nat: 'ENG', name: 'EFL League One', short: 'LO', tier: 3, sim: 'full', clubs: 'CLUBS_D3', repBand: [49, 39], rules: { promote: { to: 'D2', auto: 2, playoff: [3, 6] } } },
+    { id: 'D3', nat: 'ENG', name: 'EFL League One', short: 'LO', tier: 3, sim: 'light', clubs: 'CLUBS_D3', repBand: [49, 39], rules: { promote: { to: 'D2', auto: 2, playoff: [3, 6] } } },
     { id: 'ES1', nat: 'ESP', name: 'LaLiga', short: 'LL', tier: 1, sim: 'full', clubs: 'CLUBS_ES1', repBand: [89, 58], rules: { relegate: { to: 'ES2', n: 3 }, qualify: { to: 'CC', n: 3 } } },
-    { id: 'ES2', nat: 'ESP', name: 'Segunda División', short: 'SD', tier: 2, sim: 'full', clubs: 'CLUBS_ES2', repBand: [56, 45], rules: { promote: { to: 'ES1', auto: 2, playoff: [3, 6] } } },
+    { id: 'ES2', nat: 'ESP', name: 'Segunda División', short: 'SD', tier: 2, sim: 'light', clubs: 'CLUBS_ES2', repBand: [56, 45], rules: { promote: { to: 'ES1', auto: 2, playoff: [3, 6] } } },
     { id: 'DE1', nat: 'GER', name: 'Bundesliga', short: 'BL', tier: 1, sim: 'full', clubs: 'CLUBS_DE1', repBand: [89, 58], rules: { qualify: { to: 'CC', n: 3 } } },
     { id: 'FR1', nat: 'FRA', name: 'Ligue 1', short: 'L1', tier: 1, sim: 'full', clubs: 'CLUBS_FR1', repBand: [90, 57], rules: { qualify: { to: 'CC', n: 2 } } },
     { id: 'BR1', nat: 'BRA', name: 'Brasileirão Série A', short: 'BSA', tier: 1, sim: 'full', clubs: 'CLUBS_BR1', repBand: [85, 62], rules: { qualify: { to: 'CL', n: 5 } } },
@@ -767,6 +943,16 @@
     { id: 'NG1', nat: 'NGA', name: 'Nigeria Premier Football League', short: 'NPFL', tier: 1, sim: 'minimal', clubs: 'CLUBS_NG1', repBand: [55, 45], rules: { qualify: { to: 'AF', n: 4 } } },
     { id: 'MA1', nat: 'MAR', name: 'Botola Pro', short: 'BP', tier: 1, sim: 'minimal', clubs: 'CLUBS_MA1', repBand: [59, 46], rules: { qualify: { to: 'AF', n: 4 } } },
     { id: 'RS1', nat: 'SRB', name: 'Serbian SuperLiga', short: 'SSL', tier: 1, sim: 'minimal', clubs: 'CLUBS_RS1', repBand: [64, 46], rules: {} },
+    { id: 'BE1', nat: 'BEL', name: 'Belgian Pro League', short: 'JPL', tier: 1, sim: 'minimal', clubs: 'CLUBS_BE1', repBand: [68, 50], rules: {} },
+    { id: 'TR1', nat: 'TUR', name: 'Süper Lig', short: 'SL', tier: 1, sim: 'minimal', clubs: 'CLUBS_TR1', repBand: [72, 50], rules: {} },
+    { id: 'CZ1', nat: 'CZE', name: 'Czech First League', short: 'CFL', tier: 1, sim: 'minimal', clubs: 'CLUBS_CZ1', repBand: [64, 46], rules: {} },
+    { id: 'GR1', nat: 'GRE', name: 'Super League Greece', short: 'SLG', tier: 1, sim: 'minimal', clubs: 'CLUBS_GR1', repBand: [68, 48], rules: {} },
+    { id: 'NO1', nat: 'NOR', name: 'Eliteserien', short: 'ES', tier: 1, sim: 'minimal', clubs: 'CLUBS_NO1', repBand: [63, 46], rules: {} },
+    { id: 'PL1', nat: 'POL', name: 'Ekstraklasa', short: 'EKS', tier: 1, sim: 'minimal', clubs: 'CLUBS_PL1', repBand: [62, 46], rules: {} },
+    { id: 'DK1', nat: 'DEN', name: 'Danish Superliga', short: 'DSL', tier: 1, sim: 'minimal', clubs: 'CLUBS_DK1', repBand: [64, 48], rules: {} },
+    { id: 'AT1', nat: 'AUT', name: 'Austrian Bundesliga', short: 'ABL', tier: 1, sim: 'minimal', clubs: 'CLUBS_AT1', repBand: [64, 46], rules: {} },
+    { id: 'CH1', nat: 'SUI', name: 'Swiss Super League', short: 'SSL2', tier: 1, sim: 'minimal', clubs: 'CLUBS_CH1', repBand: [63, 48], rules: {} },
+    { id: 'SC1', nat: 'SCO', name: 'Scottish Premiership', short: 'SPFL', tier: 1, sim: 'minimal', clubs: 'CLUBS_SC1', repBand: [70, 46], rules: {} },
   ];
   FM.D.CONTINENTALS = [
     { id: 'CC', region: 'Europe', name: 'UEFA Champions League', short: 'UCL', prize: 15e6 },
@@ -801,6 +987,9 @@
     RS1: { SRB: 80, CRO: 4, GHA: 3, NGA: 3, BRA: 3, MAR: 2, SEN: 2, JPN: 1 },
     MA1: { MAR: 88, SEN: 4, CIV: 3, GHA: 2, NGA: 2, FRA: 1 },
   });
+
+  Object.assign(FM.D.NAT_MIX, { BE1: { BEL: 60, NED: 6, FRA: 5, SEN: 3, CIV: 3, GHA: 3, NGA: 3, MAR: 3, DEN: 2, NOR: 2, JPN: 2, COL: 2, BRA: 2, CRO: 2, SRB: 2 }, TR1: { TUR: 62, BRA: 4, NGA: 3, SEN: 3, CIV: 2, GHA: 2, POR: 3, NED: 2, SRB: 2, CRO: 2, ARG: 2, COL: 2, FRA: 2, GER: 2, MAR: 2, POL: 2, CZE: 1, GRE: 1, BEL: 1 }, CZ1: { CZE: 80, POL: 3, SRB: 2, CRO: 2, NGA: 2, GHA: 2, AUT: 2, GER: 1, SEN: 2, CIV: 2, BRA: 1, TUR: 1 }, GR1: { GRE: 58, SRB: 4, POR: 4, BRA: 4, ARG: 3, ESP: 3, CRO: 3, NGA: 2, SEN: 2, CIV: 2, NED: 2, POL: 2, MAR: 2, FRA: 2, COL: 2, URU: 2, CZE: 1, TUR: 1 }, NO1: { NOR: 80, DEN: 4, GHA: 3, NGA: 3, SEN: 2, USA: 2, CIV: 2, NED: 1, BEL: 1, POL: 1, SUI: 1 }, PL1: { POL: 70, CZE: 3, SRB: 3, CRO: 3, POR: 3, ESP: 3, BRA: 2, NGA: 2, GHA: 2, SEN: 2, NOR: 1, DEN: 1, GRE: 1, AUT: 1, TUR: 1, NED: 1, GER: 1 }, DK1: { DEN: 74, NOR: 4, NGA: 3, GHA: 3, SEN: 2, NED: 2, BEL: 2, USA: 2, CIV: 2, JPN: 1, KOR: 1, SUI: 1, POL: 1, AUT: 1, CZE: 1 }, AT1: { AUT: 64, GER: 8, SUI: 3, CRO: 3, SRB: 2, CZE: 2, POL: 2, NGA: 2, GHA: 2, CIV: 2, SEN: 2, MAR: 2, BRA: 2, JPN: 2, KOR: 2, DEN: 1, NOR: 1 }, CH1: { SUI: 62, FRA: 6, GER: 4, ITA: 4, AUT: 3, CRO: 2, SRB: 2, POR: 2, SEN: 2, CIV: 2, GHA: 2, NGA: 2, BRA: 2, COL: 2, CZE: 1, POL: 1, TUR: 1 }, SC1: { SCO: 58, ENG: 12, IRL: 6, WAL: 2, JPN: 3, KOR: 2, NOR: 2, DEN: 2, NED: 2, BEL: 1, NGA: 2, GHA: 2, USA: 2, CIV: 1, CRO: 1, POL: 1 } });
+  FM.D.RIVALS.push(['CLB2', 'CER2', 'Brugse derby'], ['AND2', 'STL2', 'Classique'], ['GAL', 'FEN', 'Kıtalararası Derbi'], ['BJK', 'TS', 'Beşiktaş–Trabzon'], ['SLA2', 'SPA', 'Pražské derby'], ['OLY2', 'PAO', 'Derby of the Eternal Enemies'], ['PAOK', 'ARI', 'Thessaloniki derby'], ['RBK', 'MOL', 'Norwegian Clásico'], ['VIF', 'KFU', 'Oslo derby'], ['LEG2', 'LPO', 'Polish Classic'], ['CRA2', 'WID', 'Holy war rivals'], ['FCK', 'BIF', 'New Firm'], ['RAP2', 'FAK', 'Vienna derby'], ['STU', 'GAK', 'Graz derby'], ['BAS', 'FCZ', 'Klassiker'], ['GCZ', 'YB', 'Swiss classic'], ['CEL2', 'RAN2', 'Old Firm'], ['HEA', 'HIB', 'Edinburgh derby'], ['DUN2', 'DND', 'Dundee derby']);
 
   // ---------- Alpha 1: contracts, agents, promises, badges ----------
   FM.D.AGENTS = {
