@@ -113,7 +113,7 @@
   };
 
   St.applyPress = function (n, i) {
-    const S = FM.S, c = W.userClub(), ch = n.choices[i], f = ch.fx;
+    const c = W.userClub(), ch = n.choices[i], f = ch.fx;
     if (n.resolved) return;
     n.resolved = ch.label;
     const sq = W.squad(c.id);
@@ -232,7 +232,6 @@
   };
 
   St.transfer = function (p, from, to, fee, f = {}) {
-    const S = FM.S;
     const involvesUser = W.isUser(to.id) || (from && W.isUser(from.id));
     if (!involvesUser && fee < 4e6 && !(from && from.sim === 'minimal') && !(f.intl && fee >= 1e6) && !f.veteran) return;
     const land = (c) => D.NATIONS[c.nat].name;
@@ -249,7 +248,6 @@
   // ---------- International football ----------
   St.intlWindow = function (games) {
     const S = FM.S, uc = W.userClub() || { id: null, short: '' };
-    const mine = W.squad(uc.id).filter((p) => games.some((g) => g.goals.some((x) => x.pid === p.id)) || (p.intl && p.intl.caps && S.intlLog.slice(0, games.length).some((g) => [g.h, g.a].includes('n_' + p.nat))));
     const called = W.squad(uc.id).filter((p) => p.intl && S.intlLog.slice(0, games.length).some((g) => g.h === 'n_' + p.nat || g.a === 'n_' + p.nat) && p.intl.caps > 0).slice(0, 12);
     const T = (id) => S.nteams[id];
     const shock = games.filter((g) => g.winner && Math.abs(T(g.h).elo - T(g.a).elo) > 150 && T(g.winner).elo < Math.max(T(g.h).elo, T(g.a).elo)).slice(0, 1)[0];
@@ -273,7 +271,6 @@
   };
 
   St.youthIntake = function (c, made) {
-    const S = FM.S;
     const best = made.slice().sort((a, b) => b.pa - a.pa)[0];
     const asst = FM.Staff.get('assistant');
     const tone = best.pa >= 84 ? 'I\'ve been doing this 20 years. This one is special.' : best.pa >= 70 ? 'There\'s real talent in this group.' : 'A modest group, but they\'ll work hard.';
@@ -282,7 +279,6 @@
   };
 
   St.retirement = function (p) {
-    const S = FM.S;
     const sp = p.career.spells.slice().sort((a, b) => b.apps - a.apps)[0] || { c: null, apps: 0 };
     const c = sp.c && C(sp.c);
     const lead = W.hasTrait(p, 'Leader') ? 'captain' : W.age(p) >= 36 ? 'veteran' : 'stalwart';

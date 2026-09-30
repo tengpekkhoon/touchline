@@ -295,7 +295,7 @@
         <div class="actions"><button class="btn pri block" data-act="ngNext">Choose your club →</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     } else if (NG.step === 1) {
       const row = (r, div) => {
-        const [name, short, city, c1, c2, idt, rep, stad, cap] = r;
+        const [name, short, , c1, c2, idt, rep] = r;
         const fake = { id: 'c_' + short, short, colors: [c1, c2] };
         const I = D.IDENTITY[idt];
         const diff = rep >= 80 ? 'Expectations: huge' : rep >= 65 ? 'Expectations: high' : rep >= 55 ? 'Expectations: moderate' : 'Expectations: patient';

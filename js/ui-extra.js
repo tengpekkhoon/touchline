@@ -55,7 +55,7 @@
     UI.closeAllSheets(); UI.toast(`${W.short(p)} joins ${CL(o.club).name} on loan`); UI.save(); UI.render();
   };
   UI.acts.release = (d) => {
-    const p = P(d.id), c = club();
+    const p = P(d.id);
     const yrs = Math.max(1, p.contract - S().year + 1);
     const pay = U.roundMoney(p.wage * 52 * yrs * 0.5);
     UI.sheet(`<div class="h3">Release ${esc(W.name(p))}?</div><div class="small muted" style="margin:8px 0 14px">He has ${yrs} year(s) left on ${U.money(p.wage)}/wk. Terminating costs a settlement of <b>${U.money(pay)}</b>. He becomes a free agent.</div><button class="btn block danger" data-act="doRelease" data-id="${p.id}">Release for ${U.money(pay)}</button>`, { title: 'Release player' });
@@ -528,7 +528,7 @@
 // ======================= International football =======================
 (function () {
   const FM = window.FM, U = FM.U, D = FM.D, W = FM.W, UI = FM.UI, C = UI.C;
-  const esc = U.esc, S = () => FM.S, P = (id) => FM.S.players[id];
+  const esc = U.esc, S = () => FM.S;
   const T = (id) => FM.S.nteams[id];
   const TNAME = { WC: 'World Championship', EC: 'European Nations Cup', SA: 'South American Championship', AF: 'Africa Nations Trophy', AS: 'Asia-Pacific Nations Cup' };
   const resultRow = (g, focus) => {

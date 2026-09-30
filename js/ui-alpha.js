@@ -189,7 +189,6 @@
     const sq = W.squad(id).sort((a, b) => b.ca - a.ca);
     const { xi } = W.pickXI(id, tac);
     const avg = Math.round(U.avg(xi.filter(Boolean), (p) => p.ca));
-    const played = comp ? comp.fixtures.flat().filter((f) => f.res && (f.h === id || f.a === id)).slice(-5).reverse() : [];
     const next = comp ? comp.fixtures.flat().find((f) => !f.res && (f.h === id || f.a === id)) : null;
     // Every fixture this season: league rounds in order, then cup and continental ties
     const mine = (f) => f && (f.h === id || f.a === id);

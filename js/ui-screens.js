@@ -447,7 +447,7 @@
   };
   UI.playerHTML = (p) => playerHTML(p);
   function playerHTML(p) {
-    const s = S(), v = FM.Scouting.view(p), c = p.clubId && CL(p.clubId), own = v.own;
+    const v = FM.Scouting.view(p), c = p.clubId && CL(p.clubId), own = v.own;
     const col = c ? c.colors[0] : '#334155';
     const age = W.age(p);
     const [ml, me] = W.moraleLabel(p.morale);
@@ -733,7 +733,6 @@
       return `<div class="card"><div class="row"><div class="h3 grow">⭐ ${esc(c.name)}</div>${c.winner ? `<span class="pill acc">🏆 ${esc(CL(c.winner).short)}</span>` : ''}</div><div class="tiny dim" style="margin-top:4px">${c.region || ''} · ${c.clubs.length} clubs · top 2 in each group reach the ${c.groups.length >= 4 ? 'quarter-finals' : 'semi-finals'} · ${legs} · neutral final</div>${grp}${ko.length ? `<div class="small b dim" style="margin:12px 0 2px">KNOCKOUT</div>${ko.map(fxLine).join('')}` : ''}</div>`;
     }).join('');
     const dom = W.cups().filter((c) => v === 'domestic' || (v === 'mine' && inIt(c))).map((c) => {
-      const last = c.rounds[c.rounds.length - 1];
       return `<div class="card"><div class="row"><div class="h3 grow">🏆 ${esc(c.name)} ${C.flag(c.nat)}</div>${c.winner ? `<span class="pill acc">Winners: ${esc(CL(c.winner).short)}</span>` : ''}</div><div class="tiny dim" style="margin-top:4px">${c.clubs.length} clubs · single-leg knockout · extra time & penalties</div>
         ${c.rounds.slice().reverse().map((r) => `<div class="small b dim" style="margin:12px 0 2px">${esc(r.name.toUpperCase())}${r.byes.length ? ` · ${r.byes.length} byes` : ''}</div>${r.ties.map(fxLine).join('')}`).join('') || '<div class="small dim" style="margin-top:8px">The draw has not been made yet.</div>'}</div>`;
     }).join('');
@@ -741,7 +740,6 @@
   }
 
   UI.acts.matchReport = (d) => {
-    const s = S();
     const f = FM.Cups.allFixtures().find((x) => x.id === d.id);
     if (!f || !f.res) return UI.toast('Report no longer available');
     const r = f.res;
@@ -963,7 +961,7 @@
 
   // ---------- Season review ----------
   UI.seasonReview = function (sm) {
-    const s = S(), e = sm.entry;
+    const e = sm.entry;
     const c = e.user ? CL(e.user.club) : NOCLUB; // out of work all season: no club to review
     UI.sheet(`<div class="hero" style="--c1:${c.colors[0]};--c2:${c.colors[1]}"><div class="tag">Season review · ${e.label}</div><div class="h1" style="margin:10px 0">${!e.user ? 'A season out of the dugout' : sm.trophies.length ? '🏆 ' + esc(sm.trophies.join(' & ')) : `Finished ${U.ordinal(sm.userPos)}`}</div><div class="small" style="opacity:.9">${sm.promoted ? `⬆️ Promoted to the ${esc(S().comps[c.comp].name)}!` : sm.relegated ? '⬇️ Relegated. The rebuild starts now.' : esc(c.name)}</div></div>
       ${!e.user ? '<div class="small muted" style="margin:4px 2px 12px">The football world carried on without you. Your offers are on the Home tab.</div>' : ''}

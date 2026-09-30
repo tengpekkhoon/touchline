@@ -87,7 +87,7 @@
     MV.talk = null;
     if (talkMsg) MV.promptLog = (MV.promptLog || []).concat([`Pre-match team talk → ${talkMsg}`]);
     const capt = P(m.sides[MV.us].capt);
-    if (instant) { while (!m.finished) { const o = m.step(); if (o && o.ev === 'HT') {} } return MV.post(); }
+    if (instant) { while (!m.finished) m.step(); return MV.post(); }
     const [H, A] = m.sides;
     const ov = document.createElement('div');
     ov.className = 'match';
@@ -164,7 +164,7 @@
   };
 
   MV.beginAction = function (a) {
-    const st = MV.st, m = MV.m, b = st.ball;
+    const st = MV.st, b = st.ball;
     const dur = Math.max(160, (st.minuteMs * 0.85) / Math.max(1, st.nActions));
     const dotPos = (side, slot) => st.dots[side][slot];
     let x1, y1, arc = 0, d = dur;
@@ -241,7 +241,6 @@
   };
 
   MV.showEvent = function (e) {
-    const m = MV.m;
     if (e.k === 'goal') {
       const mine = e.side === MV.us;
       MV.banner(`GOAL · ${e.min}`, e.text, true);
@@ -429,7 +428,6 @@
     document.querySelectorAll('#matchOv .prompt').forEach((e) => e.remove());
     st.prompt = null;
     if (msg) MV.ticker('📋 ' + msg);
-    const sd = MV.m.sides[MV.us];
     if (o.sub !== undefined) MV.subsSheet(o.sub >= 0 ? o.sub : null);
     MV.promptLog = (MV.promptLog || []).concat([`${MV.m.clock} ${p.title} → ${o.label}`]);
   };
@@ -465,7 +463,7 @@
     MV._subOut = outSlot;
     const render = () => {
       const on = m.onPitch(sd);
-      const bench = sd.bench.filter((p) => !sd.on.hasOwnProperty(p.id));
+      const bench = sd.bench.filter((p) => !Object.hasOwn(sd.on, p.id));
       return `<div class="small muted">Subs left: <b>${sd.subsLeft}</b> of ${FM.S.rules.subs}</div>
         <div class="h3" style="margin-top:10px">1 · Take off</div><div class="list">${on.map(({ p, i }) => `<div class="prow tap" data-act="mSubOut" data-i="${i}" style="${MV._subOut === i ? 'background:color-mix(in srgb,var(--acc) 14%,transparent);border-radius:10px' : ''}">${C.pos(p)}<div class="grow"><div class="b">${esc(W.short(p))} ${sd.injured[p.id] ? '🚑' : ''}${sd.yc[p.id] ? '🟨' : ''}</div><div class="small dim">${sd.slots[i].t} · rating ${sd.rating[p.id].toFixed(1)}</div></div>${C.fit(Math.round(sd.st[p.id]))}<span class="small b" style="width:36px;text-align:right">${Math.round(sd.st[p.id])}%</span></div>`).join('')}</div>
         <div class="h3" style="margin-top:12px">2 · Bring on</div><div class="list">${bench.map((p) => `<div class="prow tap" data-act="mSubIn" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b">${esc(W.short(p))}</div><div class="small dim">${MV._subOut != null ? 'Fit at ' + sd.slots[MV._subOut].t + ': ' + Math.round(W.effAt(p, sd.slots[MV._subOut].t)) : 'Select a player to take off first'}</div></div>${C.playerStars(p)}</div>`).join('') || '<div class="dim small">No one left on the bench.</div>'}</div>
@@ -491,7 +489,7 @@
 
   // ---------------- Post-match ----------------
   MV.post = function () {
-    const m = MV.m, fx = MV.fx;
+    const m = MV.m;
     cancelAnimationFrame(MV._raf);
     window.removeEventListener('resize', MV.resize);
     document.getElementById('matchOv')?.remove();

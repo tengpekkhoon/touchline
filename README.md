@@ -28,13 +28,20 @@ Headless regression test: two seasons with a seeded RNG through the same code th
 npm run calibrate
 ```
 
-Calibration report: three seeded seasons compared with real football, 48 measures in four groups: matches (goals, home/draw/away split, shots, xG, set pieces, penalties, cards, title races, cup upsets, light-league scores, goals trend), player careers (age profile of top-flight minutes, keeper ages, top-100 age, peak ages, retirement ages, academy-grown vs generated player shape, world elite trend, top-flight squad turnover, plus the ability-change-by-age curve) and injuries (rate per club, share of squads out, layoff lengths, long-term injuries, match vs training, muscle and hamstring shares, re-injuries, age effect) and the market (top-flight loans out, loanees' games, how long free agents wait, players created from nowhere). Trend measures need `--seasons 8` or more (use it for any long-run question). The engine's tuning knobs live in `FM.CAL` at the top of `js/engine.js` (try values with `node tools/calibrate.mjs --set chanceRate=0.15,homeAtt=1.1`; `targetGoals` is the level the tactical equilibrium settles back toward, via `S.era`), injury rates in `FM.Injury.CAL` (`js/injuries.js`), the career curve in `CURVE` and academy potential in `Sea.YOUTH` (`js/season.js`).
+Calibration report: three seeded seasons compared with real football, 48 measures in four groups: matches (goals, home/draw/away split, shots, xG, set pieces, penalties, cards, title races, cup upsets, light-league scores, goals trend), player careers (age profile of top-flight minutes, keeper ages, top-100 age, peak ages, retirement ages, academy-grown vs generated player shape, world elite trend, top-flight squad turnover, plus the ability-change-by-age curve) and injuries (rate per club, share of squads out, layoff lengths, long-term injuries, match vs training, muscle and hamstring shares, re-injuries, age effect) and the market (top-flight loans out, loanees' games, how long free agents wait, players created from nowhere). Trend measures need `--seasons 8` or more (use it for any long-run question). The engine's tuning knobs live in `FM.CAL` at the top of `js/engine.js` (try values with `node tools/calibrate.mjs --set chanceRate=0.15,homeAtt=1.1`; `targetGoals` is the level the tactical equilibrium settles back toward, via `S.era`), injury rates in `FM.Injury.CAL` (`js/injuries.js`), the career curve in `CURVE` and academy potential in `Sea.YOUTH` (`js/careers.js`).
 
 ```bash
 npm run test:regens
 ```
 
-Regen test: five academy intakes (plus the world's generated youngsters) aged year by year through the real development code, about 20 seconds. Reports career shapes with examples: prospects who deliver, flops (stalled, plateaued, burned out), one-season wonders, early primes (at their best by 18–19) and long primes (still at their best at 33–34), and checks each against an expected range; exits non-zero on failure. The rates live in `Sea.ARCS` (`js/season.js`).
+Regen test: five academy intakes (plus the world's generated youngsters) aged year by year through the real development code, about 20 seconds. Reports career shapes with examples: prospects who deliver, flops (stalled, plateaued, burned out), one-season wonders, early primes (at their best by 18–19) and long primes (still at their best at 33–34), and checks each against an expected range; exits non-zero on failure. The rates live in `Sea.ARCS` (`js/careers.js`).
+
+```bash
+npm run lint
+npm run format
+```
+
+ESLint (`eslint.config.mjs`) catches undefined names and unused variables; Prettier (`.prettierrc.json`, 120 columns) formats the code. Run both before committing; `npm run format:check` only reports.
 
 ```bash
 npm run build

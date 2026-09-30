@@ -2,7 +2,7 @@
   "name": "touchline",
   "version": "0.5.0",
   "private": true,
-  "description": "Touchline \u2014 a mobile-first football management game (web + Capacitor native shell).",
+  "description": "Touchline — a mobile-first football management game (web + Capacitor native shell).",
   "scripts": {
     "serve": "python -m http.server 5173",
     "test": "node tools/sim-test.mjs --seasons 2",
@@ -13,11 +13,18 @@
     "cap:sync": "npm run build && npx cap sync",
     "android": "npm run cap:sync && npx cap open android",
     "ios": "npm run cap:sync && npx cap open ios",
-    "calibrate": "node tools/calibrate.mjs --seasons 3"
+    "calibrate": "node tools/calibrate.mjs --seasons 3",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@capacitor/cli": "^8.5.2",
-    "esbuild": "^0.28.2"
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.9"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

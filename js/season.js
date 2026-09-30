@@ -562,12 +562,11 @@
   Sea.revenuePotential = (c) => 55e6 * Math.exp(0.071 * (c.rep - 88));
 
   Sea.userMorale = function () {
-    const S = FM.S, club = W.userClub();
+    const club = W.userClub();
     const sq = W.squad(club.id).sort((a, b) => b.ca - a.ca);
     // The captain's mood spreads: a happy one lifts the dressing room's resting point, an unhappy one drags it
     const capt = FM.Matchday.captainOf(club.id), rest = !capt ? 65 : capt.morale >= 75 ? 68 : capt.morale < 35 ? 59 : 65;
     sq.forEach((p, i) => {
-      const lf = p.form.length;
       if (i < 13 && p.season.apps < Math.floor(Sea.gamesPlayed(p.clubId) * 0.4) && !p.inj) {
         p.morale = Math.max(0, p.morale - (p.hid.amb >= 14 ? 3 : 1.5));
         if (p.morale < 35 && !p.flagMinutes) {

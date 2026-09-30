@@ -6,7 +6,7 @@
 //            (Season.minimalSimWeek), enough for scouting and the market.
 // Continental and Club World Cup ties always use the full engine, whatever tier a club plays in.
 (function () {
-  const FM = window.FM, U = FM.U, D = FM.D, W = FM.W;
+  const FM = window.FM, U = FM.U, W = FM.W;
   const Ti = (FM.Tiers = {});
   const S = () => FM.S;
 

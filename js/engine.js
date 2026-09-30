@@ -54,7 +54,6 @@
 
   class Match {
     constructor(o) {
-      const S = FM.S;
       this.o = o;
       this.comp = o.comp;
       this.knockout = !!o.knockout;
@@ -241,7 +240,7 @@
 
     // ball circulation for the visual script + passing network/heat map
     circulate(side, out, leadingToChance) {
-      const sd = this.sides[side], op = this.sides[1 - side];
+      const sd = this.sides[side];
       const on = this.onPitch(sd);
       if (!on.length) return;
       if (this.ball.side !== side) {
@@ -444,9 +443,9 @@
       if (!sd.subsLeft) return null;
       const out = sd.xi[i];
       const t = sd.slots[i].t;
-      const cands = sd.bench.filter((p) => !sd.on.hasOwnProperty(p.id) && (t === 'GK') === (p.pos === 'GK'));
+      const cands = sd.bench.filter((p) => !Object.hasOwn(sd.on, p.id) && (t === 'GK') === (p.pos === 'GK'));
       const pIn = inPid ? sd.bench.find((p) => p.id === inPid) : cands.sort((a, b) => W.effAt(b, t) - W.effAt(a, t))[0];
-      if (!pIn || sd.on.hasOwnProperty(pIn.id)) return null;
+      if (!pIn || Object.hasOwn(sd.on, pIn.id)) return null;
       const m = tl ? tl.m : this.minute;
       sd.xi[i] = pIn;
       sd.subsLeft--;
@@ -591,7 +590,7 @@
       const op = m.sides[1 - sd.idx];
       const used = (m.promptsUsed = m.promptsUsed || {});
       const min = m.minute, diff = sd.goals - op.goals;
-      const S = FM.S, asst = FM.Staff.get('assistant'), anl = FM.Staff.get('analyst');
+      const asst = FM.Staff.get('assistant'), anl = FM.Staff.get('analyst');
       const sign = sd.idx === 0 ? 1 : -1;
       const last = m.momentum.slice(-6);
       const quote = (who, text) => ({ who: `${who.fn} ${who.ln}`, role: who.role, text });

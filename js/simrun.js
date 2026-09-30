@@ -1,7 +1,7 @@
 // Runs matchday simulation in a Web Worker (sim-worker.js) with a progress overlay, falling back
 // to the main thread (yielding between days so the overlay still paints) when workers are unavailable.
 (function () {
-  const FM = window.FM, UI = FM.UI, U = FM.U;
+  const FM = window.FM, UI = FM.UI;
   const R = (FM.SimRunner = {});
   // Everything the season simulation needs, in load order (no UI files)
   R.SCRIPTS = ['core', 'data', 'clubs', 'world', 'engine', 'season', 'careers', 'cups', 'intl', 'tiers', 'contracts', 'people', 'scouting', 'transfers', 'stories', 'advice', 'matchday', 'records', 'injuries', 'save'];

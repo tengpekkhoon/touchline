@@ -2,7 +2,7 @@
 // backends (real files in the native app, IndexedDB in the browser, localStorage as a last resort).
 // Also compressed backup export/import. No DOM here, so the headless harness can test migrations.
 (function () {
-  const FM = window.FM, U = FM.U, W = FM.W;
+  const FM = window.FM, W = FM.W;
   const Sv = (FM.Save = {});
   Sv.VERSION = FM.SAVE_VERSION;
   // Saves older than this predate the 20-league world; they cannot be rebuilt into it
