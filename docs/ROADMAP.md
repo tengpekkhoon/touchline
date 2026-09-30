@@ -4,7 +4,7 @@ Sep 30, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/42
 
 ## At a glance
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done. Alpha 2 (editor and history) is next, then a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
+Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done. A playtest feedback backlog (bugs, interface, realism, market, tactics) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
 
 ```mermaid
 flowchart TB
@@ -12,7 +12,8 @@ flowchart TB
     P2 --> P3["Prototype 3 · Club management — DONE"]
     P3 --> G1{{"Playtest gate: pacing, balance, finances tuned"}}
     G1 --> A1["Alpha 1 · World scale — DONE"]
-    A1 --> A2["Alpha 2 · Editor and history — NEXT"]
+    A1 --> PF["Playtest feedback backlog — NEXT"]
+    PF --> A2["Alpha 2 · Editor and history"]
     A1 --> PB["Polish backlog — DONE"]
     A2 --> G2{{"Content gate: database + editor stable on mid-range phones"}}
     A2 --> LW["Living world backlog"]
@@ -71,6 +72,71 @@ The order below is proposed; each phase ends when its gate passes, not on a date
 - [x] National teams, call-ups and international tournaments — qualifiers, summer finals as calendar days and national team jobs
 - [x] Contract depth: clauses, bonuses, release fees, agent personalities
 - [x] Player interactions and promises; board meetings; coaching licences
+
+**Playtest feedback backlog (next, before Alpha 2)**
+
+Playtest feedback grouped into seven batches, in working order; most important first within each. Sizes: S under half a day, M one to two days, L several days, XL a week or more.
+
+*1 · Bugs and wrong behaviour*
+
+- [ ] Players described as "undefined" in news (e.g. "undefined striker makes international debut") (S)
+- [ ] No offers for your own players who are out on loan (S)
+- [ ] Error message when a new save has no manager name (S)
+- [ ] Captaincy doesn't switch automatically (S)
+- [ ] Players who just signed or renewed don't want to move (S–M)
+- [ ] Match ratings follow the result: a losing team rates lower on average (M)
+- [ ] Fan reactions judged against expectations: a draw with a better team isn't bad news; a loss to a much better team is neutral (M)
+- [ ] Career-shape test (`npm run test:regens`) deterministic under a fixed seed (S–M)
+
+*2 · Quick interface wins*
+
+- [ ] Home feed shows only items about your club; world items stay in World News (S–M)
+- [ ] Button to see must-respond messages (S)
+- [ ] Tap a club name or badge anywhere to open the club overview (M)
+- [ ] Club overview: squad first, then the next five fixtures (S)
+- [ ] Transfer history in the club overview (S)
+- [ ] International screen: tap a country to see its squad (S)
+- [ ] Current matchday shown on more screens (S)
+- [ ] "No limit" option for foreign players (S)
+- [ ] Nationality as a scouting criterion (S)
+- [ ] "Fan culture" section becomes "Club culture" (S)
+- [ ] More crest designs in real club colours (M)
+
+*3 · Realism of existing systems*
+
+- [ ] Title dominance: champion from the pre-season top 3 in 70–90% of seasons, not 94–100% (L)
+- [ ] Bigger squads and more depth at the start (M–L; watch save size and simulation time)
+- [ ] Scout valuations reflect both current and potential ability (M)
+- [ ] Market value from league, club, transfer interest, current and potential ability, and age (L)
+- [ ] Auto pick sets the whole starting XI, bench and player roles (M)
+
+*4 · Transfer market depth*
+
+- [ ] Warning X days before the transfer deadline, and a deadline-day event (M)
+- [ ] Sign players before the window opens; the move completes when it opens (M)
+- [ ] Trials for free agents (M)
+- [ ] Act when loanees aren't played enough: recall, or complain to the borrowing club (M)
+- [ ] Contract and transfer negotiation with back-and-forth (L)
+- [ ] Relative market: desperate buyers pay more; a player who wants out sells for less (L)
+
+*5 · Tactics depth*
+
+- [ ] Primary and secondary tactic, each with its own familiarity (M)
+- [ ] More formations and tactics (M–L)
+- [ ] More player roles that matter in the match engine (L)
+- [ ] More positions and position versatility (XL)
+
+*6 · Big features*
+
+- [ ] Staff ratings with real impact (M–L)
+- [ ] More options for press conferences, journalist questions, warm-up and half-time talks (M–L)
+- [ ] Better player stats view (M)
+- [ ] Training and analytics tabs (L–XL)
+- [ ] More realistic player and ball movement in the match view (XL)
+
+*7 · Platform*
+
+- [ ] "Report a problem" that exports the save through the share sheet (S); crash reporting stays in Beta
 
 **Alpha 2 · Editor and history**
 
