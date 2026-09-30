@@ -27,6 +27,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run lint # a lint error (e.g. an undefined name) stops the deploy
       - run: npm run build
       - run: touch dist/.nojekyll # serve files as-is (no Jekyll processing)
       - uses: actions/configure-pages@v5
