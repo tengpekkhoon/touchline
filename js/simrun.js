@@ -4,7 +4,7 @@
   const FM = window.FM, UI = FM.UI, U = FM.U;
   const R = (FM.SimRunner = {});
   // Everything the season simulation needs, in load order (no UI files)
-  R.SCRIPTS = ['core', 'data', 'world', 'engine', 'season', 'cups', 'intl', 'tiers', 'contracts', 'people', 'scouting', 'stories', 'advice', 'matchday', 'records', 'injuries', 'save'];
+  R.SCRIPTS = ['core', 'data', 'clubs', 'world', 'engine', 'season', 'careers', 'cups', 'intl', 'tiers', 'contracts', 'people', 'scouting', 'transfers', 'stories', 'advice', 'matchday', 'records', 'injuries', 'save'];
   R.broken = false;
   // The save string the worker packed for the state it returned (used once by the next save)
   R.packed = null;

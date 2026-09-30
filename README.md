@@ -99,10 +99,12 @@ Touchline is an installable web app: it has a manifest, app icons and a service 
 
 ```
 js/core.js       utilities, namespace
-js/data.js       nations, clubs, traits, formations, roles, scouting phrases
+js/data.js       nations, leagues, traits, formations, roles, scouting phrases
+js/clubs.js      every league's clubs, rivalries, overseas clubs
 js/world.js      world generation, player model, XI selection, competitions, calendar
 js/engine.js     match engine (incl. aggregate/away goals), commentary, tactical prompts
-js/season.js     matchday loop, development, youth, finances, season end
+js/season.js     matchday loop, finances, facilities, season end
+js/careers.js    development curve, career arcs, youth intake, retirement, AI renewals
 js/cups.js       domestic knockouts, continental groups + (two-legged) knockouts, Club World Cup
 js/intl.js       national teams, Elo, qualifiers, summer finals, national team jobs
 js/tiers.js      light and minimal simulation tiers
@@ -110,7 +112,8 @@ js/contracts.js  agents, contract clauses, negotiation model, release clauses, b
 js/people.js     player talks and promises, meetings, board, coaching licences
 js/advice.js     assistant notes, scout picks, season preview, staff market
 js/matchmotion.js  fluid on-pitch movement for the live match
-js/scouting.js   scouting knowledge + transfers
+js/scouting.js   scouting knowledge and reports
+js/transfers.js  transfer market: prices, loans, offers, AI windows, bids for your players
 js/stories.js    news feed, story cards, living-world events
 js/ui-*.js       shell, components, screens
 js/matchview.js  live pitch renderer + post-match analysis
