@@ -175,6 +175,9 @@
   };
 
   // What the user can see about a player, given knowledge
+  // How much a player's head-room (potential over current ability) counts in a scout's judgement, by age:
+  // a teenager is bought for what he'll become, a 26-year-old for what he is
+  Sc.potentialWeight = (age) => (age <= 19 ? 0.6 : age <= 21 ? 0.5 : age <= 23 ? 0.35 : age <= 25 ? 0.15 : 0);
   Sc.view = function (p) {
     const S = FM.S,
       u = S.user,
@@ -269,7 +272,7 @@
         pa = v.pa ? (v.pa[0] + v.pa[1]) / 2 : c;
       if (c >= lvl + 4) v.verdict = 'Would walk into your first XI';
       else if (c >= lvl - 2) v.verdict = 'Good enough to compete for a starting place';
-      else if (W.age(p) <= 21 && pa >= lvl + 6) v.verdict = 'One for the future — could become a star';
+      else if (W.age(p) <= 23 && pa >= lvl + 6) v.verdict = 'One for the future — could become a star';
       else if (c >= lvl - 8) v.verdict = 'Useful squad depth';
       else v.verdict = 'Not at the required level';
     }
@@ -286,7 +289,7 @@
       const c = (v.ca[0] + v.ca[1]) / 2,
         pa = v.pa ? (v.pa[0] + v.pa[1]) / 2 : c,
         age = W.age(p);
-      let score = c - lvl + (age <= 21 ? Math.max(0, pa - c) * 0.35 : 0) - (age >= 31 ? (age - 30) * 1.5 : 0);
+      let score = c - lvl + Math.max(0, pa - c) * Sc.potentialWeight(age) - (age >= 31 ? (age - 30) * 1.5 : 0);
       if (v.moneyball) score += 3;
       v.score = score;
       v.grade = score >= 4 ? 'A' : score >= -2 ? 'B' : score >= -8 ? 'C' : 'D';

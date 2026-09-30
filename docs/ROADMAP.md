@@ -88,6 +88,21 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Fan reactions judged against expectations: a draw with a better team isn't bad news; a loss to a much better team is neutral (M)
 - [x] Career-shape test (`npm run test:regens`) deterministic under a fixed seed (S–M)
 
+*1b · Playtest report fixes*
+
+- [ ] Out-of-position XI: default to no foreign-player limit (the real Premier League has none); pick the best XI within a cap by position fit; warn before kick-off when the XI has players out of position (S–M)
+- [ ] No replaying lost matches: apply and save the result at full time, and mark the match started at kick-off so a reload finishes it (S–M)
+- [ ] World transfers rolled into one daily "Transfer round-up" card (S)
+- [ ] Objectives show ⏳, not ✅, until a few games are played (S)
+- [ ] Board expectation and the assistant's preview shown side by side (S)
+- [ ] "Next match" in pre-season skips to the next friendly or the league opener (S)
+- [ ] "Clear read" renamed "Remove read stories" (S)
+- [ ] Realistic pass totals and accuracy in match stats, from possession and playing style (S–M)
+- [ ] Club-picker buttons get a solid backing (S)
+- [ ] Live commentary wraps to two lines instead of "…" (S)
+- [ ] Money in the club's currency (£, €, …) with a setting to override (M)
+- [ ] A neutral fallback manager name instead of "Alex Morgan" (S)
+
 *2 · Quick interface wins*
 
 - [x] Home feed shows only items about your club; world items stay in World News (S–M)
@@ -105,10 +120,10 @@ Playtest feedback grouped into seven batches, in working order; most important f
 *3 · Realism of existing systems*
 
 - [ ] Title dominance: champion from the pre-season top 3 in 70–90% of seasons, not 94–100% (L)
-- [ ] Bigger squads and more depth at the start (M–L; watch save size and simulation time)
-- [ ] Scout valuations reflect both current and potential ability (M)
-- [ ] Market value from league, club, transfer interest, current and potential ability, and age (L)
-- [ ] Auto pick sets the whole starting XI, bench and player roles (M)
+- [x] Bigger squads and more depth at the start (M–L; watch save size and simulation time)
+- [x] Scout valuations reflect both current and potential ability (M)
+- [x] Market value from league, club, transfer interest, current and potential ability, and age (L)
+- [x] Auto pick sets the whole starting XI, bench and player roles (M)
 
 *4 · Transfer market depth*
 

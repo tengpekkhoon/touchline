@@ -11,6 +11,7 @@
   // Tuned against real top-flight averages (goals 2.6–2.9, home/draw/away ~45/25/30, ~24 shots and ~8.5 on
   // target, ~0.3 penalties, ~4 cards). Re-run tools/calibrate.mjs after any engine change.
   const CAL = (FM.CAL = {
+    mgr: 0, // an AI manager's ability (8–17, 12 neutral) scales his side's strength by this per point (0 = off; under calibration)
     chanceRate: 0.14, // shot opportunities per minute per side, before strengths and tactics
     xgScale: 0.82, // scales open-play chance quality
     penRate: 0.013, // share of chances that are penalties
@@ -37,6 +38,59 @@
   const defVal = (a) =>
     (a.tackling * 1.2 + a.positioning * 1.2 + a.strength * 0.6 + a.pace * 0.5 + a.workRate * 0.5) / 4;
   const gkVal = (a) => (a.reflexes * 1.3 + a.handling + a.positioning * 0.7) / 3;
+
+  // A good manager gets more out of the same players: an AI club's manager ability shifts its strength by about
+  // −2.5% to +3% (the user is the manager, so never the user's side). Club dynamics that reputation doesn't predict.
+  FM.managerBoost = function (club, isUser) {
+    if (isUser || !club || club.sim === 'nation' || !club.manager) return 1;
+    const m = FM.S.staff[club.manager];
+    return m ? 1 + (m.ability - 12) * CAL.mgr : 1;
+  };
+  // How well a role suits a player: each role leans on attack, midfield or defence (plus crossing, pressing or
+  // getting forward, measured against a typical professional's 12), judged against the player's own profile, so a creative centre-back gets Ball-Playing CB
+  FM.roleScore = function (p, t, name) {
+    const r = D.ROLES[t][name] || {},
+      a = p.attrs;
+    const att = attackVal(a),
+      mid = midVal(a),
+      def = defVal(a),
+      avg = (att + mid + def) / 3;
+    return (
+      (r.att || 0) * (att - avg) +
+      (r.mid || 0) * (mid - avg) +
+      (r.def || 0) * (def - avg) +
+      (r.cross || 0) * ((a.pace + a.passing) / 2 - 12) * 0.2 +
+      (r.press || 0) * ((a.workRate + a.stamina) / 2 - 12) * 0.2 +
+      (r.dx || 0) * ((a.pace + a.stamina) / 2 - 12) * 0.1 +
+      // an all-round role (equal leanings, e.g. Box-to-Box) is about getting up and down the pitch
+      (r.att && r.att === r.mid && r.mid === r.def ? r.att * ((a.workRate + a.stamina) / 2 - 12) * 2 : 0)
+    );
+  };
+  FM.bestRole = (p, t, exclude = []) =>
+    Object.keys(D.ROLES[t])
+      .filter((name) => !exclude.includes(name))
+      .reduce((best, name) => (FM.roleScore(p, t, name) > FM.roleScore(p, t, best) ? name : best));
+  // One of each specialist role per team (a single sweeper, one No. 10 free role, one false nine)
+  FM.UNIQUE_ROLES = ['Libero', 'Trequartista', 'False 9'];
+  FM.bestRoles = function (xi, slots, defaults) {
+    const taken = new Set(),
+      out = slots.map((s, i) => defaults[i]);
+    // the strongest claim to a specialist role gets it: go through the players by how much they suit their best role
+    const order = slots
+      .map((s, i) => i)
+      .filter((i) => xi[i])
+      .sort(
+        (a, b) =>
+          FM.roleScore(xi[b], slots[b].t, FM.bestRole(xi[b], slots[b].t)) -
+          FM.roleScore(xi[a], slots[a].t, FM.bestRole(xi[a], slots[a].t)),
+      );
+    for (const i of order) {
+      const r = FM.bestRole(xi[i], slots[i].t, [...taken]);
+      out[i] = r;
+      if (FM.UNIQUE_ROLES.includes(r)) taken.add(r);
+    }
+    return out;
+  };
 
   // Position of a slot's player in that side's frame (x → attacking goal)
   FM.Pos = function (side, i, inPoss, ball) {
@@ -265,7 +319,7 @@
         mid *= f;
         def *= f;
       }
-      const cb = FM.Matchday.capBoost(capt);
+      const cb = FM.Matchday.capBoost(capt) * FM.managerBoost(sd.club, sd.user);
       att *= cb;
       mid *= cb;
       def *= cb;

@@ -624,6 +624,7 @@
   };
 
   St.rumour = function (p, c) {
+    W.addInterest(p);
     FM.News.add({
       type: 'rumour',
       title: `${c.name} linked with ${W.name(p)}`,

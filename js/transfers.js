@@ -243,6 +243,7 @@
     p.listed = false;
     p.wantsOut = false;
     T.settle(p);
+    p.value = W.value(p);
     if (!W.isUser(toId)) FM.Contracts.aiDeal(p, to);
     if (W.isUser(toId)) {
       S.user.knowledge[p.id] = 100;
@@ -548,6 +549,7 @@
     const b = U.pick(bidders);
     const fee = U.roundMoney(target.value * U.rand(target.listed ? 0.75 : 0.9, 1.35));
     if (S.news.some((n) => n.type === 'bid' && n.data.pid === target.id && n.data.status === 'open')) return;
+    W.addInterest(target, 2);
     FM.News.add({
       type: 'bid',
       title: `${b.name} bid ${U.money(fee)} for ${W.name(target)}`,

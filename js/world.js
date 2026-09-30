@@ -26,7 +26,30 @@
     if (p.pa < p.ca) p.pa = p.ca; // generation rounding can nudge ability past potential
     p.value = W.value(p);
   };
+  // Market value: what the player is worth on the market (fees, asking prices, release clauses, scouting).
+  // The ability-and-age base (W.baseValue, which wages follow) scaled by where he plays, how much he is wanted and
+  // his form: a player at a big club in a strong league costs more than the same player in a small league.
   W.value = function (p) {
+    return Math.max(10000, U.roundMoney(W.baseValue(p) * W.marketFactor(p) * W.interestFactor(p) * W.formFactor(p)));
+  };
+  let leagueTop = null; // the top of each league's reputation band: how strong the league is
+  W.marketFactor = function (p) {
+    const c = p.clubId && FM.S.clubs[p.clubId];
+    if (!c) return 0.8;
+    leagueTop = leagueTop || Object.fromEntries(D.LEAGUES.map((l) => [l.id, l.repBand[0]]));
+    const top = leagueTop[c.comp] || 60;
+    return U.clamp((0.75 + (c.rep - 50) * 0.012) * (0.85 + (top - 60) * 0.008), 0.55, 1.5);
+  };
+  // Transfer interest: every rumour or bid adds to it; it halves each season
+  W.interest = (p) => (p.buzz ? p.buzz * 0.5 ** (FM.S.year - (p.buzzY || FM.S.year)) : 0);
+  W.addInterest = function (p, n = 1) {
+    p.buzz = Math.round((W.interest(p) + n) * 100) / 100;
+    p.buzzY = FM.S.year;
+  };
+  W.interestFactor = (p) => 1 + Math.min(0.3, W.interest(p) * 0.06);
+  // Recent form (last matches' ratings): ±10–15%
+  W.formFactor = (p) => (p.form && p.form.length >= 4 ? 1 + U.clamp((U.avg(p.form) - 6.7) * 0.15, -0.1, 0.15) : 1);
+  W.baseValue = function (p) {
     const age = W.age(p);
     let v = 1000 * Math.pow(1.13, p.ca);
     if (age <= 21) v *= 1.2 + Math.max(0, p.pa - p.ca) / 30;
@@ -37,7 +60,7 @@
     if (yrs <= 0) v *= 0.35;
     else if (yrs === 1) v *= 0.7;
     if (p.hid.cons >= 15) v *= 1.05;
-    return Math.max(10000, U.roundMoney(v));
+    return v;
   };
   W.stars = (ca) => U.clamp(Math.round(((ca - 30) / 55) * 10) / 2, 0.5, 5); // 0.5–5
   W.fitAt = (p, slotType) => (D.FIT[p.pos] && D.FIT[p.pos][slotType]) || (p.pos === slotType ? 1 : 0.4);
@@ -333,7 +356,7 @@
     return p;
   };
   W.blankSeason = () => ({ apps: 0, goals: 0, ast: 0, rsum: 0, motm: 0, yc: 0, rc: 0 });
-  W.wageFor = (p) => Math.max(750, Math.round((p.value * 0.0035) / 50) * 50);
+  W.wageFor = (p) => Math.max(750, Math.round((W.baseValue(p) * 0.0035) / 50) * 50); // wages follow ability and age, not market swings
   W.startSpell = function (p, clubId) {
     p.clubId = clubId;
     W.rosterVer++;
@@ -610,14 +633,44 @@
         used.add(best.id);
       }
     }
+    // Your club: improve the quick pick by swapping players between positions, or bringing in an unused player,
+    // while the team's total fit rises (players you placed yourself stay put). AI clubs keep the quick pick: it runs
+    // thousands of times a day and the match balance is calibrated on it.
+    if (W.isUser(clubId)) {
+      const locked = new Set(
+        (tactic.lineup || []).map((pid, i) => (xi[i] && xi[i].id === pid ? i : -1)).filter((i) => i >= 0),
+      );
+      const val = (p, i) =>
+        !p || (slots[i].t === 'GK') !== (p.pos === 'GK') ? 0 : W.effAt(p, slots[i].t) * W.fitnessPick(p);
+      for (let pass = 0, better = true; better && pass < 4; pass++) {
+        better = false;
+        for (let i = 0; i < slots.length; i++) {
+          if (locked.has(i)) continue;
+          for (let j = i + 1; j < slots.length; j++) {
+            if (locked.has(j)) continue;
+            if (val(xi[j], i) + val(xi[i], j) > val(xi[i], i) + val(xi[j], j) + 1e-9) {
+              [xi[i], xi[j]] = [xi[j], xi[i]];
+              better = true;
+            }
+          }
+          for (const q of pool) {
+            if (used.has(q.id) || val(q, i) <= val(xi[i], i) + 1e-9) continue;
+            if (xi[i]) used.delete(xi[i].id);
+            used.add(q.id);
+            xi[i] = q;
+            better = true;
+          }
+        }
+      }
+    }
+    // Bench: a keeper, then cover for defence, midfield and attack, then the best of the rest
     const rest = pool.filter((p) => !used.has(p.id)).sort((a, b) => b.ca - a.ca);
     const bench = [];
-    const gk = rest.find((p) => p.pos === 'GK');
-    if (gk) bench.push(gk);
-    for (const p of rest) {
-      if (bench.length >= 9) break;
-      if (!bench.includes(p)) bench.push(p);
-    }
+    const add = (p) => p && !bench.includes(p) && bench.length < 9 && bench.push(p);
+    add(rest.find((p) => p.pos === 'GK'));
+    for (const g of ['DEF', 'MID', 'ATT']) add(rest.find((p) => D.POS_GROUP[p.pos] === g));
+    for (const p of rest) if (p.pos !== 'GK') add(p);
+    for (const p of rest) add(p); // a second keeper only if places are left
     return { xi, bench };
   };
 
@@ -917,6 +970,7 @@
     FM.Intl.setup();
     FM.Cups.setupSeason(null);
     S.calendar = W.buildCalendar();
+    for (const id in S.players) S.players[id].value = W.value(S.players[id]); // priced with their final club and contract
     return S;
   };
 
@@ -1239,6 +1293,8 @@
     injRisk: 'ir',
     arc: 'ac',
     settled: 'st',
+    buzz: 'bz',
+    buzzY: 'by',
   };
   const UNKEY = Object.fromEntries(Object.entries(KEYS).map(([k, v]) => [v, k]));
   const DEFAULTS = {

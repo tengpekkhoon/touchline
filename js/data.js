@@ -1738,8 +1738,9 @@
   ];
   // Squad sizes per tier (+ academy prospects)
   FM.D.SQUAD_TIER = {
-    full: { GK: 3, CB: 4, FB: 4, DM: 2, CM: 3, AM: 2, W: 3, ST: 2 }, // three keepers: two can be out at once
-    light: { GK: 2, CB: 3, FB: 3, DM: 2, CM: 2, AM: 2, W: 2, ST: 2 },
+    // deep enough to cover injuries, suspensions and rotation (full: 26 senior players, three of them keepers)
+    full: { GK: 3, CB: 5, FB: 4, DM: 2, CM: 4, AM: 2, W: 4, ST: 2 },
+    light: { GK: 2, CB: 3, FB: 3, DM: 2, CM: 3, AM: 2, W: 3, ST: 2 },
     minimal: { GK: 2, CB: 3, FB: 2, DM: 1, CM: 2, AM: 1, W: 2, ST: 2 },
   };
   FM.D.ACADEMY_TIER = { full: 2, light: 2, minimal: 1 };

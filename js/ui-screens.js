@@ -830,12 +830,15 @@
     const noFit = W.pickXI(id, T).xi.filter(Boolean);
     W.fitnessPick = fp;
     const rested = noFit.filter((p) => !withFit.has(p.id));
+    // ...and gives each starter the role that suits him
+    const { xi } = W.pickXI(id, T);
+    T.roles = FM.bestRoles(xi, D.FORMATIONS[T.formation], W.defaultRoles(T.formation));
     UI.save();
     UI.render();
     UI.toast(
       rested.length
-        ? `Best XI selected — ${rested.length} rested for fitness: ${rested.map((p) => `${W.short(p)} (${Math.round(p.fitness)}%)`).join(', ')}`
-        : 'Best XI selected — everyone is fit enough to start',
+        ? `Best XI, bench and roles set — ${rested.length} rested for fitness: ${rested.map((p) => `${W.short(p)} (${Math.round(p.fitness)}%)`).join(', ')}`
+        : 'Best XI, bench and roles set — everyone is fit enough to start',
       4000,
     );
   };
