@@ -83,9 +83,4 @@
     FM.S.nextId = (FM.S.nextId || 1) + 1;
     return prefix + FM.S.nextId;
   };
-
-  // Tiny event bus for UI refreshes
-  const subs = {};
-  FM.on = (ev, fn) => ((subs[ev] = subs[ev] || []).push(fn));
-  FM.emit = (ev, data) => (subs[ev] || []).forEach((fn) => fn(data));
 })();

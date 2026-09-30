@@ -167,7 +167,6 @@
     queue = job.catch(() => {});
     return job;
   };
-  Sv.flush = () => queue;
   Sv.read = async function (slot) {
     let raw = null;
     try { raw = await Sv.store().get(KEY(slot)); } catch (e) {}
@@ -180,7 +179,8 @@
     const st = Sv.store();
     await Promise.all([st.del(KEY(slot)), st.del(META(slot)), st.del(BACKUP(slot))].map((p) => p.catch(() => {})));
   };
-  // Keep the pre-upgrade save, in case a migration ever gets something wrong
+  // Keep the pre-upgrade save, in case a migration ever gets something wrong (readBackup and remove complete the
+  // storage API for a future restore / delete-slot screen)
   Sv.keepBackup = (slot, raw) => Sv.store().put(BACKUP(slot), raw).catch(() => {});
   Sv.readBackup = (slot) => Sv.store().get(BACKUP(slot)).catch(() => null);
 

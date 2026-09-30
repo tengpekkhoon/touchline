@@ -40,12 +40,6 @@
   // Match fitness: bar plus percentage, coloured by how ready he is to start
   C.fitTag = (f) => { f = Math.round(f); return `<span class="fitw" title="Match fitness">${C.fit(f)}<span style="color:${C.fitColor(f)}">${f}%</span></span>`; };
   C.form = (form) => `<div class="formdots">${form.map((r) => `<i class="f${r}">${r}</i>`).join('')}</div>`;
-  C.spark = function (arr, w = 64, h = 22) {
-    if (!arr.length) return '<span class="dim tiny">—</span>';
-    const pts = arr.map((v, i) => `${arr.length === 1 ? w / 2 : (i / (arr.length - 1)) * (w - 4) + 2},${h - 2 - ((v - 4) / 6) * (h - 4)}`).join(' ');
-    const last = arr[arr.length - 1];
-    return `<svg width="${w}" height="${h}"><polyline points="${pts}" fill="none" stroke="${last >= 7 ? 'var(--good)' : last >= 6.3 ? 'var(--acc2)' : 'var(--bad)'}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
-  };
   C.rating = (r) => `<span class="pill" style="color:${r >= 7.5 ? 'var(--good)' : r >= 6.5 ? 'var(--ink)' : 'var(--bad)'};font-weight:800">${r.toFixed(1)}</span>`;
   C.radar = function (p, approx = false, size = 220) {
     const axes = p.pos === 'GK' ? D.RADAR_GK : D.RADAR;
@@ -169,7 +163,6 @@
       return false;
     }
   };
-  UI.deleteSlot = (n) => FM.Save.remove(n);
 
   UI.applyTheme = function () {
     const t = (FM.S && FM.S.settings && FM.S.settings.theme) || (() => { try { return localStorage.getItem('touchline.theme'); } catch (e) { return null; } })() || 'dark';
@@ -309,7 +302,7 @@
         return `<button class="clubpick ${NG.club === fake.id ? 'on' : ''}" data-act="ngClub" data-id="${fake.id}">${C.crest(fake, 38)}<div class="grow"><div class="b">${esc(name)}</div><div class="small" style="color:#9fb0c5">${I.icon} ${I.label} · ${diff}</div><div class="tiny" style="color:#6f7f96;margin-top:2px">${esc(I.fans)}</div></div><div class="tiny" style="color:#9fb0c5">${div}</div></button>`;
       };
       body = `<div class="h1" style="margin-top:2vh">Pick your club</div><div class="tag">Every club has an identity. The board and fans will judge you by it.</div><div class="sp"></div>
-        ${(() => { const names = Object.fromEntries(D.LEAGUES.map((l) => [l.id, l.name])); const tier = { D1: 'Tier 1', D2: 'Tier 2', D3: 'Tier 3', ES1: 'Tier 1', ES2: 'Tier 2', DE1: 'Tier 1', FR1: 'Tier 1', BR1: 'Tier 1' }; const cols = ['#c8ff3d', '#3de0ff', '#a78bfa', '#ffb347', '#fbbf24', '#f87171', '#60a5fa', '#34d399']; return D.LEAGUE_CLUBS.map(([cid, key, nat], i) => `<div class="small b" style="color:${cols[i]};margin:16px 0 8px;letter-spacing:1px">${D.NATIONS[nat].flag} ${names[cid].toUpperCase()} · ${D.NATIONS[nat].name.toUpperCase()}</div>${D[key].map((r) => row(r, tier[cid])).join('')}`).join(''); })()}
+        ${(() => { const names = Object.fromEntries(D.LEAGUES.map((l) => [l.id, l.name])); const tier = Object.fromEntries(D.LEAGUES.map((l) => [l.id, `Tier ${l.tier}`])); const cols = ['#c8ff3d', '#3de0ff', '#a78bfa', '#ffb347', '#fbbf24', '#f87171', '#60a5fa', '#34d399']; return D.LEAGUE_CLUBS.map(([cid, key, nat], i) => `<div class="small b" style="color:${cols[i]};margin:16px 0 8px;letter-spacing:1px">${D.NATIONS[nat].flag} ${names[cid].toUpperCase()} · ${D.NATIONS[nat].name.toUpperCase()}</div>${D[key].map((r) => row(r, tier[cid])).join('')}`).join(''); })()}
         <div class="actions" style="position:sticky;bottom:0;padding:14px 0 4px;background:linear-gradient(transparent,#06090d 30%)"><button class="btn block" data-act="ngRandom">🎲 Choose random club</button><button class="btn block" data-act="ngUnemployed">🧳 Start unemployed — wait for offers</button><button class="btn pri block" data-act="ngNext" ${NG.club && NG.club !== 'none' ? '' : 'disabled'}>${NG.club && NG.club !== 'none' ? `Continue with ${esc(D.allClubRows().find((r) => 'c_' + r[1] === NG.club)[0])} →` : 'World rules →'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     } else {
       const seg = (k, vals, lbl) => `<div class="small" style="color:#9fb0c5;margin:16px 0 6px">${lbl}</div><div class="seg">${vals.map((v) => `<button class="${NG.rules[k] === v ? 'on' : ''}" data-act="ngRule" data-k="${k}" data-v="${v}">${v}</button>`).join('')}</div>`;

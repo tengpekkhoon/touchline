@@ -305,12 +305,6 @@
     return { xi, bench };
   };
 
-  W.teamStrength = function (clubId) {
-    const c = FM.S.clubs[clubId];
-    const { xi } = W.pickXI(clubId, c.tactic);
-    return U.avg(xi.filter(Boolean), (p) => p.ca);
-  };
-
   // ---------------- Competitions ----------------
   W.roundRobin = function (ids) {
     const t = U.shuffle(ids);

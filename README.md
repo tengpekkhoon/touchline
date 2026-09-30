@@ -121,7 +121,7 @@ js/injuries.js   injury catalogue and risk model, training injuries, recovery, m
 js/save.js       save format, migrations, storage backends (files / IndexedDB), backup export/import
 js/simrun.js     runs matchday simulation in the Web Worker (js/sim-worker.js) with a progress overlay
 js/native.js     Capacitor plugins with web fallbacks, back button, background autosave, boot
-tools/           sim-test.mjs (regression test), calibrate.mjs (realism report), regens.mjs (career-shape test), build.mjs (production build)
+tools/           sim-test.mjs (regression test), calibrate.mjs (realism report), regens.mjs (career-shape test), harness.mjs (seeded loader they share), build.mjs (production build)
 ```
 
 ## Not yet built (next candidates)

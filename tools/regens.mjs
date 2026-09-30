@@ -3,23 +3,12 @@
 // his potential, who flops (stalls, plateaus, burns out), one-season wonders, early primes and long primes — with
 // examples, and checks them against expected ranges. Exits non-zero if any check fails.
 //   node tools/regens.mjs [--years 20] [--seed 7] [--intakes 5]
-import fs from 'node:fs';
-import vm from 'node:vm';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { parseArgs, loadSim } from './harness.mjs';
 
-const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const args = Object.fromEntries(process.argv.slice(2).join(' ').split('--').filter(Boolean).map((a) => a.trim().split(/\s+/)));
+const args = parseArgs();
 const YEARS = +(args.years || 20), SEED = +(args.seed || 7), INTAKES = +(args.intakes || 5);
-const SIM = fs.readFileSync(path.join(ROOT, 'js/simrun.js'), 'utf8').match(/R\.SCRIPTS = \[([^\]]+)\]/)[1].match(/'([^']+)'/g).map((s) => s.slice(1, -1));
-let seed = SEED;
-const rng = () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-const SMath = Object.create(Math); SMath.random = rng;
-const ctx = { console, Math: SMath, setTimeout, performance, localStorage: { getItem: () => null, setItem() {}, removeItem() {} } };
-ctx.window = ctx;
-vm.createContext(ctx);
-for (const f of SIM) vm.runInContext(fs.readFileSync(path.join(ROOT, 'js', f + '.js'), 'utf8'), ctx, { filename: f + '.js' });
-const FM = ctx.FM, W = FM.W, Sea = FM.Season, U = FM.U;
+const { FM } = loadSim(SEED);
+const W = FM.W, Sea = FM.Season, U = FM.U;
 
 W.newWorld({ win: 3, subs: 5, foreignLimit: 6, twoLegs: true, awayGoals: false });
 const S = FM.S;

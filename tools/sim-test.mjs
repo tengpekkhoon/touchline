@@ -2,26 +2,14 @@
 // app uses (our matches applied first, the rest of each day simulated after a JSON round trip, exactly
 // like the Web Worker), then checks invariants, save packing and save migrations.
 //   node tools/sim-test.mjs [--seasons 2] [--seed 7]
-import fs from 'node:fs';
 import vm from 'node:vm';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { parseArgs, loadSim } from './harness.mjs';
 
-const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const args = Object.fromEntries(process.argv.slice(2).join(' ').split('--').filter(Boolean).map((a) => a.trim().split(/\s+/)));
+const args = parseArgs();
 const SEASONS = +(args.seasons || 2), SEED = +(args.seed || 7);
-// Same list as FM.SimRunner.SCRIPTS (js/simrun.js)
-const SIM = fs.readFileSync(path.join(ROOT, 'js/simrun.js'), 'utf8').match(/R\.SCRIPTS = \[([^\]]+)\]/)[1].match(/'([^']+)'/g).map((s) => s.slice(1, -1));
-
-let seed = SEED;
-const rng = () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-const SMath = Object.create(Math); SMath.random = rng;
 const store = {};
-const ctx = { console, Math: SMath, setTimeout, performance, localStorage: { getItem: (k) => store[k] ?? null, setItem: (k, v) => { store[k] = String(v); }, removeItem: (k) => { delete store[k]; } } };
-ctx.window = ctx;
-vm.createContext(ctx);
-for (const f of SIM) vm.runInContext(fs.readFileSync(path.join(ROOT, 'js', f + '.js'), 'utf8'), ctx, { filename: f + '.js' });
-const FM = ctx.FM, W = FM.W, Sea = FM.Season;
+const { ctx, FM } = loadSim(SEED, { getItem: (k) => store[k] ?? null, setItem: (k, v) => { store[k] = String(v); }, removeItem: (k) => { delete store[k]; } });
+const W = FM.W, Sea = FM.Season;
 // Use the context's own JSON: objects from the host realm would make the simulation much slower
 const roundTrip = () => vm.runInContext('FM.S = FM.Save.relink(JSON.parse(JSON.stringify(FM.S)))', ctx);
 const cJSON = vm.runInContext('JSON', ctx);

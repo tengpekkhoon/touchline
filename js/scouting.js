@@ -17,9 +17,6 @@
       Sc._lvlS = S; Sc._lvlKey = key; Sc._lvl = W.employed() ? U.avg(W.pickXI(S.user.clubId, S.user.tactic).xi.filter(Boolean), (q) => q.ca) : W.levelFor(S.user.rep + 8); }
     return Sc._lvl;
   };
-  Sc.bestScoutFor = function (region) {
-    return FM.S.user.scouts.map((id) => FM.S.staff[id]).sort((a, b) => b.regions[region] - a.regions[region])[0];
-  };
 
   Sc.dismiss = function (pid) {
     const u = FM.S.user;

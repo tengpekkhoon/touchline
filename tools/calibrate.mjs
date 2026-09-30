@@ -2,22 +2,13 @@
 // real football. Nothing is tuned here; it measures, so engine changes can be judged against reality.
 //   node tools/calibrate.mjs [--seasons 2] [--seed 3]
 import fs from 'node:fs';
-import vm from 'node:vm';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { ROOT, parseArgs, loadSim } from './harness.mjs';
 
-const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const args = Object.fromEntries(process.argv.slice(2).join(' ').split('--').filter(Boolean).map((a) => a.trim().split(/\s+/)));
+const args = parseArgs();
 const SEASONS = +(args.seasons || 2), SEED = +(args.seed || 3);
-const SIM = fs.readFileSync(path.join(ROOT, 'js/simrun.js'), 'utf8').match(/R\.SCRIPTS = \[([^\]]+)\]/)[1].match(/'([^']+)'/g).map((s) => s.slice(1, -1));
-let seed = SEED;
-const rng = () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-const SMath = Object.create(Math); SMath.random = rng;
-const ctx = { console, Math: SMath, setTimeout, performance, localStorage: { getItem: () => null, setItem() {}, removeItem() {} } };
-ctx.window = ctx;
-vm.createContext(ctx);
-for (const f of SIM) vm.runInContext(fs.readFileSync(path.join(ROOT, 'js', f + '.js'), 'utf8'), ctx, { filename: f + '.js' });
-const FM = ctx.FM, W = FM.W, Sea = FM.Season, U = FM.U;
+const { FM } = loadSim(SEED);
+const W = FM.W, Sea = FM.Season, U = FM.U;
 // --set chanceRate=0.14,xgScale=0.8 tries calibration values without editing the engine
 if (args.set) for (const kv of String(args.set).split(',')) { const [k, v] = kv.split('='); if (!(k in FM.CAL)) throw new Error('unknown calibration key ' + k); FM.CAL[k] = +v; }
 
