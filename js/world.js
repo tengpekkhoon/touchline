@@ -390,7 +390,8 @@
   W.levelFor = (rep) => 25 + rep * 0.58;
   // Ability of an unattached player the world invents (a new world's free agents, a thin summer market): mostly
   // lower-league standard; only rarely someone good enough for a top flight
-  W.freeAgentCA = () => (Math.random() < 0.03 ? U.randi(68, 80) : Math.round(U.clamp(U.gauss(47, 6), 34, 62)));
+  // Free agents the world generates (world start, summer top-up): mostly journeymen; a genuinely good one is rare
+  W.freeAgentCA = () => (Math.random() < 0.01 ? U.randi(60, 70) : Math.round(U.clamp(U.gauss(42, 6), 30, 56)));
 
   // Nationality for a new player at a club: league mix where one exists, mostly local elsewhere
   W.natFor = function (club) {

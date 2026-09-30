@@ -84,7 +84,7 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Error message when a new save has no manager name (S)
 - [x] Captaincy doesn't switch automatically (S)
 - [x] Players who just signed or renewed don't want to move (S–M)
-- [x] Transfers and loans only while the window is open; free agents any time. AI clubs fill squad gaps with transfers in the window and fall back on free agents once it shuts (S–M)
+- [x] Transfers and loans only while the window is open; free agents any time. AI clubs fix squad gaps in the window with transfers or free agents, and after it shuts sign free agents only for gaps that remain; free agents are mostly journeymen (S–M)
 - [x] Fan reactions judged against expectations: a draw with a better team isn't bad news; a loss to a much better team is neutral (M)
 - [x] Career-shape test (`npm run test:regens`) deterministic under a fixed seed (S–M)
 

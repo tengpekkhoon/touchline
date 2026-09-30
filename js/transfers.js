@@ -342,8 +342,8 @@
     T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c)), T.wageDemand(p, c));
     return true;
   };
-  // Good free agents don't stay unemployed: once the window has shut, the best club that needs him and can pay
-  // signs him (clubs look for transfers first while it is open)
+  // In the window, good free agents don't stay unemployed: the best club at his level that has room signs him.
+  // (Once it has shut, free agents only fill real squad gaps: Sea.freeAgents.)
   T.aiTopFreeAgents = function () {
     const full = Object.values(FM.S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id));
     Object.values(FM.S.players)
@@ -413,6 +413,7 @@
         T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c)), T.wageDemand(p, c));
         T.offload(c, D.POS_GROUP[p.pos], full);
       });
+    T.aiTopFreeAgents();
 
     // Marquee raid: a giant prises the best young talent out of another country
     if (Math.random() < 0.35 * k) {

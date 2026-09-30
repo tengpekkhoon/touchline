@@ -658,7 +658,6 @@
     FM.Injury.daily(); // rehab countdowns, returns, training knocks and illness
     Sea.minimalSimWeek();
     Sea.freeAgents();
-    if (!Sea.windowOpen()) FM.Transfers.aiTopFreeAgents();
     if (employed) Sea.ensureUserSquad(14);
     Sea.ensureKeepers();
     Sea.finances();
@@ -850,14 +849,11 @@
     if (!pool.length) return;
     const clubs = Object.values(S.clubs).filter((c) => !W.isUser(c.id));
     const room = new Map(clubs.map((c) => [c.id, W.squadTarget(c) - W.squad(c.id).length])); // a real gap in the squad
-    // Clubs fix their squads in the transfer window (transfers and loans); a free agent is the fallback for a gap
-    // still open once it has shut. Outside the window the daily rate is 1.5× the old any-day rate (the window
-    // covers 7 of ~22 base rounds), so a season's total stays similar.
-    const open = Sea.windowOpen();
+    // Only a real squad gap gets filled (a club under its squad size, short in that position). In the window clubs
+    // use transfers (T.fillGap) or free agents; once it has shut, a free agent is the only way to fill a gap.
     for (const p of U.shuffle(pool)) {
       if (p.freeSince == null) p.freeSince = now;
-      if (open) continue;
-      if (Math.random() > (1.5 * 0.12 * 55) / S.calendar.length) continue; // agents take their time; clubs have other priorities
+      if (Math.random() > (0.12 * 55) / S.calendar.length) continue; // agents take their time; clubs have other priorities (rate per week, whatever the calendar)
       const waited = (S.year - Math.floor(p.freeSince / 1000)) * S.calendar.length + S.day - (p.freeSince % 1000);
       const lower = 8 + Math.min(14, waited * 0.4),
         want = D.SQUAD_TIER;
