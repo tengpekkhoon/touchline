@@ -1,6 +1,6 @@
 # Touchline — Roadmap
 
-Sep 29, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/4208fb1b-f42b-4a90-86c7-46c970e08ba9)
+Sep 30, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/4208fb1b-f42b-4a90-86c7-46c970e08ba9)
 
 ## At a glance
 
@@ -29,6 +29,7 @@ The web prototype runs on a phone browser with no build step, covering 547 real 
 
 | Build | What shipped |
 | --- | --- |
+| Code cleanup | No gameplay change, proven by identical seeded test and calibration results. Removed dead code, merged duplicate name pools and the test tools' copied loaders (`tools/harness.mjs`), split the three largest files (clubs into `clubs.js`, player development and retirement into `careers.js`, the transfer market into `transfers.js`). ESLint and Prettier added (`npm run lint`, `npm run format`); every deploy now has to pass both before it goes live. |
 | World expansion and dynamic tiers | Your league, the one above and the one below always play in the full engine: relegated from the Premier League, League One switches from light to full; out of work, every league returns to its own tier. Ten more leagues in minimal simulation, in UEFA coefficient order: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland and Scotland (146 real clubs, 19 derbies such as the Old Firm and the Kıtalararası Derbi), with six new nations (Turkey, Czechia, Greece, Poland, Austria, Switzerland) and national teams. Name pools at least doubled for most nations (every nation 40+ first names and 43+ surnames), with more real-player combinations blocked. The world is now 547 clubs in 30 leagues, about 10,600 players and 35 national teams |
 | Manager profile and lighter lower leagues | New careers start with a full manager profile: first and last name, country (your own national team is more likely to offer you a job and will take a chance on a lower reputation), favourite club (managing them is a homecoming with warmer fans and a more patient board; managing their rival starts frostier; their job offers come more often and their trophies, promotions and relegations reach your feed) and an avatar (24 faces, 8 colours) shown on the manager card and out-of-work header. League One and the Segunda División now use the light simulation: clubs take their league's tier on promotion and relegation, the club you manage is always fully simulated, and both still play in the FA Cup and Copa del Rey |
 | Real leagues | Real league and competition names (Premier League, LaLiga, Bundesliga, UEFA Champions League, Copa Libertadores, FA Cup, FIFA World Cup, ...) and real league sizes: 401 clubs in 20 leagues (Premier League 20, Championship 24, League One 24, LaLiga 20, Segunda 22, Bundesliga 18, MLS 30 playing 34 games, Argentina 28 playing a single round-robin, ...) with real kit colours and 106 derbies. The season has 46 league days: every league spreads its own rounds across them so all finish together; cups, European nights and international breaks are placed by share of the season, and the FA Cup has enough rounds for 68 clubs. Rates retuned for real-length seasons and a world twice the size (injuries per match, AI market quotas). Cost: saves ~6 MB and simulation ~1.8× slower per day |
@@ -183,6 +184,7 @@ Step 1 is done: the game installs to the home screen and plays offline (web app 
 - [x] Phone behaviour: Android/browser back button, safe areas and notch, keyboard, portrait lock on phones / wider tablet layout
 - [x] Native plugins: haptics, share sheet for story cards and backups, themed status bar
 - [x] Build step (concatenate + esbuild minify, hashed URLs), headless season sim as an automatic regression test (`npm test`)
+- [x] Lint (ESLint) and formatting (Prettier) checks on every deploy
 - [x] Package with Capacitor for iOS and Android (projects generated; not yet compiled)
 - [ ] Compile and test on real Android and iOS devices; app icons and splash screens
 
