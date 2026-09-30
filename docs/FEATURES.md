@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-132 features are playable in the web prototype today. Build = the build that added it.
+146 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -142,10 +142,24 @@ Every feature from the game design document, with what is playable in the protot
 | Career | Start unemployed: a career with no club and a modest reputation; offers from clubs in your range arrive over the first weeks | Long-term pass |
 | Career | Out of work after a sacking: the world keeps going, up to three offers at a time (about a week each), "Wait for an offer", national team jobs carry on | Long-term pass |
 | Setup | Long saves stay lean and fast: slimmer retired-player records (save format v6), staff age and retire, forgotten records pruned | Long-term pass |
+| Match | Match engine calibrated to real top-flight football: ~2.7 goals, 45/25/30 home/draw/away, ~24 shots and ~8 on target, ~0.3 penalties, ~4 bookings and ~0.2 reds per match, set pieces ~23% of goals; home advantage (not at neutral venues), game state (leaders sit deeper late on), booked players more careful, varied booking reasons | Calibration pass |
+| Players | Realistic career shapes: fast growth in the teens, a peak around 27–29, decline through the thirties (pace and stamina first, reading of the game last); keepers and centre-backs age later; every player's ageing clock runs a little early or late | Careers and injuries pass |
+| Players | Veterans wind down: AI clubs plan for decline, offer one-year deals past 31 and renew only players still good enough; retirement at ~33–35 depends on age, level, long injuries and professionalism, and keepers play on longer | Careers and injuries pass |
+| Medical | 23 real injury types with realistic layoffs (a week to ten months); risk from proneness, age, fatigue, match fitness and a recent return; training knocks and illness; re-injuries; long injuries cost development and sometimes pace; medical centre and physio shorten layoffs and lower the risk | Careers and injuries pass |
+| Medical | Your players' injuries in the feed with expected return; surgery-or-rehab decisions; "Risk him?" for a key player nearly fit before a big game; back-in-training news with match fitness; current injury and re-injury risk on the player card | Careers and injuries pass |
+| Transfers | Living AI market: clubs replace their weakest starter (ageing players judged on where they're heading), buy from smaller clubs or at a premium from peers but never from a direct domestic rival, and sell the displaced player down the pyramid; players climb as they improve and slide down as they fade, and squads no longer age in place over long saves | Squad turnover pass |
+| Match | Steady scoring over long saves: goals per match stay at ~2.7 season after season (they used to creep toward 3.0); players who develop keep realistic secondary attributes, AI managers keep a club's usual tactical style, and a tactical equilibrium eases the whole game back toward the calibrated scoring level if it drifts | Steady scoring pass |
+| Players | Career arcs: some wonderkids flop (stall, plateau short of their potential, or peak early and fall away fast); one-season wonders have a sudden big year then give it back; rare prodigies are at their prime by 18–19; a few greats keep their prime into their mid-thirties and retire late | Careers and market pass |
+| Transfers | Loan market: clubs loan out young players with room to grow and some fringe seniors to smaller clubs where they will start; loans return in the summer | Careers and market pass |
+| Transfers | Free agents sign any day of the season to fill real squad gaps, lowering their sights the longer they wait; unused veterans can have contracts cancelled in the winter; players unattached for a season leave the game | Careers and market pass |
+| Setup | Hostable on GitHub Pages: a workflow builds the site and publishes it on every push, installable as an offline web app | Careers and market pass |
+| Clubs | Real club names in all 20 leagues with real colours, cities, stadiums and capacities, and real derbies; ratings, identities and finances are the game's own | Real clubs and free agents |
+| Transfers | Free agents are mostly lower-league standard; a top-quality free agent is rare (usually a veteran star whose contract wasn't renewed) | Real clubs and free agents |
+| Competitions | Real league and competition names at real league sizes (401 clubs in 20 leagues; MLS and Argentina in their real shorter formats); every league runs August to May on one shared calendar | Real leagues |
 
 ## Yet to be added
 
-39 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+38 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
 
 Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
 
@@ -176,7 +190,6 @@ Design principle from here: don't make the game deeper by adding more screens �
 | Youth | National youth pathways: Brazil (academies → state championships → pro clubs), England (academies → U18/U21 → loans), Japan (school → university → league), USA (high school → college → draft), Africa (academies → local clubs → European moves); scouting works differently in each | Living world |
 | Agents | Agents as characters: client networks, preferred clubs, negotiating styles, reputations and relationships with managers and sporting directors ("This agent represents 7 promising South American teenagers") | Living world |
 | Media | Media ecosystem: newspapers with biases, fan podcasts, transfer journalists of varying reliability, rumours that aren't always true, and fan forums reacting to transfers, tactics, results, players and board decisions | Living world |
-| Medical | Injuries as events: injury history, recurring problems, rehabilitation, medical staff quality, workload and recovery, surgery decisions — and dilemmas like "Risk him for the derby?" | Living world |
 | Stadiums | Stadium histories: opening year, expansions, new stands, moving grounds, renaming after a club legend | Living world |
 | Platform | Compile and test the native apps on Android and iOS devices; app icons and splash screens | Mobile readiness |
 | Match | Live passing network and heat map during the match | Beta |

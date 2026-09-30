@@ -4,6 +4,22 @@
 (function () {
   const FM = window.FM, U = FM.U, D = FM.D, W = FM.W;
 
+  // ---- Calibration: the knobs that tie the engine to real football (tools/calibrate.mjs measures the result) ----
+  // Tuned against real top-flight averages (goals 2.6–2.9, home/draw/away ~45/25/30, ~24 shots and ~8.5 on
+  // target, ~0.3 penalties, ~4 cards). Re-run tools/calibrate.mjs after any engine change.
+  const CAL = (FM.CAL = {
+    chanceRate: 0.14, // shot opportunities per minute per side, before strengths and tactics
+    xgScale: 0.82, // scales open-play chance quality
+    penRate: 0.013, // share of chances that are penalties
+    spWeight: 0.3, spXg: 1.3, // how often chances come from corners/free kicks, and their quality
+    homeAtt: 1.1, homeMid: 1.04, homeDef: 1.02, // home advantage (none at neutral venues)
+    savedBase: 0.2, savedXg: 0.6, // chance a missed shot was on target (saved)
+    yellowRate: 0.017, redRate: 0.00016, // cautions and straight reds per side per minute
+    bookedCaution: 0.3, // a booked player's chance of another card, relative to the rest
+    gameState: 0.25, // late on, a leading side creates fewer chances and a trailing side more
+    qualityExp: 1.1, // how sharply the attack/defence gap turns into chances (higher = more predictable, more lopsided)
+    targetGoals: 2.72, // tactical equilibrium: the league scoring rate the game settles back toward over long saves
+  });
   const AW = { GK: 0, CB: 0.1, FB: 0.25, WB: 0.35, DM: 0.2, CM: 0.4, AM: 0.8, W: 0.85, ST: 1 };
   const MW = { GK: 0.1, CB: 0.3, FB: 0.5, WB: 0.5, DM: 0.9, CM: 1, AM: 0.8, W: 0.5, ST: 0.3 };
   const DW = { GK: 0.5, CB: 1, FB: 0.8, WB: 0.6, DM: 0.8, CM: 0.45, AM: 0.15, W: 0.15, ST: 0.1 };
@@ -42,6 +58,7 @@
       this.o = o;
       this.comp = o.comp;
       this.knockout = !!o.knockout;
+      this.neutral = !!o.neutral; // finals and tournaments: no home advantage
       // Second leg of a two-legged tie: goals already scored in leg 1 by [this home side, this away side]
       this.agg = o.agg || null;
       this.awayGoals = !!o.awayGoals;
@@ -137,7 +154,7 @@
       if (shape === '3') { att *= 1.04; def *= 0.97; }
       if (shape === '5') { att *= 0.94; def *= 1.06; }
       if (T.invFB) { mid *= 1.04; def *= 0.99; }
-      if (sd.idx === 0) { att *= 1.04; mid *= 1.03; }
+      if (sd.idx === 0 && !this.neutral) { att *= CAL.homeAtt; mid *= CAL.homeMid; def *= CAL.homeDef; }
       if (sd.user && sd.club.sim !== 'nation' && FM.S.user.tactic.fam != null) { const f = 1 + (FM.S.user.tactic.fam - 60) * 0.0008; att *= f; mid *= f; def *= f; }
       const cb = FM.Matchday.capBoost(capt);
       att *= cb; mid *= cb; def *= cb;
@@ -165,11 +182,14 @@
       const rates = [H, A].map((sd, k) => {
         const me = k ? sA : sH, op = k ? sH : sA, opSd = k ? H : A;
         const poss = k ? 1 - possH : possH;
-        let r = 0.125 * Math.pow(me.att / op.def, 1.5) * (0.5 + poss) * me.rate;
+        let r = CAL.chanceRate * (FM.S.era || 1) * Math.pow(me.att / op.def, CAL.qualityExp) * (0.5 + poss) * me.rate;
         if (opSd.tactic.press === 'Low Block') r *= 0.88;
         if (sd.tactic.press === 'Low Block') r *= 0.92;
         if (sd.tactic.buildup === 'Counter' && opSd.tactic.press === 'High Press') r *= 1.15;
         if (opSd.tactic.buildup === 'Possession') r *= 0.93;
+        // Game state: from the hour mark the team in front sits deeper and the team behind pushes
+        const diff = sd.goals - opSd.goals;
+        if (diff && tl.m >= 55) r *= 1 - Math.sign(diff) * CAL.gameState * Math.min(1, (tl.m - 55) / 35);
         return r;
       });
 
@@ -270,16 +290,16 @@
       const sd = this.sides[side], od = this.sides[1 - side];
       const on = this.onPitch(sd).filter(({ i }) => sd.slots[i].t !== 'GK');
       const T = sd.tactic;
-      const w = { through: 0.2, cross: 0.2 + me.cross * 0.3, cutback: 0.14, longshot: 0.2, counter: 0.1, setpiece: 0.14 };
+      const w = { through: 0.2, cross: 0.2 + me.cross * 0.3, cutback: 0.14, longshot: 0.2, counter: 0.1, setpiece: CAL.spWeight };
       if (T.buildup === 'Direct') { w.cross += 0.1; w.longshot += 0.05; }
       if (T.buildup === 'Counter') w.counter += 0.18;
       if (T.buildup === 'Possession' || T.buildup === 'Short') { w.cutback += 0.08; w.through += 0.05; }
       if (od.tactic.press === 'High Press') w.counter += 0.06;
       if (od.tactic.press === 'Low Block') { w.longshot += 0.08; w.through -= 0.06; }
       let type = U.wpick(Object.keys(w), (k) => Math.max(0.01, w[k]));
-      if (Math.random() < 0.028) type = 'penalty';
-      const XG = { through: [0.12, 0.34], cross: [0.03, 0.11], cutback: [0.1, 0.26], longshot: [0.015, 0.05], counter: [0.1, 0.3], setpiece: [0.03, 0.09], penalty: [0.73, 0.75] }[type]; // penalties go to the designated taker, so the base rate sits a touch lower
-      let xg = U.rand(XG[0], XG[1]);
+      if (Math.random() < CAL.penRate) type = 'penalty';
+      const XG = { through: [0.12, 0.34], cross: [0.03, 0.11], cutback: [0.1, 0.26], longshot: [0.015, 0.05], counter: [0.1, 0.3], setpiece: [0.03, 0.09], penalty: [0.745, 0.765] }[type]; // penalties go to the designated taker, so the base rate sits a touch lower
+      let xg = U.rand(XG[0], XG[1]) * (type === 'penalty' ? 1 : type === 'setpiece' ? CAL.spXg : CAL.xgScale);
       // Set pieces: a direct free kick for the free-kick taker, or a corner delivered by the corner taker
       const Md = FM.Matchday;
       let sp = null, spTaker = null;
@@ -317,7 +337,7 @@
       if (type === 'longshot' && W.hasTrait(p, 'Flair')) pGoal += 0.03;
       let outcome;
       if (Math.random() < pGoal) outcome = 'goal';
-      else if (Math.random() < 0.3 + xg * 0.6) outcome = 'saved';
+      else if (Math.random() < CAL.savedBase + xg * CAL.savedXg) outcome = 'saved';
       else outcome = Math.random() < 0.45 ? 'blocked' : 'wide';
 
       sd.shots++; sd.xg += xg;
@@ -369,9 +389,9 @@
     discipline(tl, out) {
       this.sides.forEach((sd) => {
         const press = sd.tactic.press === 'High Press' ? 1.4 : sd.tactic.press === 'Low Block' ? 0.8 : 1;
-        if (Math.random() < 0.0034 * press * (this.derby ? 1.4 : this.heated ? 1.2 : 1) * (sd.hot || 1)) {
+        if (Math.random() < CAL.yellowRate * press * (this.derby ? 1.4 : this.heated ? 1.2 : 1) * (sd.hot || 1)) {
           const on = this.onPitch(sd).filter(({ i }) => sd.slots[i].t !== 'GK');
-          const o = U.wpick(on, ({ p, i }) => (22 - p.hid.temp) * (DW[sd.slots[i].t] + 0.2) * (W.hasTrait(p, 'Temperamental') ? 2 : 1));
+          const o = U.wpick(on, ({ p, i }) => (22 - p.hid.temp) * (DW[sd.slots[i].t] + 0.2) * (W.hasTrait(p, 'Temperamental') ? 2 : 1) * (sd.yc[p.id] ? CAL.bookedCaution : 1));
           if (!o) return;
           const p = o.p;
           if (sd.yc[p.id]) {
@@ -379,9 +399,12 @@
             out.events.push({ k: 'red', side: sd.idx, pid: p.id, min: tl.label, text: `🟥 Second yellow! ${W.short(p)} is sent off.`, big: true });
           } else {
             sd.yc[p.id] = 1; sd.rating[p.id] -= 0.3;
-            out.events.push({ k: 'yellow', side: sd.idx, pid: p.id, min: tl.label, text: `🟨 ${W.short(p)} booked for a late challenge.` });
+            // Why he was booked, with a little context: time-wasting only when protecting a lead late on
+            const op = this.sides[1 - sd.idx], lead = sd.goals - op.goals;
+            const why = U.pick(['for a late challenge', 'for a cynical foul to stop a counter', 'for pulling back his man', 'for a reckless tackle', ...(tl.m >= 70 && lead > 0 ? ['for time-wasting', 'for taking too long over a throw-in'] : []), ...(lead < 0 ? ['for dissent'] : [])]);
+            out.events.push({ k: 'yellow', side: sd.idx, pid: p.id, min: tl.label, text: `🟨 ${W.short(p)} booked ${why}.` });
           }
-        } else if (Math.random() < 0.00016) {
+        } else if (Math.random() < CAL.redRate) {
           const on = this.onPitch(sd).filter(({ i }) => sd.slots[i].t !== 'GK');
           const o = U.pick(on);
           if (!o) return;
@@ -398,9 +421,9 @@
           const t = sd.slots[i].t;
           const rf = t === 'GK' ? 0.25 : ['WB', 'FB', 'CM'].includes(t) ? 1.1 : 1;
           sd.st[p.id] = Math.max(0, sd.st[p.id] - 0.42 * (1.35 - (p.attrs.stamina / 20) * 0.7) * pf * rf);
-          if (!sd.injured[p.id] && Math.random() < 0.0001 * (p.hid.inj / 9) * (W.hasTrait(p, 'Injury Prone') ? 2 : 1) * (1.6 - sd.st[p.id] / 100)) {
+          if (!sd.injured[p.id] && Math.random() < FM.Injury.matchChance(p, sd.st[p.id])) {
             sd.injured[p.id] = tl.m;
-            out.events.push({ k: 'injury', side: sd.idx, pid: p.id, min: tl.label, text: `🚑 ${W.short(p)} goes down holding his hamstring.`, big: true });
+            out.events.push({ k: 'injury', side: sd.idx, pid: p.id, min: tl.label, text: `🚑 ${W.short(p)} ${U.pick(['goes down holding his hamstring.', 'pulls up clutching his thigh.', 'is down after a heavy challenge.', 'lands awkwardly and stays down.', 'signals to the bench — he can\'t go on.'])}`, big: true });
             if (!sd.user) this.makeSub(sd, i, null, tl);
           }
         }
@@ -696,7 +719,7 @@
 
   // Quick sim (AI vs AI): same engine, no visuals
   FM.quickSim = function (fx, knockout = false) {
-    const m = new Match({ h: fx.h, a: fx.a, comp: fx.comp, knockout, ...FM.Match.tieOpts(fx) });
+    const m = new Match({ h: fx.h, a: fx.a, comp: fx.comp, knockout, neutral: !!fx.neutral, ...FM.Match.tieOpts(fx) });
     while (!m.finished) m.step();
     return m;
   };

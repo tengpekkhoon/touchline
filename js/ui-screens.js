@@ -36,7 +36,7 @@
       const lastLine = lr ? `Their last: ${lr.gf > lr.ga || (lr.pens && lr.pens[0] > lr.pens[1]) ? 'W' : lr.gf < lr.ga || (lr.pens && lr.pens[0] < lr.pens[1]) ? 'L' : 'D'} ${lr.gf}–${lr.ga}${lr.pens ? ` (${lr.pens[0]}–${lr.pens[1]} pens)` : ''} v ${TM(lr.opp) ? TM(lr.opp).name : '?'}${lr.label ? ` · ${lr.label}` : ''}` : '';
       const oppForm = fx.intl ? opp.form || [] : s.comps[opp.comp] && s.comps[opp.comp].table[opp.id] ? s.comps[opp.comp].table[opp.id].form : [];
       hero = `<div class="hero" style="--c1:${me.colors[0]};--c2:${derby ? '#7a0010' : opp.colors[0]}">
-        <div class="row"><span class="tag">${fx.po ? esc(fx.po) + ' · ' : cal.type === 'league' ? `Matchday ${cal.round + 1} · ` : ''}${esc(compName)}</span><span class="grow"></span>${derby ? `<span class="pill" style="background:#fff;color:#b00020;border:0">⚔️ ${esc(me.derby)}</span>` : ''}</div>
+        <div class="row"><span class="tag">${fx.po ? esc(fx.po) + ' · ' : cal.type === 'league' ? `${FM.Season.matchdayLabel(cal)} · ` : ''}${esc(compName)}</span><span class="grow"></span>${derby ? `<span class="pill" style="background:#fff;color:#b00020;border:0">⚔️ ${esc(me.derby)}</span>` : ''}</div>
         <div class="vs"><div class="side">${UI.C.crest(TM(fx.h), 54)}<span>${esc(TM(fx.h).name)}</span></div><div class="mid">VS<div class="tiny" style="font-family:var(--font);font-weight:700;opacity:.8">${fx.neutral ? 'NEUTRAL' : home ? 'HOME' : 'AWAY'}</div></div><div class="side">${UI.C.crest(TM(fx.a), 54)}<span>${esc(TM(fx.a).name)}</span></div></div>
         ${aggNote ? `<div class="small center b" style="margin:-4px 0 10px;opacity:.9">${esc(aggNote)}</div>` : ''}
         <div class="row small" style="margin-bottom:${lastLine ? 4 : 12}px;opacity:.9"><span>Win chance ${Math.round(pw * 100)}%</span><span class="grow"></span><span>Their form</span>${C.form(oppForm)}</div>
@@ -89,7 +89,7 @@
   function feed() {
     const s = S(), f = UI.sub.feed, cid = club() ? club().id : null;
     let items = s.news;
-    if (f === 'club') items = items.filter((n) => n.clubId === cid || ['press', 'bid', 'report', 'youth', 'dressing', 'board', 'meeting', 'contracts'].includes(n.type));
+    if (f === 'club') items = items.filter((n) => n.clubId === cid || ['press', 'bid', 'report', 'youth', 'dressing', 'board', 'meeting', 'medical', 'contracts'].includes(n.type));
     if (f === 'stories') items = items.filter((n) => n.type === 'story');
     if (f === 'world') {
       // World News: everything about other clubs and the wider game, filtered by topic
@@ -107,7 +107,7 @@
     return html;
   }
   // Open decisions are never cleared: a live bid, an unanswered press conference or meeting
-  UI.isOpenDecision = (n) => (n.type === 'bid' && n.data && n.data.status === 'open') || ((n.type === 'press' || n.type === 'meeting') && !n.resolved);
+  UI.isOpenDecision = (n) => (n.type === 'bid' && n.data && n.data.status === 'open') || ((n.type === 'press' || n.type === 'meeting' || n.type === 'medical') && !n.resolved);
   UI.acts.clearRead = () => {
     const s = S(), before = s.news.length;
     s.news = s.news.filter((n) => !n.read || UI.isOpenDecision(n));
@@ -115,7 +115,7 @@
     UI.toast(`${before - s.news.length} read item${before - s.news.length === 1 ? '' : 's'} cleared`);
   };
 
-  const TYPE = { headline: ['📰', 'Headline'], social: ['💬', 'Fans'], story: ['', ''], press: ['🎙️', 'Press Conference'], bid: ['💼', 'Transfer Bid'], report: ['🔭', 'Scouting'], youth: ['🌱', 'Academy'], board: ['🏛️', 'Board'], dressing: ['👥', 'Dressing Room'], world: ['🌍', 'World'], brief: ['⚡', 'Around the league'], transfer: ['✍️', 'Transfer'], rumour: ['👀', 'Rumour'], award: ['🏅', 'Awards'], club: ['🏟️', 'Club'], meeting: ['🗣️', 'Player meeting'], contracts: ['📝', 'Contracts'] };
+  const TYPE = { headline: ['📰', 'Headline'], social: ['💬', 'Fans'], story: ['', ''], press: ['🎙️', 'Press Conference'], bid: ['💼', 'Transfer Bid'], report: ['🔭', 'Scouting'], youth: ['🌱', 'Academy'], board: ['🏛️', 'Board'], dressing: ['👥', 'Dressing Room'], world: ['🌍', 'World'], brief: ['⚡', 'Around the league'], transfer: ['✍️', 'Transfer'], rumour: ['👀', 'Rumour'], award: ['🏅', 'Awards'], club: ['🏟️', 'Club'], meeting: ['🗣️', 'Player meeting'], medical: ['🩺', 'Medical'], contracts: ['📝', 'Contracts'] };
   UI.newsCard = function (n) {
     const s = S();
     const when = `${n.year !== s.year ? n.year + ' · ' : ''}MD ${n.day + 1}`;
@@ -133,8 +133,9 @@
       return `<div class="news social">${head}<div class="nb"><div class="nt">${esc(n.title)}</div>${body}</div></div>`;
     }
     let extra = '';
-    if (n.type === 'meeting') {
-      extra = n.resolved ? `<div class="reply">You: “${esc(n.resolved)}” — ${esc(n.reply || '')}</div>` : `<div class="choices">${n.choices.map((ch, i) => `<button class="btn sm" data-act="meet" data-id="${n.id}" data-i="${i}">${esc(ch.label)}</button>`).join('')}</div>`;
+    if (n.type === 'meeting' || n.type === 'medical') {
+      const act = n.type === 'medical' ? 'medical' : 'meet';
+      extra = n.resolved ? `<div class="reply">You: “${esc(n.resolved)}” — ${esc(n.reply || '')}</div>` : `<div class="choices">${n.choices.map((ch, i) => `<button class="btn sm${n.type === 'medical' && i === n.rec ? ' pri' : ''}" data-act="${act}" data-id="${n.id}" data-i="${i}">${esc(ch.label)}</button>`).join('')}</div>`;
       if (n.pid && P(n.pid)) extra += `<div style="margin-top:8px"><button class="btn sm" data-act="player" data-id="${n.pid}">View ${esc(W.short(P(n.pid)))} ›</button></div>`;
     }
     if (n.type === 'press') {
@@ -176,6 +177,7 @@
   }
   UI.acts.digestTable = (d) => { UI.sub.league = d.id; UI.go('league'); };
 
+  UI.acts.medical = (d) => { const n = S().news.find((x) => x.id === d.id); FM.Injury.resolve(n, +d.i); UI.save(); UI.render(); };
   UI.acts.meet = (d) => { const n = S().news.find((x) => x.id === d.id); FM.People.resolveMeeting(n, +d.i); UI.save(); UI.render(); };
   UI.acts.press = (d) => { const n = S().news.find((x) => x.id === d.id); FM.Stories.applyPress(n, +d.i); UI.save(); UI.render(); };
   UI.acts.bid = (d) => { const n = S().news.find((x) => x.id === d.id); n.reply = FM.Transfers.respondBid(n, d.v === '1'); UI.toast(n.reply); UI.save(); UI.render(); };
@@ -308,7 +310,7 @@
     const c = club();
     const ys = W.squad(c.id).filter((p) => W.age(p) <= 21).sort((a, b) => b.pa - a.pa);
     const grads = W.squad(c.id).filter((p) => p.youth === c.id);
-    return `<div class="card"><div class="row"><div class="grow"><div class="h3">Youth Academy</div><div class="small dim">Level ${c.facilities.academy} · Intake arrives around matchday ${D.YOUTH_ROUND + 1}</div></div><div class="lvl">${[1, 2, 3, 4, 5].map((i) => `<i class="${i <= c.facilities.academy ? 'on' : ''}"></i>`).join('')}</div></div>
+    return `<div class="card"><div class="row"><div class="grow"><div class="h3">Youth Academy</div><div class="small dim">Level ${c.facilities.academy} · Intake arrives around matchday ${Math.round(((D.YOUTH_ROUND + 1) / 22) * (FM.S.comps[c.comp] && FM.S.comps[c.comp].fixtures ? FM.S.comps[c.comp].fixtures.length : 22))}</div></div><div class="lvl">${[1, 2, 3, 4, 5].map((i) => `<i class="${i <= c.facilities.academy ? 'on' : ''}"></i>`).join('')}</div></div>
       <div class="small muted" style="margin-top:8px">Academy graduates in squad: <b>${grads.length}</b> · Youth debuts under you: <b>${S().user.stats.youthDebuts}</b></div></div>
       <div class="sec"><div class="h3">Prospects (21 & under)</div></div>
       <div class="card flat list" style="padding:4px 12px">${ys.map((p) => C.playerRow(p, `${p.youth === c.id ? ' · 🌱 Academy' : ''}${p.lastGrowth > 0.5 ? ` · <span style="color:var(--good)">▲ ${p.lastGrowth.toFixed(0)}</span>` : ''}`)).join('') || '<div class="empty">No young players.</div>'}</div>`;
@@ -490,13 +492,14 @@
   // Injury history: every layoff at a fully simulated club, and a warning when one problem keeps coming back
   function injuryCard(p) {
     const inj = FM.Records.injurySummary(p);
-    if (!inj) return '';
+    const now = p.inj ? `<div class="warnline" style="margin:10px 0 4px">🚑 ${esc(p.inj.type)} — back in ${FM.Injury.range(FM.Injury.weeksLeft(p))}${p.inj.surgery ? ' (after surgery)' : ''}.</div>` : W.isUser(p.clubId) && p.injRisk ? `<div class="warnline" style="margin:10px 0 4px">🩹 Just back from ${p.injRisk.rushed ? 'a rushed return' : 'injury'} — a higher risk of a setback for the next few weeks.</div>` : '';
+    if (!inj) return now ? `<div class="card"><div class="h3">Fitness</div>${now}</div>` : '';
     // Same rule as the scout report: another club's medical record is known only once he's well scouted
     const v = FM.Scouting.view(p);
     if (!v.own && !v.injury) return '';
     const seasons = new Set(inj.list.map((x) => x.y)).size;
     return `<div class="card"><div class="row"><div class="h3 grow">Injury history</div><span class="small dim">${inj.list.length} injur${inj.list.length === 1 ? 'y' : 'ies'} · ${inj.weeks} weeks out${seasons > 1 ? ` · ${seasons} seasons` : ''}</span></div>
-      ${inj.recurring ? `<div class="warnline" style="margin:10px 0 4px">⚠️ Recurring ${esc(inj.recurring.part)} problems — ${inj.recurring.n} in the last two seasons. The medical team advise managing his minutes.</div>` : ''}
+      ${now}${inj.recurring ? `<div class="warnline" style="margin:10px 0 4px">⚠️ Recurring ${esc(inj.recurring.part)} problems — ${inj.recurring.n} in the last two seasons. The medical team advise managing his minutes.</div>` : ''}
       ${inj.list.slice().reverse().map((x) => `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)"><span class="dim" style="width:44px">${x.y}</span><span class="grow">${esc(x.type)}</span><b>${x.weeks}w</b></div>`).join('')}</div>`;
   }
 
@@ -683,7 +686,7 @@
     const comp = s.comps[c.comp];
     const mine = comp.fixtures.map((rd, i) => ({ i, f: rd.find((f) => f.h === c.id || f.a === c.id) })).filter((x) => x.f);
     const cal = FM.Season.today();
-    const lastRound = cal && cal.type === 'league' ? cal.round - 1 : comp.fixtures.length - 1;
+    const lastRound = cal && cal.type === 'league' ? W.roundsBefore(comp, cal.round) - 1 : comp.fixtures.length - 1;
     const rr = lastRound >= 0 ? comp.fixtures[lastRound] : null;
     return `${rr ? `<div class="sec"><div class="h3">Latest round</div><span class="dim small">MD ${lastRound + 1}</span></div><div class="card flat" style="padding:2px 12px">${rr.map(fxLine).join('')}</div>` : ''}
       ${(() => { const ties = FM.Cups.allFixtures().filter((f) => f.comp !== c.comp && (f.h === c.id || f.a === c.id) && s.comps[f.comp].type !== 'league'); return ties.length ? `<div class="sec"><div class="h3">Cup ties</div></div><div class="card flat" style="padding:2px 12px">${ties.map((f) => `<div class="row tiny dim" style="padding-top:6px">${esc(s.comps[f.comp].name)} · ${esc(f.po || '')}</div>${fxLine(f)}`).join('')}</div>` : ''; })()}

@@ -213,7 +213,7 @@
     }
     FM.Records.managerChange(c, old, nm, from);
     c.manager = nm.id;
-    c.tactic = W.newTactic(U.pick(Object.keys(D.FORMATIONS)), U.pick(D.BUILDUP), U.pick(D.PRESS));
+    c.tactic = W.aiTactic(c);
     FM.News.add({ type: 'world', cat: 'managers', title: from ? `${nm.fn} ${nm.ln} leaves ${from.name} for ${c.name}` : title, body: from ? `${title}. ${body}` : body, clubId: c.id });
     // The poached manager's old club now needs someone (no further poaching down the chain)
     if (from) from.manager = null; // he has gone: don't treat him as that club's departing manager
@@ -268,7 +268,7 @@
 
   St.loan = function (p, from, to, share) {
     const mine = W.isUser(to.id) || W.isUser(from.id);
-    if (!mine && Math.random() < 0.6) return;
+    if (!mine && !((p.pa >= 80 || from.rep >= 85) && Math.random() < 0.5)) return; // the wider loan market is quiet unless a big prospect moves
     FM.News.add({ type: 'transfer', title: `${W.name(p)} joins ${to.name} on loan`, body: `${describe(p)} moves from ${from.name} for the rest of the season. ${to.name} cover ${Math.round(share * 100)}% of his wages.${from.nat !== to.nat ? ` ${D.NATIONS[from.nat].flag} → ${D.NATIONS[to.nat].flag}` : ''}`, pid: p.id, clubId: to.id, intl: from.nat !== to.nat });
   };
 

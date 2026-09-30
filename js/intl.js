@@ -15,15 +15,15 @@
 
   // Tournament formats. pools: [[regions], slots]
   I.TOURNS = {
-    world: [{ id: 'WC', name: 'World Championship', size: 16, pools: [[['EUR'], 9], [['SAM'], 3], [['AFR'], 2], [['ASIA'], 1], [['NAM'], 1]] }],
+    world: [{ id: 'WC', name: 'FIFA World Cup', size: 16, pools: [[['EUR'], 9], [['SAM'], 3], [['AFR'], 2], [['ASIA'], 1], [['NAM'], 1]] }],
     continental: [
-      { id: 'EC', name: 'European Nations Cup', size: 8, pools: [[['EUR'], 8]] },
-      { id: 'SA', name: 'South American Championship', size: 4, pools: [[['SAM'], 4]] },
-      { id: 'AF', name: 'Africa Nations Trophy', size: 4, pools: [[['AFR'], 4]] },
+      { id: 'EC', name: 'UEFA European Championship', size: 8, pools: [[['EUR'], 8]] },
+      { id: 'SA', name: 'Copa América', size: 4, pools: [[['SAM'], 4]] },
+      { id: 'AF', name: 'Africa Cup of Nations', size: 4, pools: [[['AFR'], 4]] },
       { id: 'AS', name: 'Asia-Pacific Nations Cup', size: 4, pools: [[['ASIA', 'NAM'], 4]] },
     ],
   };
-  I.TNAME = { WC: 'World Championship', EC: 'European Nations Cup', SA: 'South American Championship', AF: 'Africa Nations Trophy', AS: 'Asia-Pacific Nations Cup' };
+  I.TNAME = { WC: 'FIFA World Cup', EC: 'UEFA European Championship', SA: 'Copa América', AF: 'Africa Cup of Nations', AS: 'Asia-Pacific Nations Cup' }; // Asia and North America share one tournament here, so it keeps its own name
 
   I.setup = function () {
     const s = S();
@@ -196,7 +196,7 @@
 
   // ---------- Playing a match ----------
   I.sim = function (fx) {
-    const m = new FM.Match({ h: fx.h, a: fx.a, comp: 'INTL', knockout: !!fx.ko });
+    const m = new FM.Match({ h: fx.h, a: fx.a, comp: 'INTL', knockout: !!fx.ko, neutral: !!fx.neutral });
     while (!m.finished) m.step();
     return m;
   };
@@ -214,7 +214,7 @@
         if (!tourn) {
           // players come back tired, occasionally injured, and happier for the call-up
           p.fitness = Math.max(45, Math.round(sd.st[pid] ?? p.fitness) - 6);
-          if (sd.injured[pid]) { p.inj = { weeks: U.randi(1, 3), type: 'Knock on international duty' }; FM.Records.noteInjury(p); }
+          if (sd.injured[pid]) FM.Injury.hurt(p, { where: 'intl' });
           p.morale = Math.min(100, p.morale + 3);
         } else p.fitness = Math.max(50, Math.round(sd.st[pid] ?? p.fitness));
         if (first && (W.isUser(p.clubId) || W.age(p) <= 19 || W.isUserNation(sd.club.id))) FM.Stories.firstCap(p, sd.club, m.sides[1 - k].club);
@@ -311,7 +311,7 @@
     t.picks = null;
     const club = W.userClub();
     if (club) club.boardConf = U.clamp(club.boardConf + (club.identity === 'oil' || club.identity === 'giant' ? -4 : 1), 0, 100);
-    FM.Stories.share({ kicker: 'NATIONAL TEAM', title: `${u.name} named ${t.name} manager`, sub: `${club ? `A dual role alongside ${club.name}.` : 'A full-time international job while you wait for a club.'} ${I.nextTournament() ? `Next up: the ${I.nextTournament().kind === 'world' ? 'World Championship' : 'continental championships'} in ${I.nextTournament().year}.` : ''}`, big: D.NATIONS[t.code].flag, clubId: club.id });
+    FM.Stories.share({ kicker: 'NATIONAL TEAM', title: `${u.name} named ${t.name} manager`, sub: `${club ? `A dual role alongside ${club.name}.` : 'A full-time international job while you wait for a club.'} ${I.nextTournament() ? `Next up: the ${I.nextTournament().kind === 'world' ? 'World Cup' : 'continental championships'} in ${I.nextTournament().year}.` : ''}`, big: D.NATIONS[t.code].flag, clubId: club.id });
     return { ok: true, msg: `You are the new ${t.name} manager.` };
   };
   I.leaveNational = function (how) {

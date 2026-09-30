@@ -2,7 +2,7 @@
 
 Full design: [docs/GAME_DESIGN_DOCUMENT.md](docs/GAME_DESIGN_DOCUMENT.md) · [docs/ROADMAP.md](docs/ROADMAP.md) · [docs/FEATURES.md](docs/FEATURES.md).
 
-A playable vertical slice: **204 clubs in 20 leagues across 16 nations, in three simulation tiers** — full (England 3 tiers, Spain 2, Germany, France, Brazil), light (Italy, Portugal, Netherlands, Argentina, USA, Japan) and minimal (Mexico, Korea, Thailand, Nigeria, Morocco, Serbia) — with domestic cups, five continental cups, a Club World Cup, international football with 29 national teams and qualifiers, a live match engine, and the story-driven world around it.
+A playable vertical slice: **401 real clubs in 20 real leagues (at their real sizes) across 16 nations, in three simulation tiers** — full (England 3 tiers, Spain 2, Germany, France, Brazil), light (Italy, Portugal, Netherlands, Argentina, USA, Japan) and minimal (Mexico, Korea, Thailand, Nigeria, Morocco, Serbia) — with domestic cups, five continental cups, a Club World Cup, international football with 29 national teams and qualifiers, a live match engine, and the story-driven world around it.
 
 ## Run it
 
@@ -25,10 +25,24 @@ npm test
 Headless regression test: two seasons with a seeded RNG through the same code the app uses (including the Web Worker's JSON hand-off), then invariants, save pack/unpack and save migrations. About a minute; exits non-zero on failure. `npm run test:quick` plays one season.
 
 ```bash
+npm run calibrate
+```
+
+Calibration report: three seeded seasons compared with real football, 48 measures in four groups: matches (goals, home/draw/away split, shots, xG, set pieces, penalties, cards, title races, cup upsets, light-league scores, goals trend), player careers (age profile of top-flight minutes, keeper ages, top-100 age, peak ages, retirement ages, academy-grown vs generated player shape, world elite trend, top-flight squad turnover, plus the ability-change-by-age curve) and injuries (rate per club, share of squads out, layoff lengths, long-term injuries, match vs training, muscle and hamstring shares, re-injuries, age effect) and the market (top-flight loans out, loanees' games, how long free agents wait, players created from nowhere). Trend measures need `--seasons 8` or more (use it for any long-run question). The engine's tuning knobs live in `FM.CAL` at the top of `js/engine.js` (try values with `node tools/calibrate.mjs --set chanceRate=0.15,homeAtt=1.1`; `targetGoals` is the level the tactical equilibrium settles back toward, via `S.era`), injury rates in `FM.Injury.CAL` (`js/injuries.js`), the career curve in `CURVE` and academy potential in `Sea.YOUTH` (`js/season.js`).
+
+```bash
+npm run test:regens
+```
+
+Regen test: five academy intakes (plus the world's generated youngsters) aged year by year through the real development code, about 20 seconds. Reports career shapes with examples: prospects who deliver, flops (stalled, plateaued, burned out), one-season wonders, early primes (at their best by 18–19) and long primes (still at their best at 33–34), and checks each against an expected range; exits non-zero on failure. The rates live in `Sea.ARCS` (`js/season.js`).
+
+```bash
 npm run build
 ```
 
 Minified production build in `dist/`: `sim.min.js` (engine, also loaded by the simulation worker) + `ui.min.js`, content-hashed URLs and a regenerated service worker. Preview it with `npm run serve:dist`.
+
+**GitHub Pages:** `.github/workflows/pages.yml` builds `dist/` and publishes it on every push to `main`. One-time setup: in the repository's Settings → Pages, set Source to "GitHub Actions". The game is then at `https://<user>.github.io/<repo>/` (all paths are relative, so the subpath works, and it installs as an offline web app from there).
 
 **Save format changes:** bump `FM.SAVE_VERSION` in `js/core.js` and add a migration to `MIG` in `js/save.js` (from the previous version). Never edit a shipped migration; `npm test` checks every version has an upgrade path.
 
@@ -56,12 +70,12 @@ Touchline is an installable web app: it has a manifest, app icons and a service 
 | **Match engine** | Top-down pitch, 22 moving dots, visible pressing lines, ball carrier labels. Minute-by-minute sim; highlights slow down (~every 20–40s at 1×). Live xG, possession, momentum bars, 1×/2×/4× speed, instant result. |
 | **Tactical prompts** | Analyst insights, chasing the game, protecting a lead, "pinned back", tired legs, injuries, red cards, half-time team talk (personalities react differently). Assistant has a personality and sometimes disagrees. |
 | **Tactical depth** | 6 formations (back 3/4/5), build-up (Short/Direct/Counter/Possession), pressing (High/Mid/Low), inverted full-backs, roles (Segundo Volante, Carrilero, Mezzala, Inverted Winger, False 9, Libero…), each with engine effects. |
-| **Players** | 1–20 attributes, CA/PA stars, morale, wage, value, contract, form, traits (Big Game Player, Injury Prone, Late Bloomer, Loyal, Mercenary, Leader, Fair-Weather…), hidden attributes + personality. Radar, form chart, heat map, career history. |
+| **Players** | 1–20 attributes, CA/PA stars, morale, wage, value, contract, form, traits (Big Game Player, Injury Prone, Late Bloomer, Loyal, Mercenary, Leader, Fair-Weather…), hidden attributes + personality. Radar, form chart, heat map, career history. Realistic career shapes (plus hidden arcs: wonderkids who flop, one-season wonders, early primes, long primes): fast growth in the teens, a peak around 27–29, decline through the thirties (pace first, reading of the game last); keepers and centre-backs age later, every player's clock runs a little early or late, and veterans wind down on one-year deals before retiring at ~33–35. |
 | **Scouting** | Scouts with regional strengths. Assignments by region or league, filtered by position, age, minimum potential, max fee and focus (undervalued / wonderkids / ready now). Reports are graded A–D, with a Sign / Loan / Monitor / Avoid recommendation, the scout's own words and gradual reveal of personality, injuries and hidden attributes. Target-versus-your-starter comparison. Nationality mixes per league are realistic (28 nations). Fees and wages use fine-grained steppers and exact input. |
 | **Youth** | Annual intake shaped by academy level and nationality (Japan = technicians, Brazil = flair, Serbia = defenders, France = athletes). Development depends on age, training facilities, professionalism, minutes and Late Bloomer. |
 | **Competitions** | 20 leagues in three simulation tiers (full engine / light statistical model / minimal scores-only), promotion, relegation and playoffs, five domestic cups (seeded knockouts with byes, extra time and penalties). Continental Champions Cup (Europe, 16 clubs), Copa Continental, Asian Champions Cup, African Champions League and North American Champions Cup, all fed by data-driven `qualify` rules, plus a mid-season Club World Cup for last season's finalists. Knockouts and playoff semi-finals can be two-legged, with an optional away-goals rule. |
-| **Transfers** | Offers, counter-offers, loyal/ambitious refusals, windows, rumours, AI bids for your players. Contract packages: wage, length, squad status, signing-on fee, appearance and goal bonuses, release clause, yearly rise, relegation wage cut. Agents with personalities (Shark, Pragmatic, Family, Showman, Rookie) set demands, patience and fees; release clauses can be paid — by you or by rivals. International market, marquee raids, veterans abroad, Transfer Centre. |
-| **Club identity** | 204 fictional clubs, each with an identity: Oil-Backed, Historic Giant, Fan-Owned, Youth-Focused, Selling Club, Fallen Giant. Board objectives, fan culture, chants, traditions, derbies. |
+| **Transfers** | Offers, counter-offers, loyal/ambitious refusals, windows, rumours, AI bids for your players. Contract packages: wage, length, squad status, signing-on fee, appearance and goal bonuses, release clause, yearly rise, relegation wage cut. Agents with personalities (Shark, Pragmatic, Family, Showman, Rookie) set demands, patience and fees; release clauses can be paid — by you or by rivals. International market, marquee raids, veterans abroad, Transfer Centre. AI clubs keep their squads moving: they replace their weakest starter (judging ageing players on where they're heading), buy from smaller clubs or at a premium from peers (never from a direct domestic rival), and sell the player who lost his place to a smaller club, so players climb the pyramid as they improve and slide down it as they fade. |
+| **Club identity** | 401 real clubs in 20 real leagues at their real sizes (real names, kit colours, cities, stadiums and 106 derbies; the game's own ratings), each with an identity: Oil-Backed, Historic Giant, Fan-Owned, Youth-Focused, Selling Club, Fallen Giant. Board objectives, fan culture, chants, traditions, derbies. |
 | **Stories** | Feed of newspaper headlines, fan social posts (with rival fans on derby day), press conferences with choices, dressing-room events. Instagram-style **shareable story cards** export as 1080×1350 PNG ("26-year-old Brazilian winger scores on debut"). |
 | **Living world** | AI sackings, takeovers, administration and points deductions, stadium expansions, rule changes (subs, homegrown rules, TV deals), retirements, legends returning as managers. |
 | **People** | One-to-one talks (praise, criticism, promises of minutes, a new contract, a debut, not being sold, or permission to leave). Promises are tracked, kept or broken, and move morale and squad trust. Players ask for meetings when unhappy or underpaid. Board meetings (transfer funds, owner-funded facilities, patience, a youth project), a mid-season review and five-game ultimatums. |
@@ -69,6 +83,7 @@ Touchline is an installable web app: it has a manifest, app icons and a service 
 | **Career** | Start with a club or start unemployed. Out of work (from the start or after a sacking), the world keeps playing and clubs in your reputation range make offers that come and go; a national team job carries on. |
 | **Legacy** | Hall of Fame (top scorers, appearances, academy graduates, cult heroes, biggest sales + seeded historic legends), Football Archive per season, manager identity tags (Youth Developer, Giant Killer…), sacking and job offers. |
 | **World editor (taste)** | Set points for a win, subs, foreign-player limits, two-legged ties and away goals at new game. Competitions use data-driven rules (`promote`/`relegate`/`playoff` relationships in `js/world.js`), not hardcoded leagues. |
+| **Injuries** | 23 real injury types (hamstring strains to ACL ruptures) with realistic layoffs; risk from proneness, age, fatigue, match fitness and a recent return; training knocks and illness; re-injuries; long injuries cost development and sometimes pace. Your players: medical news, surgery-or-rehab decisions, "risk him?" before big games, return-to-fitness news. Rates match real football (~35 injuries a club-season, ~9% of a squad out at any time). |
 | **Staff** | Hire and fire an assistant, coach, analyst, physio, sporting director and up to 5 scouts from a market that refreshes each season. Ability has effects: development speed, injury length, analysis depth, negotiated fees. Vacant roles fall to a caretaker. |
 | **Advice** | The assistant's notes on the Squad tab cover lineup issues, fatigue, unhappy players, youngsters ready to play, loan candidates, weak areas, expiring contracts and deadwood, with one-tap actions. Scouts' picks on the Scouting hub. |
 | **Season preview** | Predicted table, predicted finish, bookmaker title odds, pre-season best XI, key man, one to watch. |
@@ -102,12 +117,13 @@ js/matchview.js  live pitch renderer + post-match analysis
 js/ui-alpha.js   negotiation, talks, boardroom, licences, national team screens
 js/matchday.js   captain, set-piece takers, pre-match team talk, matchday digest
 js/records.js    club records, head-to-heads, rivalry heat, Player of the Month, injury history, manager moves, stadiums
+js/injuries.js   injury catalogue and risk model, training injuries, recovery, medical decisions (surgery, risk him?)
 js/save.js       save format, migrations, storage backends (files / IndexedDB), backup export/import
 js/simrun.js     runs matchday simulation in the Web Worker (js/sim-worker.js) with a progress overlay
 js/native.js     Capacitor plugins with web fallbacks, back button, background autosave, boot
-tools/           sim-test.mjs (regression test), build.mjs (production build)
+tools/           sim-test.mjs (regression test), calibrate.mjs (realism report), regens.mjs (career-shape test), build.mjs (production build)
 ```
 
 ## Not yet built (next candidates)
 
-See [docs/ROADMAP.md](docs/ROADMAP.md). Next is Alpha 2: the database and world editor, historical eras and scenarios, the youth pathway, player and manager career histories, relationships, deeper economics and database export/import. The Living world backlog follows (Football World screen, club philosophy, deeper staff, tactical evolution, agents, media, injuries as events); device builds come before Beta.
+See [docs/ROADMAP.md](docs/ROADMAP.md). Next is Alpha 2: the database and world editor, historical eras and scenarios, the youth pathway, player and manager career histories, relationships, deeper economics and database export/import. The Living world backlog follows (Football World screen, club philosophy, deeper staff, tactical evolution, agents, media); device builds come before Beta.

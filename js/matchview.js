@@ -79,7 +79,7 @@
 
   // ---------------- Live ----------------
   MV.start = function (fx, instant) {
-    const m = new FM.Match({ h: fx.h, a: fx.a, comp: fx.comp, knockout: !!fx.ko, live: !instant, track: true, ...FM.Match.tieOpts(fx) });
+    const m = new FM.Match({ h: fx.h, a: fx.a, comp: fx.comp, knockout: !!fx.ko, neutral: !!fx.neutral, live: !instant, track: true, ...FM.Match.tieOpts(fx) });
     MV.m = m; MV.fx = fx;
     MV.us = m.sides[0].user ? 0 : 1;
     // Deliver the team talk chosen in the preview (once)

@@ -22,7 +22,7 @@
     const old = list.find((x) => x.pid === p.id && x.type === type && x.state === 'open');
     if (old) return old;
     const days = Pe.PROMISE[type].days;
-    const x = { id: FM.nextId('pr'), pid: p.id, type, state: 'open', day: s.day, year: s.year, days, due: s.day + days, base: p.season.apps, target: p.season.apps + (type === 'minutes' ? 4 : 1), contract: p.contract, fromRound: FM.Season.leagueRound(), ...extra };
+    const x = { id: FM.nextId('pr'), pid: p.id, type, state: 'open', day: s.day, year: s.year, days, due: s.day + days, base: p.season.apps, target: p.season.apps + (type === 'minutes' ? 4 : 1), contract: p.contract, fromRound: FM.Season.gamesPlayed(p.clubId), ...extra };
     list.push(x);
     return x;
   };
@@ -124,7 +124,7 @@
       } else { d = -10; msg = `"What more do you want from me?" He thinks the criticism is unfair.`; }
     } else if (topic === 'plans') {
       const xi = W.pickXI(club.id, u().tactic).xi.some((q) => q && q.id === p.id);
-      d = xi ? 4 : p.season.apps < 3 && Sea().leagueRound() > 6 ? -3 : 2;
+      d = xi ? 4 : p.season.apps < 3 && Sea().baseRound() > 6 ? -3 : 2;
       msg = xi ? `"Good to hear. I want to be here."` : d < 0 ? `"Then why am I not playing?"` : `"I'll be ready when you need me."`;
     } else if (topic === 'letGo') {
       p.listed = true;
@@ -291,8 +291,8 @@
     Pe.courseTick();
     if (!W.employed()) return; // everything below is about your club
     Pe.evalPromises(false);
-    if (cal && cal.type === 'league' && cal.round >= 10 && Sea().leagueRound() >= 10) Pe.midSeason();
-    if (cal && cal.type === 'league') Pe.contractReminder(cal.round);
+    if (cal && cal.type === 'league' && Sea().baseRound() >= 10) Pe.midSeason();
+    if (cal && cal.type === 'league') Pe.contractReminder(Sea().gamesPlayed(W.userClub().id));
     // Star performers on modest wages ask for a raise
     if (cal && cal.type === 'league' && Math.random() < 0.08) {
       const c = W.userClub();

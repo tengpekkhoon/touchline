@@ -149,14 +149,15 @@
   // ---------- Player of the month (every four league rounds, in the user's league) ----------
   R.afterLeagueDay = function (cal) {
     const s = S(), u = s.user;
-    if (!u || u.sacked || !W.employed() || cal.type !== 'league' || (cal.round + 1) % 4) return;
+    const b = W.baseRound(cal.round); // monthly, on the 22-round scale
+    if (!u || u.sacked || !W.employed() || cal.type !== 'league' || (b + 1) % 4 || (cal.round > 0 && W.baseRound(cal.round - 1) === b)) return;
     const comp = s.comps[W.userClub().comp];
-    if (!comp || !comp.fixtures[cal.round]) return;
+    if (!comp || !comp.fixtures) return;
     const last4 = (p) => U.avg(p.form.slice(-4));
     const pool = comp.clubs.flatMap((id) => W.squad(id)).filter((p) => p.form.length >= 4 && p.season.apps >= 4);
     const best = pool.sort((a, b) => last4(b) - last4(a) || b.season.goals - a.season.goals)[0];
     if (!best) return;
-    const month = MONTHS.at((cal.round + 1) / 4 - 1) || 'the month';
+    const month = MONTHS.at((b + 1) / 4 - 1) || 'the month';
     best.honours = (best.honours || []).concat([[s.year, 'potm', comp.id, month]]);
     best.morale = Math.min(100, best.morale + 5);
     news({ type: 'award', title: `${W.name(best)} is ${comp.name} Player of the Month for ${month}`, body: `${last4(best).toFixed(2)} average over his last four games for ${club(best.clubId).name}${best.season.goals ? `, with ${best.season.goals} goal${best.season.goals === 1 ? '' : 's'} this season` : ''}.`, pid: best.id, clubId: best.clubId });
@@ -165,15 +166,15 @@
   // ---------- Injury history (players at fully simulated clubs) ----------
   R.noteInjury = function (p) {
     if (!p.inj || !isFull(p.clubId)) return;
-    p.injHist = (p.injHist || []).concat([[S().year, p.inj.type, p.inj.weeks]]).slice(-8);
+    p.injHist = (p.injHist || []).concat([[S().year, p.inj.type, p.inj.out || p.inj.weeks]]).slice(-8);
   };
   // Summary for the player card: [{y, type, weeks}], total weeks, and a recurring problem if any
   R.injurySummary = function (p) {
     const list = (p.injHist || []).map(([y, type, weeks]) => ({ y, type, weeks }));
     if (!list.length) return null;
     const recent = list.filter((x) => x.y >= S().year - 1), byPart = {};
-    recent.forEach((x) => { const part = x.type.split(' ')[0].toLowerCase(); byPart[part] = (byPart[part] || 0) + 1; });
-    const rec = Object.entries(byPart).filter(([part, n]) => n >= 2 && part !== 'knock' && part !== 'bruised').sort((a, b) => b[1] - a[1])[0];
+    recent.forEach((x) => { const part = FM.Injury ? FM.Injury.part(x.type) : x.type.split(' ')[0].toLowerCase(); byPart[part] = (byPart[part] || 0) + 1; });
+    const rec = Object.entries(byPart).filter(([part, n]) => n >= 2 && !['knock', 'bruised', 'illness', 'head', 'ribs'].includes(part)).sort((a, b) => b[1] - a[1])[0];
     return { list, weeks: U.sum(list, (x) => x.weeks), recurring: rec ? { part: rec[0], n: rec[1] } : null };
   };
 

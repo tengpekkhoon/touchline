@@ -164,7 +164,7 @@
   };
 
   // ======================= Home icon jumps to what needs attention =======================
-  UI.pendingNews = () => S().news.filter((n) => (n.type === 'bid' && n.data.status === 'open') || ((n.type === 'press' || n.type === 'meeting') && !n.resolved));
+  UI.pendingNews = () => S().news.filter((n) => (n.type === 'bid' && n.data.status === 'open') || ((n.type === 'press' || n.type === 'meeting' || n.type === 'medical') && !n.resolved));
   UI.acts.tab = (d) => {
     const pend = d.tab === 'home' ? UI.pendingNews() : [];
     if (!pend.length) return UI.go(d.tab);

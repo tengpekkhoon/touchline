@@ -62,7 +62,7 @@
     // Contracts
     sq.filter((p) => p.contract <= s.year && p.ca >= teamAvg - 4 && !p.loan).slice(0, 2).forEach((p) => add('contract:' + p.id, 5, '📝', `${W.short(p)}'s contract runs out this season. Renew him or he could leave for nothing.`, p.id, { label: 'Renew', act: 'renew', id: p.id }));
     // Deadwood
-    sq.filter((p) => W.age(p) >= 29 && !p.listed && p.season.apps <= Math.max(1, FM.Season.leagueRound() * 0.15) && p.wage > U.avg(sq, (q) => q.wage) * 1.2 && !p.loan).slice(0, 2)
+    sq.filter((p) => W.age(p) >= 29 && !p.listed && p.season.apps <= Math.max(1, FM.Season.gamesPlayed(p.clubId) * 0.15) && p.wage > U.avg(sq, (q) => q.wage) * 1.2 && !p.loan).slice(0, 2)
       .forEach((p) => add('dead:' + p.id, 2, '💼', `${W.short(p)} earns ${U.money(p.wage)}/wk and barely plays. Selling would free up wages.`, p.id, { label: 'List him', act: 'listPlayer', id: p.id }));
     // Familiarity
     if ((T.fam ?? 60) < 45) add('fam', 3, '🧠', `The players are still learning the ${T.formation}. Familiarity is ${Math.round(T.fam)}% — sticking with it will help.`);

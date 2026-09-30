@@ -93,6 +93,7 @@ for (let s = 0; s < SEASONS; s++) {
 const S = FM.S;
 const gpm = stats.goals / stats.matches;
 check(gpm > 2.3 && gpm < 3.8, `goals per match ${gpm.toFixed(2)} outside 2.3–3.8`);
+check(Number.isFinite(S.era) && S.era >= 0.85 && S.era <= 1.15, `tactical equilibrium factor ${S.era} missing or outside 0.85–1.15`);
 for (const c of Object.values(S.clubs)) {
   if (c.sim !== 'full') continue;
   const n = W.squad(c.id).length;
@@ -114,6 +115,12 @@ check(Object.keys(recs.h2h || {}).length >= 5, `only ${Object.keys(recs.h2h || {
 check(Object.values(S.players).some((p) => p.honours && p.honours.some((h) => h[1] === 'potm')), 'no Player of the Month awarded');
 check(Object.values(S.players).some((p) => p.injHist && p.injHist.length), 'no injury histories recorded');
 check(Object.values(recs.heat || {}).every((h) => Number.isFinite(h.v) && h.v >= 0), 'invalid rivalry heat values');
+// Injuries: catalogue types, sane countdowns, a realistic share of full-club squads out, medical decisions settled
+const hurt = Object.values(S.players).filter((p) => p.inj);
+check(hurt.every((p) => p.inj.weeks >= 1 && Number.isFinite(p.inj.weeks) && (p.inj.type === 'Illness' || FM.Injury.TYPES.some((t) => t.name === p.inj.type))), 'an injury with a bad countdown or unknown type');
+const fullSq = Object.values(S.clubs).filter((c) => c.sim === 'full').flatMap((c) => W.squad(c.id)), outPct = (100 * fullSq.filter((p) => p.inj).length) / fullSq.length;
+check(outPct > 2 && outPct < 25, `${outPct.toFixed(1)}% of full-club players injured`);
+check(S.news.filter((n) => n.type === 'medical' && !n.resolved).every((n) => S.year === n.year && S.day - n.day < 2), 'a medical decision was never settled');
 // Managers move between clubs; every full club still has exactly one manager, and nobody manages two clubs
 check((recs.moves || []).length > 0, 'no manager moves recorded');
 const mgrs = Object.values(S.clubs).filter((c) => c.sim === 'full' && !W.isUser(c.id)).map((c) => c.manager);

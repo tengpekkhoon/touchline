@@ -125,6 +125,7 @@
     p.career.goals = Math.round(p.career.apps * ({ ST: 0.35, W: 0.2, AM: 0.18, CM: 0.07, DM: 0.03 }[pos] || 0.02) * U.rand(0.5, 1.4));
     W.refresh(p);
     p.wage = W.wageFor(p);
+    FM.Season.assignArc(p, age); // hidden career arc: most players have none
     if (clubId) W.startSpell(p, clubId);
     return p;
   };
@@ -145,15 +146,27 @@
   const SQUAD = D.SQUAD_TIER.full;
   // Squad size an AI club aims for, by simulation tier
   W.squadTarget = (c) => U.sum(Object.values(D.SQUAD_TIER[c.sim] || SQUAD)) + 2;
-  function pickAge() { return U.wpick([18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], (a) => (a < 21 ? 2 : a <= 29 ? 6 : a <= 32 ? 3 : 1)); }
+  // How far short of his prime a generated player is at each age (ability peaks ~26–30)
+  const AGE_GAP = { 18: 12, 19: 10.5, 20: 9, 21: 7, 22: 5, 23: 3.5, 24: 2.2, 25: 1.2, 26: 0.5, 27: 0, 28: 0, 29: 0, 30: 0.3, 31: 1, 32: 2, 33: 3, 34: 4, 35: 5, 36: 6, 37: 7 };
+  // Squad ages follow the shape the simulated world settles into over many seasons (so a new world doesn't
+  // carry an age bulge that ages through it for a decade). Keepers skew older: they mature later and play on longer.
+  const AGES = [18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37];
+  const AGE_W = { 18: 3, 19: 3, 20: 3, 21: 4.5, 30: 3.8, 31: 3.4, 32: 3, 33: 2.2, 34: 1.5, 35: 0.9, 36: 0.4, 37: 0 };
+  function pickAge(pos) {
+    if (pos === 'GK') return U.wpick(AGES, (a) => (a < 21 ? 1.5 : a <= 24 ? 4 : a <= 33 ? 5 : a <= 35 ? 2.5 : 1));
+    return U.wpick(AGES, (a) => AGE_W[a] ?? 5);
+  }
+  // Potential of a generated player: roughly how far he is from his prime at this age (AGE_GAP), with a spread
+  // that is wider the younger he is. Centring it on the ageing curve keeps the next generation's elite about as
+  // strong as today's; a flat bonus (up to +30) made every generation outgrow the last.
   W.potentialFor = function (ca, age) {
-    if (age <= 18) return ca + U.randi(8, 30);
-    if (age <= 20) return ca + U.randi(4, 22);
-    if (age <= 23) return ca + U.randi(1, 12);
-    if (age <= 26) return ca + U.randi(0, 5);
-    return ca;
+    const gap = age >= 26 ? AGE_GAP[Math.min(age, 26)] || 0 : AGE_GAP[Math.max(18, age)] + Math.max(0, 18 - age) * 2;
+    return ca + Math.max(0, Math.round(gap + U.gauss(0, 1.5 + gap * 0.4)));
   };
   W.levelFor = (rep) => 25 + rep * 0.58;
+  // Ability of an unattached player the world invents (a new world's free agents, a thin summer market): mostly
+  // lower-league standard; only rarely someone good enough for a top flight
+  W.freeAgentCA = () => (Math.random() < 0.03 ? U.randi(68, 80) : Math.round(U.clamp(U.gauss(47, 6), 34, 62)));
 
   // Nationality for a new player at a club: league mix where one exists, mostly local elsewhere
   W.natFor = function (club) {
@@ -167,9 +180,9 @@
     const lvl = W.levelFor(club.rep);
     const positions = randomPos(D.SQUAD_TIER[club.sim] || SQUAD);
     positions.forEach((pos, i) => {
-      const age = pickAge();
+      const age = pickAge(pos);
       const starter = i % 2 === 0;
-      let ca = Math.round(U.clamp(U.gauss(lvl + (starter ? 3 : -4) - (age < 21 ? 8 : 0) - (age > 32 ? 3 : 0), 4), 30, 92));
+      let ca = Math.round(U.clamp(U.gauss(lvl + (starter ? 3 : -4) - AGE_GAP[pos === 'GK' ? Math.round(20 + (age - 20) * 0.7) : age], 4), 30, 92));
       const p = W.genPlayer({ nat: W.natFor(club), pos, age, ca, pa: W.potentialFor(ca, age), clubId: club.id });
       FM.S.players[p.id] = p;
     });
@@ -238,6 +251,10 @@
 
   // ---------------- Tactics ----------------
   W.defaultRoles = (formation) => D.FORMATIONS[formation].map((s) => Object.keys(D.ROLES[s.t])[0]);
+  // How an AI club sets up: formation from the usual mix, build-up from its identity, big clubs press high.
+  // Used for new worlds and every new manager alike, so the world's tactical mix (and its goals per game) stays
+  // steady over long saves instead of drifting toward a uniform, more open mix as managers come and go.
+  W.aiTactic = (c) => W.newTactic(U.pick(['4-3-3', '4-2-3-1', '4-4-2', '3-5-2', '4-3-3', '5-3-2']), { fan: 'Short', giant: 'Possession', oil: 'Possession', youth: 'Short' }[c.identity] || (c.rep < 60 ? 'Counter' : U.pick(D.BUILDUP)), c.rep > 75 ? 'High Press' : U.pick(D.PRESS));
   W.newTactic = (formation = '4-3-3', buildup = 'Short', press = 'Mid Block') => ({ formation, buildup, press, roles: W.defaultRoles(formation), invFB: false, lineup: null });
 
   // Picks an XI (respecting a saved user lineup when valid) and a bench
@@ -316,7 +333,9 @@
     comp.table = {};
     comp.clubs.forEach((id) => (comp.table[id] = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: comp.deductions?.[id] ? -comp.deductions[id] : 0, form: [] }));
     comp.deductions = {};
-    comp.fixtures = W.roundRobin(comp.clubs).map((rd, r) => rd.map(([h, a]) => ({ id: FM.nextId('f'), comp: comp.id, round: r, h, a, res: null })));
+    let rounds = W.roundRobin(comp.clubs);
+    if (comp.rules && comp.rules.rounds) rounds = rounds.slice(0, comp.rules.rounds); // formats shorter than a double round-robin
+    comp.fixtures = rounds.map((rd, r) => rd.map(([h, a]) => ({ id: FM.nextId('f'), comp: comp.id, round: r, h, a, res: null })));
     comp.playoff = null;
   };
 
@@ -337,21 +356,45 @@
   W.worldCups = () => Object.values(FM.S.comps).filter((c) => c.type === 'world');
   W.simOf = (compId) => (FM.S.comps[compId] && FM.S.comps[compId].sim) || 'full';
 
-  // League rounds with midweek cup, continental, Club World Cup and international days slotted in between.
+  // The season has as many league days as the longest league has rounds (S.rounds). Every league spreads its own
+  // rounds evenly across them, so a 38-round and a 46-round league both start in August and finish in May.
+  // Calendar events were designed on a 22-round season; W.scaleRound / W.baseRound convert between the two.
+  W.scaleRound = (r) => Math.round((r * ((FM.S.rounds || 22) - 1)) / 21);
+  W.baseRound = (r) => Math.round((r * 21) / ((FM.S.rounds || 22) - 1));
+  W.dayScale = () => 21 / ((FM.S.rounds || 22) - 1); // per-day rates tuned on 22 league days
+  // A league's own round on league day r (-1: it doesn't play that day), its fixtures, and rounds before day r
+  W.roundOn = (c, r) => (c.onDay ? (c.onDay[r] ?? -1) : r);
+  W.roundFixtures = (c, r) => { const k = W.roundOn(c, r); return k >= 0 ? c.fixtures[k] || null : null; };
+  W.roundsBefore = (c, r) => { if (!c.onDay) return Math.min(r, c.fixtures.length); let n = 0; for (let i = 0; i < r && i < c.onDay.length; i++) if (c.onDay[i] >= 0) n++; return n; };
+
+  // League days with midweek cup, continental, Club World Cup and international days slotted in between.
   // Two-legged knockouts add a second leg day; tournament summers append the finals at the end.
   W.buildCalendar = function () {
     const S = FM.S, rounds = Math.max(...W.leagues().map((c) => c.fixtures.length));
+    S.rounds = rounds;
+    for (const c of W.leagues()) {
+      const n = c.fixtures.length;
+      c.onDay = Array(rounds).fill(-1);
+      for (let k = 0; k < n; k++) c.onDay[n > 1 ? Math.round((k * (rounds - 1)) / (n - 1)) : 0] = k;
+    }
+    const at = (map) => { const out = {}; for (const [k, v] of Object.entries(map)) { let r = W.scaleRound(+k); while (out[r] !== undefined) r++; out[r] = v; } return out; };
+    const CC = at(D.CC_AFTER), CWC = at(D.CWC_AFTER), INTL = at(D.INTL_AFTER);
+    // Domestic cup days: enough rounds for the biggest cup (byes even out the first round), spread through the season
+    const biggest = Math.max(2, ...W.cups().map((c) => Object.values(S.clubs).filter((x) => x.sim === 'full' && x.nat === c.nat).length));
+    const cupDays = Math.max(Object.keys(D.CUP_AFTER).length, Math.ceil(Math.log2(biggest)));
+    const CUP = {}, c0 = W.scaleRound(1), c1 = W.scaleRound(19);
+    for (let i = 0; i < cupDays; i++) { let r = Math.round(c0 + (i * (c1 - c0)) / Math.max(1, cupDays - 1)); while (CUP[r]) r++; CUP[r] = 'DC'; }
     const legs = !!S.rules.twoLegs;
     const cal = [];
     for (let i = 0; i < D.PRESEASON_DAYS; i++) cal.push({ type: 'pre', idx: i });
     for (let r = 0; r < rounds; r++) {
       cal.push({ type: 'league', round: r });
-      let st = D.CC_AFTER[r];
+      let st = CC[r];
       if (st && !legs) st = /2$/.test(st) && st !== 'G2' ? null : st.replace(/^(QF|SF)1$/, '$1');
       if (st && W.continentals().length) cal.push({ type: 'cup', comps: W.continentals().map((c) => c.id), stage: st });
-      if (D.CWC_AFTER[r] && W.worldCups().length) cal.push({ type: 'cup', comps: W.worldCups().map((c) => c.id), stage: D.CWC_AFTER[r], world: true });
-      if (D.CUP_AFTER[r] && W.cups().length) cal.push({ type: 'cup', comps: W.cups().map((c) => c.id) });
-      if (D.INTL_AFTER[r] && S.nteams) D.INTL_AFTER[r].forEach((tag) => cal.push({ type: 'intl', tag }));
+      if (CWC[r] && W.worldCups().length) cal.push({ type: 'cup', comps: W.worldCups().map((c) => c.id), stage: CWC[r], world: true });
+      if (CUP[r] && W.cups().length) cal.push({ type: 'cup', comps: W.cups().map((c) => c.id) });
+      if (INTL[r] && S.nteams) INTL[r].forEach((tag) => cal.push({ type: 'intl', tag }));
     }
     if (legs) cal.push({ type: 'playoff', stage: 'SF1' }, { type: 'playoff', stage: 'SF2' }, { type: 'playoff', stage: 'F' });
     else cal.push({ type: 'playoff', stage: 'SF' }, { type: 'playoff', stage: 'F' });
@@ -372,10 +415,10 @@
     // Competitions are data: relationships (relegate/promote/qualify) drive the season, nothing is hardcoded
     D.LEAGUES.forEach((l) => (S.comps[l.id] = { id: l.id, type: 'league', nat: l.nat, name: l.name, short: l.short, tier: l.tier, sim: l.sim, repBand: l.repBand, clubs: [], rules: JSON.parse(JSON.stringify(l.rules)) }));
     const CUP = (id, nat, name, short) => (S.comps[id] = { id, type: 'cup', nat, name, short, clubs: [], prize: 3e6 });
-    CUP('CUPENG', 'ENG', 'The Crown Cup', 'CRC'); CUP('CUPESP', 'ESP', 'Copa Nacional', 'CN'); CUP('CUPGER', 'GER', 'Pokal der Länder', 'PDL'); CUP('CUPFRA', 'FRA', 'Coupe Nationale', 'CNF'); CUP('CUPBRA', 'BRA', 'Copa do País', 'CDP');
+    CUP('CUPENG', 'ENG', 'FA Cup', 'FAC'); CUP('CUPESP', 'ESP', 'Copa del Rey', 'CDR'); CUP('CUPGER', 'GER', 'DFB-Pokal', 'DFB'); CUP('CUPFRA', 'FRA', 'Coupe de France', 'CDF'); CUP('CUPBRA', 'BRA', 'Copa do Brasil', 'CDB');
     S.comps.FR = { id: 'FR', type: 'friendly', name: 'Pre-season friendly', short: 'FR', clubs: [] };
     D.CONTINENTALS.forEach((c) => (S.comps[c.id] = { ...c, type: 'continental', clubs: [] }));
-    S.comps.CWC = { id: 'CWC', type: 'world', name: 'Club World Cup', short: 'CWC', clubs: [], prize: 1e7 };
+    S.comps.CWC = { id: 'CWC', type: 'world', name: 'FIFA Club World Cup', short: 'CWC', clubs: [], prize: 1e7 };
 
     const mkClub = (row, compId, nat, sim) => {
       const [name, short, city, c1, c2, identity, rep] = row;
@@ -388,7 +431,7 @@
         id, name, short, city, nat, colors: [c1, c2], identity, rep, stadium: { name: stadium, cap, cap0: cap }, comp: compId, sim,
         balance: budget * 1.5 + 4e6, budget, fanMood: 60, boardConf: 65,
         facilities: { training: U.randi(2, 4), academy: identity === 'youth' ? 4 : U.randi(1, 3), medical: U.randi(2, 3), analytics: U.randi(1, 3), stadium: 1, fanzone: U.randi(1, 2), museum: rep > 70 ? 2 : 1 },
-        tactic: W.newTactic(U.pick(['4-3-3', '4-2-3-1', '4-4-2', '3-5-2', '4-3-3', '5-3-2']), { fan: 'Short', giant: 'Possession', oil: 'Possession', youth: 'Short' }[identity] || (rep < 60 ? 'Counter' : U.pick(D.BUILDUP)), rep > 75 ? 'High Press' : U.pick(D.PRESS)),
+        tactic: W.aiTactic({ identity, rep }),
         chant: U.pick(D.CHANTS).replace('{city}', city).replace('{short}', short).replace('{nick}', name.split(' ').pop()),
         tradition: U.pick(D.TRADITIONS), rival: null, derby: null, titles: {}, ledger: [], bestSales: [],
         manager: sim === 'minimal' ? null : W.genStaff('Manager', U.chance(0.75) ? nat : U.pick(Object.keys(D.NATIONS)), { rep: Math.round(rep * U.rand(0.8, 1.05)) }).id,
@@ -412,7 +455,7 @@
     });
     // Some unattached free agents
     for (let i = 0; i < 45; i++) {
-      const age = U.randi(19, 34), ca = U.randi(42, 70), pos = U.pick(D.POS);
+      const age = U.randi(19, 34), ca = W.freeAgentCA(), pos = U.pick(D.POS);
       const p = W.genPlayer({ nat: U.pick(Object.keys(D.NATIONS)), pos, age, ca, pa: W.potentialFor(ca, age) });
       p.contract = S.year; S.players[p.id] = p;
     }
@@ -516,7 +559,7 @@
   // personality) are recomputed on load. Unknown keys pass through untouched.
   const HID = ['cons', 'inj', 'prof', 'amb', 'loy', 'temp', 'big', 'lead'];
   const SEASON = ['apps', 'goals', 'ast', 'rsum', 'motm', 'yc', 'rc', 'lapps'];
-  const KEYS = { fn: 'f', ln: 'l', nat: 'n', born: 'b', pos: 'p', foot: 'ft', morale: 'm', form: 'fo', fitness: 'fi', inj: 'i', susp: 's', wage: 'w', contract: 'c', traits: 't', clubId: 'cl', youth: 'y', cult: 'cu', derbyGoals: 'dg', intl: 'in', deal: 'de', agent: 'ag', lastGrowth: 'lg', flagMinutes: 'fm', loan: 'lo', listed: 'li', debuted: 'db', wantsOut: 'wo', askedRaise: 'ar' };
+  const KEYS = { fn: 'f', ln: 'l', nat: 'n', born: 'b', pos: 'p', foot: 'ft', morale: 'm', form: 'fo', fitness: 'fi', inj: 'i', susp: 's', wage: 'w', contract: 'c', traits: 't', clubId: 'cl', youth: 'y', cult: 'cu', derbyGoals: 'dg', intl: 'in', deal: 'de', agent: 'ag', lastGrowth: 'lg', flagMinutes: 'fm', loan: 'lo', listed: 'li', debuted: 'db', wantsOut: 'wo', askedRaise: 'ar', injRisk: 'ir', arc: 'ac' };
   const UNKEY = Object.fromEntries(Object.entries(KEYS).map(([k, v]) => [v, k]));
   const DEFAULTS = { inj: null, susp: 0, youth: null, cult: 0, derbyGoals: 0, lastGrowth: 0, flagMinutes: false, listed: false };
   const DROP = new Set(['ca', 'value', 'personality', 'attrs', 'hid', 'season', 'career', 'history', '_heat', '_riskPlayOn']);

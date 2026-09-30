@@ -64,7 +64,8 @@
     const [ml, me] = W.moraleLabel(p.morale);
     const tags = [];
     if (own && FM.Matchday && FM.Matchday.captainOf(p.clubId) === p) tags.push('<span class="capt-tag" title="Club captain">C</span>');
-    if (p.inj) tags.push(`<span class="pill bad">🚑 ${p.inj.weeks}w</span>`);
+    if (p.inj) tags.push(`<span class="pill bad" title="${esc(p.inj.type)}">🚑 ${FM.Injury.weeksLeft(p)}w</span>`);
+    else if (own && p.injRisk) tags.push('<span class="pill warn" title="Just back from injury: higher risk of a setback">🩹</span>');
     if (p.susp) tags.push(`<span class="pill warn">🟥 ${p.susp}</span>`);
     if (p.listed) tags.push(`<span class="pill">Listed</span>`);
     if (p.loan && W.isUser(p.clubId)) tags.push(`<span class="pill acc">Loan</span>`);
@@ -202,11 +203,11 @@
   UI.render = function (anim) {
     const S = FM.S, club = W.userClub();
     TABS.forEach(([k]) => $('#nav-' + k).classList.toggle('on', k === UI.tab));
-    const unread = S.news.filter((n) => (n.type === 'bid' && n.data.status === 'open') || ((n.type === 'press' || n.type === 'meeting') && !n.resolved)).length;
+    const unread = S.news.filter((n) => (n.type === 'bid' && n.data.status === 'open') || ((n.type === 'press' || n.type === 'meeting' || n.type === 'medical') && !n.resolved)).length;
     $('#nav-home').querySelector('.badge')?.remove();
     if (unread) $('#nav-home').insertAdjacentHTML('beforeend', `<span class="badge">${unread}</span>`);
     const cal = FM.Season.today();
-    const md = !cal ? '' : cal.type === 'league' ? `Matchday ${cal.round + 1}` : cal.type === 'cup' ? (cal.world ? 'Club World Cup' : cal.stage ? 'Continental night' : 'Cup day') : cal.type === 'pre' ? `Pre-season ${cal.idx + 1}/${FM.D.PRESEASON_DAYS}` : cal.type === 'intl' ? 'International break' : cal.type === 'tourn' ? 'Summer finals' : cal.stage === 'F' ? 'Playoff final' : 'Playoff semis';
+    const md = !cal ? '' : cal.type === 'league' ? FM.Season.matchdayLabel(cal) : cal.type === 'cup' ? (cal.world ? 'Club World Cup' : cal.stage ? 'Continental night' : 'Cup day') : cal.type === 'pre' ? `Pre-season ${cal.idx + 1}/${FM.D.PRESEASON_DAYS}` : cal.type === 'intl' ? 'International break' : cal.type === 'tourn' ? 'Summer finals' : cal.stage === 'F' ? 'Playoff final' : 'Playoff semis';
     const nt = !club && S.user.nation && S.nteams && S.nteams[S.user.nation];
     $('#topbar').innerHTML = club ? `${C.crest(club, 30)}<div class="t-main"><div class="t-title">${esc(club.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${md}${FM.Season.windowOpen() ? ' · <span style="color:var(--acc)">Window open</span>' : ''}</div></div><div class="money">${U.money(club.balance)}</div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`
       : `<div style="width:30px;height:34px;display:grid;place-items:center;font-size:22px">🧳</div><div class="t-main"><div class="t-title">${esc(S.user.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${md} · <span style="color:var(--warn)">Out of work</span>${nt ? ` · ${esc(nt.name)}` : ''}</div></div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`;
@@ -294,7 +295,7 @@
         return `<button class="clubpick ${NG.club === fake.id ? 'on' : ''}" data-act="ngClub" data-id="${fake.id}">${C.crest(fake, 38)}<div class="grow"><div class="b">${esc(name)}</div><div class="small" style="color:#9fb0c5">${I.icon} ${I.label} · ${diff}</div><div class="tiny" style="color:#6f7f96;margin-top:2px">${esc(I.fans)}</div></div><div class="tiny" style="color:#9fb0c5">${div}</div></button>`;
       };
       body = `<div class="h1" style="margin-top:2vh">Pick your club</div><div class="tag">Every club has an identity. The board and fans will judge you by it.</div><div class="sp"></div>
-        ${(() => { const names = { D1: 'Premier Division', D2: 'The Championship', D3: 'League One', ES1: 'La Primera', ES2: 'La Segunda', DE1: 'Erste Liga', FR1: 'Première Ligue', BR1: 'Série Nacional' }; const tier = { D1: 'Tier 1', D2: 'Tier 2', D3: 'Tier 3', ES1: 'Tier 1', ES2: 'Tier 2', DE1: 'Tier 1', FR1: 'Tier 1', BR1: 'Tier 1' }; const cols = ['#c8ff3d', '#3de0ff', '#a78bfa', '#ffb347', '#fbbf24', '#f87171', '#60a5fa', '#34d399']; return D.LEAGUE_CLUBS.map(([cid, key, nat], i) => `<div class="small b" style="color:${cols[i]};margin:16px 0 8px;letter-spacing:1px">${D.NATIONS[nat].flag} ${names[cid].toUpperCase()} · ${D.NATIONS[nat].name.toUpperCase()}</div>${D[key].map((r) => row(r, tier[cid])).join('')}`).join(''); })()}
+        ${(() => { const names = Object.fromEntries(D.LEAGUES.map((l) => [l.id, l.name])); const tier = { D1: 'Tier 1', D2: 'Tier 2', D3: 'Tier 3', ES1: 'Tier 1', ES2: 'Tier 2', DE1: 'Tier 1', FR1: 'Tier 1', BR1: 'Tier 1' }; const cols = ['#c8ff3d', '#3de0ff', '#a78bfa', '#ffb347', '#fbbf24', '#f87171', '#60a5fa', '#34d399']; return D.LEAGUE_CLUBS.map(([cid, key, nat], i) => `<div class="small b" style="color:${cols[i]};margin:16px 0 8px;letter-spacing:1px">${D.NATIONS[nat].flag} ${names[cid].toUpperCase()} · ${D.NATIONS[nat].name.toUpperCase()}</div>${D[key].map((r) => row(r, tier[cid])).join('')}`).join(''); })()}
         <div class="actions" style="position:sticky;bottom:0;padding:14px 0 4px;background:linear-gradient(transparent,#06090d 30%)"><button class="btn block" data-act="ngRandom">🎲 Choose random club</button><button class="btn block" data-act="ngUnemployed">🧳 Start unemployed — wait for offers</button><button class="btn pri block" data-act="ngNext" ${NG.club && NG.club !== 'none' ? '' : 'disabled'}>${NG.club && NG.club !== 'none' ? `Continue with ${esc(D.allClubRows().find((r) => 'c_' + r[1] === NG.club)[0])} →` : 'World rules →'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     } else {
       const seg = (k, vals, lbl) => `<div class="small" style="color:#9fb0c5;margin:16px 0 6px">${lbl}</div><div class="seg">${vals.map((v) => `<button class="${NG.rules[k] === v ? 'on' : ''}" data-act="ngRule" data-k="${k}" data-v="${v}">${v}</button>`).join('')}</div>`;

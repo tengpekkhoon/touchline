@@ -126,7 +126,7 @@
           res.cards.push({ side, pid: p.id, k: 'yellow' });
           p.season.yc++; if (p.season.yc % 5 === 0) { p.susp = 1; p.suspNew = true; }
         } else if (Math.random() < 0.004) { res.cards.push({ side, pid: p.id, k: 'red' }); p.season.rc++; p.susp = 2; p.suspNew = true; }
-        if (Math.random() < 0.012 * (p.hid.inj >= 15 ? 1.8 : 1)) p.inj = { weeks: U.randi(1, 5), type: U.pick(['Hamstring strain', 'Ankle sprain', 'Calf strain', 'Knee ligament', 'Groin strain']) };
+        if (Math.random() < FM.Injury.lightChance(p) * (mins[p.id] / 90)) FM.Injury.hurt(p, { where: 'match' });
       });
     });
     res.goals.forEach((g) => {

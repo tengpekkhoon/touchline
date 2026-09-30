@@ -10,7 +10,20 @@
     for (let d = Math.min(FM.S.day, cal.length - 1); d >= 0; d--) if (cal[d].type === 'league') return cal[d].round;
     return 0;
   };
-  Sea.windowOpen = () => { const c = Sea.today(); return !!c && c.type !== 'playoff' && c.type !== 'tourn' && D.WINDOW_ROUNDS.includes(Sea.leagueRound()); };
+  // The season's progress on the 22-round scale the calendar was designed on (windows, mid-season review, ...)
+  Sea.baseRound = () => W.baseRound(Sea.leagueRound());
+  // League games a club's league has played so far (leagues of different sizes play on different days)
+  Sea.gamesPlayed = function (clubId) {
+    const c = clubId && FM.S.clubs[clubId], comp = c && FM.S.comps[c.comp];
+    return comp && comp.fixtures ? W.roundsBefore(comp, Sea.leagueRound()) : Sea.baseRound();
+  };
+  // "Matchday 12" for our league (or the first league with a game that day)
+  Sea.matchdayLabel = function (cal) {
+    const c = W.employed() && W.userClub(), comp = c && FM.S.comps[c.comp];
+    const k = comp ? W.roundOn(comp, cal.round) : -1;
+    return k >= 0 ? `Matchday ${k + 1}` : comp ? 'Other leagues play' : `Matchday ${cal.round + 1}`;
+  };
+  Sea.windowOpen = () => { const c = Sea.today(); return !!c && c.type !== 'playoff' && c.type !== 'tourn' && D.WINDOW_ROUNDS.includes(Sea.baseRound()); };
   Sea.seasonLabel = () => `${FM.S.year}/${String((FM.S.year + 1) % 100).padStart(2, '0')}`;
 
   // Fixtures played on the current day (creates playoff ties lazily)
@@ -18,7 +31,7 @@
     const S = FM.S, cal = Sea.today();
     if (!cal) return [];
     if (cal.type === 'league') {
-      return W.leagues().filter((c) => c.fixtures[cal.round]).flatMap((c) => c.fixtures[cal.round]);
+      return W.leagues().flatMap((c) => W.roundFixtures(c, cal.round) || []);
     }
     if (cal.type === 'cup') return cal.comps.flatMap((id) => FM.Cups.fixturesFor(S.comps[id], cal));
     if (cal.type === 'pre') { const plan = S.user.preseason[cal.idx]; return plan && plan.fx ? [plan.fx] : []; }
@@ -72,7 +85,7 @@
       if (cal.type !== 'league') continue;
       if (!W.employed()) return null;
       const c = S.comps[W.userClub().comp];
-      const fx = c.fixtures[cal.round] && c.fixtures[cal.round].find((f) => W.isUser(f.h) || W.isUser(f.a));
+      const fx = (W.roundFixtures(c, cal.round) || []).find((f) => W.isUser(f.h) || W.isUser(f.a));
       if (fx && !fx.res) return fx;
     }
     return null;
@@ -94,7 +107,7 @@
     const comp = S.comps[fx.comp];
     if (comp.type === 'friendly') return Sea.applyFriendly(fx, m);
     const [hc, ac] = [S.clubs[fx.h], S.clubs[fx.a]];
-    if (comp.type === 'league' && !fx.ko && !fx.leg) Sea.updTable(comp.table, fx, res);
+    if (comp.type === 'league' && !fx.ko && !fx.leg) { Sea.updTable(comp.table, fx, res); const e = (S.eraLog = S.eraLog || { g: 0, n: 0 }); e.g += res.hg + res.ag; e.n++; }
     if (comp.type !== 'league') FM.Cups.onResult(fx);
     const derby = m.derby;
     m.sides.forEach((sd, k) => {
@@ -109,14 +122,8 @@
         p.form.push(r); p.form = p.form.slice(-10);
         p.fitness = Math.round(sd.st[pid] ?? p.fitness);
         p.morale = U.clamp(p.morale + (won ? 4 : lost ? -4 * (pid === sd.capt ? 1 : calm) : 0) + (r >= 7.5 ? 3 : r < 5.8 ? -3 : 0), 0, 100);
-        if (sd.injured[pid] || p._riskPlayOn) {
-          const med = sd.club.facilities.medical || 2;
-          const physio = sd.user ? 1 - (W.staffAbility('physio') - 10) * 0.03 : 1;
-          const base = U.randi(1, 5) * (p._riskPlayOn ? 2 : 1);
-          p.inj = { weeks: Math.max(1, Math.round(base * (1.25 - med * 0.08) * physio)), type: U.pick(['Hamstring strain', 'Ankle sprain', 'Calf strain', 'Knee ligament', 'Groin strain', 'Bruised ribs']) };
-          delete p._riskPlayOn;
-          FM.Records.noteInjury(p);
-        }
+        if (sd.injured[pid]) FM.Injury.hurt(p, { where: 'match', rushed: !!p._riskPlayOn });
+        delete p._riskPlayOn;
       }
       if (m.motm && sd.mins[m.motm]) { S.players[m.motm].season.motm++; S.players[m.motm].morale = Math.min(100, S.players[m.motm].morale + 5); }
     });
@@ -314,7 +321,7 @@
     const S = FM.S, c = Sea.today();
     if (!c) return 'Season';
     if (S.day === S.calendar.length - 1) return 'Final day — then awards, retirements and the new season';
-    return c.type === 'league' ? `Matchday ${c.round + 1}` : c.type === 'cup' ? (c.world ? 'Club World Cup' : c.stage ? 'Continental night' : 'Cup day') : c.type === 'pre' ? 'Pre-season' : c.type === 'intl' ? 'International break' : c.type === 'tourn' ? 'Summer finals' : 'Playoffs';
+    return c.type === 'league' ? Sea.matchdayLabel(c) : c.type === 'cup' ? (c.world ? 'Club World Cup' : c.stage ? 'Continental night' : 'Cup day') : c.type === 'pre' ? 'Pre-season' : c.type === 'intl' ? 'International break' : c.type === 'tourn' ? 'Summer finals' : 'Playoffs';
   };
   // Sim through days without a match of ours; stop for our next fixture, a decision in the feed,
   // a transfer window opening or closing, or the season's end
@@ -370,11 +377,12 @@
     Object.values(S.players).forEach((p) => {
       if (p.retired) return;
       p.fitness = Math.min(100, p.fitness + 30 + (p.attrs.stamina - 10));
-      if (p.inj) { p.inj.weeks--; if (p.inj.weeks <= 0) { p.inj = null; p.fitness = 80; } }
       if (p.susp && !p.suspNew) p.susp--;
       delete p.suspNew;
     });
+    FM.Injury.daily(); // rehab countdowns, returns, training knocks and illness
     Sea.minimalSimWeek();
+    Sea.freeAgents();
     if (employed) Sea.ensureUserSquad(14);
     Sea.ensureKeepers();
     Sea.finances();
@@ -384,7 +392,7 @@
     if (Sea.windowOpen()) { FM.Transfers.aiWindow(); if (employed) { FM.Transfers.aiBidsForUser(); FM.Contracts.releaseClauses(); } }
     FM.People.tick();
     const cd = Sea.today();
-    if (cd && cd.type === 'league' && cd.round === D.YOUTH_ROUND) Sea.youthIntake();
+    if (cd && cd.type === 'league' && cd.round === W.scaleRound(D.YOUTH_ROUND)) Sea.youthIntake();
     if (employed) { Sea.facilities(); Sea.boardCheck(); }
     FM.Stories.daily();
     S.day++;
@@ -392,6 +400,7 @@
     const summary = S.day >= S.calendar.length ? Sea.endSeason() : null;
     if (S.user.sacked) W.goUnemployed('sacked');
     else if (!W.employed()) Sea.jobMarket();
+    else if (!summary) FM.Injury.riskHim(Sea.userFixture()); // a key man nearly fit before a big game
     return summary;
   };
 
@@ -463,6 +472,36 @@
     FM.News.add({ type: 'club', title: `Sporting director makes up the numbers: ${signed.length} signing${signed.length === 1 ? '' : 's'}`, body: `With only ${sq.length - signed.length} players under contract, the club has added ${signed.map((p) => `${W.name(p)} (${p.pos}${p.youth === c.id ? ', academy' : ''})`).join(', ')} on one-year deals. Renew contracts before they expire to keep control of your squad.`, clubId: c.id, pids: signed.map((p) => p.id) });
   };
 
+  // Free agents: released players look for a club at their level, and clubs with room sign them any day of the
+  // season (no window needed for a free agent). The longer a player waits, the further down he'll go; veterans
+  // who find nothing retire in the summer, and anyone unattached for a whole season drops out of the game.
+  Sea.freeAgents = function () {
+    const S = FM.S, now = Sea.dayIndex();
+    const pool = Object.values(S.players).filter((p) => !p.clubId && !p.retired);
+    if (!pool.length) return;
+    const clubs = Object.values(S.clubs).filter((c) => !W.isUser(c.id));
+    const room = new Map(clubs.map((c) => [c.id, W.squadTarget(c) - W.squad(c.id).length])); // a real gap in the squad
+    for (const p of U.shuffle(pool)) {
+      if (p.freeSince == null) p.freeSince = now;
+      if (Math.random() > 0.12 * 55 / S.calendar.length) continue; // agents take their time; clubs have other priorities (rate per week, whatever the calendar)
+      const waited = (S.year - Math.floor(p.freeSince / 1000)) * S.calendar.length + S.day - (p.freeSince % 1000);
+      const lower = 8 + Math.min(14, waited * 0.4), want = D.SQUAD_TIER;
+      const fits = clubs.filter((c) => {
+        if (room.get(c.id) <= 0) return false;
+        const lvl = W.levelFor(c.rep);
+        if (p.ca < lvl - lower || p.ca > lvl + 4) return false;
+        const same = W.squad(c.id).filter((q) => q.pos === p.pos).length;
+        return same < ((want[c.sim] || want.full)[p.pos] || 2);
+      });
+      if (!fits.length) continue;
+      const c = fits.sort((a, b) => b.rep - a.rep)[Math.floor(Math.random() * Math.min(3, fits.length))];
+      FM.Transfers.execute(p, c.id, 0, FM.Transfers.wageDemand(p, c));
+      p.contract = S.year + (W.age(p) >= 30 ? 1 : U.randi(1, 2));
+      delete p.freeSince;
+      room.set(c.id, room.get(c.id) - 1);
+    }
+  };
+
   // Overseas (minimal simulation) clubs: synthetic appearances so scouts see form & stats
   Sea.minimalSimWeek = function () {
     const S = FM.S;
@@ -527,7 +566,7 @@
     const capt = FM.Matchday.captainOf(club.id), rest = !capt ? 65 : capt.morale >= 75 ? 68 : capt.morale < 35 ? 59 : 65;
     sq.forEach((p, i) => {
       const lf = p.form.length;
-      if (i < 13 && p.season.apps < Math.floor(Sea.leagueRound() * 0.4) && !p.inj) {
+      if (i < 13 && p.season.apps < Math.floor(Sea.gamesPlayed(p.clubId) * 0.4) && !p.inj) {
         p.morale = Math.max(0, p.morale - (p.hid.amb >= 14 ? 3 : 1.5));
         if (p.morale < 35 && !p.flagMinutes) {
           p.flagMinutes = true;
@@ -538,36 +577,94 @@
   };
 
   // ---------- Development ----------
+  // Career shape: ability rises quickly in the teens, levels off in the mid-twenties, peaks around 27–29
+  // and falls away through the thirties. Keepers and centre-backs age more slowly; each player's clock
+  // runs a little early or late (fixed per player), and professionals decline more gently.
+  const CURVE = [[17, 4.8], [19, 4.3], [21, 3.6], [23, 2.9], [25, 2.0], [27, 1.0], [28, 0.3], [29, 0], [30, -1], [31, -1.9], [32, -2.8], [33, -3.6], [34, -4.4], [36, -5.6]];
+  const curveAt = (e) => {
+    if (e <= CURVE[0][0]) return CURVE[0][1];
+    for (let i = 1; i < CURVE.length; i++) if (e <= CURVE[i][0]) { const [a0, g0] = CURVE[i - 1], [a1, g1] = CURVE[i]; return g0 + ((g1 - g0) * (e - a0)) / (a1 - a0); }
+    return CURVE[CURVE.length - 1][1];
+  };
+  Sea.AGE_STRETCH = { GK: 0.75, CB: 0.92, DM: 0.96, CM: 0.97 };
+  // A player's own ageing clock: -1.2..+1.2 years, from his id so it never changes and needs no save field
+  Sea.clock = (p) => { let h = 0; for (const ch of String(p.id)) h = (h * 31 + ch.charCodeAt(0)) | 0; return ((Math.abs(h) % 1000) / 1000 - 0.5) * 2.4; };
+  Sea.careerAge = function (p) {
+    const a = W.age(p);
+    if (a <= 20) return a;
+    return 20 + (a - 20) * (Sea.AGE_STRETCH[p.pos] || 1) - Sea.clock(p) * Math.min(1, (a - 20) / 6);
+  };
   Sea.growthCurve = function (p) {
-    const a = W.age(p), lb = W.hasTrait(p, 'Late Bloomer');
-    let g = a <= 18 ? 7 : a <= 20 ? 6 : a <= 22 ? 4.5 : a <= 24 ? 3 : a <= 26 ? 1.5 : a <= 29 ? 0.3 : a <= 31 ? -1.5 : a <= 33 ? -3 : -4.5;
+    const a = W.age(p), lb = W.hasTrait(p, 'Late Bloomer'), arc = p.arc && p.arc.k;
+    let g = curveAt(Sea.careerAge(p));
     if (lb) { if (a <= 21) g *= 0.6; else if (a <= 27) g += 2.2; }
+    if (arc === 'burnout' && a > p.arc.peak) g = Math.min(g, -(2.5 + Math.min(3, (a - p.arc.peak) * 0.6))); // the legs, the hunger or the body go early
+    if (arc === 'ageless' && g < 0 && a <= 35) g *= 0.3; // keeps his prime deep into his thirties
     return g;
+  };
+
+  // ---------- Career arcs ----------
+  // Most careers follow the curve; a few don't. Hidden and fixed when the player is created (world or academy):
+  //   stall   — a prospect who barely improves            plateau — levels off well short of his potential
+  //   burnout — peaks early (22–25), then falls away fast  meteor  — one outstanding season (age 21–27), then fades
+  //   early   — at or near his prime by 18–19 (Mbappé, Yamal)
+  //   ageless — keeps his prime into his mid-thirties (Messi, Ronaldo): slow decline, retires late
+  Sea.ARCS = { stall: 0.08, plateau: 0.12, burnout: 0.07, early: 0.1, meteor: 0.02, ageless: 0.04, agelessPlain: 0.01 };
+  Sea.assignArc = function (p, age) {
+    const A = Sea.ARCS, S = FM.S, x = Math.random();
+    const prospect = age <= 21 && p.pa >= 78 && p.pa - p.ca >= 12;
+    if (prospect) {
+      if (x < A.stall) return (p.arc = { k: 'stall' });
+      if (x < A.stall + A.plateau) return (p.arc = { k: 'plateau', cap: Math.round(p.ca + (p.pa - p.ca) * U.rand(0.35, 0.65)) });
+      if (x < A.stall + A.plateau + A.burnout) return (p.arc = { k: 'burnout', peak: U.randi(22, 25) });
+      if (p.pa >= 84 && x < A.stall + A.plateau + A.burnout + A.early) return (p.arc = { k: 'early' });
+    }
+    const y = Math.random();
+    if (age <= 26 && y < A.meteor) return (p.arc = { k: 'meteor', y: S.year + U.randi(Math.max(1, 21 - age), 27 - age) });
+    if (age <= 30 && y < A.meteor + (p.hid.prof >= 14 ? A.ageless : A.agelessPlain)) return (p.arc = { k: 'ageless' });
+    return null;
   };
   Sea.develop = function (p, frac) {
     const S = FM.S;
     const club = p.clubId && S.clubs[p.clubId];
+    const arc = p.arc && p.arc.k, a = W.age(p);
     let g = Sea.growthCurve(p);
     if (g > 0) {
-      const head = p.pa - p.ca;
-      if (head <= 0) return;
+      let head = p.pa - p.ca;
+      if (arc === 'plateau') head = Math.min(head, p.arc.cap - p.ca);
+      if (head <= 0 && arc !== 'meteor') return;
+      head = Math.max(0, head);
       const train = (club ? (club.facilities.training || 2) : 2) + (club && W.isUser(club.id) ? (W.staffAbility('coach') - 10) * 0.12 : 0);
       const mins = Math.min(0.45, p.season.apps * 0.03);
       const f = 0.55 + train * 0.09 + (p.hid.prof - 10) / 25 + mins;
-      g = Math.min(g * f, head * 0.7) * frac * U.rand(0.6, 1.4);
+      const early = arc === 'early' && a <= 21, fast = early || (arc === 'burnout' && a <= p.arc.peak);
+      g = Math.min(g * f * (early ? 3 : fast ? 1.3 : 1), head * (early ? 1.2 : 0.45)) * frac * U.rand(0.6, 1.4); // closing in on potential slows down: players keep improving into their mid-twenties
+      if (arc === 'stall') g *= 0.2;
+      if (p.inj && (p.inj.out || 0) >= 8) g *= 0.4; // months on the treatment table cost development
     } else {
       g = g * frac * (1.25 - p.hid.prof / 40) * U.rand(0.7, 1.3);
     }
+    // One-season wonder: a sudden leap in his big year (above his potential), given back over the next two
+    const boom = arc === 'meteor' ? S.year - p.arc.y : null;
+    if (boom === 0) { if (p.arc.pa == null) p.arc.pa = p.pa; g += 9 * frac * U.rand(0.8, 1.2); } else if (boom === 1 || boom === 2) g -= 4.5 * frac * U.rand(0.8, 1.2);
     Sea.applyGrowth(p, g);
+    if ((boom === 1 || boom === 2) && p.arc.pa != null) p.pa = Math.max(p.arc.pa, p.ca); // the big year never becomes his new ceiling
+    // Experience: in their late twenties and thirties players keep reading the game better
+    const e = Sea.careerAge(p);
+    if (e >= 26 && e <= 31) for (const k of ['positioning', 'composure', 'vision']) p.attrs[k] = Math.min(20, p.attrs[k] + 0.12 * frac * Math.random() * 2);
   };
+  // How fast each attribute fades with age (relative): legs first, then touch, and reading the game last
+  const AGEING = { pace: 2, stamina: 1.6, strength: 0.7, workRate: 1.1, dribbling: 1.1, reflexes: 1.2, technique: 0.6, finishing: 0.7, tackling: 0.9, handling: 0.6, passing: 0.5, vision: 0.35, positioning: 0.4, composure: 0.3 };
   Sea.applyGrowth = function (p, dCA) {
     const w = D.POS_W[p.pos];
-    const phys = ['pace', 'stamina', 'strength'];
     const before = p.ca;
     for (const k of D.ATTRS) {
       let d;
-      if (dCA >= 0) d = w[k] ? (dCA / 5) * U.rand(0.5, 1.5) : (dCA / 5) * 0.3 * Math.random();
-      else d = (dCA / 5) * (phys.includes(k) ? 1.8 : w[k] ? 0.8 : 0.4) * U.rand(0.5, 1.5);
+      // Secondary attributes develop too (nearly as fast), so a player grown in the simulation ends up shaped like a
+      // generated player of the same ability. At 15% they fell ever further behind, and as academy products
+      // replaced the generated players, defending (which leans on them) eroded and goals crept up season by season.
+      if (dCA >= 0) d = (dCA / 5) * (w[k] ? U.rand(0.5, 1.5) : 0.9 * U.rand(0.5, 1.5));
+      else d = (dCA / 5) * (AGEING[k] || 0.8) * (w[k] ? 1 : 0.5) * U.rand(0.5, 1.5);
       if ((k === 'reflexes' || k === 'handling') && p.pos !== 'GK') continue;
       p.attrs[k] = U.clamp(p.attrs[k] + d, 1, 20);
     }
@@ -577,7 +674,11 @@
   };
 
   // ---------- Youth intake ----------
+  // Potential of academy prospects: mean rises with academy level (and a youth-focused club), plus rare wonderkids.
+  // Tuned so each year's intake grows into an elite about as strong as the one it replaces (no inflation).
+  Sea.YOUTH = { base: 51, perAcad: 4, youthClub: 4, sd: 6.5, wonder: 0.006 };
   Sea.youthIntake = function () {
+    const Y = Sea.YOUTH;
     const S = FM.S;
     Object.values(S.clubs).forEach((c) => {
       const acad = c.facilities.academy || 2;
@@ -587,9 +688,9 @@
         const nat = W.youthNat(c);
         const pos = U.pick(['GK', 'CB', 'CB', 'FB', 'DM', 'CM', 'CM', 'AM', 'W', 'W', 'ST', 'ST']);
         const ca = Math.round(U.clamp(U.gauss(26 + acad * 3, 4), 18, 48));
-        let pa = Math.round(U.clamp(U.gauss(50 + acad * 5 + (c.identity === 'youth' ? 5 : 0), 11), ca + 8, 94));
-        // Real wonderkids are rare: about 10 a year across the whole world (it was ~35, and the elite inflated season after season)
-        if (Math.random() < 0.006 * acad) pa = U.randi(83, 95);
+        let pa = Math.round(U.clamp(U.gauss(Y.base + acad * Y.perAcad + (c.identity === 'youth' ? Y.youthClub : 0), Y.sd), ca + 8, 94));
+        // Real wonderkids are rare: about 10 a year across the whole world
+        if (Math.random() < Y.wonder * acad) pa = U.randi(83, 95);
         const p = W.genPlayer({ nat, pos, age: U.randi(15, 16), ca, pa, clubId: c.id, youthClub: c.id });
         p.career.apps = 0; p.career.goals = 0; p.contract = S.year + 3; p.wage = 400;
         S.players[p.id] = p;
@@ -637,7 +738,7 @@
     const S = FM.S, c = W.userClub();
     const firstSeason = (S.user.joinedClubYear || S.user.joined) === S.year;
     if (FM.People.ultimatumFailed()) S.user.sacked = true;
-    else if (!firstSeason && FM.Season.leagueRound() >= 14 && c.boardConf < 10 && W.position(c.id) > Sea.expectedPos(c) + 3 && !S.user.sacked) {
+    else if (!firstSeason && FM.Season.baseRound() >= 14 && c.boardConf < 10 && W.position(c.id) > Sea.expectedPos(c) + 3 && !S.user.sacked) {
       S.user.sacked = true;
     } else if (S.day > 6 && c.boardConf < 30 && !c.warned) {
       c.warned = true;
@@ -743,8 +844,18 @@
     return summary;
   };
 
+  // Tactical equilibrium: when the whole game drifts toward more (or fewer) goals, defending adapts. Each summer the
+  // chance rate moves part of the way back toward the calibrated scoring level (damped, capped at ±15%). It never
+  // changes the differences between teams, and the first season always plays the raw engine.
+  Sea.settleEra = function () {
+    const S = FM.S, e = S.eraLog;
+    delete S.eraLog;
+    if (!e || e.n < 200) return;
+    S.era = U.clamp((S.era || 1) * Math.pow(FM.CAL.targetGoals / (e.g / e.n), 0.6), 0.85, 1.15);
+  };
   Sea.newSeason = function (entry) {
     const S = FM.S;
+    Sea.settleEra();
     S.year++;
     FM.Transfers.endLoans();
     // retirements, contracts, history snapshot
@@ -754,8 +865,7 @@
       p.history = (p.history || []).slice(-8); // the last eight seasons are enough for the player card and keep long saves small
       p.season = W.blankSeason();
       p.flagMinutes = false; p.lastGrowth = 0;
-      const a = W.age(p);
-      if (a >= 34 && Math.random() < (a - 32) * 0.3) return Sea.retire(p);
+      if (Math.random() < Sea.retireChance(p)) return Sea.retire(p);
       if (p.clubId && p.contract < S.year) {
         const c = S.clubs[p.clubId];
         if (W.isUser(p.clubId)) {
@@ -763,7 +873,7 @@
           FM.News.add({ type: 'club', title: `${W.name(p)} leaves on a free`, body: `His contract expired without a new deal.${W.hasTrait(p, 'Loyal') ? ' He wanted to stay.' : ''}`, pid: p.id, clubId: p.clubId });
           W.spell(p).to = S.year - 1; p.clubId = null; p.listed = false;
           if (S.user.tactic.lineup) S.user.tactic.lineup = S.user.tactic.lineup.map((x) => (x === p.id ? null : x));
-        } else if (c.sim === 'minimal' || p.ca >= Sea.squadMedian(c.id) - 2 || Math.random() < 0.6) { p.contract = S.year + U.randi(1, 3); p.wage = Math.max(p.wage, W.wageFor(p)); }
+        } else if (Sea.aiRenews(p, c)) { p.contract = S.year + (W.age(p) >= 31 ? 1 : U.randi(1, 3)); p.wage = Math.max(p.wage, W.wageFor(p)); }
         else { W.spell(p).to = S.year - 1; p.clubId = null; }
       }
       W.refresh(p);
@@ -772,7 +882,7 @@
     Object.values(S.clubs).forEach((c) => {
       if (W.isUser(c.id)) return;
       const sq = W.squad(c.id);
-      const worth = (p) => p.ca + (W.age(p) <= 20 ? (p.pa - p.ca) * 0.5 : 0);
+      const worth = (p) => p.ca + (W.age(p) <= 20 ? (p.pa - p.ca) * 0.5 : 0) - Math.max(0, W.age(p) - 29) * 2; // clubs plan for decline
       sq.sort((a, b) => worth(a) - worth(b));
       // release the least useful, but never a club's last two goalkeepers
       while (sq.length > W.squadTarget(c) + 3) {
@@ -781,14 +891,19 @@
         const [p] = sq.splice(i, 1); W.spell(p).to = S.year - 1; p.clubId = null;
       }
     });
+    // Unattached veterans: most hang up their boots, a few good ones hold out for a contract
     const free = Object.values(S.players).filter((p) => !p.clubId);
-    free.filter((p) => W.age(p) >= 31).forEach((p) => Sea.retire(p));
-    const pool = Object.values(S.players).filter((p) => !p.clubId).sort((a, b) => a.ca - b.ca);
-    while (pool.length > 90) delete S.players[pool.shift().id];
-    // New faces on the free-agent market (released abroad, unattached pros)
-    for (let i = 0; i < 18; i++) {
-      const age = U.randi(20, 32), ca = U.randi(44, 72), p = W.genPlayer({ nat: U.pick(Object.keys(D.NATIONS)), pos: U.pick(D.POS), age, ca, pa: W.potentialFor(ca, age) });
-      p.contract = S.year; S.players[p.id] = p;
+    free.filter((p) => W.age(p) >= 31 && Math.random() < Math.min(1, 0.45 + (W.age(p) - 31) * 0.2 - (p.ca >= 65 ? 0.25 : 0))).forEach((p) => Sea.retire(p));
+    // Unattached for a whole season: he has left professional football (a notable career still gets its farewell)
+    Object.values(S.players).filter((p) => !p.clubId && !p.retired && p.freeSince != null && p.freeSince < (S.year - 1) * 1000).forEach((p) => (p.career.apps >= 380 ? Sea.retire(p) : delete S.players[p.id]));
+    // Keep the pool a sensible size: the least employable (weakest, bar young players with a future) drop out first
+    const worthFA = (p) => p.ca + (W.age(p) <= 21 ? (p.pa - p.ca) * 0.4 : 0);
+    const pool = Object.values(S.players).filter((p) => !p.clubId && !p.retired).sort((a, b) => worthFA(a) - worthFA(b));
+    while (pool.length > 150) delete S.players[pool.shift().id];
+    // A thin market gets a few unattached pros from leagues outside the game (only when needed, never a flood)
+    for (let i = pool.length; i < 40; i++) {
+      const age = U.randi(22, 31), ca = W.freeAgentCA(), p = W.genPlayer({ nat: U.pick(Object.keys(D.NATIONS)), pos: U.pick(D.POS), age, ca, pa: W.potentialFor(ca, age) });
+      p.contract = S.year; p.freeSince = Sea.dayIndex(); S.players[p.id] = p;
     }
     Sea.ensureUserSquad(18);
     // squads replenish (AI)
@@ -888,6 +1003,26 @@
       const m = c.manager && S.staff[c.manager];
       if (m && m.age >= 72 && !W.isUser(c.id) && c.sim !== 'minimal') FM.Stories.newManager(c, `${m.fn} ${m.ln} retires from management`, `After a long career, ${c.name}'s manager calls it a day.`);
     });
+  };
+  // Chance a player retires this summer: age (keepers last longer), still good enough for his club,
+  // a long injury late in a career, and professionalism
+  Sea.retireChance = function (p) {
+    const a = W.age(p) - (p.pos === 'GK' ? 2 : 0);
+    if (a < 32) return 0;
+    let r = [0.02, 0.05, 0.12, 0.24, 0.38, 0.52, 0.68][a - 32] ?? 0.9;
+    const c = p.clubId && FM.S.clubs[p.clubId];
+    if (c) { const gap = p.ca - Sea.squadMedian(c.id); r *= gap >= 4 ? 0.7 : gap >= -3 ? 0.9 : 1.5; }
+    if (p.inj && (p.inj.out || 0) >= 12) r *= 1.8;
+    if (p.hid.prof >= 15) r *= 0.8;
+    if (p.arc && p.arc.k === 'ageless') r *= 0.35;
+    return Math.min(0.95, r);
+  };
+  // AI clubs renewing an expiring contract: younger squad players usually, veterans (one year at a time) only
+  // while they are still clearly good enough — which is how most careers wind down before retirement
+  Sea.aiRenews = function (p, c) {
+    const a = W.age(p), gap = p.ca - Sea.squadMedian(c.id);
+    if (a < 31) return c.sim === 'minimal' || gap >= -2 || Math.random() < 0.6;
+    return gap >= a - 30 || Math.random() < (c.sim === 'minimal' ? 0.4 : 0.15);
   };
   Sea.retire = function (p) {
     const S = FM.S;

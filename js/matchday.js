@@ -146,13 +146,14 @@
   };
   Md.digest = function (cal, snap) {
     const S = FM.S, club = W.userClub(), comp = S.comps[snap.comp];
-    if (!comp || comp.id !== club.comp || !comp.fixtures || !comp.fixtures[cal.round]) return;
-    const fxs = comp.fixtures[cal.round].filter((f) => f.res);
+    const today = comp && comp.fixtures && W.roundFixtures(comp, cal.round), round = comp ? W.roundOn(comp, cal.round) : -1;
+    if (!comp || comp.id !== club.comp || !today) return;
+    const fxs = today.filter((f) => f.res);
     if (!fxs.length) return;
     const table = W.sortedTable(comp), n = table.length;
     const pos = (id) => table.findIndex((r) => r.id === id) + 1;
     // Movement means nothing after the opening round (the table started alphabetical)
-    const move = (id) => (cal.round === 0 ? 0 : snap.order.indexOf(id) + 1 - pos(id));
+    const move = (id) => (round === 0 ? 0 : snap.order.indexOf(id) + 1 - pos(id));
     const mine = fxs.find((f) => f.h === club.id || f.a === club.id);
     // Headline moments of the round
     const notes = [];
@@ -165,7 +166,7 @@
     const upset = fxs.find((f) => { const hw = f.res.hg > f.res.ag, aw = f.res.ag > f.res.hg; if (!hw && !aw) return false; const w = S.clubs[hw ? f.h : f.a], l = S.clubs[hw ? f.a : f.h]; return l.rep - w.rep >= 12 && pos(l.id) <= 4; });
     if (upset) { const hw = upset.res.hg > upset.res.ag; notes.push(`😮 Shock: ${S.clubs[hw ? upset.h : upset.a].name} beat ${S.clubs[hw ? upset.a : upset.h].name}`); }
     const leader = table[0];
-    if (snap.order[0] !== leader.id && cal.round > 0) notes.push(`👑 ${S.clubs[leader.id].name} go top`);
+    if (snap.order[0] !== leader.id && round > 0) notes.push(`👑 ${S.clubs[leader.id].name} go top`);
     // Golden boot race in this league
     const leaguePlayers = comp.clubs.flatMap((id) => W.squad(id));
     const scorer = leaguePlayers.filter((p) => p.season.goals > 0).sort((a, b) => b.season.goals - a.season.goals)[0];
@@ -182,9 +183,9 @@
     const safety = rels && my && pos(club.id) > lastSafe - 3 ? my.pts - table[inZone ? lastSafe - 1 : lastSafe].pts : null;
     FM.News.add({
       type: 'digest', clubId: club.id,
-      title: `${comp.name} · Matchday ${cal.round + 1} round-up`,
+      title: `${comp.name} · Matchday ${round + 1} round-up`,
       data: {
-        comp: comp.id, round: cal.round,
+        comp: comp.id, round,
         mine: mine && { h: mine.h, a: mine.a, hg: mine.res.hg, ag: mine.res.ag },
         pos: pos(club.id), pts: my ? my.pts : 0, move: move(club.id), gap, top: pos(club.id) === 1, safety, inZone,
         table: table.slice(0, 4).map((r) => [r.id, r.pts, move(r.id)]),

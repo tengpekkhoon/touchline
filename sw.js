@@ -7,7 +7,7 @@ const FILES = [
   './', './index.html', './manifest.webmanifest',
   './css/app.css', './css/fonts.css',
   './js/core.js', './js/data.js', './js/world.js', './js/engine.js', './js/season.js', './js/cups.js', './js/intl.js',
-  './js/tiers.js', './js/contracts.js', './js/people.js', './js/scouting.js', './js/stories.js', './js/advice.js', './js/matchday.js', './js/records.js', './js/save.js', './js/simrun.js', './js/native.js', './js/sim-worker.js',
+  './js/tiers.js', './js/contracts.js', './js/people.js', './js/scouting.js', './js/stories.js', './js/advice.js', './js/matchday.js', './js/records.js', './js/injuries.js', './js/save.js', './js/simrun.js', './js/native.js', './js/sim-worker.js',
   './js/ui-core.js', './js/ui-screens.js', './js/matchview.js', './js/matchmotion.js', './js/ui-extra.js', './js/ui-alpha.js',
   './fonts/inter-var-latin.woff2', './fonts/inter-var-latin-ext.woff2',
   './fonts/barlow-condensed-600-latin.woff2', './fonts/barlow-condensed-600-latin-ext.woff2',

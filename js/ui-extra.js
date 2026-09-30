@@ -229,7 +229,7 @@
       if (!s.user.previewSeen && !s.settings.skipPreview) setTimeout(() => { if (!document.querySelector('.sheet-wrap')) UI.seasonPreview(); }, 350);
       top += planner(cal.idx);
     }
-    const lr = FM.Season.leagueRound();
+    const lr = FM.Season.baseRound();
     if (cal.type === 'pre' || lr <= 2) top += `<button class="card row tap" style="width:100%;text-align:left" data-act="preview2"><span style="font-size:26px">🔮</span><div class="grow"><div class="h3">Season preview</div><div class="small dim">Predicted finish, title odds and your best XI</div></div><span class="dim">›</span></button>`;
     return top + html;
   };
