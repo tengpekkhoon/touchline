@@ -53,7 +53,13 @@
       shape = CREST_SHAPES.at(h % CREST_SHAPES.length),
       [pattern, busy] = CREST_PATTERNS.at(Math.floor(h / CREST_SHAPES.length) % CREST_PATTERNS.length);
     const id = 'cl' + club.id;
-    return `<svg class="crest" data-club="${esc(club.id)}" width="${size}" height="${Math.round(size * 1.15)}" viewBox="0 0 40 46"><defs><clipPath id="${id}"><path d="${shape}"/></clipPath></defs><g clip-path="url(#${id})"><rect width="40" height="46" fill="${c1}"/>${pattern(c2)}</g><path d="${shape}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/><text x="20" y="31" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="11.5" fill="${busy ? '#fff' : U.ink(c1)}" stroke="${busy ? 'rgba(0,0,0,.5)' : 'none'}" stroke-width=".7" paint-order="stroke">${esc(club.short)}</text></svg>`;
+    // The letters: on busy patterns they sit on a solid band of the main colour so stripes never cross them; too
+    // small to read (under 20 px), the badge goes without them
+    const label =
+      size < 20
+        ? ''
+        : `${busy ? `<rect x="5" y="21.5" width="30" height="13" rx="2.5" fill="${c1}"/>` : ''}<text x="20" y="31.5" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="11.5" fill="${U.ink(c1)}">${esc(club.short)}</text>`;
+    return `<svg class="crest" data-club="${esc(club.id)}" width="${size}" height="${Math.round(size * 1.15)}" viewBox="0 0 40 46"><defs><clipPath id="${id}"><path d="${shape}"/></clipPath></defs><g clip-path="url(#${id})"><rect width="40" height="46" fill="${c1}"/>${pattern(c2)}</g><path d="${shape}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/>${label}</svg>`;
   };
   C.stars = function (lo, hi = lo, pot = null) {
     const a = (Math.round(lo * 2) / 2 / 5) * 100,
@@ -491,6 +497,8 @@
     fav: '',
     avatar: { e: '🧑', bg: '#1f6feb' },
     club: null,
+    q: '', // club picker search
+    lg: 'all', // club picker league filter
     rules: { win: 3, subs: 5, foreignLimit: W.NO_LIMIT, twoLegs: 1, awayGoals: 0 },
     slot: 1,
   };
@@ -560,17 +568,27 @@
                 : 'Expectations: patient';
         return `<button class="clubpick ${NG.club === fake.id ? 'on' : ''}" data-act="ngClub" data-id="${fake.id}">${C.crest(fake, 38)}<div class="grow"><div class="b">${esc(name)}</div><div class="small" style="color:#9fb0c5">${I.icon} ${I.label} · ${diff}</div><div class="tiny" style="color:#6f7f96;margin-top:2px">${esc(I.fans)}</div></div><div class="tiny" style="color:#9fb0c5">${div}</div></button>`;
       };
+      // The list, filtered by the search box (club or city, accents ignored) and the league picker; redrawn on its own
+      // as you type so the keyboard stays up
+      const plain = (t) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+      UI._ngList = () => {
+        const names = Object.fromEntries(D.LEAGUES.map((l) => [l.id, l.name]));
+        const tier = Object.fromEntries(D.LEAGUES.map((l) => [l.id, `Tier ${l.tier}`]));
+        const cols = ['#c8ff3d', '#3de0ff', '#a78bfa', '#ffb347', '#fbbf24', '#f87171', '#60a5fa', '#34d399'];
+        const q = plain(NG.q.trim());
+        const html = D.LEAGUE_CLUBS.map(([cid, key, nat], i) => {
+          if (NG.lg !== 'all' && NG.lg !== cid) return '';
+          const rows = D[key].filter((r) => !q || plain(r[0]).includes(q) || plain(r[2] || '').includes(q));
+          return rows.length
+            ? `<div class="small b" style="color:${cols[i]};margin:16px 0 8px;letter-spacing:1px">${D.NATIONS[nat].flag} ${names[cid].toUpperCase()} · ${D.NATIONS[nat].name.toUpperCase()}</div>${rows.map((r) => row(r, tier[cid])).join('')}`
+            : '';
+        }).join('');
+        return html || '<div class="empty">No club matches that search.</div>';
+      };
       body = `<div class="h1" style="margin-top:2vh">Pick your club</div><div class="tag">Every club has an identity. The board and fans will judge you by it.</div><div class="sp"></div>
-        ${(() => {
-          const names = Object.fromEntries(D.LEAGUES.map((l) => [l.id, l.name]));
-          const tier = Object.fromEntries(D.LEAGUES.map((l) => [l.id, `Tier ${l.tier}`]));
-          const cols = ['#c8ff3d', '#3de0ff', '#a78bfa', '#ffb347', '#fbbf24', '#f87171', '#60a5fa', '#34d399'];
-          return D.LEAGUE_CLUBS.map(
-            ([cid, key, nat], i) =>
-              `<div class="small b" style="color:${cols[i]};margin:16px 0 8px;letter-spacing:1px">${D.NATIONS[nat].flag} ${names[cid].toUpperCase()} · ${D.NATIONS[nat].name.toUpperCase()}</div>${D[key].map((r) => row(r, tier[cid])).join('')}`,
-          ).join('');
-        })()}
-        <div class="actions" style="position:sticky;bottom:0;padding:14px 0 4px;background:#06090d;box-shadow:0 -18px 14px -6px #06090d"><button class="btn block" data-act="ngRandom">🎲 Choose random club</button><button class="btn block" data-act="ngUnemployed">🧳 Start unemployed — wait for offers</button><button class="btn pri block" data-act="ngNext" ${NG.club && NG.club !== 'none' ? '' : 'disabled'}>${NG.club && NG.club !== 'none' ? `Continue with ${esc(D.allClubRows().find((r) => 'c_' + r[1] === NG.club)[0])} →` : 'World rules →'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
+        <div class="ng-find"><input type="search" id="ng-q" placeholder="Search club or city" value="${esc(NG.q)}" autocomplete="off"><select id="ng-lg"><option value="all">All leagues</option>${D.LEAGUE_CLUBS.map(([cid, , nat]) => `<option value="${cid}" ${NG.lg === cid ? 'selected' : ''}>${D.NATIONS[nat].flag} ${esc(D.LEAGUES.find((l) => l.id === cid).name)}</option>`).join('')}</select></div>
+        <div id="ng-list">${UI._ngList()}</div>
+        <div class="actions ng-foot"><button class="btn sm" data-act="ngBack" aria-label="Back">←</button><button class="btn sm" data-act="ngRandom">🎲 Random</button><button class="btn sm" data-act="ngUnemployed">🧳 No club</button><button class="btn sm pri grow" data-act="ngNext" ${NG.club && NG.club !== 'none' ? '' : 'disabled'}>${NG.club && NG.club !== 'none' ? `${esc(D.allClubRows().find((r) => 'c_' + r[1] === NG.club)[0])} →` : 'World rules →'}</button></div>`;
     } else {
       const label = (k, v) => (k === 'foreignLimit' && v >= W.NO_LIMIT ? 'No limit' : v);
       const seg = (k, vals, lbl) =>
@@ -601,6 +619,18 @@
     const clearNameError = () => {
       if (!$('#ng-err').hidden) nameError();
     };
+    const ngQ = $('#ng-q'),
+      ngLg = $('#ng-lg');
+    if (ngQ)
+      ngQ.addEventListener('input', () => {
+        NG.q = ngQ.value;
+        $('#ng-list').innerHTML = UI._ngList();
+      });
+    if (ngLg)
+      ngLg.addEventListener('change', () => {
+        NG.lg = ngLg.value;
+        $('#ng-list').innerHTML = UI._ngList();
+      });
     const fn = $('#ng-fn'),
       ln = $('#ng-ln'),
       nat = $('#ng-nat'),

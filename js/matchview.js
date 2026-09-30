@@ -603,7 +603,7 @@
 
     // pressing shapes: connect each team's back line & midfield line
     m.sides.forEach((sd, k) => {
-      const col = sd.club.colors[0];
+      const col = MV.kit(m, k);
       const lines = [['GK'], ['CB', 'FB', 'WB'], ['DM', 'CM']];
       [lines[1], lines[2]].forEach((types) => {
         const pts = sd.slots
@@ -625,7 +625,8 @@
     // players
     const r = Math.max(6, w * 0.022);
     m.sides.forEach((sd, k) => {
-      const [c1, c2] = sd.club.colors;
+      const c1 = MV.kit(m, k),
+        ring = U.ink(c1) === '#fff' || U.ink(c1) === '#ffffff' ? 'rgba(255,255,255,.95)' : 'rgba(0,0,0,.85)';
       sd.xi.forEach((p, i) => {
         if (!p || sd.sentOff[p.id]) return;
         const d = st.dots[k][i],
@@ -638,8 +639,8 @@
         x.arc(cx, cy, r, 0, Math.PI * 2);
         x.fillStyle = sd.slots[i].t === 'GK' ? (k ? '#f59e0b' : '#a3e635') : c1;
         x.fill();
-        x.lineWidth = 2;
-        x.strokeStyle = c2 === c1 ? '#fff' : c2;
+        x.lineWidth = 2.5;
+        x.strokeStyle = sd.slots[i].t === 'GK' ? 'rgba(0,0,0,.85)' : ring; // contrasting ring so every dot stands off the grass
         x.stroke();
         if (sd.injured[p.id]) {
           x.fillStyle = '#f87171';
@@ -820,6 +821,20 @@
   };
 
   // ---------------- Post-match ----------------
+  // The colour a side wears on the pitch: its main colour, unless that is too close to the grass (then its second
+  // colour); the away side changes too if both teams would look alike
+  const GRASS = [31, 122, 63];
+  const rgb = (h) => (/^#[0-9a-f]{6}$/i.test(h) ? [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)) : null);
+  const dist = (a, b) => (a && b ? Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) : 999);
+  MV.kit = function (m, k) {
+    const pick = (club, avoid) => {
+      const [c1, c2] = club.colors;
+      const bad = (c) => dist(rgb(c), GRASS) < 90 || (avoid && dist(rgb(c), rgb(avoid)) < 80);
+      return bad(c1) && !bad(c2) ? c2 : c1;
+    };
+    const home = pick(m.sides[0].club);
+    return k === 0 ? home : pick(m.sides[1].club, home);
+  };
   MV.post = function () {
     const m = MV.m;
     // The result counts from the final whistle: applied and saved now, not when you leave the post-match screens

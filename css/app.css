@@ -1999,3 +1999,48 @@ main {
   border: 1px solid var(--line);
   background: var(--card2);
 }
+.title .ng-find {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+  padding: 8px 0;
+  background: #06090d;
+}
+.title .ng-find input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 12px;
+  border-radius: 14px;
+  border: 1px solid #243042;
+  background: #0f151e;
+  color: #fff;
+  font-size: 16px;
+}
+.title .ng-find select {
+  width: 42%;
+  padding: 10px 8px;
+}
+.title .ng-foot {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: row; /* one row, not the stacked .actions column */
+  align-items: stretch;
+  gap: 6px;
+  padding: 10px 0 4px;
+  background: #06090d;
+  box-shadow: 0 -14px 12px -6px #06090d;
+}
+.title .ng-foot .btn {
+  width: auto;
+  flex: 0 0 auto;
+}
+.title .ng-foot .btn.grow {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

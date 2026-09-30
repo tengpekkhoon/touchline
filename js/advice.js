@@ -164,9 +164,17 @@
           { label: 'Renew', act: 'renew', id: p.id },
         ),
       );
-    // Deadwood
+    // Deadwood: only once a few matchdays have been played, and never a player in the current XI
+    const played = FM.Season.gamesPlayed(c.id),
+      starters = new Set(
+        W.pickXI(c.id, T)
+          .xi.filter(Boolean)
+          .map((p) => p.id),
+      );
     sq.filter(
       (p) =>
+        played >= 5 &&
+        !starters.has(p.id) &&
         W.age(p) >= 29 &&
         !p.listed &&
         p.season.apps <= Math.max(1, FM.Season.gamesPlayed(p.clubId) * 0.15) &&
@@ -226,6 +234,10 @@
         return { id, r: A.teamRating(id) + S().clubs[id].rep * 0.06 + noise };
       })
       .sort((a, b) => b.r - a.r);
+    // Predicted points from the same number the table is sorted by, so the order and the figure always agree
+    const mean = U.avg(rows, (x) => x.r),
+      games = comp.fixtures.length;
+    rows.forEach((x) => (x.pts = Math.round(games * U.clamp(1.37 + (x.r - mean) * 0.09, 0.4, 2.5))));
     const pos = rows.findIndex((x) => x.id === c.id) + 1;
     const top = rows[0].r;
     // Bookmaker odds: softmax over team ratings, with a margin

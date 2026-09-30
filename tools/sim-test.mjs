@@ -220,7 +220,25 @@ const bad = Object.values(S.players).filter(
 );
 check(bad.length === 0, `${bad.length} players with invalid attributes (e.g. ${bad[0] && bad[0].id})`);
 check(S.news.length > 0 && S.news.length <= 2 * FM.News.CAP, `feed has ${S.news.length} items`);
-const clubNews = S.news.filter((n) => FM.News.isClub(n, S.user.clubId)).length;
+// The squad index is updated in place on every move: it must agree with a full recount of the players
+{
+  const byClub = {};
+  for (const p of Object.values(S.players))
+    if (p.clubId && !p.retired) (byClub[p.clubId] = byClub[p.clubId] || []).push(p.id);
+  const off = Object.keys(S.clubs).filter((id) => {
+    const a = W.squad(id)
+        .map((p) => p.id)
+        .sort()
+        .join(','),
+      b = (byClub[id] || []).sort().join(',');
+    return a !== b;
+  });
+  check(off.length === 0, `${off.length} clubs whose squad index disagrees with their players (e.g. ${off[0]})`);
+}
+// club news survives the world's transfer noise (counting every club the test manager has had: a late sacking can
+// leave him at a new club with little news of its own yet)
+const everManaged = new Set(S.user.history.map((h) => h.club).concat(S.user.clubId || []));
+const clubNews = S.news.filter((n) => everManaged.has(n.clubId) || FM.News.isClub(n, S.user.clubId)).length;
 check(clubNews > 20, `only ${clubNews} club items kept in the feed`);
 // Records: our club's match records, all-time head-to-heads, player of the month, injury histories
 const recs = S.records || {},

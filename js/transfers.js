@@ -316,7 +316,25 @@
   // A club short of players (under its squad size, with a position below the tier's numbers) buys one for the
   // thinnest position while the window is open. Returns true if it signed someone. Free agents fill whatever is
   // still missing once the window has shut (Sea.freeAgents).
-  T.fillGap = function (c, sq, market) {
+  // The AI market, indexed once per day: market players by position and by group, strongest first, and asking
+  // prices cached (each shopper used to scan every player and price each one: most of a window day's time)
+  const indexMarket = (market) => {
+    const byPos = {},
+      byGroup = {},
+      ask = new Map();
+    const sorted = market.slice().sort((a, b) => b.ca - a.ca);
+    for (const p of sorted) {
+      (byPos[p.pos] = byPos[p.pos] || []).push(p);
+      (byGroup[D.POS_GROUP[p.pos]] = byGroup[D.POS_GROUP[p.pos]] || []).push(p);
+    }
+    const price = (p) => {
+      let v = ask.get(p.id);
+      if (v == null) ask.set(p.id, (v = T.askPrice(p)));
+      return v;
+    };
+    return { byPos, byGroup, price };
+  };
+  T.fillGap = function (c, sq, mkt) {
     if (sq.length >= W.squadTarget(c)) return false;
     const want = D.SQUAD_TIER[c.sim] || D.SQUAD_TIER.full;
     const short = Object.keys(want)
@@ -326,18 +344,21 @@
     if (!short) return false;
     const lvl = W.levelFor(c.rep),
       foreignFull = T.foreignCount(c) >= FM.S.rules.foreignLimit + 3;
-    const pool = market.filter(
-      (p) =>
-        p.pos === short.pos &&
+    const pool = [];
+    for (const p of mkt.byPos[short.pos] || []) {
+      if (p.ca > lvl + 4) continue;
+      if (p.ca < lvl - 12) break; // strongest first: nobody further down is good enough
+      if (
         p.clubId &&
         p.clubId !== c.id &&
-        p.ca >= lvl - 12 &&
-        p.ca <= lvl + 4 &&
+        !T.isSettled(p) &&
         FM.S.clubs[p.clubId].rep < c.rep + 3 &&
         !rivalSale(p, c) &&
-        T.askPrice(p) * premium(p, c) <= c.budget &&
-        !(foreignFull && p.nat !== c.nat),
-    );
+        !(foreignFull && p.nat !== c.nat) &&
+        mkt.price(p) * premium(p, c) <= c.budget
+      )
+        pool.push(p);
+    }
     if (!pool.length) return false;
     const p = U.wpick(pool, (x) => Math.pow(x.ca, 3) * (W.age(x) <= 25 ? 1.25 : 1));
     T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c)), T.wageDemand(p, c));
@@ -372,11 +393,12 @@
         W.age(p) <= (p.pos === 'GK' ? 31 : 29),
     );
     const k = W.dayScale() * (full.length / 110); // per-day quotas tuned on 110 clubs and 22 league days
+    const mkt = indexMarket(market);
     U.shuffle(full)
       .slice(0, Math.round(T.AI_SHOPPERS * k))
       .forEach((c) => {
         const sq = W.squad(c.id);
-        if (T.fillGap(c, sq, market)) return; // squad gaps come first, while the window is open
+        if (T.fillGap(c, sq, mkt)) return; // squad gaps come first, while the window is open
         if (sq.length >= W.squadTarget(c) + 5) return;
         const spots = Object.keys(STARTERS)
           .map((g) => ({ g, v: starterLevel(sq, g) }))
@@ -386,16 +408,19 @@
         // the weakest spot first; if nobody better is available there, the next one
         let pool = [];
         for (const spot of spots.slice(0, 2)) {
-          pool = market.filter(
-            (p) =>
-              D.POS_GROUP[p.pos] === spot.g &&
+          pool = [];
+          for (const p of mkt.byGroup[spot.g] || []) {
+            if (p.ca < spot.v + 3) break; // strongest first: nobody further down would improve the side
+            if (
               p.clubId !== c.id &&
-              p.ca >= spot.v + 3 &&
+              !T.isSettled(p) &&
               (!p.clubId || S.clubs[p.clubId].rep < c.rep + 3) &&
               !rivalSale(p, c) &&
-              T.askPrice(p) * premium(p, c) <= c.budget &&
-              !(foreignFull && p.nat !== c.nat),
-          );
+              !(foreignFull && p.nat !== c.nat) &&
+              mkt.price(p) * premium(p, c) <= c.budget
+            )
+              pool.push(p);
+          }
           if (pool.length) break;
         }
         if (!pool.length) return;
@@ -475,6 +500,12 @@
   // be a smaller club where he'd start or rotate, and the parent keeps enough bodies in his position.
   T.LOANS_PER_DAY = 40;
   T.aiLoans = function (full) {
+    const levels = new Map(); // club|group → starter level (a loan changes only the borrowing club's)
+    const levelOf = (c, g) => {
+      const key = c.id + '|' + g;
+      if (!levels.has(key)) levels.set(key, starterLevel(W.squad(c.id), g));
+      return levels.get(key);
+    };
     const S = FM.S,
       played = Math.max(2, FM.Season.baseRound() * 0.35 * 1.7); // ~games played by a typical club
     const pool = Object.values(S.players).filter((p) => {
@@ -501,13 +532,17 @@
           (c) =>
             c.id !== parent.id &&
             c.rep < parent.rep - 3 &&
+            k.ca <= W.levelFor(c.rep) + 12 &&
             W.squad(c.id).length < W.squadTarget(c) + 3 &&
-            k.ca >= starterLevel(W.squad(c.id), g) + 1 &&
-            k.ca <= W.levelFor(c.rep) + 12,
+            k.ca >= levelOf(c, g) + 1,
         )
         .sort((a, b) => b.rep - a.rep);
       const d = dests[Math.floor(Math.random() * Math.min(3, dests.length))];
-      if (d) T.loan(k, d.id, W.age(k) <= 22 ? U.pick([0.5, 0.75, 1]) : U.pick([0.75, 1]), 0);
+      if (d) {
+        T.loan(k, d.id, W.age(k) <= 22 ? U.pick([0.5, 0.75, 1]) : U.pick([0.75, 1]), 0);
+        levels.delete(d.id + '|' + g);
+        levels.delete(parent.id + '|' + g);
+      }
     }
   };
   // Winter exits: a few clubs with a bloated squad agree to cancel the contract of a veteran who isn't playing

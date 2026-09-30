@@ -192,6 +192,7 @@
         .replace('{best}', W.short(best))
         .replace('{worst}', W.short(worst))
         .replace('{score}', score)
+        .replace('{ticket}', U.money(50))
         .replace('{mgr}', mgr)
         .replace('{opp}', opp.name)
         .replace('{rival}', opp.short);
@@ -234,7 +235,7 @@
                     '{mgr} out? Too early to say but that was dire.',
                     'Nothing about that was good enough. Nothing.',
                     "Players don't look like they care 😡",
-                    'Paid £40 to watch that. Never again (see you next week)',
+                    'Paid {ticket} to watch that. Never again (see you next week)',
                   ]
                 : [
                     "Point's a point I suppose 🤷",

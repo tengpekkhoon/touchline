@@ -103,6 +103,20 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Money in the club's currency (£, €, …) with a setting to override (M)
 - [x] A neutral fallback manager name instead of "Alex Morgan" (S)
 
+*1c · Second playtest report: speed and polish*
+
+- [x] Faster days: the AI transfer market indexes players by position and caches asking prices and squad levels (it took 0.8–2 s of every window day, more than all the matches); loans likewise. Pre-season days ~8× faster (1.2–1.35 s → 0.14–0.21 s), league days 1.7–3.7 s → 0.7–1.35 s (M)
+- [x] Cheaper AI market for leagues far from yours (S) — not needed: the whole market now takes 0.1–0.3 s a day
+- [x] No league position before matchday 1: "Season starts soon" instead of "9th · 0 pts", and a dash instead of "Currently 9th" (S)
+- [x] Assistant never advises selling a starter, and skips "barely plays" advice for the first matchdays (S)
+- [x] Predicted table shows the number it is sorted by (predicted points) (S)
+- [x] No hard-coded £ in club and fan text ("kids' tickets cost £1", "Paid £40") (S)
+- [x] Match log: an injury is logged before the substitution it causes (S)
+- [x] Club picker: search box and league filter; compact footer that doesn't cover the list (M)
+- [x] Crest letters on a solid band so stripes never cross them; badge only at tiny sizes (S)
+- [x] Pitch dots get a contrasting outline, and the second kit colour when the first is too close to the grass (S)
+- [ ] Later, if days still feel slow on a mid-range phone: pre-compute the next day in the background (M–L)
+
 *2 · Quick interface wins*
 
 - [x] Home feed shows only items about your club; world items stay in World News (S–M)
@@ -119,7 +133,10 @@ Playtest feedback grouped into seven batches, in working order; most important f
 
 *3 · Realism of existing systems*
 
-- [ ] Title dominance: champion from the pre-season top 3 in 70–90% of seasons, not 94–100% (L)
+- [ ] Title dominance: champion from the pre-season top 3 in 70–90% of seasons (now ~90%, 83–97% by seed), through club dynamics: eras end when managers leave, squads age or money runs short, and a strong manager can build a new power (L)
+- [ ] Elite creep: the world's top 200 players gain 0.35–0.5 ability a season (real −0.2 to +0.2); gentler top of the growth curve and slight decline at the peak (M)
+- [ ] Small calibration misses: squad injured at any time 7.7% (real 8–15), retirement age from a top flight 33.0 (real 33.5–36.5), top-100 players' age 25.7–26.3 (real 26.5–29) (S)
+- [ ] Loyal long-servers become club icons (fan favourite, testimonial); veterans accept pay cuts to stay (S–M)
 - [x] Bigger squads and more depth at the start (M–L; watch save size and simulation time)
 - [x] Scout valuations reflect both current and potential ability (M)
 - [x] Market value from league, club, transfer interest, current and potential ability, and age (L)
@@ -132,6 +149,9 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [ ] Act when loanees aren't played enough: recall, or complain to the borrowing club (M)
 - [ ] Contract and transfer negotiation with back-and-forth (L)
 - [ ] Relative market: desperate buyers pay more; a player who wants out sells for less (L)
+- [ ] Player choice between clubs: several bidders, and he picks by league, playing time, wages and ambition, sometimes turning down a bigger club (M)
+- [ ] Sell-on clauses, add-ons and fees paid in instalments (M)
+- [ ] AI squad planning by age profile: replace players about to decline, not only weak spots (S)
 
 *5 · Tactics depth*
 
@@ -139,6 +159,10 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [ ] More formations and tactics (M–L)
 - [ ] More player roles that matter in the match engine (L)
 - [ ] More positions and position versatility (XL)
+- [ ] Match moments: rare goalkeeper errors (keeper quality and composure) and a big-game boost for a side's best player (M)
+- [ ] Home advantage that varies with crowd, stadium, derbies and fan mood, not one fixed boost (S–M)
+- [ ] Weather that matters: rain slows passing and adds errors, snow lowers scoring, heat adds fatigue (S–M)
+- [ ] Form streaks: a confidence value that builds with good games and fades with bad ones (±3%) (M)
 
 *6 · Big features*
 
@@ -147,6 +171,11 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [ ] Better player stats view (M)
 - [ ] Training and analytics tabs (L–XL)
 - [ ] More realistic player and ball movement in the match view (XL)
+- [ ] Club finances by country: TV money in England, gate receipts in Germany, player sales in Brazil and Portugal (M)
+- [ ] Wage-to-revenue pressure: budgets cut above ~70%, debt, forced sales and, at worst, administration (M)
+- [ ] Attendance that reacts to results, ticket prices and stadium size (S–M)
+- [ ] A second-tier continental cup (Europa League equivalent) (M)
+- [ ] More of the lower pyramid (L; watch save size and speed)
 
 *7 · Platform*
 

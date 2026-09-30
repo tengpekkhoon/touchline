@@ -493,7 +493,10 @@
   // Progress on a board objective. Until three league games are played nothing counts as achieved yet (⏳).
   Sea.objProgress = function (o, club) {
     const r = objProgressRaw(o, club);
-    if (club.comp && Sea.gamesPlayed(club.id) < 3 && r.ok) r.ok = false;
+    const played = club.comp ? Sea.gamesPlayed(club.id) : 1;
+    if (played < 3 && r.ok) r.ok = false;
+    if (!played && (o.id === 'pos' || o.id === 'pos2'))
+      r.status = o.id === 'pos2' ? `— (board expects ${U.ordinal(Sea.expectedPos(club))})` : '—';
     return r;
   };
   const objProgressRaw = function (o, club) {

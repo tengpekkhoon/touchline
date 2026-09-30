@@ -359,7 +359,13 @@
   W.wageFor = (p) => Math.max(750, Math.round((W.baseValue(p) * 0.0035) / 50) * 50); // wages follow ability and age, not market swings
   W.startSpell = function (p, clubId) {
     p.clubId = clubId;
+    const fresh = sqIdx.S === FM.S && sqIdx.ver === W.rosterVer;
     W.rosterVer++;
+    if (fresh) {
+      const b = (sqIdx.by[clubId] = sqIdx.by[clubId] || []);
+      if (!b.includes(p)) b.push(p);
+      sqIdx.ver = W.rosterVer; // still complete: squads filter out anyone who has since left
+    }
     p.career.spells.push({ c: clubId, from: FM.S.year, to: null, apps: 0, goals: 0 });
   };
   W.spell = (p) => p.career.spells[p.career.spells.length - 1];

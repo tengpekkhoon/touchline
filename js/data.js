@@ -1139,7 +1139,7 @@
     'Fans hold up scarves for the anthem before kick-off',
     'The home end sings through the whole 12th minute',
     "A minute's applause for every departing legend",
-    'Tickets for kids cost £1 on derby day',
+    'Kids get in for next to nothing on derby day',
   ];
 
   // Staff

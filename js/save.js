@@ -95,6 +95,9 @@
     }
     if (u && Array.isArray(u.shortlist)) u.shortlist = u.shortlist.filter(has);
     if (Array.isArray(s.news) && s.news.length > 2 * FM.News.CAP) FM.News.trim(s);
+    for (const id in s.clubs || {})
+      if (s.clubs[id].tradition === 'Tickets for kids cost £1 on derby day')
+        s.clubs[id].tradition = 'Kids get in for next to nothing on derby day';
     return s;
   };
 

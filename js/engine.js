@@ -762,7 +762,7 @@
               text: `🚑 ${W.short(p)} ${U.pick(['goes down holding his hamstring.', 'pulls up clutching his thigh.', 'is down after a heavy challenge.', 'lands awkwardly and stays down.', "signals to the bench — he can't go on."])}`,
               big: true,
             });
-            if (!sd.user) this.makeSub(sd, i, null, tl);
+            if (!sd.user) this.makeSub(sd, i, null, tl, out);
           }
         }
       });
@@ -781,7 +781,8 @@
     }
 
     // Replace slot i with bench player (best fit if pid null). Returns the event.
-    makeSub(sd, i, inPid, tl) {
+    // batch: the minute's event list, so a substitution is logged after whatever caused it that minute
+    makeSub(sd, i, inPid, tl, batch) {
       if (!sd.subsLeft) return null;
       const out = sd.xi[i];
       const t = sd.slots[i].t;
@@ -805,7 +806,7 @@
         text: `🔁 ${W.short(pIn)} replaces ${out ? W.short(out) : '—'}.`,
       };
       sd.subsMade.push(ev);
-      this.events.push(ev);
+      (batch ? batch.events : this.events).push(ev);
       return ev;
     }
 
