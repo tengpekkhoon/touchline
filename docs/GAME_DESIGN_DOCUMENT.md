@@ -1,6 +1,6 @@
 # Touchline — Game Design Document
 
-Sep 29, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/db0a1349-77d1-4363-b0df-55ef94250bd5)
+Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/db0a1349-77d1-4363-b0df-55ef94250bd5)
 
 ## Vision and positioning
 
@@ -384,7 +384,7 @@ Gameplay updates are free.
 
 ## Prototype status and roadmap
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done: 204 clubs in 20 leagues across 16 nations in three simulation tiers, domestic cups, five continental cups and a Club World Cup, international football with 29 national teams, contract clauses and agents, player promises, board meetings, club records and rivalries that grow, and an installable app with save upgrades and backups. The full breakdown lives in [FEATURES.md](FEATURES.md), and the phased plan in [ROADMAP.md](ROADMAP.md).
+Four prototype builds, Alpha 1, the polish and small-features backlogs, mobile readiness step 2 and the first playtest feedback batches are done: 547 real clubs in 30 real leagues across 25 nations in three simulation tiers, domestic cups, five continental cups and a Club World Cup, international football with 29 national teams, contract clauses and agents, player promises, board meetings, club records and rivalries that grow, and an installable app with save upgrades and backups. The full breakdown lives in [FEATURES.md](FEATURES.md), and the phased plan in [ROADMAP.md](ROADMAP.md).
 
 | Area | In the prototype | Yet to be added |
 | --- | --- | --- |
@@ -402,4 +402,4 @@ Four prototype builds, Alpha 1, the polish and small-features backlogs and mobil
 | Platform | Installable offline web app, save upgrades, compressed backups, background simulation, native-app projects (Android, iOS) | Device builds, cloud saves |
 | Editor | Points, subs and foreign-player rules at new game | Full database and rules editor; database export/import and community sharing |
 
-**Open question:** real club names and likenesses need a licensing decision; the prototype uses fictional clubs.
+**Open question:** real club names and likenesses need a licensing decision; the prototype now uses real club, league and competition names (with its own ratings) and fictional players.

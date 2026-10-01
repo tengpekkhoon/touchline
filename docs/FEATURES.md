@@ -1,12 +1,12 @@
 # Touchline — Feature List
 
-Sep 29, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/dcc1d812-21cc-47af-86dd-67235bca8506)
+Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/dcc1d812-21cc-47af-86dd-67235bca8506)
 
 Every feature from the game design document, with what is playable in the prototype today and what is still to come. Status and phase match [ROADMAP.md](ROADMAP.md).
 
 ## In the game
 
-151 features are playable in the web prototype today. Build = the build that added it.
+169 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -161,10 +161,28 @@ Every feature from the game design document, with what is playable in the protot
 | Competitions | Dynamic simulation tiers: your league and the leagues directly above and below always play in the full engine; every other league runs at its own tier | World expansion and dynamic tiers |
 | Competitions | Ten more leagues in minimal simulation in UEFA coefficient order (Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland) with real clubs and derbies; six new nations and national teams | World expansion and dynamic tiers |
 | Players | Larger name pools for every nation (40+ first names, 43+ surnames each), fewer repeated names, real-player combinations blocked | World expansion and dynamic tiers |
+| Feed | Home feed of your club by default, a Needs reply list for bids, press, meetings and medical calls, and one daily Transfer round-up instead of dozens of stories | Playtest feedback |
+| Clubs | Tap any club badge or name for its overview: squad first, next five fixtures, transfer history in and out | Playtest feedback |
+| International | Tap a country in results, group tables, knockout ties or job vacancies to see its squad | Playtest feedback |
+| Setup | No foreign-player limit by default (like the real Premier League); with a limit, the best XI is picked within it and the pre-match screen warns about anyone out of position | Playtest feedback |
+| Setup | Club picker with search (club or city) and a league filter; an error if the manager has no name | Playtest feedback |
+| Scouting | Scouting assignments by nationality; scout grades weigh potential more for younger players | Playtest feedback |
+| Transfers | Transfer window rules: transfers and loans only while it is open, free agents any time; AI clubs fix squad gaps in the window and sign free agents for gaps that remain | Playtest feedback |
+| Transfers | Players who just moved or renewed are settled for a year: not targeted, not looking to leave | Playtest feedback |
+| Transfers | Market value from ability and age, the league and club he plays for, transfer interest and form | Playtest feedback |
+| Tactics | Auto pick sets the best XI (swapping players between positions), a bench that covers every area, and a role suited to each starter | Playtest feedback |
+| Clubs | Deeper squads (26 senior players in the full simulation), club culture, crests in 44 designs in each club's real colours | Playtest feedback |
+| Clubs | Club icons: long-servers with a tag, a testimonial in their tenth season, fans furious if one is sold; veterans take pay cuts to stay | Playtest feedback |
+| Stories | Fans judge results against expectations: a draw away to a giant is good news, a home defeat as favourites is not | Playtest feedback |
+| Match | Results are saved at full time and a match left mid-way is finished on load with the same result every time (no replays) | Playtest feedback |
+| Match | Realistic passing totals and accuracy in match stats; pitch dots in a kit that stands out from the grass | Playtest feedback |
+| UI | Money in your club's currency (£, €, $) with a setting; matchday N of 38 in the top bar; nothing shown as achieved before a ball is kicked | Playtest feedback |
+| Performance | Faster days: pre-season ~8× faster, league days about twice as fast | Playtest feedback |
+| World | AI managers' ability and their teams' familiarity with their tactics affect results; big clubs well off the pace sack their manager, so eras end | Playtest feedback |
 
 ## Yet to be added
 
-38 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+56 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
 
 Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
 
@@ -172,6 +190,24 @@ Design principle from here: don't make the game deeper by adding more screens �
 
 | Area | Feature | Phase |
 | --- | --- | --- |
+| Transfers | Warning before the transfer deadline and a deadline-day event | Playtest 4 |
+| Transfers | Trials for free agents | Playtest 4 |
+| Transfers | Recall a loanee who is not playing, or complain to the borrowing club | Playtest 4 |
+| Transfers | Contract and transfer negotiation with back-and-forth | Playtest 4 |
+| Transfers | Relative market: desperate buyers pay more, a player who wants out sells for less | Playtest 4 |
+| Transfers | Player choice between clubs by league, playing time, wages and ambition | Playtest 4 |
+| Transfers | Sell-on clauses, add-ons and fees paid in instalments | Playtest 4 |
+| Transfers | AI squad planning by age profile | Playtest 4 |
+| Tactics | Primary and secondary tactic, each with its own familiarity | Playtest 5 |
+| Tactics | More formations and tactics; more player roles that matter in the engine | Playtest 5 |
+| Tactics | More positions and position versatility | Playtest 5 |
+| Match | Goalkeeper errors and big-game moments; home advantage that varies; weather that matters; form streaks | Playtest 5 |
+| Staff | Staff ratings with real impact | Playtest 6 |
+| Players | Better player stats view; training and analytics tabs | Playtest 6 |
+| Match | More realistic player and ball movement in the match view | Playtest 6 |
+| Economics | Club finances by country, wage-to-revenue pressure, attendance that reacts to results and prices | Playtest 6 |
+| Competitions | A second-tier continental cup; more of the lower pyramid | Playtest 6 |
+| Platform | "Report a problem" that exports your save | Playtest 7 |
 | Editor | Database and world editor — architecture first, UI after. World (countries, cities, continents, rules) · Clubs (clubs, stadiums, facilities, finances, rivalries) · Players (attributes, contracts, personalities, nationalities) · Staff (managers, coaches, scouts, agents) · Competitions (leagues, cups, continental, international) · Rules (promotion/relegation, registration, foreign players, transfer windows, points, playoffs, prize money) · History (historical starts, events, scenarios, alternate history) | Alpha 2 |
 | History | Historical eras from 1992 with era-appropriate rules | Alpha 2 |
 | History | Alternate-history setup and scenario creator | Alpha 2 |

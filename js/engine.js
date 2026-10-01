@@ -12,7 +12,7 @@
   // target, ~0.3 penalties, ~4 cards). Re-run tools/calibrate.mjs after any engine change.
   const CAL = (FM.CAL = {
     aiFam: 1, // AI clubs' tactical familiarity counts like yours (0 = off)
-    mgr: 0, // an AI manager's ability (8–17, 12 neutral) scales his side's strength by this per point (0 = off; under calibration)
+    mgr: 0.006, // an AI manager's ability (8–17, 12 neutral) scales his side's strength by this per point (about −2.5% to +3%)
     chanceRate: 0.14, // shot opportunities per minute per side, before strengths and tactics
     xgScale: 0.82, // scales open-play chance quality
     penRate: 0.013, // share of chances that are penalties

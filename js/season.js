@@ -695,7 +695,11 @@
     // weekly processes
     Object.values(S.players).forEach((p) => {
       if (p.retired) return;
-      p.fitness = Math.min(100, p.fitness + 30 + (p.attrs.stamina - 10));
+      // older legs recover more slowly between matches (so veterans get rested more often)
+      p.fitness = Math.min(
+        100,
+        p.fitness + 30 + (p.attrs.stamina - 10) - Math.max(0, W.age(p) - 29) * Sea.AGE_RECOVERY,
+      );
       if (p.susp && !p.suspNew) p.susp--;
       delete p.suspNew;
     });
@@ -1365,12 +1369,17 @@
         p.clubId = null;
       }
     });
-    // Unattached veterans: most hang up their boots, a few good ones hold out for a contract
+    // Unattached veterans: a decent one released at 31–33 looks for a club lower down rather than retiring on
+    // the spot (he retires from there later); the chance rises with age, and faster for weaker players
     const free = Object.values(S.players).filter((p) => !p.clubId);
+    const R = Sea.FA_RETIRE;
     free
-      .filter(
-        (p) => W.age(p) >= 31 && Math.random() < Math.min(1, 0.45 + (W.age(p) - 31) * 0.2 - (p.ca >= 65 ? 0.25 : 0)),
-      )
+      .filter((p) => {
+        const a = W.age(p);
+        if (a < 31) return false;
+        const chance = (a - R.from) * R.perYear + (p.ca < 50 ? R.weak : p.ca < 58 ? R.weak / 2 : 0);
+        return Math.random() < U.clamp(chance, R.min, 1);
+      })
       .forEach((p) => Sea.retire(p));
     // Unattached for a whole season: he has left professional football (a notable career still gets its farewell)
     Object.values(S.players)

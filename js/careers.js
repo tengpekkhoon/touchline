@@ -283,6 +283,8 @@
   // Players already at elite level (75+) grow at half the usual rate: without it the world's top 200 gained ~0.4
   // ability a season (calibrated: trend +0.18, top-100 age 26.6 over six seasons)
   Sea.ELITE = { from: 75, growth: 0.5 };
+  Sea.AGE_RECOVERY = 0; // fitness points less recovered per day for each year past 29
+  Sea.FA_RETIRE = { from: 32, perYear: 0.18, weak: 0.3, min: 0.05 }; // unattached veterans' chance of retiring each summer
   Sea.RETIRE_TOP = 1; // retirement chance multiplier for players at top-flight clubs
   Sea.retireChance = function (p) {
     const a = W.age(p) - (p.pos === 'GK' ? 2 : 0);
