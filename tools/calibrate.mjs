@@ -321,6 +321,8 @@ const injDay = () => {
     } // free agents good enough for a top flight
 };
 
+let fullDays = 0,
+  simDays = 0;
 const t0 = Date.now(),
   seasonGoals = [];
 for (let s = 0; s < SEASONS; s++) {
@@ -330,6 +332,9 @@ for (let s = 0; s < SEASONS; s++) {
     if (fx) Sea.applyUserMatch(FM.quickSim(fx, !!fx.ko));
     summary = Sea.advance(null);
     injDay();
+    // fully simulated clubs change as the manager moves between leagues: average them over the run
+    fullDays += Object.values(FM.S.clubs).filter((c) => c.sim === 'full').length;
+    simDays++;
     if (!W.employed() && FM.S.user.offers.length) W.takeCharge(FM.S.user.offers[0].id, 'Calibration', false);
   }
   const e = summary.entry;
@@ -427,7 +432,7 @@ const peak = (c) => {
 };
 const oc = curve('o'),
   gc = curve('g');
-const fullClubs = Object.values(FM.S.clubs).filter((c) => c.sim === 'full').length;
+const fullClubs = fullDays / Math.max(1, simDays);
 const careerRows = [
   ['Top-flight average age (by minutes)', car.ageSum / car.apps, 26, 27.8, 1],
   ['Top-flight minutes by U21s %', pct(car.appsU21, car.apps), 6, 14, 1], // big-five leagues 6–10, France and Brazil 12–17

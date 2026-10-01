@@ -836,7 +836,7 @@
       f = UI._rf;
     let reps = Object.entries(s.user.reports)
       .map(([pid, r]) => ({ p: P(pid), r }))
-      .filter(({ p }) => p && !W.isUser(p.clubId))
+      .filter(({ p }) => p && !W.ownPlayer(p))
       .map((x) => ({ ...x, v: FM.Scouting.view(x.p) }));
     if (f.grade !== 'all') reps = reps.filter((x) => (f.grade === 'AB' ? ['A', 'B'] : [f.grade]).includes(x.v.grade));
     const keep = new Set(sfApply(reps.map((x) => x.p)));
@@ -850,7 +850,7 @@
     reps.sort(sorts[f.sort]);
     const disList = Object.keys(s.user.dismissed || {})
       .map(P)
-      .filter((p) => p && !p.retired && !W.isUser(p.clubId));
+      .filter((p) => p && !p.retired && !W.ownPlayer(p));
     const nDis = disList.length;
     const cnt = (g) =>
       Object.keys(s.user.reports).filter(
@@ -886,7 +886,7 @@
   function searchView() {
     const q = UI._q,
       s = S();
-    let ps = Object.values(s.players).filter((p) => !p.retired && !W.isUser(p.clubId));
+    let ps = Object.values(s.players).filter((p) => !p.retired && !W.ownPlayer(p));
     if (q.text)
       ps = ps.filter((p) =>
         (W.name(p) + ' ' + (p.clubId ? CL(p.clubId).name : '') + ' ' + D.NATIONS[p.nat].name)
@@ -1410,7 +1410,7 @@
                 .join(' · ')}</div>`
             : ''
         }</div>
-      <div class="card"><div class="h3">Squad</div><div class="tiny dim" style="margin-bottom:6px">The best ${squad.length} available ${esc(D.NATIONS[t.code].name)} players</div>${squad.map((p) => `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${esc(W.name(p))}${W.isUser(p.clubId) ? ' <span class="pill acc">Yours</span>' : ''}</div><div class="tiny dim ellip">${p.clubId ? esc(s.clubs[p.clubId].name) : 'Free agent'} · ${W.age(p)} · ${p.intl ? p.intl.caps : 0} caps</div></div>${C.playerStars(p)}</div>`).join('')}</div>
+      <div class="card"><div class="h3">Squad</div><div class="tiny dim" style="margin-bottom:6px">The best ${squad.length} available ${esc(D.NATIONS[t.code].name)} players</div>${squad.map((p) => `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${esc(W.name(p))}${W.ownPlayer(p) ? ' <span class="pill acc">Yours</span>' : ''}</div><div class="tiny dim ellip">${p.clubId ? esc(s.clubs[p.clubId].name) : 'Free agent'} · ${W.age(p)} · ${p.intl ? p.intl.caps : 0} caps</div></div>${C.playerStars(p)}</div>`).join('')}</div>
       <div class="card"><div class="h3">Recent results</div>${games.map((g) => resultRow(g, t.id)).join('') || '<div class="small dim">No matches yet.</div>'}</div>`,
       { title: t.name },
     );

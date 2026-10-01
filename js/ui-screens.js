@@ -579,7 +579,18 @@
         ['list', 'Squad'],
         ['tactics', 'Tactics'],
         ['academy', 'Academy'],
-      ]) + (tab === 'tactics' ? tacticsView() : tab === 'academy' ? academyView() : squadView())
+        ['training', 'Training'],
+        ['analytics', 'Analytics'],
+      ]) +
+      (tab === 'tactics'
+        ? tacticsView()
+        : tab === 'academy'
+          ? academyView()
+          : tab === 'training'
+            ? UI.trainingView()
+            : tab === 'analytics'
+              ? UI.analyticsView()
+              : squadView())
     );
   };
   UI._sq = { sort: 'pos', filter: 'all' };
@@ -666,14 +677,10 @@
   }
   function academyView() {
     const c = club();
-    const ys = W.squad(c.id)
-      .filter((p) => W.age(p) <= 21)
-      .sort((a, b) => b.pa - a.pa);
     const grads = W.squad(c.id).filter((p) => p.youth === c.id);
     return `<div class="card"><div class="row"><div class="grow"><div class="h3">Youth Academy</div><div class="small dim">Level ${c.facilities.academy} · Intake arrives around matchday ${Math.round(((D.YOUTH_ROUND + 1) / 22) * (FM.S.comps[c.comp] && FM.S.comps[c.comp].fixtures ? FM.S.comps[c.comp].fixtures.length : 22))}</div></div><div class="lvl">${[1, 2, 3, 4, 5].map((i) => `<i class="${i <= c.facilities.academy ? 'on' : ''}"></i>`).join('')}</div></div>
       <div class="small muted" style="margin-top:8px">Academy graduates in squad: <b>${grads.length}</b> · Youth debuts under you: <b>${S().user.stats.youthDebuts}</b></div></div>
-      <div class="sec"><div class="h3">Prospects (21 & under)</div></div>
-      <div class="card flat list" style="padding:4px 12px">${ys.map((p) => C.playerRow(p, `${p.youth === c.id ? ' · 🌱 Academy' : ''}${p.lastGrowth > 0.5 ? ` · <span style="color:var(--good)">▲ ${p.lastGrowth.toFixed(0)}</span>` : ''}`)).join('') || '<div class="empty">No young players.</div>'}</div>`;
+      ${UI.youthSides(c)}`;
   }
 
   // ---------- Tactics ----------
@@ -1122,7 +1129,7 @@
     const inj = FM.Records.injurySummary(p);
     const now = p.inj
       ? `<div class="warnline" style="margin:10px 0 4px">🚑 ${esc(p.inj.type)} — back in ${FM.Injury.range(FM.Injury.weeksLeft(p))}${p.inj.surgery ? ' (after surgery)' : ''}.</div>`
-      : W.isUser(p.clubId) && p.injRisk
+      : W.ownPlayer(p) && p.injRisk
         ? `<div class="warnline" style="margin:10px 0 4px">🩹 Just back from ${p.injRisk.rushed ? 'a rushed return' : 'injury'} — a higher risk of a setback for the next few weeks.</div>`
         : '';
     if (!inj) return now ? `<div class="card"><div class="h3">Fitness</div>${now}</div>` : '';
@@ -1400,7 +1407,7 @@
   function searchView() {
     const q = UI._q,
       s = S();
-    let ps = Object.values(s.players).filter((p) => !p.retired && !W.isUser(p.clubId));
+    let ps = Object.values(s.players).filter((p) => !p.retired && !W.ownPlayer(p));
     if (q.text)
       ps = ps.filter((p) =>
         (W.name(p) + ' ' + (p.clubId ? CL(p.clubId).name : '')).toLowerCase().includes(q.text.toLowerCase()),

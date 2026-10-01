@@ -120,7 +120,7 @@
       }
       if (p.injRisk && --p.injRisk.d <= 0) delete p.injRisk;
       if (!p.clubId) continue;
-      if (Math.random() < train * Inj.risk(p)) Inj.hurt(p, { where: 'train' });
+      if (Math.random() < train * Inj.risk(p) * FM.Training.injK(p)) Inj.hurt(p, { where: 'train' });
       else if (Math.random() < ill) Inj.hurt(p, { where: 'ill' });
     }
     Inj.expireDecisions();

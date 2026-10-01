@@ -161,13 +161,7 @@
       if (!p.loan) return;
       // An option to buy: the borrower takes it up if he played most of their games
       const o = p.loan;
-      if (
-        o.buy &&
-        !W.isUser(p.clubId) &&
-        S.clubs[p.clubId] &&
-        W.spell(p).apps >= 15 &&
-        S.clubs[p.clubId].budget >= o.buy
-      ) {
+      if (o.buy && !W.ownPlayer(p) && S.clubs[p.clubId] && W.spell(p).apps >= 15 && S.clubs[p.clubId].budget >= o.buy) {
         const buyer = S.clubs[p.clubId],
           parent = S.clubs[o.from];
         W.spell(p).to = S.year - 1;
@@ -251,10 +245,11 @@
   // flags.deal: a structured fee (instalments, add-on, sell-on: FM.Market). Only the first instalment changes hands
   // now; the buyer's budget also sets aside half of what is still to pay.
   T.execute = function (p, toId, fee, wage, flags = {}) {
-    const icon = W.isUser(p.clubId) && FM.Season.isIcon(p);
+    const icon = W.ownPlayer(p) && FM.Season.isIcon(p);
     const S = FM.S,
-      from = p.clubId && S.clubs[p.clubId],
+      from = p.clubId && S.clubs[FM.Youth.owner(p.clubId)], // a B-team player is sold by the parent club
       to = S.clubs[toId];
+    p.team = undefined; // a new club: he starts in its first-team squad
     const deal = from ? flags.deal : null,
       cash = FM.Market.cashNow(fee, deal);
     if (from) {
@@ -493,7 +488,7 @@
       (p) =>
         !p.retired &&
         !p.loan &&
-        !W.isUser(p.clubId) &&
+        !W.ownPlayer(p) &&
         !T.isSettled(p) &&
         W.age(p) >= 19 &&
         W.age(p) <= (p.pos === 'GK' ? 31 : 29),
@@ -558,7 +553,7 @@
           (p) =>
             p.clubId &&
             !p.loan &&
-            !W.isUser(p.clubId) &&
+            !W.ownPlayer(p) &&
             !T.isSettled(p) &&
             nationOf(p.clubId) !== g.nat &&
             S.clubs[p.clubId].rep < g.rep &&
@@ -577,7 +572,7 @@
         (p) =>
           p.clubId &&
           !p.loan &&
-          !W.isUser(p.clubId) &&
+          !W.ownPlayer(p) &&
           S.clubs[p.clubId].sim === 'full' &&
           W.age(p) >= 30 &&
           p.season.apps < Math.max(3, FM.Season.gamesPlayed(p.clubId) * 0.4),
@@ -617,7 +612,7 @@
     const S = FM.S,
       played = Math.max(2, FM.Season.baseRound() * 0.35 * 1.7); // ~games played by a typical club
     const pool = Object.values(S.players).filter((p) => {
-      if (!p.clubId || p.loan || p.inj || W.isUser(p.clubId) || p.contract <= S.year || p.season.apps > played)
+      if (!p.clubId || p.loan || p.inj || W.ownPlayer(p) || p.contract <= S.year || p.season.apps > played)
         return false;
       const c = S.clubs[p.clubId],
         a = W.age(p);
@@ -721,7 +716,7 @@
     const S = FM.S,
       p = S.players[n.data.pid];
     if (n.data.status !== 'open') return 'Already resolved.';
-    if (!p || !W.isUser(p.clubId)) {
+    if (!p || !W.ownPlayer(p)) {
       n.data.status = 'void';
       return 'The player is no longer at the club.';
     }
@@ -777,7 +772,7 @@
       buyer = S.clubs[d.from],
       M = FM.Market;
     if (d.status !== 'open') return { msg: 'Already resolved.' };
-    if (!p || !W.isUser(p.clubId)) {
+    if (!p || !W.ownPlayer(p)) {
       d.status = 'void';
       return { msg: 'The player is no longer at the club.' };
     }
@@ -824,7 +819,7 @@
       p = S.players[d.pid],
       buyer = S.clubs[d.from];
     if (d.status !== 'open') return 'Already resolved.';
-    if (!p || !W.isUser(p.clubId)) {
+    if (!p || !W.ownPlayer(p)) {
       d.status = 'void';
       return 'The player is no longer at the club.';
     }

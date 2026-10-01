@@ -466,7 +466,7 @@
     const s = S();
     Object.values(s.players).forEach((p) => {
       if (!p.clubId || !p.deal) return;
-      if (p.deal.rise && W.isUser(p.clubId) && p.contract >= s.year)
+      if (p.deal.rise && W.ownPlayer(p) && p.contract >= s.year)
         p.wage = Math.round((p.wage * (1 + p.deal.rise)) / 50) * 50;
       if (p.contract < s.year) delete p.deal.status;
     });

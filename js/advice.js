@@ -361,7 +361,7 @@
     }),
     analyst: (a) => ({
       sp: 1 + (a - 10) * 0.012,
-      text: `Set-piece chances ${pc((a - 10) * 0.012)} · opposition reports and bargains`,
+      text: `Set-piece chances ${pc((a - 10) * 0.012)} · opposition reports, bargains and match analytics`,
     }),
     physio: (a) => ({
       risk: 1 - (a - 10) * 0.012,

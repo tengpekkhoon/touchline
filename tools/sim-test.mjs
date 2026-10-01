@@ -172,6 +172,16 @@ for (let s = 0; s < SEASONS; s++) {
   }
   check(FM.S.year === year + 1, `season ${s + 1}: year did not advance`);
   check(summary && summary.entry, `season ${s + 1}: no season summary`);
+  // B teams stay below their parent clubs; your competitive matches are logged for the analytics tab
+  {
+    const tierOf = (c) => (c && c.comp && FM.S.comps[c.comp] ? FM.S.comps[c.comp].tier : 99);
+    const high = Object.values(FM.S.clubs).filter(
+      (c) => c.parent && FM.S.clubs[c.parent] && tierOf(c) <= tierOf(FM.S.clubs[c.parent]),
+    );
+    check(high.length === 0, `season ${s + 1}: B teams level with or above their parent: ${high.map((c) => c.short)}`);
+    const logged = (FM.S.user.logPrev || []).length;
+    check(logged >= 15, `season ${s + 1}: only ${logged} matches in the analytics log`);
+  }
   // Long-term drift: the world should stay the same size and roughly the same shape season after season
   const S0 = FM.S,
     full = Object.values(S0.clubs).filter((c) => c.sim === 'full'),
@@ -321,6 +331,24 @@ for (let s = 0; s < SEASONS; s++) {
   );
 }
 
+// ---- training and youth sides ----
+{
+  const Tr = FM.Training,
+    t = Tr.get(),
+    p = W.squad(W.userClub().id).find((x) => x.pos !== 'GK' && !x.loan);
+  Object.assign(t, { focus: 'defending', intensity: 'hard' });
+  const wt = Tr.attrW(p, Tr.weights(p));
+  check(wt('tackling') > 1.2 && wt('finishing') < 1, 'defending training does not favour defending attributes');
+  check(Tr.devK(p) > 1.1 && Tr.injK(p) > 1.2, 'hard training does not speed development and raise injury risk');
+  const other = Object.values(FM.S.players).find((x) => x.clubId && !W.ownPlayer(x));
+  check(Tr.devK(other) === 1 && !Tr.weights(other), "another club's player follows your training");
+  Object.assign(t, { focus: 'balanced', intensity: 'normal' });
+  FM.Youth.round();
+  check(FM.Youth.table('ENG', 'u21').length >= 40, 'no English U21 league table');
+  const b = FM.Youth.bTeamOf('c_RMA');
+  check(b && FM.Youth.owner(b.id) === 'c_RMA', 'Real Madrid Castilla does not belong to Real Madrid');
+}
+
 // ---- invariants ----
 const S = FM.S;
 const gpm = stats.goals / stats.matches;
@@ -348,7 +376,8 @@ if (W.employed()) {
   );
 }
 check(
-  (S.comps.CUPENG.clubs || []).length === S.comps.D1.clubs.length + S.comps.D2.clubs.length + S.comps.D3.clubs.length,
+  (S.comps.CUPENG.clubs || []).length ===
+    ['D1', 'D2', 'D3', 'D4'].reduce((t, id) => t + (S.comps[id].sim !== 'minimal' ? S.comps[id].clubs.length : 0), 0),
   'FA Cup is missing English league clubs',
 );
 for (const c of Object.values(S.clubs)) {

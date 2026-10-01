@@ -620,6 +620,7 @@
               : 0.6 + (Md.spScore(spTaker.p, 'cor') / 20) * 0.45;
         if (sd.user && sd.club.sim !== 'nation') xg *= FM.Staff.impact('analyst').sp; // rehearsed routines
         if (sd.warm === 'setpieces') xg *= 1.06;
+        if (sd.user && sd.club.sim !== 'nation') xg *= FM.Training.spK(); // set-piece training
       }
       if (type !== 'penalty') xg = U.clamp(xg * me.q * Math.sqrt(me.att / op.def), 0.01, 0.8);
       // Roles decide who gets on the end of things: shoot (who shoots), head (who wins crosses and corners), assist
@@ -706,6 +707,10 @@
       sd.shots++;
       sd.xg += xg;
       if (outcome === 'goal' || outcome === 'saved') sd.sot++;
+      const ty = ((sd.types = sd.types || {})[type] = sd.types[type] || [0, 0, 0]); // shots, goals, xG by chance type
+      ty[0]++;
+      ty[2] += xg;
+      if (outcome === 'goal') ty[1]++;
       if (sd.ps[p.id]) {
         sd.ps[p.id].sh++;
         if (outcome === 'goal' || outcome === 'saved') sd.ps[p.id].sot++;
@@ -781,6 +786,7 @@
             from: assister.i,
             to: shooter.i,
             fast: true,
+            ctype: type, // the match view sends the runner early for a through ball or a counter
           });
         else if (this.ball.slot !== shooter.i)
           out.script.push({ k: 'pass', side, from: this.ball.slot, to: shooter.i });

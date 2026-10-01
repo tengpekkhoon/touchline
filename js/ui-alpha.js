@@ -392,7 +392,7 @@
     let n = 0;
     Object.keys(s.user.reports).forEach((id) => {
       const p = P(id);
-      if (!p || W.isUser(p.clubId)) return;
+      if (!p || W.ownPlayer(p)) return;
       if (['C', 'D'].includes(FM.Scouting.view(p).grade)) {
         FM.Scouting.dismiss(id);
         n++;
@@ -931,7 +931,7 @@
       <div class="h3" style="margin-top:8px">Build-up</div>${seg('buildup', D.BUILDUP)}<div class="h3" style="margin-top:10px">Pressing</div>${seg('press', D.PRESS)}
       <div class="row" style="margin-top:14px"><div class="h3 grow">Call-ups <span class="dim small">${picked.size}/23</span></div><button class="btn sm" data-act="ntAuto">Auto-pick</button></div>
       <div class="tiny dim" style="margin:4px 0 6px">The best ${pool.length} ${esc(D.NATIONS[t.code].name)} players. Tap to call up or drop. Injured players can't be picked.</div>
-      <div class="list">${pool.map((p) => `<div class="prow tap" data-act="ntPick" data-id="${p.id}" style="${picked.has(p.id) ? '' : 'opacity:.55'}">${C.pos(p)}<div class="grow"><div class="b ellip">${picked.has(p.id) ? '✅ ' : ''}${esc(W.name(p))}${W.isUser(p.clubId) ? ' <span class="pill acc">Yours</span>' : ''}</div><div class="tiny dim ellip">${p.clubId ? esc(S().clubs[p.clubId].name) : 'Free agent'} · ${W.age(p)} · ${p.intl ? p.intl.caps : 0} caps${!W.available(p) ? ' · 🚑 unavailable' : ''}</div></div><b>${Math.round(p.ca)}</b></div>`).join('')}</div>`;
+      <div class="list">${pool.map((p) => `<div class="prow tap" data-act="ntPick" data-id="${p.id}" style="${picked.has(p.id) ? '' : 'opacity:.55'}">${C.pos(p)}<div class="grow"><div class="b ellip">${picked.has(p.id) ? '✅ ' : ''}${esc(W.name(p))}${W.ownPlayer(p) ? ' <span class="pill acc">Yours</span>' : ''}</div><div class="tiny dim ellip">${p.clubId ? esc(S().clubs[p.clubId].name) : 'Free agent'} · ${W.age(p)} · ${p.intl ? p.intl.caps : 0} caps${!W.available(p) ? ' · 🚑 unavailable' : ''}</div></div><b>${Math.round(p.ca)}</b></div>`).join('')}</div>`;
     if (document.querySelector('.sheet-wrap .nt-sheet')) UI.refreshSheet(`<div class="nt-sheet">${html}</div>`);
     else UI.sheet(`<div class="nt-sheet">${html}</div>`, { title: `${t.name} squad` });
   };

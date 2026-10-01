@@ -102,7 +102,7 @@
       head = Math.max(0, head);
       const train =
         (club ? club.facilities.training || 2 : 2) + (club && W.isUser(club.id) ? FM.Staff.impact('coach').dev : 0);
-      const mins = Math.min(0.45, p.season.apps * 0.03);
+      const mins = Math.min(0.45, p.season.apps * 0.03 + Math.min(0.15, (p.season.yapps || 0) * 0.008)); // youth-team games help a little
       const f = 0.55 + train * 0.09 + (p.hid.prof - 10) / 25 + mins;
       const early = arc === 'early' && a <= 21,
         fast = early || (arc === 'burnout' && a <= p.arc.peak);
@@ -110,6 +110,7 @@
       if (arc === 'stall') g *= 0.2;
       if (p.ca >= Sea.ELITE.from) g *= Sea.ELITE.growth; // the very best grow more slowly: keeps the elite from inflating
       if (p.inj && (p.inj.out || 0) >= 8) g *= 0.4; // months on the treatment table cost development
+      g *= FM.Training.devK(p); // your training focus and intensity
     } else {
       g = g * frac * (1.25 - p.hid.prof / 40) * U.rand(0.7, 1.3);
     }
@@ -146,13 +147,14 @@
   };
   Sea.applyGrowth = function (p, dCA) {
     const w = D.POS_W[p.pos];
-    const before = p.ca;
+    const before = p.ca,
+      tw = dCA > 0 ? FM.Training.attrW(p, FM.Training.weights(p)) : null; // training focus shapes what grows
     for (const k of D.ATTRS) {
       let d;
       // Secondary attributes develop too (nearly as fast), so a player grown in the simulation ends up shaped like a
       // generated player of the same ability. At 15% they fell ever further behind, and as academy products
       // replaced the generated players, defending (which leans on them) eroded and goals crept up season by season.
-      if (dCA >= 0) d = (dCA / 5) * (w[k] ? U.rand(0.5, 1.5) : 0.9 * U.rand(0.5, 1.5));
+      if (dCA >= 0) d = (dCA / 5) * (w[k] ? U.rand(0.5, 1.5) : 0.9 * U.rand(0.5, 1.5)) * (tw ? tw(k) : 1);
       else d = (dCA / 5) * (AGEING[k] || 0.8) * (w[k] ? 1 : 0.5) * U.rand(0.5, 1.5);
       if ((k === 'reflexes' || k === 'handling') && p.pos !== 'GK') continue;
       p.attrs[k] = U.clamp(p.attrs[k] + d, 1, 20);
@@ -281,7 +283,7 @@
   };
   // Players already at elite level (75+) grow at half the usual rate: without it the world's top 200 gained ~0.4
   // ability a season (calibrated: trend +0.18, top-100 age 26.6 over six seasons)
-  Sea.ELITE = { from: 75, growth: 0.5 };
+  Sea.ELITE = { from: 75, growth: 0.4 };
   // Older legs recover more slowly between matches: fitness points less recovered per day for each year past 29.
   // Veterans get rested more often, so over-30s' share of minutes stays steady (calibrated: 3 → 20–27%, 5 → 18–26%)
   Sea.AGE_RECOVERY = 5;

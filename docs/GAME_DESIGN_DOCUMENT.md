@@ -186,6 +186,10 @@ Watching a sixteen-year-old become a club legend is one of the strongest long-te
 
 **Academy facilities matter:** a better academy produces more and better prospects, and a better training ground develops them faster.
 
+**Youth sides and B teams:** every full and light club runs U21 and U18 squads that play national youth leagues, so prospects outside the first-team squad still get games (which count a little toward their development). In Spain and Germany, B teams (Real Madrid Castilla, Barça Atlètic, VfB Stuttgart II, ...) play in the lower divisions as in real life: they can never go up into their parent's division, and their players belong to the parent, which pays them, sells them and moves them freely between the two.
+
+**Training:** a weekly team focus (balanced, fitness, attacking, defending, technical, set pieces, tactics, recovery) and intensity (light, normal, hard), plus an individual focus or a new position for any player. Focus shapes which attributes grow; intensity trades faster development for more training knocks and heavier legs; set-piece and tactics work show up on matchday. The Analytics tab reads your season back to you (xG match by match, against the league, chance types, when goals come), and a better analyst sees more in it.
+
 **University and alternative pathways** add further sources of talent:
 
 - University draft.

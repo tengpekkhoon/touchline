@@ -81,7 +81,7 @@
       .filter((pos) => sq.filter((p) => p.pos === pos).length < want[pos] - (pos === 'GK' ? 1 : 0))
       .map((pos) => D.POS_NAME[pos].toLowerCase());
     const bids = s.news.filter((n) => n.type === 'bid' && n.data.status === 'open').length;
-    const listed = sq.filter((p) => p.listed && W.isUser(p.clubId)).length;
+    const listed = sq.filter((p) => p.listed && W.ownPlayer(p)).length;
     const bits = [`Budget ${U.money(c.budget)}.`];
     if (thin.length) bits.push(`Thin at ${thin.join(', ')}.`);
     if (bids) bits.push(`${U.plural(bids, 'bid')} waiting for an answer.`);
@@ -198,7 +198,7 @@
       const p = s.players[t.pid];
       if (!p || p.retired) return false;
       if (p.clubId) {
-        if (!W.isUser(p.clubId))
+        if (!W.ownPlayer(p))
           FM.News.add({
             type: 'club',
             title: `${W.name(p)} cuts his trial short`,
@@ -273,7 +273,7 @@
     return { msg: gone ? 'He has moved on.' : `${W.name(p)} leaves with the staff's best wishes.` };
   }
   function preChoice(n, k, p) {
-    if (!p || !W.isUser(p.clubId)) return { msg: 'He is no longer at the club.' };
+    if (!p || !W.ownPlayer(p)) return { msg: 'He is no longer at the club.' };
     if (k === 'renew') return { msg: 'Talk to his agent before they do.', renew: p.id };
     if (p.preWarned) p.preWarned.until = now(); // he'll agree with them now
     return { msg: `${W.name(p)} will leave on a free in the summer.` };
@@ -754,7 +754,7 @@
   M.preOpen = () => FM.Season.baseRound() >= 11;
   M.canPre = function (p) {
     const s = S();
-    if (!p.clubId || W.isUser(p.clubId))
+    if (!p.clubId || W.ownPlayer(p))
       return { ok: false, msg: 'Only players at other clubs can be signed on a pre-contract.' };
     if (p.contract > s.year)
       return {
@@ -869,7 +869,7 @@
     const cands = Object.values(s.players).filter(
       (p) =>
         p.clubId &&
-        !W.isUser(p.clubId) &&
+        !W.ownPlayer(p) &&
         !p.pre &&
         !p.loan &&
         p.contract <= s.year &&

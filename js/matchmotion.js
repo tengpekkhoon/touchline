@@ -84,6 +84,16 @@
     const st = MV.st,
       b = st.ball;
     st.override = {};
+    // A through ball or a counter is coming next: the runner sets off before the pass, into the space behind
+    const nx = st.actions[0];
+    if (nx && nx.k === 'pass' && (nx.ctype === 'through' || nx.ctype === 'counter')) {
+      const r = st.dots[nx.side][nx.to];
+      if (r) {
+        const f = MV.toFrame(nx.side, r.x, r.y),
+          g = MV.toGlobal(nx.side, U.clamp(f.x + 0.12, 0.05, 0.9), U.clamp(f.y + (0.5 - f.y) * 0.25, 0.08, 0.92));
+        st.override[`${nx.side}:${nx.to}`] = { x: g.x, y: g.y, sprint: true };
+      }
+    }
     if (a.k === 'carry') {
       // Dribble: carrier pushes forward (and a little sideways) with the ball at his feet
       const d = st.dots[a.side][a.slot];
@@ -111,7 +121,8 @@
       // Lead the receiver: aim where he's heading, and send him onto the ball
       const d = st.dots[a.side][a.to];
       const tgt = (st.targets && st.targets[a.side] && st.targets[a.side][a.to]) || d;
-      const lead = a.k === 'win' ? 0 : 0.55;
+      // into space for a through ball (the runner is already going), a lead pass otherwise
+      const lead = a.k === 'win' ? 0 : a.ctype === 'through' || a.ctype === 'counter' ? 1.05 : 0.55;
       x1 = U.clamp(d.x + (tgt.x - d.x) * lead + (a.k === 'win' ? 0 : dir(a.side) * 0.012), 0.02, 0.98);
       y1 = U.clamp(d.y + (tgt.y - d.y) * lead, 0.03, 0.97);
       st.override[`${a.side}:${a.to}`] = { x: x1, y: y1, sprint: true };
@@ -189,6 +200,7 @@
     st.act = null;
     st.ball.inFlight = false;
     st.ball.h = 0;
+    if (a.k !== 'shot') st.touch = 0.22; // the receiver's first touch: the ball settles rather than sticks
     if (a.k === 'shot') {
       const ev = st.pendingEv.shift();
       if (ev) MV.showEvent(ev);
@@ -215,7 +227,7 @@
       const inPoss = owner === k;
       const opp = m.sides[1 - k],
         oppDots = st.dots[1 - k];
-      const targets = sd.slots.map((s, i) => {
+      const fr = sd.slots.map((s, i) => {
         const p = FM.Pos(sd, i, inPoss, bf);
         let x = p.x,
           y = p.y;
@@ -240,8 +252,31 @@
           y = 0.5 + (bf.y - 0.5) * 0.35;
           x = 0.025 + Math.max(0, 0.5 - bf.x) * 0.06;
         }
-        return MV.toGlobal(k, U.clamp(x, 0.02, 0.98), U.clamp(y, 0.03, 0.97));
+        return { x, y };
       });
+      if (!inPoss) {
+        // the back line steps up and drops together, and stays goal-side of the ball
+        const back = sd.slots.map((s, i) => i).filter((i) => ['CB', 'FB', 'WB'].includes(sd.slots[i].t));
+        if (back.length >= 2) {
+          let line = U.avg(back, (i) => fr[i].x);
+          line = Math.min(line, Math.max(0.07, bf.x - 0.05));
+          back.forEach((i) => (fr[i].x = U.lerp(fr[i].x, line, sd.slots[i].t === 'WB' ? 0.5 : 0.8)));
+        }
+        // defenders pick up the nearest runner in their zone, goal-side of him
+        const att = oppDots.map((d) => MV.toFrame(k, d.x, d.y));
+        back.forEach((i) => {
+          const z = fr[i],
+            a = att
+              .map((q, j) => ({ q, j, d: Math.hypot(q.x - z.x, q.y - z.y) }))
+              .filter((o) => o.j !== b.slot && opp.slots[o.j].t !== 'GK' && o.d < 0.16)
+              .sort((p, q) => p.d - q.d)[0];
+          if (a) {
+            z.y = U.lerp(z.y, a.q.y, 0.45);
+            z.x = Math.min(z.x, a.q.x - 0.025);
+          }
+        });
+      }
+      const targets = fr.map((p) => MV.toGlobal(k, U.clamp(p.x, 0.02, 0.98), U.clamp(p.y, 0.03, 0.97)));
 
       if (inPoss) {
         // two nearest teammates come short to offer angles to the carrier
@@ -269,9 +304,12 @@
           .map((tg, i) => ({ i, d: dist(st.dots[k][i], b) }))
           .filter((o) => sd.slots[o.i].t !== 'GK')
           .sort((p, q) => p.d - q.d);
-        near.slice(0, n).forEach(({ i }) => {
-          targets[i].x = U.lerp(targets[i].x, b.x, pull);
-          targets[i].y = U.lerp(targets[i].y, b.y, pull);
+        // the nearest presser closes down goal-side of the ball and jockeys; a second one (high press) shows him wide
+        near.slice(0, n).forEach(({ i }, j) => {
+          const gx = b.x - dir(k) * (j ? 0.05 : 0.028),
+            gy = b.y + (j ? (b.y < 0.5 ? 0.04 : -0.04) : 0);
+          targets[i].x = U.lerp(targets[i].x, gx, j ? pull * 0.8 : Math.max(pull, 0.85));
+          targets[i].y = U.lerp(targets[i].y, gy, j ? pull * 0.8 : Math.max(pull, 0.85));
         });
         const outlet = oppDots
           .map((d, i) => ({ d, i }))
@@ -322,6 +360,7 @@
           (ov && ov.dive ? 2.2 : 1) *
           Math.max(1, st.speed * 0.75);
         if (st.celebrate && st.celebrate.side === k) vmax *= 1.2;
+        else if (!ov && Math.hypot(tg.x - d.x, tg.y - d.y) < 0.08) vmax *= 0.6; // jog into shape, sprint to recover
         let dvx = (tg.x - d.x) * 3.2,
           dvy = (tg.y - d.y) * 3.2;
         const sp = Math.hypot(dvx, dvy);
@@ -337,6 +376,26 @@
       });
     });
 
+    // Nobody stands on anybody: players closer than a stride ease apart (the ball carrier holds his line)
+    const all = [];
+    st.dots.forEach((side, k) => side.forEach((d, i) => d && all.push({ d, k, i })));
+    for (let i = 0; i < all.length; i++)
+      for (let j = i + 1; j < all.length; j++) {
+        const A = all[i].d,
+          B = all[j].d,
+          dx = B.x - A.x,
+          dy = B.y - A.y,
+          L = Math.hypot(dx, dy),
+          min = all[i].k === all[j].k ? 0.04 : 0.02;
+        if (L >= min || L === 0) continue;
+        const push = (min - L) * Math.min(1, dt * 6),
+          ux = dx / L,
+          uy = dy / L;
+        const holdA = all[i].k === b.side && all[i].i === b.slot,
+          holdB = all[j].k === b.side && all[j].i === b.slot;
+        if (!holdA) ((A.x -= ux * push * (holdB ? 1 : 0.5)), (A.y -= uy * push * (holdB ? 1 : 0.5)));
+        if (!holdB) ((B.x += ux * push * (holdA ? 1 : 0.5)), (B.y += uy * push * (holdA ? 1 : 0.5)));
+      }
     // Ball at the carrier's feet, slightly ahead in the direction he's moving
     if (!st.act || st.act.kind === 'carry') {
       const d = st.dots[b.side] && st.dots[b.side][b.slot];
@@ -346,7 +405,8 @@
           fy = v > 0.01 ? d.vy / v : 0;
         const tx = d.x + fx * 0.011,
           ty = d.y + fy * 0.011;
-        const k = Math.min(1, dt * 18);
+        st.touch = Math.max(0, (st.touch || 0) - dt);
+        const k = Math.min(1, dt * (st.touch > 0 ? 7 : 18));
         b.x = U.lerp(b.x, tx, k);
         b.y = U.lerp(b.y, ty, k);
         b.h = 0;

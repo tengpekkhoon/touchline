@@ -26,10 +26,11 @@ flowchart TB
 
 ## Shipped
 
-The web prototype runs on a phone browser with no build step, covering 547 real clubs in 30 real leagues across 27 nations in three simulation tiers, and 35 national teams. Newest build first.
+The web prototype runs on a phone browser with no build step, covering 664 real clubs in 36 real leagues across 27 nations in three simulation tiers, and 35 national teams. Newest build first.
 
 | Build | What shipped |
 | --- | --- |
+| Playtest feedback, batch 6 | Big features. Training (team focus and intensity, individual focus or a new position) and analytics (your season in xG, against the league, chance types, goal times, the analyst's notes). Staff abilities with real, listed effects. Press conferences, journalist questions, warm-ups and half-time options. Player stats view, keeper numbers (saves, save %, clean sheets, goals prevented), season-by-season history kept forever, club seasons and league leaderboards. Money by country (TV in England, gates in Germany, sales in Brazil and Portugal), attendance that reacts, wage pressure up to administration. UEFA Europa League and Copa Sudamericana. Six more divisions (League Two, Primera Federación, 2. and 3. Liga, Serie B, Ligue 2): 664 clubs in 36 leagues. B teams (Castilla, Barça Atlètic, Stuttgart II, ...) that can never go up to their parent's division, with the parent's players; U21 and U18 sides and youth leagues. Follow clubs, competitions, nations and players. More natural match movement (a back line, marking, jockeying, early runs, spacing). Groundwork for saves that start in a past season. The new divisions run in the light simulation (full when they're your league or next to it). Calibration 52/53 and 53/53 on two seeds (elite growth eased to keep the world's best from inflating; the one miss is a borderline goals trend of −0.022 a season). |
 | Playtest feedback, round 2 (batches 2 and 4) | International tab. Scouting filters (position, age, level against your XI, fee, wage, contract, nationality, league, availability), judged on your scouts' estimates. Transfer fees in green (in) and red (out), and every transfer history links to the player. Deadline day hour by hour: a live ticker of deals, late bids and collapses until 23:00. Pre-contracts from the mid-season window, for you and AI clubs (yours get a warning first). Players running down their contracts sell cheaper. Fan and board reactions to your transfers. Full negotiation of bids for your players (fee, instalments, add-on, sell-on). Loan offers for your players, some with an option to buy. Loan suggestions that name where he'd play. Scouting reveals more, rung by rung (foot and second positions, best role, situation, mentality, wage demands, agent). Calibration 51/51 on both seeds. |
 | Playtest feedback, batch 5 | Tactics depth. Plan A and Plan B, each with its own familiarity, switchable mid-match. Six more formations, a width instruction and a Wing Play build-up. Roles that decide who shoots, creates, wins headers and wins the ball back, plus ten new roles. Positions by side (the stronger foot matters on the flanks), second positions and learning new ones. Keeper howlers and big-game stars. Home advantage that varies with the crowd, stadium, derbies and travel. Weather by climate and season (rain, snow, heat). Club confidence from recent results. A calibrated amount of upset. Calibration 51/51 and 50/51 on two seeds (two new measures: underdog wins, keeper errors); title races more open (top-three champions 83–87%). |
 | Playtest feedback, batch 4 | Transfer market depth. A deadline with a countdown, a warning three days out, deadline day (more AI buyers at a premium, late bids, the skip stops for it) and a window summary. Trials for free agents. A loan watch for loanees who aren't played (recall them, or tell the club to play them). Fee talks that go back and forth (clubs counter down to a floor, agents make their own proposals, you can counter bids for your players). A relative market (players who want away and clubs in debt sell cheaper; clubs short at a position pay more). Players choosing between clubs and saying why. Fees in instalments, add-ons and sell-on clauses, with payments to come in the finances. AI clubs replacing ageing starters. Each real league's foreign-player rules (homegrown quotas, non-EU limits, MLS international slots, foreign caps) for new careers. Calibration 48/49 and 47/49 on two seeds; over-30s' share of top-flight minutes now ends six seasons at 25% (was 27–30%). |
@@ -187,22 +188,22 @@ Playtest feedback grouped into seven batches, in working order; most important f
 
 *6 · Big features*
 
-- [ ] Staff ratings with real impact (M–L)
-- [ ] More options for press conferences, journalist questions, warm-up and half-time talks (M–L)
-- [ ] Better player stats view (M)
-- [ ] Keeper stats: saves, save %, clean sheets, goals conceded and goals prevented (xG faced minus conceded) instead of goals and assists (S–M)
-- [ ] Season-by-season stats on the player profile: a row per season and club (apps, goals, assists, rating; keepers their own), every season kept (M)
-- [ ] Training and analytics tabs (L–XL)
-- [ ] More realistic player and ball movement in the match view (XL)
-- [ ] Club finances by country: TV money in England, gate receipts in Germany, player sales in Brazil and Portugal (M)
-- [ ] Wage-to-revenue pressure: budgets cut above ~70%, debt, forced sales and, at worst, administration (M)
-- [ ] Attendance that reacts to results, ticket prices and stadium size (S–M)
-- [ ] A second-tier continental cup (Europa League equivalent) (M)
-- [ ] More of the lower pyramid (L; watch simulation speed)
-- [ ] Follow clubs, competitions, nations and players: their news in your feed and a Following screen (M)
-- [ ] Reserve and youth teams (U21, U18) with their own fixtures, promotion to the first team and loans from them (L–XL)
-- [ ] B teams in Spain and Germany (Real Madrid Castilla, Barça Atlètic, Bayern II, ...) as in real life: reserve sides in the lower divisions that can never be promoted into their parent club's division, with players contracted to the parent club and moving freely between the two (L)
-- [ ] Groundwork for historical stats and historical saves: per-season player and club stats kept in an archive, and a data model that can start a save in a past season (L)
+- [x] Staff ratings with real impact: every role's ability changes something measurable (coach: development and position learning; assistant: familiarity; analyst: set pieces and match analytics; physio: injury risk, layoffs, recovery; director: fees and wages) (M–L)
+- [x] More options for press conferences, journalist questions, warm-up and half-time talks (M–L)
+- [x] Better player stats view, plus league leaderboards (M)
+- [x] Keeper stats: saves, save %, clean sheets, goals conceded and goals prevented (xG faced minus conceded) instead of goals and assists (S–M)
+- [x] Season-by-season stats on the player profile: a row per season and club (apps, goals, assists, rating; keepers their own), every season kept (M)
+- [x] Training and analytics tabs: a team focus (eight) and intensity (three) and an individual focus or new position for any player, shaping development, which attributes grow, training injuries, recovery, set pieces and familiarity; analytics of your season (xG match by match, against the league, chance types, goal times, the analyst's reading, which improves with his ability) (L–XL)
+- [x] More realistic player and ball movement in the match view: a back line that steps up and drops together, goal-side marking, a presser who jockeys rather than running into the ball, runners who set off before a through ball and passes played into space, players who keep their spacing and jog into shape, a first touch on receiving (XL)
+- [x] Club finances by country: TV money in England, gate receipts in Germany, player sales in Brazil and Portugal (M)
+- [x] Wage-to-revenue pressure: budgets cut above ~70%, debt, forced sales and, at worst, administration (M)
+- [x] Attendance that reacts to results, ticket prices and stadium size (S–M)
+- [x] A second-tier continental cup: UEFA Europa League and Copa Sudamericana (M)
+- [x] More of the lower pyramid: EFL League Two, Primera Federación, 2. Bundesliga, 3. Liga, Serie B and Ligue 2 (117 clubs; 664 clubs in 36 leagues in all) (L; watch simulation speed)
+- [x] Follow clubs, competitions, nations and players: their news in your feed and a Following screen (M)
+- [x] Reserve and youth teams (U21, U18) at every full and light club, with national youth leagues each league day, squads you move players between, and youth games that count (a little) toward development (L–XL)
+- [x] B teams in Spain and Germany (Real Madrid Castilla, Barça Atlètic, Bayern II, ...) as in real life: reserve sides in the lower divisions that can never be promoted into their parent club's division, with players contracted to the parent club and moving freely between the two (L)
+- [x] Groundwork for historical stats and historical saves: per-season player and club stats kept in an archive, and a data model that can start a save in a past season (L)
 
 *7 · Platform*
 

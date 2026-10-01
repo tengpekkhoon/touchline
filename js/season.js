@@ -69,7 +69,7 @@
       const po = c.rules.promote && c.rules.promote.playoff;
       if (!po) continue;
       if (!c.playoff) {
-        const t = W.sortedTable(c);
+        const t = FM.Youth.promotable(c, W.sortedTable(c)); // B teams can't go up into their parent's division
         const seeds = t.slice(po[0] - 1, po[1]).map((r) => r.id);
         c.playoff = { seeds, sf: [], final: null, winner: null };
       }
@@ -504,7 +504,7 @@
     if (club.identity === 'fan' && gf >= 3) club.fanMood = Math.min(100, club.fanMood + 3);
     u.lastMatch = { fxId: fx.id, comp: fx.comp };
     // Familiarity grows with the tactic you used; switched to Plan B, both grow, at half the rate each
-    const famK = FM.Staff.impact('assistant').fam; // a good assistant drills the system in faster
+    const famK = FM.Staff.impact('assistant').fam * FM.Training.famK(); // a good assistant (and tactics training) drills it in faster
     const grow = (t, k) =>
       (t.fam = Math.min(
         100,
@@ -513,6 +513,7 @@
     const switched = m.sides[side] && m.sides[side].switched && u.tactic2;
     grow(u.tactic, switched ? 0.5 : 1);
     if (switched) grow(u.tactic2, 0.5);
+    FM.Analytics.record(fx, m, side);
     FM.Stories.userMatch(fx, m, side);
   };
 
@@ -758,7 +759,11 @@
     }
     if (today && (today.type === 'intl' || today.type === 'tourn')) FM.Intl.afterDay(today);
     if (snap && !(S.settings || {}).noDigest) FM.Matchday.digest(today, snap);
-    if (today && today.type === 'league') FM.Records.afterLeagueDay(today);
+    if (today && today.type === 'league') {
+      FM.Records.afterLeagueDay(today);
+      FM.Youth.round(); // the U21 and U18 leagues play too
+      FM.Training.leagueDay();
+    }
     // weekly processes
     const recUser = employed ? FM.Staff.impact('physio').rec : 0; // a good physio gets your players fit sooner
     Object.values(S.players).forEach((p) => {
@@ -770,7 +775,8 @@
           30 +
           (p.attrs.stamina - 10) -
           Math.max(0, W.age(p) - 29) * Sea.AGE_RECOVERY +
-          (recUser && W.isUser(p.clubId) ? recUser : 0),
+          (recUser && W.isUser(p.clubId) ? recUser : 0) +
+          FM.Training.recK(p),
       );
       if (p.susp && !p.suspNew) p.susp--;
       delete p.suspNew;
@@ -1037,10 +1043,11 @@
     const wageBill = {};
     Object.values(S.players).forEach((p) => {
       if (!p.clubId || p.retired) return;
+      const payer = FM.Youth.owner(p.clubId); // a B-team player is paid by the parent club
       if (p.loan) {
-        wageBill[p.clubId] = (wageBill[p.clubId] || 0) + p.wage * p.loan.share;
+        wageBill[payer] = (wageBill[payer] || 0) + p.wage * p.loan.share;
         wageBill[p.loan.from] = (wageBill[p.loan.from] || 0) + p.wage * Math.max(0, 1 - p.loan.share);
-      } else wageBill[p.clubId] = (wageBill[p.clubId] || 0) + p.wage;
+      } else wageBill[payer] = (wageBill[payer] || 0) + p.wage;
     });
     const days = S.calendar.length,
       wk = D.WAGE_WEEKS / days;
@@ -1248,7 +1255,9 @@
       }
       if (R.relegate) t.slice(-R.relegate.n).forEach((r) => moves.push([r.id, comp.id, R.relegate.to]));
       if (R.promote) {
-        t.slice(0, R.promote.auto).forEach((r) => moves.push([r.id, comp.id, R.promote.to]));
+        FM.Youth.promotable(comp, t)
+          .slice(0, R.promote.auto)
+          .forEach((r) => moves.push([r.id, comp.id, R.promote.to]));
         if (comp.playoff && comp.playoff.final && comp.playoff.final.res) {
           const w = winnerOf(comp.playoff.final);
           entry.comps[comp.id].playoffWinner = w;
@@ -1261,15 +1270,17 @@
     entry.cups = {};
     for (const c of Object.values(S.comps))
       if (c.type !== 'league' && c.winner) entry.cups[c.id] = { name: c.name, winner: c.winner, runnerUp: c.runnerUp };
-    // Apply promotion/relegation relationships
-    moves.forEach(([id, from, to]) => {
+    // Apply promotion/relegation relationships (then put any B team now level with its parent back down)
+    const applyMove = ([id, from, to]) => {
       const c = S.clubs[id];
       S.comps[from].clubs = S.comps[from].clubs.filter((x) => x !== id);
       S.comps[to].clubs.push(id);
       c.comp = to;
       (S.comps[to].tier < S.comps[from].tier ? entry.promoted : entry.relegated).push(id);
       c.rep = U.clamp(c.rep + (S.comps[to].tier < S.comps[from].tier ? 4 : -5), 20, 99);
-    });
+    };
+    moves.forEach(applyMove);
+    FM.Youth.fixBTeams().forEach(applyMove);
 
     W.applySimFocus(); // after promotion and relegation: your (possibly new) league and its neighbours go full
     Sea.favClubNews(entry);
@@ -1406,6 +1417,7 @@
     const S = FM.S;
     Sea.settleEra();
     S.year++;
+    FM.Analytics.newSeason();
     FM.Transfers.endLoans();
     // retirements, contracts, history snapshot
     Object.values(S.players).forEach((p) => {
@@ -1574,6 +1586,7 @@
     }
     FM.Stories.worldEvents(entry);
     FM.Contracts.newSeason();
+    FM.Youth.newSeason(); // youth sides re-sorted, B teams restocked
     Sea.ageStaff();
     Sea.trimRetired();
     W.leagues().forEach(W.setupSeasonFixtures);

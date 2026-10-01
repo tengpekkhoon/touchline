@@ -128,7 +128,7 @@
     `<div class="bar"><i style="width:${U.clamp(v, 0, 100)}%;${color ? 'background:' + color : ''}"></i></div>`;
   C.moodColor = (v) => (v >= 65 ? 'var(--good)' : v >= 40 ? 'var(--warn)' : 'var(--bad)');
   C.playerRow = function (p, extra = '', right = '') {
-    const own = W.isUser(p.clubId);
+    const own = W.ownPlayer(p);
     const [ml, me] = W.moraleLabel(p.morale);
     const tags = [];
     if (own && FM.Matchday && FM.Matchday.captainOf(p.clubId) === p)
@@ -138,7 +138,7 @@
       tags.push('<span class="pill warn" title="Just back from injury: higher risk of a setback">🩹</span>');
     if (p.susp) tags.push(`<span class="pill warn">🟥 ${p.susp}</span>`);
     if (p.listed) tags.push(`<span class="pill">Listed</span>`);
-    if (p.loan && W.isUser(p.clubId)) tags.push(`<span class="pill acc">Loan</span>`);
+    if (p.loan && W.ownPlayer(p)) tags.push(`<span class="pill acc">Loan</span>`);
     const club = p.clubId ? FM.S.clubs[p.clubId] : null;
     return `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${C.flag(p.nat)} ${esc(W.name(p))} ${tags.join(' ')}</div><div class="small dim ellip">${W.age(p)} yrs · ${own ? `${me} ${ml}` : club ? esc(club.name) : 'Free agent'}${extra}</div></div><div class="col" style="align-items:flex-end;gap:4px"><div class="row" style="gap:6px">${C.playerStars(p)}${own ? `<b class="carate" title="Current ability">${Math.round(p.ca)}</b>${Math.round(p.lastGrowth || 0) ? `<span class="tiny b" title="Change this season" style="color:${p.lastGrowth > 0 ? 'var(--good)' : 'var(--bad)'}">${p.lastGrowth > 0 ? '▲' : '▼'}${Math.abs(Math.round(p.lastGrowth))}</span>` : ''}` : ''}</div>${own ? C.fitTag(p.fitness) : ''}${right}</div></div>`;
   };

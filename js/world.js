@@ -403,6 +403,7 @@
     sv: 0,
     ga: 0,
     xga: 0,
+    yapps: 0,
   });
   W.STAT_KEYS = Object.keys(W.blankSeason());
   // One history row per season and club from a season's numbers ({ y, c, apps, g, a, r, ... })
@@ -455,6 +456,19 @@
     p.career.spells.push({ c: clubId, from: FM.S.year, to: null, apps: 0, goals: 0 });
   };
   W.spell = (p) => p.career.spells[p.career.spells.length - 1];
+  // Your player: at your club or at your B team (whose players belong to you)
+  W.ownPlayer = (p) => !!(p && p.clubId) && W.isUser(FM.Youth ? FM.Youth.owner(p.clubId) : p.clubId);
+  // Move a player within a club family (a parent and its B team): no transfer, no new career spell
+  W.moveWithin = function (p, clubId) {
+    p.clubId = clubId;
+    const fresh = sqIdx.S === FM.S && sqIdx.ver === W.rosterVer;
+    W.rosterVer++;
+    if (fresh) {
+      const b = (sqIdx.by[clubId] = sqIdx.by[clubId] || []);
+      if (!b.includes(p)) b.push(p);
+      sqIdx.ver = W.rosterVer;
+    }
+  };
 
   function randomPos(counts) {
     const out = [];
@@ -531,7 +545,8 @@
       return n;
     };
     positions.forEach((pos, i) => {
-      const age = pickAge(pos);
+      // a B team is a young side: mostly 18 to 23, with a few older heads
+      const age = club.parent ? (Math.random() < 0.85 ? U.randi(18, 23) : U.randi(24, 27)) : pickAge(pos);
       const starter = i % 2 === 0;
       let ca = Math.round(
         U.clamp(
@@ -746,7 +761,20 @@
   W.pickXI = function (clubId, tactic, squad) {
     const slots = D.FORMATIONS[tactic.formation];
     const club = FM.clubOf(clubId);
-    const pool = (squad || (club.sim === 'nation' ? FM.Intl.squad(club.code) : W.squad(clubId))).filter(W.available);
+    let pool = (squad || (club.sim === 'nation' ? FM.Intl.squad(club.code) : W.squad(clubId))).filter(W.available);
+    // Youth-side players (U21, U18) only step up when the first-team squad is short
+    if (club.sim !== 'nation' && pool.some((p) => p.team)) {
+      const first = pool.filter((p) => !p.team);
+      pool =
+        first.length >= 16
+          ? first
+          : first.concat(
+              pool
+                .filter((p) => p.team)
+                .sort((a, b) => b.ca - a.ca)
+                .slice(0, 16 - first.length),
+            );
+    }
     // Registration rules: caps on foreign (or non-EU) players in the matchday squad, XI and bench (FM.Reg)
     const lims = FM.Reg.matchdayLimits(club);
     const limited = (p) => lims.some((l) => l.f(p));
@@ -1055,7 +1083,8 @@
       const stadium =
         row[7] || { MEX: `Estadio ${city}`, MAR: `Stade de ${city}`, SRB: `Stadion ${city}` }[nat] || `${city} Stadium`;
       const cap = row[8] || Math.round((8000 + (rep - 40) * 900) / 500) * 500;
-      const id = 'c_' + short;
+      const id = 'c_' + short,
+        parent = row[9] ? 'c_' + row[9] : null; // a B team's parent club
       const lvl = W.levelFor(rep),
         idt = D.IDENTITY[identity];
       const budget =
@@ -1071,6 +1100,7 @@
         colors: [c1, c2],
         identity,
         rep,
+        parent,
         stadium: { name: stadium, cap, cap0: cap },
         comp: compId,
         sim,
@@ -1172,6 +1202,7 @@
       p.career.apps += sp.apps;
     }
     for (const id in S.players) S.players[id].value = W.value(S.players[id]); // priced with their final club and contract
+    FM.Youth.assignAll(); // U21 and U18 squads from the start
     return S;
   };
 
@@ -1481,6 +1512,7 @@
     'sv',
     'ga',
     'xga',
+    'yapps',
   ];
   const KEYS = {
     fn: 'f',

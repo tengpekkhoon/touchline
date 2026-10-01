@@ -1,12 +1,12 @@
 # Touchline — Feature List
 
-Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/dcc1d812-21cc-47af-86dd-67235bca8506)
+Oct 2, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/dcc1d812-21cc-47af-86dd-67235bca8506)
 
 Every feature from the game design document, with what is playable in the prototype today and what is still to come. Status and phase match [ROADMAP.md](ROADMAP.md).
 
 ## In the game
 
-199 features are playable in the web prototype today. Build = the build that added it.
+217 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -209,10 +209,28 @@ Every feature from the game design document, with what is playable in the protot
 | Transfers | Loan offers for your players, some with an option to buy | Playtest round 2 |
 | Transfers | Loan suggestions that name where he'd play | Playtest round 2 |
 | Scouting | Scouting reveals more, rung by rung: foot, second positions, best role, situation, mentality, wage demands, agent | Playtest round 2 |
+| Squad | Training: a team focus (balanced, fitness, attacking, defending, technical, set pieces, tactics, recovery) and intensity (light, normal, hard) that shape development, which attributes grow, training injuries, recovery, set pieces and familiarity | Playtest batch 6 |
+| Squad | Individual training: an attribute focus for any player, or a new position learned on the training ground | Playtest batch 6 |
+| Analytics | Analytics tab: your season in xG match by match, against the league average and rank, chance types for and against, when goals come, and the analyst's reading (more insight from a better analyst) | Playtest batch 6 |
+| Staff | Every staff role's ability has a listed, real effect (development, familiarity, set pieces, injuries, recovery, fees) | Playtest batch 6 |
+| Stories | Press conferences with more journalist questions; warm-up and half-time options | Playtest batch 6 |
+| Stats | Player stats view and league leaderboards | Playtest batch 6 |
+| Stats | Keeper stats: saves, save %, clean sheets, goals prevented | Playtest batch 6 |
+| Stats | Season-by-season stats on the player profile, every season kept, and club seasons | Playtest batch 6 |
+| Economics | Club finances by country: TV money in England, gates in Germany, player sales in Brazil and Portugal | Playtest batch 6 |
+| Economics | Wage-to-revenue pressure: budgets cut, transfers frozen, interest on debt and, at worst, administration | Playtest batch 6 |
+| Economics | Attendance that reacts to results, ticket prices and stadium size | Playtest batch 6 |
+| Competitions | UEFA Europa League and CONMEBOL Copa Sudamericana | Playtest batch 6 |
+| Competitions | Six more divisions: EFL League Two, Primera Federación, 2. Bundesliga, 3. Liga, Serie B, Ligue 2 (664 clubs in 36 leagues) | Playtest batch 6 |
+| Competitions | B teams in Spain and Germany: never promoted into their parent's division, players belong to the parent and move freely between the two | Playtest batch 6 |
+| Youth | U21 and U18 sides at every full and light club, national youth leagues, players moved between them and the first team | Playtest batch 6 |
+| Feed | Follow clubs, competitions, nations and players: their news in your feed and a Following screen | Playtest batch 6 |
+| Match | More natural movement: a back line that moves together, goal-side marking, jockeying, early runs in behind, spacing, first touches | Playtest batch 6 |
+| World | Groundwork for saves that start in a past season | Playtest batch 6 |
 
 ## Yet to be added
 
-47 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+39 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
 
 Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
 
@@ -220,14 +238,6 @@ Design principle from here: don't make the game deeper by adding more screens �
 
 | Area | Feature | Phase |
 | --- | --- | --- |
-| Stats | Keeper stats: saves, save %, clean sheets, goals prevented | Playtest 6 |
-| Stats | Season-by-season stats on the player profile, every season kept | Playtest 6 |
-| Competitions | B teams in Spain and Germany: never promoted into their parent's division, players contracted to the parent club | Playtest 6 |
-| Staff | Staff ratings with real impact | Playtest 6 |
-| Players | Better player stats view; training and analytics tabs | Playtest 6 |
-| Match | More realistic player and ball movement in the match view | Playtest 6 |
-| Economics | Club finances by country, wage-to-revenue pressure, attendance that reacts to results and prices | Playtest 6 |
-| Competitions | A second-tier continental cup; more of the lower pyramid | Playtest 6 |
 | Platform | "Report a problem" that exports your save | Playtest 7 |
 | Editor | Database and world editor — architecture first, UI after. World (countries, cities, continents, rules) · Clubs (clubs, stadiums, facilities, finances, rivalries) · Players (attributes, contracts, personalities, nationalities) · Staff (managers, coaches, scouts, agents) · Competitions (leagues, cups, continental, international) · Rules (promotion/relegation, registration, foreign players, transfer windows, points, playoffs, prize money) · History (historical starts, events, scenarios, alternate history) | Alpha 2 |
 | History | Historical eras from 1992 with era-appropriate rules | Alpha 2 |

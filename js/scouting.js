@@ -402,7 +402,7 @@
       c = W.userClub();
     return Object.keys(S.user.reports)
       .map((id) => S.players[id])
-      .filter((p) => p && !W.isUser(p.clubId) && !p.retired)
+      .filter((p) => p && !W.ownPlayer(p) && !p.retired)
       .map((p) => ({ p, v: Sc.view(p) }))
       .filter(
         ({ v, p }) =>
