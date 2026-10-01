@@ -45,7 +45,7 @@
     // Starters playing out of position (the fit bar on the tactics screen shows the same), loudly, before kick-off
     const slots = D.FORMATIONS[myTactic.formation];
     const outOfPos = xi
-      .map((p, i) => p && { p, t: slots[i].t, fit: W.fitAt(p, slots[i].t) })
+      .map((p, i) => p && { p, t: slots[i].t, fit: W.fitAt(p, slots[i].t, slots[i], myTactic.roles[i]) })
       .filter((x) => x && x.fit < 0.8);
     UI.sheet(
       `${derby ? `<div class="warnline" style="color:#ff6b6b;background:rgba(255,80,80,.12)">⚔️ ${esc(me.derby)} — the fans will never forget this one, win or lose.</div>` : heat >= FM.Records.EMERGING ? `<div class="warnline">🔥 ${heat >= FM.Records.RIVALRY ? `${esc(opp.name)} are rivals now` : `A rivalry is building with ${esc(opp.name)}`} — expect a big crowd and a few crunching tackles.</div>` : ''}
@@ -55,6 +55,7 @@
         <div class="row small" style="margin-top:6px"><span class="grow dim">System</span><b>${opp.tactic.formation} · ${opp.tactic.buildup} · ${opp.tactic.press}</b></div>
         <div class="row small" style="margin-top:6px"><span class="grow dim">Danger man</span><b class="tap" data-act="player" data-id="${key.id}">${C.flag(key.nat)} ${esc(W.name(key))} (${key.pos})</b></div>
         <div class="q" style="margin-top:10px;padding:10px 12px;background:var(--card2);border-radius:12px;font-size:13px;border-left:3px solid var(--acc2)"><b class="tiny dim" style="display:block">${esc(asst.fn + ' ' + asst.ln)} · Assistant</b>“${tip}”</div></div>
+      ${MV.conditions(fx, me, opp, nt)}
       ${f1 && f1.res ? `<div class="warnline" style="margin-bottom:8px">Second leg. First leg: ${esc(CL(f1.h).name)} ${f1.res.hg}–${f1.res.ag} ${esc(CL(f1.a).name)}${s.rules.awayGoals ? ' · away goals count' : ''}. Level on aggregate after 90 minutes → extra time${s.rules.awayGoals ? ' (unless away goals decide it)' : ''}.</div>` : fx.leg === 1 ? '<div class="warnline" style="margin-bottom:8px">First leg — no extra time tonight. The tie is decided in the return match.</div>' : ''}
       <div class="card"><div class="row"><div class="h3 grow">Your XI · ${myTactic.formation}</div><button class="btn sm" data-act="${nt ? 'goNation' : 'goTactics'}">${nt ? 'Squad' : 'Tactics'}</button></div>
         <div class="small muted" style="margin-top:8px;line-height:1.7">${xi
@@ -158,6 +159,26 @@
     MV.start(FM.Season.userFixture(), true);
   };
 
+  // Conditions before kick-off: the forecast, the crowd (how much home advantage there is) and both sides' form
+  MV.conditions = function (fx, me, opp, nt) {
+    const wx = FM.Match.forecast(fx),
+      note = FM.Match.WEATHER_NOTE[wx[0]];
+    const h = FM.clubOf(fx.h),
+      a = FM.clubOf(fx.a);
+    const hf = fx.neutral ? 0 : FM.Match.homeFactor(h, a, h.rival === a.id || FM.Records.heated(h.id, a.id));
+    const crowd = !hf
+      ? 'Neutral venue'
+      : hf >= 1.25
+        ? `${esc(h.name)}'s crowd will be rocking — a big home advantage`
+        : hf <= 0.8
+          ? `A subdued crowd at ${esc(h.name)} — little home advantage`
+          : `Normal home advantage for ${esc(h.name)}`;
+    const form = (c) => (c.sim === 'nation' ? '—' : `${FM.Season.confLabel(c)}`);
+    return `<div class="card"><div class="h3">Conditions</div>
+      <div class="row small" style="margin-top:8px"><span class="grow dim">Weather</span><b>${wx[1]} ${wx[0]}</b></div>${note ? `<div class="tiny dim" style="text-align:right">${note}</div>` : ''}
+      <div class="row small" style="margin-top:6px"><span class="grow dim">Crowd</span><b style="text-align:right;max-width:70%">${crowd}</b></div>
+      ${nt ? '' : `<div class="row small" style="margin-top:6px"><span class="grow dim">Confidence</span><b>${esc(me.short)} ${form(me)} · ${esc(opp.short)} ${form(opp)}</b></div>`}</div>`;
+  };
   // ---------------- Live ----------------
   MV.start = function (fx, instant) {
     const m = new FM.Match({
@@ -754,7 +775,14 @@
       T = sd.tactic;
     const seg = (k, vals) =>
       `<div class="seg" style="margin:6px 0 14px">${vals.map((v) => `<button class="${T[k] === v ? 'on' : ''}" data-act="mTac" data-k="${k}" data-v="${v}">${v.replace(' Press', '').replace(' Block', '')}</button>`).join('')}</div>`;
-    const html = `<div class="h3">Build-up</div>${seg('buildup', D.BUILDUP)}<div class="h3">Pressing</div>${seg('press', D.PRESS)}
+    const B = FM.S.user.tactic2,
+      planB =
+        B && !sd.switched && sd.club.sim !== 'nation'
+          ? `<button class="btn block" style="margin-bottom:14px" data-act="mPlanB">🔁 Switch to Plan B · ${B.formation} · ${B.buildup} · ${B.press} (familiarity ${Math.round(B.fam ?? 40)}%)</button>`
+          : sd.switched
+            ? '<div class="tiny dim" style="margin-bottom:10px">Playing Plan B.</div>'
+            : '';
+    const html = `${planB}<div class="h3">Build-up</div>${seg('buildup', D.BUILDUP)}<div class="h3">Pressing</div>${seg('press', D.PRESS)}<div class="h3">Width</div>${seg('width', D.WIDTH)}
       <div class="row"><div class="grow h3">Inverted full-backs</div><button class="btn sm ${T.invFB ? 'pri' : ''}" data-act="mInv">${T.invFB ? 'On' : 'Off'}</button></div>
       <div class="small muted" style="margin-top:12px">Energy: ${MV.m
         .onPitch(sd)
@@ -767,6 +795,15 @@
   UI.acts.mTac = (d) => {
     MV.m.sides[MV.us].tactic[d.k] = d.v;
     MV.ticker(`📋 Switched to ${d.v}`);
+    MV.tacticsSheet();
+  };
+  UI.acts.mPlanB = () => {
+    const sd = MV.m.sides[MV.us],
+      B = FM.S.user.tactic2;
+    if (!B) return;
+    if (MV.m.changeAt == null) MV.m.changeAt = MV.m.momentum.length;
+    MV.m.switchTactic(sd, B);
+    MV.ticker(`📋 Plan B: ${B.formation}, ${B.buildup}, ${B.press}`);
     MV.tacticsSheet();
   };
   UI.acts.mInv = () => {

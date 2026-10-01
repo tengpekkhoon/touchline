@@ -673,8 +673,10 @@
   }
 
   // ---------- Tactics ----------
+  // The tactic being edited: Plan A (the one matches start with) or Plan B (switch to it in a match)
+  const TT = () => (UI._planB ? W.secondTactic() : S().user.tactic);
   function tacticsView() {
-    const T = S().user.tactic,
+    const T = TT(),
       c = club();
     const slots = D.FORMATIONS[T.formation];
     const { xi, bench } = W.pickXI(c.id, T);
@@ -686,13 +688,18 @@
     const dots = slots
       .map((s, i) => {
         const p = xi[i];
-        const fit = p ? W.fitAt(p, s.t) : 0;
-        return `<div class="slot-dot ${sel === i ? 'sel' : ''}" style="left:${U.clamp(s.y * 100, 11, 89)}%;top:${s.t === 'GK' ? 90 : Math.min(74, 6 + (1 - (s.x - 0.04) / 0.76) * 80)}%" data-act="slot" data-i="${i}"><div class="d" style="background:${c.colors[0]};color:${U.ink(c.colors[0])};${fit < 0.8 ? 'border-color:var(--warn)' : ''}">${p ? Math.round(p.ca) : '—'}</div><div class="n">${p && p === arm ? '<b class="capt">C</b>' : ''}${p ? esc(p.ln) : 'Empty'}</div>${p ? `<div class="fr"><div class="f"><i style="width:${Math.round(p.fitness)}%;background:${C.fitColor(p.fitness)}"></i></div><span style="color:${C.fitColor(p.fitness)}">${Math.round(p.fitness)}%</span></div>` : ''}<div class="r">${esc(T.roles[i])}</div></div>`;
+        const fit = p ? W.fitAt(p, s.t, s, T.roles[i]) : 0;
+        return `<div class="slot-dot ${sel === i ? 'sel' : ''}" style="left:${U.clamp(s.y * 100, 11, 89)}%;top:${s.t === 'GK' ? 90 : Math.min(74, 6 + (1 - (s.x - 0.04) / 0.76) * 80)}%" data-act="slot" data-i="${i}"><div class="d" style="background:${c.colors[0]};color:${U.ink(c.colors[0])};${fit < 0.8 ? 'border-color:var(--warn)' : ''}">${p ? Math.round(p.ca) : '—'}</div><div class="n">${p && p === arm ? '<b class="capt">C</b>' : ''}${p ? esc(p.ln) : 'Empty'}</div>${p ? `<div class="fr"><div class="f"><i style="width:${Math.round(p.fitness)}%;background:${C.fitColor(p.fitness)}"></i></div><span style="color:${C.fitColor(p.fitness)}">${Math.round(p.fitness)}%</span></div>` : ''}<div class="r">${D.slotLabel(s)} · ${esc(T.roles[i])}</div></div>`;
       })
       .join('');
     const seg = (k, vals) =>
       `<div class="seg" style="margin-top:6px">${vals.map((v) => `<button class="${T[k] === v ? 'on' : ''}" data-act="tac" data-k="${k}" data-v="${v}">${v.replace(' Press', '').replace(' Block', '')}</button>`).join('')}</div>`;
-    return `<div class="chips">${Object.keys(D.FORMATIONS)
+    const planB = !!UI._planB,
+      A = S().user.tactic,
+      B = S().user.tactic2;
+    const plans = `<div class="seg" style="margin-bottom:6px"><button class="${planB ? '' : 'on'}" data-act="tacPlan" data-v="A">Plan A · ${Math.round(A.fam ?? 60)}%</button><button class="${planB ? 'on' : ''}" data-act="tacPlan" data-v="B">Plan B${B ? ` · ${Math.round(B.fam ?? 40)}%` : ''}</button></div>
+      <div class="tiny dim" style="margin:0 2px 10px">${planB ? 'Plan B: switch to it during a match from Tactics. It has its own familiarity, which grows when you use it.' : 'Plan A starts every match. Set up a Plan B to switch to during a match (a chase, or shutting up shop).'}${planB ? ` <button class="btn sm" data-act="swapPlans">Make Plan B the starting plan</button>` : ''}</div>`;
+    return `${plans}<div class="chips">${Object.keys(D.FORMATIONS)
       .map(
         (f) => `<button class="chip ${T.formation === f ? 'on' : ''}" data-act="formation" data-v="${f}">${f}</button>`,
       )
@@ -702,6 +709,7 @@
       <div class="small dim center" style="margin:6px 0 12px">Tap a player to change him or his role. Orange ring = out of position. Bar = match fitness — auto-pick rests tired players.</div>
       <div class="card"><div class="h3">Build-up</div>${seg('buildup', D.BUILDUP)}
         <div class="h3" style="margin-top:14px">Pressing</div>${seg('press', D.PRESS)}
+        <div class="h3" style="margin-top:14px">Width</div>${seg('width', D.WIDTH)}
         <div class="row" style="margin-top:14px"><div class="grow"><div class="h3">Inverted full-backs</div><div class="small dim">Full-backs step into midfield in possession</div></div><button class="btn sm ${T.invFB ? 'pri' : ''}" data-act="invfb">${T.invFB ? 'On' : 'Off'}</button></div>
         <div class="small muted" style="margin-top:12px;line-height:1.5">${tacticHint(T)}</div></div>
       ${leadershipCard(xi, arm)}
@@ -713,13 +721,18 @@
       Direct: 'Get it forward quickly — more crosses and long shots.',
       Counter: 'Absorb and break — deadly against high-pressing teams.',
       Possession: 'Dominate the ball — starves opponents, can lack cutting edge.',
+      'Wing Play': 'Get it wide and into the box — lots of crosses; a Target Man feasts on them.',
     }[T.buildup];
+    const w = {
+      Narrow: 'Narrow: through the middle, more through balls — but it leaves the flanks to them.',
+      Wide: 'Wide: stretch them and cross.',
+    }[T.width || 'Balanced'];
     const p = {
       'High Press': 'High press wins the ball high up but tires legs and leaves space behind.',
       'Mid Block': 'Balanced mid block.',
       'Low Block': 'Deep block — hard to break down, but invites pressure.',
     }[T.press];
-    return `💡 ${b} ${p}`;
+    return `💡 ${b} ${p}${w ? ' ' + w : ''}`;
   }
   // ---------- Captain & set-piece takers ----------
   const spNum = (v) =>
@@ -817,8 +830,22 @@
         : `${Md.SP[d.k].label}: best on the pitch`,
     );
   };
+  UI.acts.tacPlan = (d) => {
+    UI._planB = d.v === 'B';
+    if (UI._planB) W.secondTactic();
+    UI._slot = null;
+    UI.save();
+    UI.render();
+  };
+  UI.acts.swapPlans = () => {
+    W.swapTactics();
+    UI._planB = false;
+    UI.save();
+    UI.render();
+    UI.toast('Plan B is now Plan A: matches start with it');
+  };
   UI.acts.formation = (d) => {
-    const T = S().user.tactic;
+    const T = TT();
     T.formation = d.v;
     T.roles = W.defaultRoles(d.v);
     T.lineup = null;
@@ -827,18 +854,18 @@
     UI.render();
   };
   UI.acts.tac = (d) => {
-    S().user.tactic[d.k] = d.v;
+    TT()[d.k] = d.v;
     UI.save();
     UI.render();
   };
   UI.acts.invfb = () => {
-    const T = S().user.tactic;
+    const T = TT();
     T.invFB = !T.invFB;
     UI.save();
     UI.render();
   };
   UI.acts.autoXI = () => {
-    const T = S().user.tactic,
+    const T = TT(),
       id = club().id;
     T.lineup = null;
     // Compare with a pick that ignores fitness: whoever drops out was rested
@@ -866,7 +893,7 @@
   };
   UI.acts.slot = (d) => UI.slotPicker(+d.i);
   UI.slotPicker = function (i, inMatch) {
-    const T = S().user.tactic,
+    const T = TT(),
       c = club(),
       s = D.FORMATIONS[T.formation][i];
     const { xi } = W.pickXI(c.id, T);
@@ -874,13 +901,14 @@
     const roles = Object.keys(D.ROLES[s.t]);
     const cands = W.squad(c.id)
       .filter((p) => (s.t === 'GK') === (p.pos === 'GK'))
-      .sort((a, b) => W.effAt(b, s.t) - W.effAt(a, s.t));
+      .sort((a, b) => W.effAt(b, s.t, s, T.roles[i]) - W.effAt(a, s.t, s, T.roles[i]));
     UI.sheet(
       `<div class="h3">Role</div><div class="chips" style="margin-top:8px;flex-wrap:wrap">${roles.map((r) => `<button class="chip ${T.roles[i] === r ? 'on' : ''}" data-act="role" data-i="${i}" data-v="${r}">${r}</button>`).join('')}</div>
+      <div class="tiny dim" style="margin:-2px 2px 8px">${esc((D.ROLES[s.t][T.roles[i]] || {}).desc || '')}${['FB', 'WB', 'W'].includes(s.t) && D.slotSide(s) ? ` · ${D.slotSide(s) === 'L' ? 'Left' : 'Right'} flank: ${s.t === 'W' && (D.ROLES.W[T.roles[i]] || {}).inv ? 'best with a ' + (D.slotSide(s) === 'L' ? 'right' : 'left') + '-footer cutting inside' : 'best with a ' + (D.slotSide(s) === 'L' ? 'left' : 'right') + '-footer'}` : ''}</div>
       <div class="h3" style="margin-top:6px">Player</div><div class="list">${cands
         .map((p) => {
           const inXI = xi.findIndex((q) => q && q.id === p.id);
-          const fit = W.fitAt(p, s.t);
+          const fit = W.fitAt(p, s.t, s, T.roles[i]);
           const tag = !W.available(p)
             ? p.inj
               ? '🚑 Injured'
@@ -890,20 +918,20 @@
               : inXI >= 0
                 ? 'In XI (swap)'
                 : '';
-          return `<div class="prow tap" data-act="pickSlot" data-i="${i}" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${esc(W.name(p))} ${cur && cur.id === p.id ? '✓' : ''}</div><div class="small dim">${fit >= 1 ? 'Natural' : fit >= 0.8 ? 'Accomplished' : fit >= 0.6 ? 'Awkward' : 'Unfamiliar'}${tag ? ' · ' + tag : ''}</div></div>${C.fitTag(p.fitness)}<div class="b" style="width:26px;text-align:right">${Math.round(W.effAt(p, s.t))}</div></div>`;
+          return `<div class="prow tap" data-act="pickSlot" data-i="${i}" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${esc(W.name(p))} ${cur && cur.id === p.id ? '✓' : ''}</div><div class="small dim">${fit >= 1 ? 'Natural' : fit >= 0.8 ? 'Accomplished' : fit >= 0.6 ? 'Awkward' : 'Unfamiliar'}${tag ? ' · ' + tag : ''}</div></div>${C.fitTag(p.fitness)}<div class="b" style="width:26px;text-align:right">${Math.round(W.effAt(p, s.t, s, T.roles[i]))}</div></div>`;
         })
         .join('')}</div>`,
-      { title: `${s.t} · slot ${i + 1}` },
+      { title: `${D.slotLabel(s)} · ${D.POS_NAME[s.t] || s.t}` },
     );
   };
   UI.acts.role = (d) => {
-    S().user.tactic.roles[+d.i] = d.v;
+    TT().roles[+d.i] = d.v;
     UI.save();
     UI.closeSheet();
     UI.render();
   };
   UI.acts.pickSlot = (d) => {
-    const T = S().user.tactic,
+    const T = TT(),
       c = club(),
       p = P(d.id);
     if (!W.available(p)) return UI.toast(`${W.short(p)} is unavailable`);
@@ -931,6 +959,14 @@
     if (rep) rep.isNew = false;
   };
   UI.playerHTML = (p) => playerHTML(p);
+  // Second positions he can play (learned, or from the start): "also DM, FB (learning)"
+  const altLine = (p) => {
+    const alt = Object.entries(p.alt || {})
+      .filter(([, v]) => v >= 0.8)
+      .sort((a, b) => b[1] - a[1])
+      .map(([t, v]) => `${t}${v < 0.9 ? ' (learning)' : ''}`);
+    return alt.length ? ` · also ${alt.join(', ')}` : '';
+  };
   function playerHTML(p) {
     const v = FM.Scouting.view(p),
       c = p.clubId && CL(p.clubId),
@@ -972,7 +1008,7 @@
       nt
         ? `<span class="tap" data-act="nation" data-id="${nt.id}" style="text-decoration:underline dotted">${html}</span>`
         : html;
-    return `<div class="pcard-hero" style="--c1:${col}"><div class="row" style="align-items:flex-start"><div class="grow"><div class="tiny b" style="opacity:.85;letter-spacing:1px;text-transform:uppercase">${D.POS_NAME[p.pos]} · ${p.foot} foot</div><div class="h1" style="margin-top:6px">${esc(p.fn)}<br>${esc(p.ln)}</div><div class="small" style="margin-top:8px;opacity:.9">${natLink(`${C.flag(p.nat)} ${D.NATIONS[p.nat].name}`)} · ${age} yrs${c ? ' · ' + esc(c.name) : ''}</div></div>${c ? C.crest(c, 48) : ''}</div>
+    return `<div class="pcard-hero" style="--c1:${col}"><div class="row" style="align-items:flex-start"><div class="grow"><div class="tiny b" style="opacity:.85;letter-spacing:1px;text-transform:uppercase">${D.POS_NAME[p.pos]}${altLine(p)} · ${p.foot} foot</div><div class="h1" style="margin-top:6px">${esc(p.fn)}<br>${esc(p.ln)}</div><div class="small" style="margin-top:8px;opacity:.9">${natLink(`${C.flag(p.nat)} ${D.NATIONS[p.nat].name}`)} · ${age} yrs${c ? ' · ' + esc(c.name) : ''}</div></div>${c ? C.crest(c, 48) : ''}</div>
       <div class="row" style="margin-top:14px;gap:14px"><div><div class="tiny" style="opacity:.75">ABILITY</div>${C.playerStars(p)}</div><div><div class="tiny" style="opacity:.75">VALUE</div><b>${own || v.k >= 30 ? U.money(p.value) : '?'}</b></div><div><div class="tiny" style="opacity:.75">WAGE</div><b>${own || v.k >= 30 ? U.money(p.wage) + '/wk' : '?'}</b></div>${own ? `<div><div class="tiny" style="opacity:.75">MORALE</div><b>${me} ${ml}</b></div>` : ''}</div></div>
       <div class="sp"></div>
       ${ownActions}

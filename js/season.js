@@ -178,6 +178,8 @@
     const comp = S.comps[fx.comp];
     if (comp.type === 'friendly') return Sea.applyFriendly(fx, m);
     const [hc, ac] = [S.clubs[fx.h], S.clubs[fx.a]];
+    Sea.confidence(m, res);
+    Sea.learnPositions(m);
     if (comp.type === 'league' && !fx.ko && !fx.leg) {
       Sea.updTable(comp.table, fx, res);
       const e = (S.eraLog = S.eraLog || { g: 0, n: 0 });
@@ -304,6 +306,41 @@
           day: S.day,
         };
     });
+  };
+  // Confidence: a club's results against what was expected of them (FM.Match exp) build it up or wear it down,
+  // −1 to 1, and it scales the side's strength by up to ±CAL.conf. Recent games count most.
+  Sea.CONF = { keep: 0.8, step: 0.6 };
+  Sea.confidence = function (m, res) {
+    if (m.exp == null) return;
+    const pens = res.pens && res.hg === res.ag;
+    const home = res.hg > res.ag || (pens && res.pens[0] > res.pens[1]) ? 1 : res.hg < res.ag || pens ? 0 : 0.5;
+    [
+      [m.sides[0].club, home - m.exp],
+      [m.sides[1].club, 1 - home - (1 - m.exp)],
+    ].forEach(([c, d]) => {
+      if (!c || c.sim === 'nation') return;
+      c.conf = Math.round(U.clamp((c.conf || 0) * Sea.CONF.keep + d * Sea.CONF.step, -1, 1) * 100) / 100;
+    });
+  };
+  Sea.confLabel = (c) => {
+    const v = (c && c.conf) || 0;
+    return v >= 0.5 ? 'Flying' : v >= 0.2 ? 'Confident' : v > -0.2 ? 'Steady' : v > -0.5 ? 'Shaky' : 'Low';
+  };
+  // Playing out of position teaches it: a little each game in a slot that isn't his natural one, up to
+  // "accomplished" (p.alt, read by W.fitAt). Whoever finished the match in each slot learns it.
+  Sea.LEARN = { step: 0.012, max: 0.95 };
+  Sea.learnPositions = function (m) {
+    for (const sd of m.sides) {
+      if (sd.club.sim === 'nation') continue;
+      sd.xi.forEach((p, i) => {
+        if (!p || sd.sentOff[p.id]) return;
+        const t = sd.slots[i].t;
+        if (t === p.pos || t === 'GK' || p.pos === 'GK') return;
+        const now = W.fitAt(p, t);
+        if (now >= Sea.LEARN.max) return;
+        (p.alt = p.alt || {})[t] = Math.round(Math.min(Sea.LEARN.max, now + Sea.LEARN.step) * 1000) / 1000;
+      });
+    }
   };
   // An AI club's set-up settles in with every match, as yours does (a new manager starts it lower)
   Sea.growFam = function (c) {
@@ -446,10 +483,12 @@
     );
     if (club.identity === 'fan' && gf >= 3) club.fanMood = Math.min(100, club.fanMood + 3);
     u.lastMatch = { fxId: fx.id, comp: fx.comp };
-    u.tactic.fam = Math.min(
-      100,
-      (u.tactic.fam || 50) + Math.max(0.5, (100 - (u.tactic.fam || 50)) * 0.06) * FM.People.badgeBonus(),
-    );
+    // Familiarity grows with the tactic you used; switched to Plan B, both grow, at half the rate each
+    const grow = (t, k) =>
+      (t.fam = Math.min(100, (t.fam || 50) + Math.max(0.5, (100 - (t.fam || 50)) * 0.06) * k * FM.People.badgeBonus()));
+    const switched = m.sides[side] && m.sides[side].switched && u.tactic2;
+    grow(u.tactic, switched ? 0.5 : 1);
+    if (switched) grow(u.tactic2, 0.5);
     FM.Stories.userMatch(fx, m, side);
   };
 
@@ -1493,6 +1532,8 @@
     S.user.preseason = {};
     S.user.previewSeen = false;
     S.user.tactic.fam = Math.round((S.user.tactic.fam ?? 60) * 0.75); // new faces, rusty over the summer
+    if (S.user.tactic2) S.user.tactic2.fam = Math.round((S.user.tactic2.fam ?? 40) * 0.75);
+    Object.values(S.clubs).forEach((c) => c.conf && (c.conf = Math.round(c.conf * 50) / 100)); // a fresh start
     for (const c of Object.values(S.clubs))
       if (c.tactic && c.tactic.fam != null && !W.isUser(c.id)) c.tactic.fam = Math.round(c.tactic.fam * 0.75);
     W.refreshStaffPool();

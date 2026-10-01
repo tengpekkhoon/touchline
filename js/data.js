@@ -198,54 +198,191 @@
       { t: 'ST', x: 0.7, y: 0.4 },
       { t: 'ST', x: 0.7, y: 0.6 },
     ],
+    '4-1-4-1': [
+      GK,
+      { t: 'FB', x: 0.24, y: 0.14 },
+      { t: 'CB', x: 0.2, y: 0.38 },
+      { t: 'CB', x: 0.2, y: 0.62 },
+      { t: 'FB', x: 0.24, y: 0.86 },
+      { t: 'DM', x: 0.36, y: 0.5 },
+      { t: 'W', x: 0.56, y: 0.13 },
+      { t: 'CM', x: 0.5, y: 0.36 },
+      { t: 'CM', x: 0.5, y: 0.64 },
+      { t: 'W', x: 0.56, y: 0.87 },
+      { t: 'ST', x: 0.76, y: 0.5 },
+    ],
+    '4-4-1-1': [
+      GK,
+      { t: 'FB', x: 0.24, y: 0.14 },
+      { t: 'CB', x: 0.2, y: 0.38 },
+      { t: 'CB', x: 0.2, y: 0.62 },
+      { t: 'FB', x: 0.24, y: 0.86 },
+      { t: 'W', x: 0.5, y: 0.13 },
+      { t: 'CM', x: 0.45, y: 0.38 },
+      { t: 'CM', x: 0.45, y: 0.62 },
+      { t: 'W', x: 0.5, y: 0.87 },
+      { t: 'AM', x: 0.64, y: 0.5 },
+      { t: 'ST', x: 0.78, y: 0.5 },
+    ],
+    '4-1-2-1-2': [
+      GK,
+      { t: 'FB', x: 0.24, y: 0.14 },
+      { t: 'CB', x: 0.2, y: 0.38 },
+      { t: 'CB', x: 0.2, y: 0.62 },
+      { t: 'FB', x: 0.24, y: 0.86 },
+      { t: 'DM', x: 0.36, y: 0.5 },
+      { t: 'CM', x: 0.48, y: 0.28 },
+      { t: 'CM', x: 0.48, y: 0.72 },
+      { t: 'AM', x: 0.6, y: 0.5 },
+      { t: 'ST', x: 0.76, y: 0.4 },
+      { t: 'ST', x: 0.76, y: 0.6 },
+    ],
+    '4-3-1-2': [
+      GK,
+      { t: 'FB', x: 0.24, y: 0.14 },
+      { t: 'CB', x: 0.2, y: 0.38 },
+      { t: 'CB', x: 0.2, y: 0.62 },
+      { t: 'FB', x: 0.24, y: 0.86 },
+      { t: 'CM', x: 0.45, y: 0.28 },
+      { t: 'CM', x: 0.42, y: 0.5 },
+      { t: 'CM', x: 0.45, y: 0.72 },
+      { t: 'AM', x: 0.6, y: 0.5 },
+      { t: 'ST', x: 0.76, y: 0.4 },
+      { t: 'ST', x: 0.76, y: 0.6 },
+    ],
+    '3-4-2-1': [
+      GK,
+      { t: 'CB', x: 0.2, y: 0.27 },
+      { t: 'CB', x: 0.17, y: 0.5 },
+      { t: 'CB', x: 0.2, y: 0.73 },
+      { t: 'WB', x: 0.44, y: 0.09 },
+      { t: 'CM', x: 0.44, y: 0.38 },
+      { t: 'CM', x: 0.44, y: 0.62 },
+      { t: 'WB', x: 0.44, y: 0.91 },
+      { t: 'AM', x: 0.64, y: 0.32 },
+      { t: 'AM', x: 0.64, y: 0.68 },
+      { t: 'ST', x: 0.78, y: 0.5 },
+    ],
+    '5-4-1': [
+      GK,
+      { t: 'WB', x: 0.3, y: 0.08 },
+      { t: 'CB', x: 0.19, y: 0.3 },
+      { t: 'CB', x: 0.16, y: 0.5 },
+      { t: 'CB', x: 0.19, y: 0.7 },
+      { t: 'WB', x: 0.3, y: 0.92 },
+      { t: 'W', x: 0.5, y: 0.15 },
+      { t: 'CM', x: 0.44, y: 0.38 },
+      { t: 'CM', x: 0.44, y: 0.62 },
+      { t: 'W', x: 0.5, y: 0.85 },
+      { t: 'ST', x: 0.72, y: 0.5 },
+    ],
+  };
+  // Slot labels with the side of the pitch (left/right from y): LB, RCB, LWB, RW, LM, ...
+  FM.D.slotSide = (s) => (s.y < 0.4 ? 'L' : s.y > 0.6 ? 'R' : '');
+  FM.D.slotLabel = function (s) {
+    const side = FM.D.slotSide(s);
+    if (s.t === 'FB') return side + 'B';
+    if (s.t === 'WB') return side + 'WB';
+    if (s.t === 'W') return side + (s.x < 0.55 ? 'M' : 'W');
+    if (s.t === 'GK' || !side) return s.t;
+    return side + s.t;
   };
   FM.D.shapeOf = (f) => ({ 3: 'Back 3', 4: 'Back 4', 5: 'Back 5' })[f[0]];
 
-  // Roles: engine modifiers (att/mid/def) + positional nudges in possession (dx, dy toward centre if 'in')
+  // Roles: engine modifiers (att/mid/def) + positional nudges in possession (dx, dy toward centre if 'in').
+  // What each role does in the match engine: shoot = more of the side's shots fall to him, assist = more of its
+  // chances are made by him, head = he wins the crosses, win = wins the ball back (the opponent keeps it less),
+  // press = presses from the front (the same, at a little extra running), cross = his side crosses more,
+  // inv = he wants the opposite flank to his stronger foot (cutting inside). desc = the one-line description.
   FM.D.ROLES = {
-    GK: { Goalkeeper: {}, 'Sweeper Keeper': { mid: 0.02, dx: 0.06, risk: 0.01 } },
+    GK: {
+      Goalkeeper: { desc: 'Stays on his line and keeps it simple.' },
+      'Sweeper Keeper': { mid: 0.02, dx: 0.06, risk: 0.01, desc: 'Comes off his line and starts attacks.' },
+    },
     CB: {
-      'Centre-Back': { def: 0.02 },
-      'Ball-Playing CB': { mid: 0.02, def: -0.01 },
-      Libero: { mid: 0.03, def: -0.02, dx: 0.12 },
+      'Centre-Back': { def: 0.02, head: 0.2, desc: 'Defends first; a threat at corners.' },
+      'Ball-Playing CB': { mid: 0.02, def: -0.01, assist: 0.1, desc: 'Steps out and breaks lines with his passing.' },
+      'No-Nonsense CB': { def: 0.03, mid: -0.01, head: 0.3, desc: 'Heads it, clears it, no risks.' },
+      Libero: { mid: 0.03, def: -0.02, dx: 0.12, assist: 0.15, desc: 'Steps into midfield with the ball.' },
     },
     FB: {
-      'Full-Back': { def: 0.02 },
-      'Wing-Back': { att: 0.02, def: -0.01, dx: 0.14 },
-      'Inverted FB': { mid: 0.03, dx: 0.12, in: 0.28 },
+      'Full-Back': { def: 0.02, desc: 'Solid defensively, overlaps when it is on.' },
+      'Wing-Back': { att: 0.02, def: -0.01, dx: 0.14, assist: 0.15, desc: 'Bombs on and crosses.' },
+      'Inverted FB': { mid: 0.03, dx: 0.12, in: 0.28, desc: 'Tucks into midfield in possession.' },
+      'No-Nonsense FB': { def: 0.03, att: -0.01, desc: 'Stays home and defends.' },
     },
-    WB: { 'Wing-Back': { att: 0.02 }, 'Complete WB': { att: 0.03, def: -0.02, dx: 0.1 } },
+    WB: {
+      'Wing-Back': { att: 0.02, assist: 0.15, desc: 'Covers the whole flank and crosses.' },
+      'Complete WB': { att: 0.03, def: -0.02, dx: 0.1, assist: 0.25, desc: 'Lives in the final third.' },
+    },
     DM: {
-      Anchor: { def: 0.03, att: -0.01 },
-      'Deep-Lying Playmaker': { mid: 0.03 },
-      'Segundo Volante': { att: 0.03, def: -0.01, dx: 0.14 },
+      Anchor: { def: 0.03, att: -0.01, win: 0.01, desc: 'Sits in front of the defence.' },
+      'Deep-Lying Playmaker': { mid: 0.03, assist: 0.25, desc: 'Dictates the tempo from deep.' },
+      Regista: { mid: 0.04, def: -0.02, assist: 0.45, desc: 'A free role from deep: everything goes through him.' },
+      'Ball-Winning Mid': { def: 0.02, win: 0.025, press: 0.03, desc: 'Hunts the ball and breaks up play.' },
+      'Segundo Volante': { att: 0.03, def: -0.01, dx: 0.14, shoot: 0.35, desc: 'Arrives late in the box.' },
     },
     CM: {
-      'Box-to-Box': { att: 0.01, def: 0.01, mid: 0.01 },
-      Carrilero: { def: 0.02, mid: 0.01, in: -0.1 },
-      Mezzala: { att: 0.03, def: -0.01, dx: 0.1, in: -0.12 },
-      Playmaker: { mid: 0.03 },
+      'Box-to-Box': { att: 0.01, def: 0.01, mid: 0.01, shoot: 0.15, desc: 'Gets up and down the pitch.' },
+      Carrilero: { def: 0.02, mid: 0.01, in: -0.1, win: 0.01, desc: 'Shuttles across to cover the flank.' },
+      Mezzala: {
+        att: 0.03,
+        def: -0.01,
+        dx: 0.1,
+        in: -0.12,
+        shoot: 0.25,
+        desc: 'Drifts into the half-space to attack.',
+      },
+      Playmaker: { mid: 0.03, assist: 0.3, desc: 'Keeps the ball moving and picks the pass.' },
+      'Ball-Winning Mid': { def: 0.02, win: 0.025, press: 0.03, desc: 'Hunts the ball and breaks up play.' },
+      'Roaming Playmaker': {
+        mid: 0.02,
+        att: 0.01,
+        dx: 0.06,
+        assist: 0.35,
+        desc: 'Turns up everywhere to make the play.',
+      },
     },
     AM: {
-      'Advanced Playmaker': { mid: 0.03 },
-      Trequartista: { att: 0.03, def: -0.02 },
-      'Shadow Striker': { att: 0.03, dx: 0.1 },
+      'Advanced Playmaker': { mid: 0.03, assist: 0.4, desc: 'The creator between the lines.' },
+      Trequartista: { att: 0.03, def: -0.02, assist: 0.3, shoot: 0.2, desc: 'A free role: creates and scores.' },
+      Enganche: { mid: 0.04, def: -0.03, assist: 0.6, desc: 'A classic No. 10: stands still and makes the play.' },
+      'Shadow Striker': { att: 0.03, dx: 0.1, shoot: 0.4, desc: 'Ghosts into the box beyond the striker.' },
     },
     W: {
-      Winger: { att: 0.02, cross: 0.1 },
-      'Inverted Winger': { att: 0.02, mid: 0.01, in: 0.2 },
-      'Inside Forward': { att: 0.03, in: 0.25, dx: 0.06 },
+      Winger: { att: 0.02, cross: 0.1, assist: 0.2, desc: 'Hugs the line, beats his man and crosses.' },
+      'Inverted Winger': {
+        att: 0.02,
+        mid: 0.01,
+        in: 0.2,
+        inv: 1,
+        shoot: 0.15,
+        desc: 'Cuts inside onto his stronger foot.',
+      },
+      'Inside Forward': { att: 0.03, in: 0.25, dx: 0.06, inv: 1, shoot: 0.3, desc: 'Cuts inside to shoot.' },
+      'Wide Playmaker': { mid: 0.03, in: 0.18, assist: 0.35, desc: 'Starts wide, comes inside to create.' },
+      Raumdeuter: { att: 0.03, def: -0.02, dx: 0.08, shoot: 0.5, desc: 'Finds space in the box and finishes.' },
     },
     ST: {
-      Poacher: { att: 0.03, dx: 0.04 },
-      'Target Man': { att: 0.02, cross: 0.1 },
-      'False 9': { mid: 0.04, att: 0.01, dx: -0.14 },
-      'Pressing Forward': { att: 0.01, press: 0.05 },
+      Poacher: { att: 0.03, dx: 0.04, shoot: 0.4, desc: 'Lives on the last defender and finishes.' },
+      'Target Man': { att: 0.02, cross: 0.1, head: 0.8, desc: 'Wins it in the air; the side crosses more.' },
+      'Advanced Forward': { att: 0.03, dx: 0.06, shoot: 0.3, desc: 'Runs in behind all game.' },
+      'Complete Forward': { att: 0.02, mid: 0.02, shoot: 0.2, assist: 0.2, desc: 'Does everything a striker can.' },
+      'False 9': {
+        mid: 0.04,
+        att: 0.01,
+        dx: -0.14,
+        assist: 0.35,
+        shoot: -0.3,
+        desc: 'Drops deep to link play; others score.',
+      },
+      'Pressing Forward': { att: 0.01, press: 0.05, desc: 'Leads the press from the front.' },
     },
   };
 
-  FM.D.BUILDUP = ['Short', 'Direct', 'Counter', 'Possession'];
+  FM.D.BUILDUP = ['Short', 'Direct', 'Counter', 'Possession', 'Wing Play'];
   FM.D.PRESS = ['High Press', 'Mid Block', 'Low Block'];
+  FM.D.WIDTH = ['Narrow', 'Balanced', 'Wide'];
 
   // ---------- Traits ----------
   FM.D.TRAITS = {
@@ -1150,7 +1287,16 @@
     ['Cloudy', '☁️', 0.2],
     ['Rain', '🌧️', 0.2],
     ['Snow', '❄️', 0.05],
+    ['Hot', '🥵', 0],
   ];
+  // Climate by nation: wet (more rain), cold (snow in midwinter), warm (hot at the start and end of the
+  // season), tropical (often hot, never snow)
+  FM.D.CLIMATE = {
+    wet: ['ENG', 'SCO', 'WAL', 'IRL', 'NED', 'BEL', 'NOR', 'DEN', 'GER'],
+    cold: ['NOR', 'DEN', 'POL', 'CZE', 'AUT', 'SUI', 'SRB', 'GER', 'KOR', 'SCO', 'USA'],
+    warm: ['ESP', 'POR', 'ITA', 'GRE', 'TUR', 'MAR', 'ARG', 'URU', 'USA', 'JPN', 'KOR', 'FRA'],
+    tropical: ['BRA', 'THA', 'NGA', 'MEX', 'COL', 'GHA', 'CIV', 'SEN'],
+  };
 
   FM.D.SEASON_START = 2026;
   FM.D.WINDOW_ROUNDS = [0, 1, 2, 3, 11, 12, 13]; // transfer window open around these league rounds

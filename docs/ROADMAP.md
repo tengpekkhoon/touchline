@@ -4,7 +4,7 @@ Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/420
 
 ## At a glance
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are the first batches of playtest feedback (bugs, interface, speed, realism, transfer market). The rest of that backlog (tactics and match engine, big features) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
+Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are the first batches of playtest feedback (bugs, interface, speed, realism, transfer market, tactics and match engine). The rest of that backlog (big features, platform) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
 
 ```mermaid
 flowchart TB
@@ -30,6 +30,7 @@ The web prototype runs on a phone browser with no build step, covering 547 real 
 
 | Build | What shipped |
 | --- | --- |
+| Playtest feedback, batch 5 | Tactics depth. Plan A and Plan B, each with its own familiarity, switchable mid-match. Six more formations, a width instruction and a Wing Play build-up. Roles that decide who shoots, creates, wins headers and wins the ball back, plus ten new roles. Positions by side (the stronger foot matters on the flanks), second positions and learning new ones. Keeper howlers and big-game stars. Home advantage that varies with the crowd, stadium, derbies and travel. Weather by climate and season (rain, snow, heat). Club confidence from recent results. A calibrated amount of upset. Calibration 51/51 and 50/51 on two seeds (two new measures: underdog wins, keeper errors); title races more open (top-three champions 83–87%). |
 | Playtest feedback, batch 4 | Transfer market depth. A deadline with a countdown, a warning three days out, deadline day (more AI buyers at a premium, late bids, the skip stops for it) and a window summary. Trials for free agents. A loan watch for loanees who aren't played (recall them, or tell the club to play them). Fee talks that go back and forth (clubs counter down to a floor, agents make their own proposals, you can counter bids for your players). A relative market (players who want away and clubs in debt sell cheaper; clubs short at a position pay more). Players choosing between clubs and saying why. Fees in instalments, add-ons and sell-on clauses, with payments to come in the finances. AI clubs replacing ageing starters. Each real league's foreign-player rules (homegrown quotas, non-EU limits, MLS international slots, foreign caps) for new careers. Calibration 48/49 and 47/49 on two seeds; over-30s' share of top-flight minutes now ends six seasons at 25% (was 27–30%). |
 | Playtest feedback, batches 1–3 | Three playtest reports worked through. Bugs (undefined nationalities, offers for your own loanees, captaincy switching, replaying lost matches), interface (feed of your club, needs-reply list, daily transfer round-up, tap any badge for the club, club picker search, money in the club's currency, readable crests), speed (pre-season days ~8× faster), realism (settled players after a move, fans judged against expectations, transfer-window rules, no foreign-player limit by default, auto pick with roles, market value by league and club, deeper squads, club icons and testimonials). Calibration now 48/49 measures in range on two seeds: title dominance, elite inflation, injuries and retirement ages fixed. |
 | Code cleanup | No gameplay change, proven by identical seeded test and calibration results. Removed dead code, merged duplicate name pools and the test tools' copied loaders (`tools/harness.mjs`), split the three largest files (clubs into `clubs.js`, player development and retirement into `careers.js`, the transfer market into `transfers.js`). ESLint and Prettier added (`npm run lint`, `npm run format`); every deploy now has to pass both before it goes live. |
@@ -161,15 +162,15 @@ Playtest feedback grouped into seven batches, in working order; most important f
 
 *5 · Tactics depth*
 
-- [ ] Primary and secondary tactic, each with its own familiarity (M)
-- [ ] More formations and tactics (M–L)
-- [ ] More player roles that matter in the match engine (L)
-- [ ] More positions and position versatility (XL)
-- [ ] Match moments: rare goalkeeper errors (keeper quality and composure) and a big-game boost for a side's best player (M)
-- [ ] Home advantage that varies with crowd, stadium, derbies and fan mood, not one fixed boost (S–M)
-- [ ] Weather that matters: rain slows passing and adds errors, snow lowers scoring, heat adds fatigue (S–M)
-- [ ] Form streaks: a confidence value that builds with good games and fades with bad ones (±3%) (M)
-- [ ] Upsets: a limited, calibrated amount of randomness so underdogs win as often as in real football (league and cup upset rates measured against real ones) (S–M)
+- [x] Plan A and Plan B: a second tactic with its own familiarity (grows when you use it, rusts over the summer); edit either on the Tactics screen, make Plan B the starting plan, or switch to it mid-match from the in-game Tactics sheet: style, pressing, width, roles and shape at once, the players re-arranged into the new formation by who fits each slot (M)
+- [x] Six more formations (4-1-4-1, 4-4-1-1, the 4-1-2-1-2 diamond, 4-3-1-2, 3-4-2-1, 5-4-1) and two new instructions: width (narrow plays through the middle and leaves the flanks, wide stretches and crosses) and a Wing Play build-up; AI clubs use the new shapes too (M–L)
+- [x] Roles that matter in the engine: each decides who shoots, who creates, who wins the ball in the air and who wins it back (the opponent keeps it less), and pressing roles run more. Ten new roles: No-Nonsense CB and FB, Regista, Ball-Winning Mid, Roaming Playmaker, Enganche, Wide Playmaker, Raumdeuter, Advanced Forward, Complete Forward; every role has a one-line description (L)
+- [x] Positions by side and versatility: slots are labelled by side (LB, RCB, LWB, RM, LW, ...); a full-back or wing-back is best on the side of his stronger foot, a winger too unless his role cuts inside (then the other flank); a third of players start with a second position, and anyone learns a new one by playing there (about 25 games to become accomplished), shown on his profile (XL)
+- [x] Match moments: keeper howlers (a saveable shot slips through; more likely with poor handling and nerves, and in the rain; ~0.04 a match, real 0.03–0.1) and a big-game lift for each side's best player in derbies, knockout ties and top-of-the-table meetings (M)
+- [x] Home advantage that varies: fan mood, stadium size, derbies and a long trip for the visitors (another country) make it bigger or smaller (half to 1.6 times the usual); the pre-match Conditions card says how big the crowd's lift will be (S–M)
+- [x] Weather that matters, by climate and time of year: rain hurts short passing and makes keepers fumble, snow (cold countries, midwinter) means fewer chances, heat (warm countries early and late in the season, the tropics) tires legs faster; the forecast shows before kick-off and the match is played in it (S–M)
+- [x] Confidence: every club's results against what was expected of them build it up or wear it down (up to ±3% strength), recent games counting most; shown as Flying / Confident / Steady / Shaky / Low on the club overview and before kick-off, half-reset each summer (M)
+- [x] Upsets: each side's form on the day varies a little (capped), calibrated so a bottom-half side beats a top-four side ~14% of the time (real 9–18%, new measure) and cup upsets stay at ~20%; champions from the pre-season top three fell to 83–87% (was 90–97%) (S–M)
 
 *6 · Big features*
 
@@ -330,5 +331,5 @@ Step 1 is done: the game installs to the home screen and plays offline (web app 
 - **Tech stack for release:** proposed answer — keep the web engine inside a native wrapper (Capacitor) rather than porting; the game is plain HTML/CSS/JS with no server.
 - **Store updates:** JavaScript updates still normally go through store review, so fixes can't be pushed instantly.
 - **Performance at scale:** the 30-league world has about 11,300 players; a league day takes ~0.7–1.35 s and pre-season days ~0.15–0.2 s in Node, and saves are ~7 MB with the compact player format. IndexedDB and native files handle that, but saves no longer fit the 5 MB localStorage fallback (private browsing). Mid-range phones are still untested (content gate).
-- **Balance:** calibration is 47–48/49 in range on two seeds (title dominance, elite growth, injuries and retirement ages fixed; over-30s' share of top-flight minutes now ends six seasons at ~25%, real 17–28, though it still rises from ~18% early on); borderline on some seeds: injuries per club (~40.5, real up to 40) and elite growth. Finances and difficulty still need tuning from playtests.
+- **Balance:** calibration is 50–51/51 in range on two seeds (title dominance, elite growth, injuries, retirement ages and upsets in range; over-30s' share of top-flight minutes ends six seasons at 24–25%, real 17–28, though it still rises from ~19% early on); one seed still shows the elite improving a little too fast. Finances and difficulty still need tuning from playtests.
 - **Scope:** the editor and history modes are large; they may need to ship after 1.0.

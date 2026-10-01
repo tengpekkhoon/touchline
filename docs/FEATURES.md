@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-179 features are playable in the web prototype today. Build = the build that added it.
+188 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -189,10 +189,19 @@ Every feature from the game design document, with what is playable in the protot
 | Transfers | Fees in yearly instalments, add-ons and sell-on clauses; payments to come on the finances screen | Playtest batch 4 |
 | Transfers | AI clubs replace ageing starters before they decline | Playtest batch 4 |
 | Squad | Each real league's foreign-player rules: homegrown quotas (England, Italy), non-EU limits (Spain, France, Italy), MLS international slots, foreign caps (Brazil, Japan, Argentina, Mexico and more) | Playtest batch 4 |
+| Tactics | Plan A and Plan B, each with its own familiarity; switch to Plan B mid-match (shape included, players re-arranged by fit) | Playtest batch 5 |
+| Tactics | Six more formations (4-1-4-1, 4-4-1-1, diamond, 4-3-1-2, 3-4-2-1, 5-4-1), a width instruction and a Wing Play build-up | Playtest batch 5 |
+| Tactics | Roles that matter in the engine (who shoots, creates, wins headers, wins the ball back) and ten new roles, each with a description | Playtest batch 5 |
+| Squad | Positions by side (LB, RW, ...): the stronger foot matters on the flanks; second positions, learned by playing there | Playtest batch 5 |
+| Match | Keeper howlers and a big-game lift for each side's best player | Playtest batch 5 |
+| Match | Home advantage that varies with fan mood, stadium size, derbies and travel | Playtest batch 5 |
+| Match | Weather by climate and time of year: rain, snow and heat each change the game; the forecast shows before kick-off | Playtest batch 5 |
+| Match | Club confidence from recent results against expectations (up to Â±3%), shown on the club overview and before kick-off | Playtest batch 5 |
+| Match | A calibrated amount of upset: underdogs win as often as in real football | Playtest batch 5 |
 
 ## Yet to be added
 
-48 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+44 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
 
 Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
 
@@ -200,10 +209,6 @@ Design principle from here: don't make the game deeper by adding more screens â€
 
 | Area | Feature | Phase |
 | --- | --- | --- |
-| Tactics | Primary and secondary tactic, each with its own familiarity | Playtest 5 |
-| Tactics | More formations and tactics; more player roles that matter in the engine | Playtest 5 |
-| Tactics | More positions and position versatility | Playtest 5 |
-| Match | Goalkeeper errors and big-game moments; home advantage that varies; weather that matters; form streaks | Playtest 5 |
 | Staff | Staff ratings with real impact | Playtest 6 |
 | Players | Better player stats view; training and analytics tabs | Playtest 6 |
 | Match | More realistic player and ball movement in the match view | Playtest 6 |

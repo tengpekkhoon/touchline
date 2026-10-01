@@ -113,7 +113,26 @@ for (let s = 0; s < SEASONS; s++) {
         ...FM.Match.tieOpts(fx),
       });
       if (stats.userMatches % 3 === 0) FM.Matchday.applyTalk(m, 'focus', FM.Matchday.talkContext(fx));
-      while (!m.finished) m.step();
+      // Plan B: a 4-4-2 chase, switched to when behind on the hour (a different shape re-arranges the XI)
+      const us = m.sides.findIndex((sd) => sd.user),
+        planB = W.secondTactic();
+      if (planB.formation === FM.S.user.tactic.formation) {
+        planB.formation = FM.S.user.tactic.formation === '4-4-2' ? '3-4-3' : '4-4-2';
+        planB.roles = W.defaultRoles(planB.formation);
+        planB.buildup = 'Direct';
+      }
+      while (!m.finished) {
+        m.step();
+        const sd = m.sides[us];
+        if (sd && !sd.switched && m.minute >= 60 && sd.goals < m.sides[1 - us].goals) {
+          m.switchTactic(sd, planB);
+          stats.planB = (stats.planB || 0) + 1;
+          check(
+            sd.xi.length === FM.D.FORMATIONS[planB.formation].length && sd.xi.filter(Boolean).length >= 7,
+            `Plan B left the XI broken (${sd.xi.filter(Boolean).length} players in ${planB.formation})`,
+          );
+        }
+      }
       Sea.applyUserMatch(m);
       check(!!fx.res, `user fixture ${fx.id} has no result after applyUserMatch`);
       stats.userMatches++;
@@ -486,7 +505,7 @@ check(refuse(FM.SAVE_VERSION + 1) === 'too-new', 'future save not refused as too
 const secs = ((Date.now() - t0) / 1000).toFixed(1);
 console.log(
   `${stats.matches} matches · ${gpm.toFixed(2)} goals/match · ${stats.userMatches} user matches · ${stats.days} sim steps · save ${(packed.length / 1e6).toFixed(2)} MB · ${secs}s
-  market: ${stats.bought || 0} signed, ${stats.lostToRival || 0} lost to a rival, ${stats.trials || 0} trials, ${(S.payments || []).length} payments pending`,
+  market: ${stats.bought || 0} signed, ${stats.lostToRival || 0} lost to a rival, ${stats.trials || 0} trials, ${(S.payments || []).length} payments pending; Plan B used ${stats.planB || 0}×`,
 );
 if (fails.length) {
   console.error(`\nFAILED (${fails.length}):\n - ` + fails.join('\n - '));

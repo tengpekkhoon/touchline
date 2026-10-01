@@ -63,9 +63,36 @@
     return v;
   };
   W.stars = (ca) => U.clamp(Math.round(((ca - 30) / 55) * 10) / 2, 0.5, 5); // 0.5–5
-  W.fitAt = (p, slotType) => (D.FIT[p.pos] && D.FIT[p.pos][slotType]) || (p.pos === slotType ? 1 : 0.4);
-  W.effAt = function (p, slotType) {
-    const fit = W.fitAt(p, slotType);
+  // How well a player fits a slot (0–1): his natural position's table, or a second position he has learned
+  // (p.alt). Given the slot itself, its side counts on the flanks: a full-back or wing-back is at home on the side
+  // of his stronger foot, a winger too unless his role cuts inside (inv), when he wants the other flank.
+  W.SIDE_FIT = 0.93; // full-back or wing-back on his weaker side
+  W.SIDE_FIT_W = 0.95; // winger on the side his role doesn't want
+  W.fitAt = (p, slotType, slot, role) => {
+    let f = (D.FIT[p.pos] && D.FIT[p.pos][slotType]) || (p.pos === slotType ? 1 : 0.4);
+    if (p.alt && p.alt[slotType] > f) f = p.alt[slotType];
+    if (slot && p.foot !== 'Both' && (slotType === 'FB' || slotType === 'WB' || slotType === 'W')) {
+      const side = D.slotSide(slot);
+      if (side) {
+        const strong = p.foot === 'Left' ? 'L' : 'R';
+        const inv = slotType === 'W' && role && (D.ROLES.W[role] || {}).inv;
+        if ((side === strong) === !!inv) f *= slotType === 'W' ? W.SIDE_FIT_W : W.SIDE_FIT;
+      }
+    }
+    return f;
+  };
+  // Second positions: a third of outfield players start with one (a few with two) from the positions next to
+  // theirs; playing there teaches it (Sea.learnPositions)
+  W.genAlt = function (p) {
+    if (p.pos === 'GK' || Math.random() > 0.35) return;
+    const near = Object.keys(D.FIT[p.pos] || {}).filter((t) => t !== p.pos);
+    const n = Math.random() < 0.25 ? 2 : 1;
+    U.shuffle(near)
+      .slice(0, n)
+      .forEach((t) => ((p.alt = p.alt || {})[t] = Math.round(U.rand(0.86, 0.97) * 100) / 100));
+  };
+  W.effAt = function (p, slotType, slot, role) {
+    const fit = W.fitAt(p, slotType, slot, role);
     return W.calcCA(p, slotType) * (0.62 + 0.38 * fit) * (0.8 + 0.2 * (p.fitness / 100)) * (0.95 + p.morale / 1000);
   };
   W.available = (p) => !p.inj && !p.susp && !p.retired;
@@ -330,6 +357,7 @@
       cult: 0,
       derbyGoals: 0,
     };
+    W.genAlt(p);
     // Unique names (and never a famous real player). Retry combinations, then fall back to a second surname.
     let tries = 0;
     while ((REAL_NAMES.has(`${p.fn} ${p.ln}`) || W.nameTaken(`${p.fn} ${p.ln}`)) && tries++ < 60) {
@@ -578,21 +606,76 @@
   // How an AI club sets up: formation from the usual mix, build-up from its identity, big clubs press high.
   // Used for new worlds and every new manager alike, so the world's tactical mix (and its goals per game) stays
   // steady over long saves instead of drifting toward a uniform, more open mix as managers come and go.
+  W.AI_FORMATIONS = {
+    '4-3-3': 2,
+    '4-2-3-1': 2,
+    '4-4-2': 1,
+    '3-5-2': 0.8,
+    '5-3-2': 0.6,
+    '4-1-4-1': 0.8,
+    '4-4-1-1': 0.6,
+    '3-4-2-1': 0.6,
+    '4-1-2-1-2': 0.3,
+    '4-3-1-2': 0.3,
+    '5-4-1': 0.4,
+  };
   W.aiTactic = (c) =>
     W.newTactic(
-      U.pick(['4-3-3', '4-2-3-1', '4-4-2', '3-5-2', '4-3-3', '5-3-2']),
+      U.wpick(Object.keys(W.AI_FORMATIONS), (f) => W.AI_FORMATIONS[f]),
       { fan: 'Short', giant: 'Possession', oil: 'Possession', youth: 'Short' }[c.identity] ||
         (c.rep < 60 ? 'Counter' : U.pick(D.BUILDUP)),
       c.rep > 75 ? 'High Press' : U.pick(D.PRESS),
+      U.wpick(D.WIDTH, (w) => (w === 'Balanced' ? 3 : 1)),
     );
-  W.newTactic = (formation = '4-3-3', buildup = 'Short', press = 'Mid Block') => ({
+  W.newTactic = (formation = '4-3-3', buildup = 'Short', press = 'Mid Block', width = 'Balanced') => ({
     formation,
     buildup,
     press,
+    width,
     roles: W.defaultRoles(formation),
     invFB: false,
     lineup: null,
   });
+  // The user's second tactic (Plan B), made on first use from the first one; it has its own familiarity
+  W.secondTactic = function () {
+    const u = FM.S.user;
+    if (!u.tactic2) {
+      u.tactic2 = JSON.parse(JSON.stringify(u.tactic));
+      u.tactic2.fam = Math.round((u.tactic.fam ?? 55) * 0.6);
+      u.tactic2.lineup = null;
+    }
+    return u.tactic2;
+  };
+  // Swap: Plan B becomes the tactic you start with. Captain and set-piece takers stay with the team, not the plan.
+  W.swapTactics = function () {
+    const u = FM.S.user,
+      a = u.tactic,
+      b = W.secondTactic();
+    for (const k of ['capt', 'captAuto', 'sp']) {
+      b[k] = a[k];
+      delete a[k];
+    }
+    u.tactic = b;
+    u.tactic2 = a;
+    const c = W.userClub();
+    if (c) c.tactic = u.tactic;
+  };
+  // Weather on the day, by the home side's climate and the time of the season (the calendar runs August–May)
+  W.weatherFor = function (club) {
+    const f = FM.S.calendar && FM.S.calendar.length ? FM.S.day / FM.S.calendar.length : 0.5,
+      nat = club && club.nat,
+      C = D.CLIMATE,
+      winter = f > 0.3 && f < 0.7,
+      edge = f < 0.15 || f > 0.85;
+    const w = { Clear: 0.55, Cloudy: 0.2, Rain: 0.2, Snow: 0, Hot: 0 };
+    if (C.wet.includes(nat)) w.Rain = 0.3;
+    if (C.warm.includes(nat) || C.tropical.includes(nat)) w.Rain = 0.12;
+    if (C.cold.includes(nat) && winter) w.Snow = 0.12;
+    if (C.tropical.includes(nat)) w.Hot = winter ? 0.15 : 0.35;
+    else if (C.warm.includes(nat) && edge) w.Hot = 0.3;
+    const k = U.wpick(Object.keys(w), (x) => w[x]);
+    return D.WEATHER.find((x) => x[0] === k);
+  };
 
   // Picks an XI (respecting a saved user lineup when valid) and a bench
   W.NO_LIMIT = 99; // rules.foreignLimit value for "no limit on foreign players"
@@ -636,7 +719,10 @@
         if (used.has(p.id)) continue;
         if (slots[i].t === 'GK' ? p.pos !== 'GK' : p.pos === 'GK') continue;
         // a loanee his parent club insisted should play gets the benefit of the doubt
-        const v = W.effAt(p, slots[i].t) * W.fitnessPick(p) * (p.loan && p.loan.promised ? 1.1 : 1);
+        const v =
+          W.effAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]) *
+          W.fitnessPick(p) *
+          (p.loan && p.loan.promised ? 1.1 : 1);
         if (v > bv) {
           bv = v;
           best = p;
@@ -656,7 +742,9 @@
         (tactic.lineup || []).map((pid, i) => (xi[i] && xi[i].id === pid ? i : -1)).filter((i) => i >= 0),
       );
       const val = (p, i) =>
-        !p || (slots[i].t === 'GK') !== (p.pos === 'GK') ? 0 : W.effAt(p, slots[i].t) * W.fitnessPick(p);
+        !p || (slots[i].t === 'GK') !== (p.pos === 'GK')
+          ? 0
+          : W.effAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]) * W.fitnessPick(p);
       for (let pass = 0, better = true; better && pass < 4; pass++) {
         better = false;
         for (let i = 0; i < slots.length; i++) {

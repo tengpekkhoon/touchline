@@ -28,6 +28,12 @@
     bookedCaution: 0.3, // a booked player's chance of another card, relative to the rest
     gameState: 0.25, // late on, a leading side creates fewer chances and a trailing side more
     qualityExp: 1.1, // how sharply the attack/defence gap turns into chances (higher = more predictable, more lopsided)
+    dayForm: 0.04, // each side's form on the day: strength × (1 ± this, normally distributed) — upsets
+    conf: 0.03, // a club's confidence (−1 to 1, from recent results against expectations) scales its strength by ±this
+    gkErr: 0.008, // chance that a keeper spills a shot he would have saved (scaled by his handling and composure)
+    star: 0.04, // in a big game a side's best player raises his level by this
+    snow: 0.85, // chance rate in snow
+    heat: 1.3, // fatigue in the heat
     targetGoals: 2.72, // tactical equilibrium: the league scoring rate the game settles back toward over long saves
   });
   const AW = { GK: 0, CB: 0.1, FB: 0.25, WB: 0.35, DM: 0.2, CM: 0.4, AM: 0.8, W: 0.85, ST: 1 };
@@ -131,14 +137,20 @@
       this.agg = o.agg || null;
       this.awayGoals = !!o.awayGoals;
       this.live = !!o.live;
-      this.weather = o.weather || U.wpick(D.WEATHER, (w) => w[2]);
       const hc = FM.clubOf(o.h),
         ac = FM.clubOf(o.a);
+      this.weather = o.weather || W.weatherFor(hc);
       this.derby = hc.rival === ac.id;
       // A rivalry that has grown out of past meetings (FM.Records): a big game with a bit more edge
       this.heated = !this.derby && FM.Records.heated(hc.id, ac.id);
       this.big = this.derby || this.heated || Math.max(hc.rep, ac.rep) >= 80;
+      // A big occasion for the stars: a derby, a knockout tie, or two top sides meeting
+      this.bigGame = this.derby || this.heated || this.knockout || Math.min(hc.rep, ac.rep) >= 75;
+      this.homeF = this.neutral ? 0 : Match.homeFactor(hc, ac, this.derby || this.heated);
       this.sides = [this.mkSide(hc, 0), this.mkSide(ac, 1)];
+      // What the result was expected to be worth to the home side (win 1, draw ½): confidence moves against it
+      const avg = (sd) => U.avg(sd.xi.filter(Boolean), (p) => p.ca);
+      this.exp = FM.Season.expected(avg(this.sides[0]), avg(this.sides[1]), true, this.neutral);
       this.events = [];
       this.momentum = [];
       this.mom = 0;
@@ -194,6 +206,12 @@
           sd.ps[p.id] = { pass: 0, kp: 0, sh: 0, sot: 0, tk: 0, tch: 0 };
         }
       });
+      // On the day: form (a little luck either way, capped), confidence from recent results, and the best player
+      const s = CAL.dayForm;
+      sd.day = 1 + U.clamp(U.gauss(0, s), -2.5 * s, 2.5 * s);
+      sd.conf = club.sim === 'nation' ? 0 : club.conf || 0;
+      const star = xi.filter(Boolean).sort((a, b) => b.ca - a.ca)[0];
+      sd.star = star && star.id;
       // Armband: the club captain if he starts, else the best leader in the XI (passed on if he goes off)
       const capt = FM.Matchday.armband(
         sd,
@@ -235,11 +253,26 @@
       return sd.xi.map((p, i) => ({ p, i })).filter(({ p }) => p && !sd.sentOff[p.id]);
     }
 
+    // A player's fit in his slot (side and role included) and each slot's role, worked out once per match: the
+    // engine asks every minute. Subs and a change of tactic clear them.
+    fitOf(sd, p, i) {
+      const c = (sd.fitC = sd.fitC || []),
+        e = c[i];
+      if (e && e[0] === p) return e[1];
+      const f = 0.62 + 0.38 * W.fitAt(p, sd.slots[i].t, sd.slots[i], sd.tactic.roles[i]);
+      c[i] = [p, f];
+      return f;
+    }
+    roleAt(sd, i) {
+      const c = (sd.roleC = sd.roleC || []);
+      return c[i] || (c[i] = D.ROLES[sd.slots[i].t][sd.tactic.roles[i]] || {});
+    }
     factor(sd, p) {
       let f = 0.72 + 0.28 * Math.sqrt((sd.st[p.id] ?? 100) / 100);
       f *= 0.96 + p.morale / 1250;
       if (this.weather[0] === 'Rain' && W.hasTrait(p, 'Fair-Weather')) f *= 0.9;
       if (this.big && W.hasTrait(p, 'Big Game Player')) f *= 1.06;
+      if (this.bigGame && p.id === sd.star) f *= 1 + CAL.star;
       if (this.derby && W.hasTrait(p, 'Derby Specialist')) f *= 1.08;
       if (sd.injured[p.id]) f *= 0.6;
       return f;
@@ -257,12 +290,13 @@
         rm = 0,
         rd = 0,
         cross = 0,
+        win = 0,
         capt = null;
       const on = this.onPitch(sd);
       for (const { p, i } of on) {
         if (p.id === sd.capt) capt = p;
         const t = sd.slots[i].t,
-          fit = 0.62 + 0.38 * W.fitAt(p, t),
+          fit = this.fitOf(sd, p, i),
           f = this.factor(sd, p) * fit,
           A = p.attrs;
         a += AW[t] * attackVal(A) * f;
@@ -272,11 +306,12 @@
         d += DW[t] * defVal(A) * f;
         dw += DW[t];
         if (t === 'GK') gk = gkVal(A) * f;
-        const r = D.ROLES[t][sd.tactic.roles[i]] || {};
+        const r = this.roleAt(sd, i);
         ra += r.att || 0;
         rm += r.mid || 0;
         rd += r.def || 0;
         cross += r.cross || 0;
+        win += (r.win || 0) + (r.press || 0) * 0.4; // ball-winners and pressing forwards win it back
       }
       if (!capt && on.length) {
         capt = FM.Matchday.armband(sd, on);
@@ -287,12 +322,7 @@
       let att = (a / aw) * (1 + ra),
         mid = (m / mw) * (1 + rm),
         def = (d / dw) * (1 + rd);
-      const b = {
-        Short: [1, 1.04, 1, 1, 1.05],
-        Direct: [1.02, 0.95, 1, 1.08, 0.92],
-        Counter: [1, 0.93, 1.04, 0.95, 1.05],
-        Possession: [0.99, 1.1, 1.01, 0.9, 1.06],
-      }[T.buildup];
+      const b = Match.BUILDUP[T.buildup] || Match.BUILDUP.Short;
       att *= b[0];
       mid *= b[1];
       def *= b[2];
@@ -309,13 +339,28 @@
         mid *= 1.04;
         def *= 0.99;
       }
-      if (sd.idx === 0 && !this.neutral) {
-        att *= CAL.homeAtt;
-        mid *= CAL.homeMid;
-        def *= CAL.homeDef;
+      // Rain: the ball skids and short passing suffers
+      if (this.weather[0] === 'Rain' && (T.buildup === 'Short' || T.buildup === 'Possession')) mid *= 0.97;
+      // Home advantage, as big as the crowd, the stadium and the occasion make it (Match.homeFactor)
+      if (sd.idx === 0 && this.homeF) {
+        const h = this.homeF;
+        att *= 1 + (CAL.homeAtt - 1) * h;
+        mid *= 1 + (CAL.homeMid - 1) * h;
+        def *= 1 + (CAL.homeDef - 1) * h;
       }
+      // Form on the day and confidence
+      const day = sd.day * (1 + sd.conf * CAL.conf);
+      att *= day;
+      mid *= day;
+      def *= day;
       const famNow =
-        sd.club.sim === 'nation' ? null : sd.user ? FM.S.user.tactic.fam : CAL.aiFam ? (sd.tactic.fam ?? 70) : null;
+        sd.club.sim === 'nation'
+          ? null
+          : sd.user
+            ? (sd.tactic.fam ?? FM.S.user.tactic.fam)
+            : CAL.aiFam
+              ? (sd.tactic.fam ?? 70)
+              : null;
       if (famNow != null) {
         const f = 1 + (famNow - 60) * 0.0008;
         att *= f;
@@ -330,7 +375,7 @@
       att *= pen * (1 + sd.mods.att);
       mid *= pen * (1 + sd.mods.mid);
       def *= pen * (1 + sd.mods.def);
-      return { att, mid, def, gk, rate: b[3], q: b[4], cross };
+      return { att, mid, def, gk, rate: b[3], q: b[4], cross, win: Math.min(0.08, win) };
     }
 
     // ---------- one simulated minute ----------
@@ -348,8 +393,9 @@
         sA = this.strength(A);
       // pressing effects on opponent control
       const pm = { 'High Press': 0.93, 'Mid Block': 1, 'Low Block': 1.06 };
-      const midH = sH.mid * pm[A.tactic.press],
-        midA = sA.mid * pm[H.tactic.press];
+      // the other side's ball-winners and pressers make it harder to keep the ball
+      const midH = sH.mid * pm[A.tactic.press] * (1 - sA.win),
+        midA = sA.mid * pm[H.tactic.press] * (1 - sH.win);
       let possH = U.clamp(Math.pow(midH, 3) / (Math.pow(midH, 3) + Math.pow(midA, 3)), 0.25, 0.75);
       if (A.tactic.press === 'Low Block') possH = Math.min(0.78, possH + 0.04);
       if (H.tactic.press === 'Low Block') possH = Math.max(0.22, possH - 0.04);
@@ -364,6 +410,7 @@
         if (sd.tactic.press === 'Low Block') r *= 0.92;
         if (sd.tactic.buildup === 'Counter' && opSd.tactic.press === 'High Press') r *= 1.15;
         if (opSd.tactic.buildup === 'Possession') r *= 0.93;
+        if (this.weather[0] === 'Snow') r *= CAL.snow; // heavy pitch, fewer chances
         // Game state: from the hour mark the team in front sits deeper and the team behind pushes
         const diff = sd.goals - opSd.goals;
         if (diff && tl.m >= 55) r *= 1 - Math.sign(diff) * CAL.gameState * Math.min(1, (tl.m - 55) / 35);
@@ -510,6 +557,20 @@
         w.cutback += 0.08;
         w.through += 0.05;
       }
+      if (T.buildup === 'Wing Play') {
+        w.cross += 0.2;
+        w.cutback += 0.04;
+      }
+      // Width: wide stretches them for crosses; narrow plays through the middle (and leaves the flanks)
+      if (T.width === 'Wide') {
+        w.cross += 0.12;
+        w.through -= 0.03;
+      } else if (T.width === 'Narrow') {
+        w.cross -= 0.1;
+        w.through += 0.04;
+        w.cutback += 0.03;
+      }
+      if (od.tactic.width === 'Narrow') w.cross += 0.08;
       if (od.tactic.press === 'High Press') w.counter += 0.06;
       if (od.tactic.press === 'Low Block') {
         w.longshot += 0.08;
@@ -541,20 +602,31 @@
               : 0.6 + (Md.spScore(spTaker.p, 'cor') / 20) * 0.45;
       }
       if (type !== 'penalty') xg = U.clamp(xg * me.q * Math.sqrt(me.att / op.def), 0.01, 0.8);
+      // Roles decide who gets on the end of things: shoot (who shoots), head (who wins crosses and corners), assist
+      const roleOf = (o) => this.roleAt(sd, o.i);
       // shooter
       const shooterW = (o) => {
         const t = sd.slots[o.i].t,
-          A = o.p.attrs;
+          A = o.p.attrs,
+          r = roleOf(o);
         if (type === 'longshot')
-          return ({ CM: 1, AM: 1.2, DM: 0.6, W: 0.8, ST: 0.6 }[t] || 0.15) * (A.finishing + A.technique);
-        if (type === 'cross') return (AW[t] + (t === 'CB' ? 0.2 : 0)) * (A.strength + A.finishing);
+          return (
+            ({ CM: 1, AM: 1.2, DM: 0.6, W: 0.8, ST: 0.6 }[t] || 0.15) *
+            (A.finishing + A.technique) *
+            (1 + Math.max(-0.5, r.shoot || 0) * 0.5)
+          );
+        if (type === 'cross')
+          return (
+            (AW[t] + (t === 'CB' ? 0.2 : 0)) * (A.strength + A.finishing) * (1 + (r.head || 0) + (r.shoot || 0) * 0.3)
+          );
         if (type === 'penalty') return (AW[t] + 0.05) * (A.finishing + A.composure) ** 2;
         if (sp === 'cor')
           return (
             ({ CB: 1, ST: 1, DM: 0.5, AM: 0.35, CM: 0.35, W: 0.25, FB: 0.3, WB: 0.3 }[t] || 0.2) *
-            (A.strength + A.positioning * 0.6 + A.finishing * 0.6) ** 1.5
+            (A.strength + A.positioning * 0.6 + A.finishing * 0.6) ** 1.5 *
+            (1 + (r.head || 0) * 0.5)
           );
-        return (AW[t] + 0.02) * (A.finishing + A.composure + A.pace * 0.5);
+        return (AW[t] + 0.02) * (A.finishing + A.composure + A.pace * 0.5) * Math.max(0.3, 1 + (r.shoot || 0));
       };
       const penTaker = type === 'penalty' ? Md.taker(sd, 'pen', on) : null;
       const shooter =
@@ -567,9 +639,15 @@
         const pool = on.filter((o) => o !== shooter);
         assister = U.wpick(pool, (o) => {
           const t = sd.slots[o.i].t,
-            A = o.p.attrs;
-          if (type === 'cross') return ({ W: 1.2, FB: 0.9, WB: 1.1, AM: 0.4 }[t] || 0.1) * A.passing;
-          return (MW[t] + AW[t] * 0.5) * (A.passing + A.vision);
+            A = o.p.attrs,
+            r = roleOf(o);
+          if (type === 'cross')
+            return (
+              ({ W: 1.2, FB: 0.9, WB: 1.1, AM: 0.4 }[t] || 0.1) *
+              A.passing *
+              (1 + (r.assist || 0) * 0.5 + (r.cross || 0) * 3)
+            );
+          return (MW[t] + AW[t] * 0.5) * (A.passing + A.vision) * (1 + (r.assist || 0));
         });
       }
       const p = shooter.p,
@@ -582,10 +660,21 @@
         0.9,
       );
       if (type === 'longshot' && W.hasTrait(p, 'Flair')) pGoal += 0.03;
-      let outcome;
+      let outcome,
+        howler = false;
       if (Math.random() < pGoal) outcome = 'goal';
       else if (Math.random() < CAL.savedBase + xg * CAL.savedXg) outcome = 'saved';
       else outcome = Math.random() < 0.45 ? 'blocked' : 'wide';
+      // A rare keeper's error: a shot he should have saved slips through (worse hands and nerves, wet ball)
+      const gk = this.onPitch(od).find(({ i }) => od.slots[i].t === 'GK');
+      if (outcome === 'saved' && gk && type !== 'penalty') {
+        const G = gk.p.attrs,
+          q = U.clamp(1 + (11 - (G.handling + G.composure) / 2) * 0.15, 0.3, 2.5);
+        if (Math.random() < CAL.gkErr * q * (this.weather[0] === 'Rain' ? 1.8 : 1)) {
+          outcome = 'goal';
+          howler = true;
+        }
+      }
 
       sd.shots++;
       sd.xg += xg;
@@ -617,7 +706,6 @@
           y: U.clamp(0.5 + U.gauss(0, R[2]), 0.22, 0.78),
         });
       }
-      const gk = this.onPitch(od).find(({ i }) => od.slots[i].t === 'GK');
       const ev = {
         k: 'chance',
         side,
@@ -632,6 +720,10 @@
         big: xg >= 0.12 || outcome === 'goal' || (sp === 'fk' && outcome === 'saved'),
       };
       if (sp) ev.sp = sp;
+      if (howler) {
+        ev.err = gk.p.id;
+        od.rating[gk.p.id] -= 1.1;
+      }
       if (outcome === 'goal') {
         sd.goals++;
         sd.rating[p.id] += type === 'penalty' ? 0.7 : 1.0;
@@ -646,7 +738,9 @@
         sd.rating[p.id] += 0.08;
       } else sd.rating[p.id] -= xg * 0.4;
       if (assister && outcome !== 'goal') sd.rating[assister.p.id] += 0.08;
-      ev.text = FM.Commentary.chance(ev, p, assister && assister.p, gk && gk.p, this);
+      ev.text = howler
+        ? `Howler! ${W.short(gk.p)} lets ${W.short(p)}'s shot slip through his hands.`
+        : FM.Commentary.chance(ev, p, assister && assister.p, gk && gk.p, this);
       out.events.push(ev);
 
       if (this.live || this.o.track) {
@@ -672,6 +766,39 @@
         if (outcome === 'goal') out.script.push({ k: 'kickoff', side: 1 - side, to: this.ball.slot });
       }
       return ev;
+    }
+    // Change to another tactic mid-match (your Plan B): style, pressing, width and roles at once, and the shape
+    // too, the players on the pitch re-arranged into the new formation's slots by who fits each best
+    switchTactic(sd, t) {
+      const nt = JSON.parse(JSON.stringify(t));
+      nt.lineup = null;
+      if (nt.formation !== sd.tactic.formation) {
+        const slots = D.FORMATIONS[nt.formation],
+          players = sd.xi.filter(Boolean),
+          xi = new Array(slots.length).fill(null);
+        // Best natural fits first (a striker to the striker's slot), ability breaking ties; the keeper stays in
+        // goal and a sent-off player fills a slot last
+        const pairs = [];
+        slots.forEach((s, i) =>
+          players.forEach((p) => {
+            if ((s.t === 'GK') !== (p.pos === 'GK')) return;
+            const fit = sd.sentOff[p.id] ? -1 : W.fitAt(p, s.t, s, nt.roles[i]);
+            pairs.push({ i, p, fit, eff: W.effAt(p, s.t, s, nt.roles[i]) });
+          }),
+        );
+        pairs.sort((a, b) => b.fit - a.fit || b.eff - a.eff);
+        const used = new Set();
+        for (const x of pairs)
+          if (!xi[x.i] && !used.has(x.p.id)) {
+            xi[x.i] = x.p;
+            used.add(x.p.id);
+          }
+        sd.xi = xi;
+        sd.slots = slots;
+      }
+      sd.tactic = nt;
+      sd.switched = true;
+      sd.fitC = sd.roleC = sd.rfC = null;
     }
     kickoffSlot(sd) {
       const st =
@@ -750,10 +877,18 @@
 
     fatigue(tl, out) {
       this.sides.forEach((sd) => {
-        const pf = { 'High Press': 1.35, 'Mid Block': 1, 'Low Block': 0.82 }[sd.tactic.press];
+        const pf =
+          { 'High Press': 1.35, 'Mid Block': 1, 'Low Block': 0.82 }[sd.tactic.press] *
+          (this.weather[0] === 'Hot' ? CAL.heat : 1); // the heat drains legs
+        const rfs = (sd.rfC = sd.rfC || []);
         for (const { p, i } of this.onPitch(sd)) {
           const t = sd.slots[i].t;
-          const rf = t === 'GK' ? 0.25 : ['WB', 'FB', 'CM'].includes(t) ? 1.1 : 1;
+          // how hard the slot and its role run: wide and central midfielders more, pressing roles more still
+          const rf =
+            rfs[i] ??
+            (rfs[i] =
+              (t === 'GK' ? 0.25 : t === 'WB' || t === 'FB' || t === 'CM' ? 1.1 : 1) *
+              (1 + (this.roleAt(sd, i).press || 0) * 2));
           sd.st[p.id] = Math.max(0, sd.st[p.id] - 0.42 * (1.35 - (p.attrs.stamina / 20) * 0.7) * pf * rf);
           if (!sd.injured[p.id] && Math.random() < FM.Injury.matchChance(p, sd.st[p.id])) {
             sd.injured[p.id] = tl.m;
@@ -794,6 +929,7 @@
       if (!pIn || Object.hasOwn(sd.on, pIn.id)) return null;
       const m = tl ? tl.m : this.minute;
       sd.xi[i] = pIn;
+      sd.fitC = null;
       sd.subsLeft--;
       sd.st[pIn.id] = pIn.fitness;
       sd.rating[pIn.id] = 6.3;
@@ -912,12 +1048,13 @@
       const sd = this.sides[k],
         poss = this.result().poss[k],
         T = sd.tactic;
-      const style = { Possession: 1.15, Short: 1.05, Direct: 0.85, Counter: 0.8 }[T.buildup] || 1;
+      const style = { Possession: 1.15, Short: 1.05, Direct: 0.85, Counter: 0.8, 'Wing Play': 0.95 }[T.buildup] || 1;
       // ~500 at 50% possession, ~700 at 72%, ~300 at 28%; style nudges it, the simulated count adds ±5%
       const total = Math.round((150 + 7 * poss) * Math.sqrt(style) * (0.95 + (sd.passCount % 11) / 100));
       const xi = sd.xi.filter(Boolean),
         passing = xi.length ? xi.reduce((s, p) => s + p.attrs.passing, 0) / xi.length : 12;
-      const acc = Math.round(U.clamp(78 + (poss - 50) * 0.35 + (style - 1) * 20 + (passing - 12) * 1.4, 62, 92));
+      const wet = { Rain: -3, Snow: -5 }[this.weather[0]] || 0; // a wet or heavy pitch costs accuracy
+      const acc = Math.round(U.clamp(78 + (poss - 50) * 0.35 + (style - 1) * 20 + (passing - 12) * 1.4 + wet, 62, 92));
       return { total, acc };
     }
     result() {
@@ -945,13 +1082,49 @@
     }
   }
   FM.Match = Match;
+  // Build-up styles: [attack, midfield, defence, chance rate, chance quality]
+  Match.BUILDUP = {
+    Short: [1, 1.04, 1, 1, 1.05],
+    Direct: [1.02, 0.95, 1, 1.08, 0.92],
+    Counter: [1, 0.93, 1.04, 0.95, 1.05],
+    Possession: [0.99, 1.1, 1.01, 0.9, 1.06],
+    'Wing Play': [1.01, 0.97, 1, 1.04, 0.96],
+  };
+  // How much the home side's advantage counts (1 = the usual): a happy crowd and a big stadium make it bigger, a
+  // derby's atmosphere and a long trip for the visitors (another country) too; a fed-up crowd, a small ground less
+  Match.homeFactor = function (h, a, derby) {
+    if (!h || h.sim === 'nation') return 1;
+    const mood = h.fanMood ?? 60,
+      cap = (h.stadium && h.stadium.cap) || 25000;
+    const f =
+      1 +
+      (0.3 * (mood - 60)) / 40 +
+      U.clamp(0.12 * Math.log2(cap / 25000), -0.2, 0.2) +
+      (derby ? 0.15 : 0) +
+      (a && a.nat !== h.nat ? 0.15 : 0);
+    return U.clamp(f, 0.5, 1.6);
+  };
   // Aggregate / away-goal options for a fixture that is the second leg of a tie
+  // Options a fixture carries into its match: the weather forecast (Match.forecast) and, for a second leg, the
+  // first leg's score
   Match.tieOpts = function (fx) {
-    if (!fx.first) return {};
+    const o = fx.wx ? { weather: D.WEATHER.find((w) => w[0] === fx.wx) } : {};
+    if (!fx.first) return o;
     const f1 = FM.Cups.findFixture(fx.first);
-    if (!f1 || !f1.res) return {};
+    if (!f1 || !f1.res) return o;
     // leg 1 was played with the sides reversed
-    return { agg: [f1.res.ag, f1.res.hg], awayGoals: !!FM.S.rules.awayGoals };
+    return { ...o, agg: [f1.res.ag, f1.res.hg], awayGoals: !!FM.S.rules.awayGoals };
+  };
+  // The forecast for a fixture, fixed once you've seen it (your pre-match screen) so the match is played in it
+  Match.forecast = function (fx) {
+    if (!fx.wx) fx.wx = W.weatherFor(FM.clubOf(fx.h))[0];
+    return D.WEATHER.find((w) => w[0] === fx.wx);
+  };
+  // What the weather does, in a few words (pre-match screen)
+  Match.WEATHER_NOTE = {
+    Rain: 'short passing suffers and keepers fumble more',
+    Snow: 'a heavy pitch: fewer chances',
+    Hot: 'legs tire faster, pressing costs more',
   };
 
   // ---------------- Commentary ----------------

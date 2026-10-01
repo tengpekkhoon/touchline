@@ -46,6 +46,9 @@ const lg = {
   penGoals: 0,
   cards: 0,
   reds: 0,
+  howlers: 0,
+  bigVsSmall: 0,
+  smallWins: 0,
 };
 const light = { n: 0, goals: 0, h: 0, d: 0, a: 0, nil: 0 };
 const cup = { mixed: 0, upsets: 0 };
@@ -83,6 +86,16 @@ Sea.apply = function (fx, m) {
     }
     lg.cards += res.cards.length;
     lg.reds += res.cards.filter((c) => c.k === 'red').length;
+    lg.howlers += m.events.filter((e) => e.k === 'goal' && e.err).length;
+    // Upsets: a top-four side (by pre-season reputation) against a bottom-half one, and how often the small one wins
+    const n = comp.clubs.length,
+      rh = ranks[fx.h],
+      ra = ranks[fx.a];
+    if (rh && ra && Math.min(rh, ra) <= 4 && Math.max(rh, ra) > n / 2) {
+      lg.bigVsSmall++;
+      const smallHome = rh > ra;
+      if (smallHome ? res.hg > res.ag : res.ag > res.hg) lg.smallWins++;
+    }
     // minutes by age in top flights (real age profiles are minutes-weighted)
     if (comp.tier === 1)
       for (const sd of m.sides)
@@ -387,6 +400,8 @@ const rows = [
   ['Champion points per game', U.avg(titles, (t) => t.ppg), 2.15, 2.5, 2],
   ['Title margin (pts)', U.avg(titles, (t) => t.gap), 2, 10, 1],
   ['Champion was a top-3 club %', pct(titles.filter((t) => t.rank <= 3).length, titles.length), 70, 90, 0],
+  ['Bottom-half side beats a top-four side %', pct(lg.smallWins, lg.bigVsSmall), 9, 18, 1], // by pre-season standing; big five leagues ~12–15
+  ['Keeper errors leading to goals per match', lg.howlers / lg.n, 0.03, 0.1, 3],
   ['Cup upsets (lower division wins) %', pct(cup.upsets, cup.mixed), 15, 30, 1],
   ['Light leagues: goals per match', light.goals / light.n, 2.5, 2.9, 2],
   ['Light leagues: home wins %', pct(light.h, light.n), 42, 48, 1],
