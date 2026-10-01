@@ -159,7 +159,7 @@
     UI.render();
   };
   UI.acts.ddAll = () => {
-    while (M.dd() && M.dd().i < M.DD_HOURS.length) M.deadlineHour();
+    for (let g = 0; g < M.DD_HOURS.length && M.dd() && M.dd().i < M.DD_HOURS.length; g++) M.deadlineHour();
     UI.save();
     UI.deadlineSheet();
     UI.render();

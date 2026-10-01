@@ -383,9 +383,67 @@
     if (clubId) W.startSpell(p, clubId);
     return p;
   };
-  W.blankSeason = () => ({ apps: 0, goals: 0, ast: 0, rsum: 0, motm: 0, yc: 0, rc: 0 });
+  // A season's numbers. From fully simulated matches also minutes, shots, key passes, tackles and passes, clean
+  // sheets, and for keepers saves, goals conceded and the xG of the shots they faced.
+  W.blankSeason = () => ({
+    apps: 0,
+    goals: 0,
+    ast: 0,
+    rsum: 0,
+    motm: 0,
+    yc: 0,
+    rc: 0,
+    mins: 0,
+    sh: 0,
+    sot: 0,
+    kp: 0,
+    tk: 0,
+    pas: 0,
+    cs: 0,
+    sv: 0,
+    ga: 0,
+    xga: 0,
+  });
+  W.STAT_KEYS = Object.keys(W.blankSeason());
+  // One history row per season and club from a season's numbers ({ y, c, apps, g, a, r, ... })
+  W.seasonRow = (y, c, st) => ({
+    y,
+    c,
+    apps: st.apps,
+    g: st.goals,
+    a: st.ast,
+    r: st.apps ? +(st.rsum / st.apps).toFixed(2) : 0,
+    mins: st.mins,
+    sh: st.sh,
+    kp: st.kp,
+    tk: st.tk,
+    cs: st.cs,
+    sv: st.sv,
+    ga: st.ga,
+    xga: Math.round(st.xga * 10) / 10,
+    motm: st.motm,
+    yc: st.yc,
+    rc: st.rc,
+  });
+  // The season's rows: a player who moved mid-season (a transfer, a loan, back from loan) gets one per club
+  W.seasonRows = function (p, y) {
+    const rows = [];
+    let prev = W.blankSeason();
+    const diff = (a, b) => Object.fromEntries(W.STAT_KEYS.map((k) => [k, (a[k] || 0) - (b[k] || 0)]));
+    for (const sp of p.splits || []) {
+      const d = diff(sp.s, prev);
+      if (d.apps > 0) rows.push(W.seasonRow(y, sp.c, d));
+      prev = sp.s;
+    }
+    const last = diff(p.season, prev);
+    if (last.apps > 0) rows.push(W.seasonRow(y, p.clubId, last));
+    return rows;
+  };
   W.wageFor = (p) => Math.max(750, Math.round((W.baseValue(p) * 0.0035) / 50) * 50); // wages follow ability and age, not market swings
   W.startSpell = function (p, clubId) {
+    // a move in the middle of a season: remember the numbers so far, for a history row with the old club
+    if (p.clubId && p.clubId !== clubId && p.season && p.season.apps > 0)
+      (p.splits = p.splits || []).push({ c: p.clubId, s: { ...p.season } });
     p.clubId = clubId;
     const fresh = sqIdx.S === FM.S && sqIdx.ver === W.rosterVer;
     W.rosterVer++;
@@ -945,7 +1003,7 @@
     FM.S = {
       version: FM.SAVE_VERSION,
       nextId: 1,
-      year: D.SEASON_START,
+      year: opts.startYear || D.SEASON_START, // groundwork for saves that start in a past season
       day: 0,
       players: {},
       clubs: {},
@@ -1403,7 +1461,27 @@
   // stored as arrays, common keys are shortened, defaults are dropped, and derived fields (ability, value,
   // personality) are recomputed on load. Unknown keys pass through untouched.
   const HID = ['cons', 'inj', 'prof', 'amb', 'loy', 'temp', 'big', 'lead'];
-  const SEASON = ['apps', 'goals', 'ast', 'rsum', 'motm', 'yc', 'rc', 'lapps'];
+  const HIST = ['y', 'c', 'apps', 'g', 'r', 'a', 'mins', 'sh', 'kp', 'tk', 'cs', 'sv', 'ga', 'xga', 'motm', 'yc', 'rc']; // history row fields, packed in this order (old saves: the first five)
+  const SEASON = [
+    'apps',
+    'goals',
+    'ast',
+    'rsum',
+    'motm',
+    'yc',
+    'rc',
+    'lapps',
+    'mins',
+    'sh',
+    'sot',
+    'kp',
+    'tk',
+    'pas',
+    'cs',
+    'sv',
+    'ga',
+    'xga',
+  ];
   const KEYS = {
     fn: 'f',
     ln: 'l',
@@ -1476,7 +1554,7 @@
         return a;
       }),
     ];
-    if (p.history && p.history.length) o.Y = p.history.map((h) => [h.y, h.c, h.apps, h.g, h.r]);
+    if (p.history && p.history.length) o.Y = p.history.map((h) => HIST.map((k) => h[k] ?? 0));
     for (const k in p) {
       if (DROP.has(k) || p[k] === undefined) continue;
       if (k in DEFAULTS && p[k] === DEFAULTS[k]) continue;
@@ -1492,7 +1570,7 @@
     p.season = W.blankSeason();
     if (o.Z)
       SEASON.forEach((k, i) => {
-        if (o.Z[i] || k !== 'lapps') p.season[k] = o.Z[i];
+        if (o.Z[i] || (k !== 'lapps' && o.Z[i] != null)) p.season[k] = o.Z[i]; // older saves have fewer fields
       });
     p.career = {
       apps: o.K[0],
@@ -1508,7 +1586,7 @@
         ...(fee != null ? { fee } : {}),
       })),
     };
-    if (o.Y) p.history = o.Y.map(([y, c, apps, g, r]) => ({ y, c, apps, g, r }));
+    if (o.Y) p.history = o.Y.map((a) => Object.fromEntries(HIST.map((k, i) => [k, a[i] ?? 0])));
     p.personality = W.personality(p.hid);
     W.refresh(p);
     if (o.C != null && o.C !== p.ca) {

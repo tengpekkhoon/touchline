@@ -192,11 +192,28 @@
       const won = k ? res.ag > res.hg : res.hg > res.ag,
         lost = k ? res.hg > res.ag : res.ag > res.hg;
       const calm = FM.Matchday.calm(S.players[sd.capt]); // a Leader captain softens a defeat
+      const conceded = k ? res.hg : res.ag;
       for (const pid in sd.mins) {
         const p = S.players[pid];
         const r = sd.rating[pid];
         p.season.apps++;
         p.season.rsum += r;
+        // the detail from the engine: minutes, shots, chances made, tackles, passes; clean sheets; keepers' numbers
+        const st = p.season,
+          ps = sd.ps[pid] || {},
+          mins = sd.mins[pid];
+        st.mins = (st.mins || 0) + mins;
+        st.sh = (st.sh || 0) + (ps.sh || 0);
+        st.sot = (st.sot || 0) + (ps.sot || 0);
+        st.kp = (st.kp || 0) + (ps.kp || 0);
+        st.tk = (st.tk || 0) + (ps.tk || 0);
+        st.pas = (st.pas || 0) + (ps.pass || 0);
+        if (conceded === 0 && mins >= 60) st.cs = (st.cs || 0) + 1;
+        if (p.pos === 'GK') {
+          st.sv = (st.sv || 0) + (ps.sv || 0);
+          st.ga = (st.ga || 0) + (ps.ga || 0);
+          st.xga = Math.round(((st.xga || 0) + (ps.xga || 0)) * 100) / 100;
+        }
         p.career.apps++;
         const sp = W.spell(p);
         if (sp && sp.c === sd.club.id) sp.apps++;
@@ -1165,7 +1182,8 @@
         nat: comp.nat,
         champion: t[0].id,
         runnerUp: t[1].id,
-        table: t.map((r) => ({ id: r.id, pts: r.pts, gd: r.gd })),
+        // the whole table, every club's record: the archive behind club histories
+        table: t.map((r) => ({ id: r.id, p: r.p, w: r.w, d: r.d, l: r.l, gf: r.gf, ga: r.ga, pts: r.pts, gd: r.gd })),
         topScorer: top && { pid: top.id, name: W.name(top), club: top.clubId, goals: top.season.goals },
         poty: poty && {
           pid: poty.id,
@@ -1356,15 +1374,10 @@
     // retirements, contracts, history snapshot
     Object.values(S.players).forEach((p) => {
       if (p.retired) return;
-      if (p.season.apps)
-        (p.history = p.history || []).push({
-          y: S.year - 1,
-          c: p.clubId,
-          apps: p.season.apps,
-          g: p.season.goals,
-          r: +(p.season.rsum / p.season.apps).toFixed(2),
-        });
-      p.history = (p.history || []).slice(-8); // the last eight seasons are enough for the player card and keep long saves small
+      // every season is kept, a row per club played for (save size is no constraint for a downloadable game)
+      const rows = W.seasonRows(p, S.year - 1);
+      if (rows.length) p.history = (p.history || []).concat(rows);
+      delete p.splits;
       p.season = W.blankSeason();
       p.flagMinutes = false;
       p.lastGrowth = 0;

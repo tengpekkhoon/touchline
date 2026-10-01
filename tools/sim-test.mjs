@@ -288,6 +288,39 @@ for (let s = 0; s < SEASONS; s++) {
   console.log(`season ${s + 1} done · ${((Date.now() - t0) / 1000).toFixed(1)}s`);
 }
 
+// ---- history: rows per season and club, keepers' numbers ----
+{
+  const S1 = FM.S,
+    act = Object.values(S1.players).filter((p) => !p.retired && p.history && p.history.length);
+  check(act.length > 1000, `only ${act.length} players have season history`);
+  check(
+    act.every((p) => p.history.every((h) => h.y && h.apps > 0 && (h.c == null || S1.clubs[h.c]))),
+    'a history row has no season, no appearances or an unknown club',
+  );
+  // last season's keeper rows (the season has just been archived)
+  const rows = Object.values(S1.players)
+    .filter((p) => p.pos === 'GK' && p.history)
+    .flatMap((p) => p.history.filter((h) => h.y === S1.year - 1 && h.sv + h.ga >= 15));
+  const sv = U.sum(rows, (h) => h.sv),
+    ga = U.sum(rows, (h) => h.ga);
+  check(
+    rows.length > 50 && sv / (sv + ga) > 0.55 && sv / (sv + ga) < 0.82,
+    `keeper save % ${((100 * sv) / (sv + ga)).toFixed(1)} out of range (${rows.length} keepers)`,
+  );
+}
+// ---- a save that starts in a past season (groundwork for historical saves) ----
+{
+  const { FM: F2 } = loadSim(SEED + 1);
+  F2.W.newWorld({ startYear: 1995 });
+  F2.Season.init();
+  F2.W.takeCharge(Object.values(F2.S.clubs).find((c) => c.comp === 'D1').id, 'History');
+  for (let d = 0; d < 6; d++) F2.Season.advance(null);
+  check(
+    F2.S.year === 1995 && Object.values(F2.S.players).every((p) => F2.W.age(p) >= 15 && F2.W.age(p) <= 45),
+    'a 1995 world is broken',
+  );
+}
+
 // ---- invariants ----
 const S = FM.S;
 const gpm = stats.goals / stats.matches;

@@ -740,9 +740,10 @@
   };
   // The day is being played: any hours not stepped through run now. Returns true if the day's market is handled.
   M.finishDeadline = function () {
-    const d = M.dd();
+    const d = M.isDeadline() && M.dd();
     if (!d) return false;
-    while (d.i < M.DD_HOURS.length) M.deadlineHour();
+    // each hour moves d.i on; the cap is a guard so a stale record can never stall the day
+    for (let g = 0; g < M.DD_HOURS.length && d.i < M.DD_HOURS.length; g++) M.deadlineHour();
     return true;
   };
   const T = () => FM.Transfers;

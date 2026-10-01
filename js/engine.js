@@ -203,7 +203,7 @@
           sd.st[p.id] = p.fitness;
           sd.rating[p.id] = 6.3;
           sd.on[p.id] = 0;
-          sd.ps[p.id] = { pass: 0, kp: 0, sh: 0, sot: 0, tk: 0, tch: 0 };
+          sd.ps[p.id] = { pass: 0, kp: 0, sh: 0, sot: 0, tk: 0, tch: 0, sv: 0, ga: 0, xga: 0 };
         }
       });
       // On the day: form (a little luck either way, capped), confidence from recent results, and the best player
@@ -676,6 +676,13 @@
         }
       }
 
+      // the keeper's own numbers: what he faced, saved and let in
+      const gps = gk && od.ps[gk.p.id];
+      if (gps) {
+        gps.xga += xg;
+        if (outcome === 'saved') gps.sv++;
+        if (outcome === 'goal') gps.ga++;
+      }
       sd.shots++;
       sd.xg += xg;
       if (outcome === 'goal' || outcome === 'saved') sd.sot++;
@@ -934,7 +941,7 @@
       sd.st[pIn.id] = pIn.fitness;
       sd.rating[pIn.id] = 6.3;
       sd.on[pIn.id] = m;
-      sd.ps[pIn.id] = { pass: 0, kp: 0, sh: 0, sot: 0, tk: 0, tch: 0 };
+      sd.ps[pIn.id] = { pass: 0, kp: 0, sh: 0, sot: 0, tk: 0, tch: 0, sv: 0, ga: 0, xga: 0 };
       if (out) sd.off[out.id] = m;
       const ev = {
         k: 'sub',

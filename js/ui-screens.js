@@ -1019,7 +1019,8 @@
       <div class="card"><div class="row"><div class="h3 grow">Profile</div>${!own && v.k < 70 ? '<span class="pill warn">Approximate</span>' : ''}</div>${own || v.k >= 40 ? C.radar(p, !own && v.k < 70) : '<div class="lock">🔒 Profile hidden</div>'}${attrs()}</div>
       <div class="card"><div class="row"><div class="h3 grow">Form</div><span class="small dim">last ${p.form.length}</span></div>
         <div class="row" style="align-items:flex-end;gap:5px;height:70px;margin-top:10px">${p.form.length ? p.form.map((r) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px"><div class="tiny b">${r.toFixed(1)}</div><div style="width:100%;border-radius:4px;height:${(r - 4) * 8}px;background:${r >= 7.5 ? 'var(--good)' : r >= 6.5 ? 'var(--acc2)' : 'var(--bad)'}"></div></div>`).join('') : '<div class="dim small">No appearances yet.</div>'}</div>
-        <div class="row small" style="margin-top:12px;justify-content:space-between"><span><b>${p.season.apps}</b> <span class="dim">apps</span></span><span><b>${p.season.goals}</b> <span class="dim">goals</span></span><span><b>${p.season.ast}</b> <span class="dim">assists</span></span><span><b>${avg}</b> <span class="dim">avg</span></span><span><b>${p.season.motm}</b> <span class="dim">MOTM</span></span></div></div>
+</div>
+      ${UI.statsCard(p, avg)}
       <div class="card"><div class="h3" style="margin-bottom:8px">Heat map</div><canvas id="pheat" class="heat" width="480" height="320"></canvas><div class="tiny dim" style="margin-top:6px">${own && p._heat ? 'From his last match' : 'Typical positioning from scouting footage'} · attacking →</div></div>
       <div class="card"><div class="h3">Career</div><div class="row small" style="margin:8px 0"><span class="grow muted">Total</span><b>${p.career.apps} games · ${p.career.goals} goals</b></div>
         ${p.career.spells
@@ -1030,12 +1031,78 @@
               `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)">${CL(sp.c) ? C.crest(CL(sp.c), 18) : ''}<span class="grow">${esc(CL(sp.c) ? CL(sp.c).name : '—')}</span><span class="dim">${sp.loan ? 'Loan · ' : sp.fee != null ? `${sp.fee ? U.money(sp.fee) : 'Free'} · ` : ''}${sp.from}–${sp.to || 'now'}</span><b style="margin-left:8px">${sp.apps}/${sp.goals}</b></div>`,
           )
           .join('')}
-        ${history.length ? `<div class="small dim" style="margin-top:8px">Seasons: ${history.map((h) => `${h.y}: ${h.apps}g ${h.g}⚽ ${h.r}`).join(' · ')}</div>` : ''}
         ${p.intl && p.intl.caps ? `<div class="row small" style="margin-top:8px"><span class="grow muted">International</span><b>${natLink(`${C.flag(p.nat)} ${p.intl.caps} caps · ${p.intl.goals} goals`)}</b></div>` : ''}
         ${p.honours && p.honours.length ? `<div class="row small" style="margin-top:8px"><span class="grow muted">Honours</span><b>${honoursLine(p)}</b></div>` : ''}
         <div class="row small" style="margin-top:8px"><span class="grow muted">Contract</span><b>until ${p.contract}</b></div></div>
+      ${UI.seasonsCard(p, history)}
       ${injuryCard(p)}`;
   }
+  // This season's numbers: keepers their own (clean sheets, saves, save %, goals prevented), outfielders theirs,
+  // with per-90 figures where they say more than totals
+  UI.statsCard = function (p, avg) {
+    const st = p.season,
+      gk = p.pos === 'GK',
+      m = st.mins || 0,
+      p90 = (x) => (m >= 270 ? ((x * 90) / m).toFixed(2) : '—');
+    const cell = (v, l, sub) =>
+      `<div class="kpi" style="padding:8px 4px"><div class="v" style="font-size:18px">${v}</div><div class="l">${l}</div>${sub ? `<div class="tiny dim">${sub}</div>` : ''}</div>`;
+    const faced = (st.sv || 0) + (st.ga || 0);
+    const cells = gk
+      ? [
+          cell(st.apps, 'Apps', `${m} mins`),
+          cell(st.cs || 0, 'Clean sheets'),
+          cell(st.ga || 0, 'Conceded', m >= 270 ? `${p90(st.ga || 0)} per 90` : ''),
+          cell(st.sv || 0, 'Saves'),
+          cell(faced ? Math.round((100 * (st.sv || 0)) / faced) + '%' : '—', 'Save %'),
+          cell(
+            faced ? ((st.xga || 0) - (st.ga || 0) >= 0 ? '+' : '') + ((st.xga || 0) - (st.ga || 0)).toFixed(1) : '—',
+            'Goals prevented',
+            'xG faced − conceded',
+          ),
+          cell(avg, 'Avg rating'),
+          cell(st.motm, 'MOTM'),
+        ]
+      : [
+          cell(st.apps, 'Apps', `${m} mins`),
+          cell(st.goals, 'Goals', p90(st.goals) !== '—' ? `${p90(st.goals)} per 90` : ''),
+          cell(st.ast, 'Assists', p90(st.ast) !== '—' ? `${p90(st.ast)} per 90` : ''),
+          cell(st.sh || 0, 'Shots', st.sh ? `${st.sot || 0} on target` : ''),
+          cell(st.kp || 0, 'Chances made'),
+          cell(st.tk || 0, 'Tackles won'),
+          cell(avg, 'Avg rating'),
+          cell(st.motm, 'MOTM', st.yc || st.rc ? `${st.yc}🟨 ${st.rc}🟥` : ''),
+        ];
+    return `<div class="card"><div class="row"><div class="h3 grow">${FM.Season.seasonLabel()} season</div>${['DEF'].includes(D.POS_GROUP[p.pos]) && st.cs ? `<span class="tiny dim">${st.cs} clean sheets</span>` : ''}</div>
+      <div class="kpis" style="grid-template-columns:repeat(4,1fr);margin-top:8px">${cells.join('')}</div>
+      <div class="tiny dim" style="margin-top:6px">Shots, chances, tackles, minutes and keeper numbers come from fully simulated matches.</div></div>`;
+  };
+  // Every season he has played, a row per club (a mid-season move gets two)
+  UI.seasonsCard = function (p, history) {
+    if (!history.length) return '';
+    const gk = p.pos === 'GK';
+    const head = gk ? ['Apps', 'CS', 'Conc', 'Rtg'] : ['Apps', 'G', 'A', 'Rtg'];
+    const row = (h) => {
+      const c = CL(h.c);
+      const v = gk
+        ? [h.apps, h.cs || 0, h.ga || 0, h.r ? h.r.toFixed(2) : '—']
+        : [h.apps, h.g, h.a || 0, h.r ? h.r.toFixed(2) : '—'];
+      return `<tr><td class="l">${h.y}/${String((h.y + 1) % 100).padStart(2, '0')}</td><td class="l"><span class="row" style="gap:6px">${c ? C.crest(c, 16) : ''}<span class="ellip" style="max-width:110px">${c ? esc(c.short) : '—'}</span></span></td>${v.map((x) => `<td>${x}</td>`).join('')}</tr>`;
+    };
+    const tot = history.reduce(
+      (t, h) => ({
+        apps: t.apps + h.apps,
+        g: t.g + h.g,
+        a: t.a + (h.a || 0),
+        cs: t.cs + (h.cs || 0),
+        ga: t.ga + (h.ga || 0),
+      }),
+      { apps: 0, g: 0, a: 0, cs: 0, ga: 0 },
+    );
+    return `<div class="card"><div class="h3">Season by season</div>
+      <table class="t" style="margin-top:8px"><tr><th class="l">Season</th><th class="l">Club</th>${head.map((h) => `<th>${h}</th>`).join('')}</tr>
+      ${history.map(row).join('')}
+      <tr style="font-weight:700"><td class="l">Total</td><td></td>${(gk ? [tot.apps, tot.cs, tot.ga, ''] : [tot.apps, tot.g, tot.a, '']).map((x) => `<td>${x}</td>`).join('')}</tr></table></div>`;
+  };
   // Player of the month awards, grouped: "🏅 Player of the Month ×2 (Oct 2026, Jan 2027)"
   function honoursLine(p) {
     const potm = p.honours.filter((h) => h[1] === 'potm');
@@ -1590,6 +1657,36 @@
             .sort((a, b) => b.season.rsum / b.season.apps - a.season.rsum / a.season.apps),
           (p) => (p.season.rsum / p.season.apps).toFixed(2),
           'Average rating (3+ apps)',
+        )}
+        ${list(
+          ps.filter((p) => p.season.kp).sort((a, b) => b.season.kp - a.season.kp),
+          (p) => p.season.kp,
+          'Chances made',
+        )}
+        ${list(
+          ps.filter((p) => p.season.tk).sort((a, b) => b.season.tk - a.season.tk),
+          (p) => p.season.tk,
+          'Tackles won',
+        )}</div>
+        <div class="card"><div class="h3">Goalkeepers</div>
+        ${list(
+          ps.filter((p) => p.pos === 'GK' && p.season.cs).sort((a, b) => b.season.cs - a.season.cs),
+          (p) => p.season.cs,
+          'Clean sheets',
+        )}
+        ${list(
+          ps
+            .filter((p) => p.pos === 'GK' && (p.season.sv || 0) + (p.season.ga || 0) >= 20)
+            .sort((a, b) => b.season.sv / (b.season.sv + b.season.ga) - a.season.sv / (a.season.sv + a.season.ga)),
+          (p) => Math.round((100 * p.season.sv) / (p.season.sv + p.season.ga)) + '%',
+          'Save % (20+ shots faced)',
+        )}
+        ${list(
+          ps
+            .filter((p) => p.pos === 'GK' && p.season.apps >= 3)
+            .sort((a, b) => b.season.xga - b.season.ga - (a.season.xga - a.season.ga)),
+          (p) => (p.season.xga - p.season.ga >= 0 ? '+' : '') + (p.season.xga - p.season.ga).toFixed(1),
+          'Goals prevented (xG faced − conceded)',
         )}</div>`;
         })
         .join('')

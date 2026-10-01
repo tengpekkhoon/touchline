@@ -439,6 +439,34 @@
 
   // ======================= Team overview (from league and group tables) =======================
   UI.acts.clubView = (d) => UI.clubSheet(d.id);
+  // The club's seasons from the archive: league, position, record, points, and what it won, went up or down
+  UI.clubSeasonsCard = function (id) {
+    const s = S(),
+      rows = [];
+    for (const e of (s.archive || []).slice().reverse()) {
+      let line = null;
+      for (const cid in e.comps || {}) {
+        const c = e.comps[cid],
+          i = (c.table || []).findIndex((r) => r.id === id);
+        if (i < 0) continue;
+        const r = c.table[i];
+        line = { e, c, pos: i + 1, r };
+        break;
+      }
+      if (!line) continue;
+      const won = Object.values(e.cups || {})
+        .filter((x) => x.winner === id)
+        .map((x) => x.name);
+      if (line.c.champion === id) won.unshift(line.c.name);
+      const move = (e.promoted || []).includes(id) ? '⬆️' : (e.relegated || []).includes(id) ? '⬇️' : '';
+      rows.push(
+        `<tr><td class="l">${esc(e.label || String(e.year))}</td><td class="l"><span class="ellip" style="max-width:120px;display:inline-block">${esc(line.c.name)}</span></td><td>${U.ordinal(line.pos)}${move}</td><td>${line.r.w != null ? `${line.r.w}-${line.r.d}-${line.r.l}` : '—'}</td><td>${line.r.pts}</td></tr>${won.length ? `<tr><td></td><td class="l tiny" colspan="4">🏆 ${won.map(esc).join(', ')}</td></tr>` : ''}`,
+      );
+    }
+    return rows.length
+      ? `<div class="card"><div class="h3">Season by season</div><table class="t" style="margin-top:8px"><tr><th class="l">Season</th><th class="l">League</th><th>Pos</th><th>W-D-L</th><th>Pts</th></tr>${rows.join('')}</table></div>`
+      : '';
+  };
   UI.clubSheet = function (id) {
     const s = S(),
       c = s.clubs[id];
@@ -574,6 +602,7 @@
       ${movesCard}
       ${h2h.length ? `<div class="card"><div class="row"><div class="h3 grow">Head-to-head this season</div>${h2hRec}</div>${h2h.map((f) => `<div class="tiny dim" style="padding-top:6px">${esc(fxWhere(f))}</div>${f.res ? UI.fxLine(f) : `<div class="row small" style="padding:8px 0;border-top:1px solid var(--line)"><span class="grow ellip" style="text-align:right">${esc(s.clubs[f.h].name)}</span><b style="min-width:44px;text-align:center">v</b><span class="grow ellip">${esc(s.clubs[f.a].name)}</span></div>`}`).join('')}</div>` : ''}
       ${allTimeCard}
+      ${UI.clubSeasonsCard(id)}
       ${
         Object.keys(c.titles || {}).length
           ? `<div class="card"><div class="h3">Honours</div>${Object.entries(c.titles)

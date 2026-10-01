@@ -204,7 +204,7 @@
   };
 
   // What the world keeps of a retired player: enough for the Hall of Fame, legends returning as managers and
-  // club all-time lists. Only the true greats also keep their season-by-season history (future biographies).
+  // club all-time lists, and everyone's season-by-season history (the archive behind historical stats).
   Sea.retiredEntry = function (p) {
     const S = FM.S,
       great =
@@ -228,14 +228,14 @@
       derbyGoals: p.derbyGoals,
       year: S.year - 1,
       lead: p.hid.lead,
+      history: p.history,
     };
-    if (great)
-      Object.assign(r, { great: true, traits: p.traits, history: p.history, caps: (p.intl && p.intl.caps) || 0 });
+    if (great) Object.assign(r, { great: true, traits: p.traits, caps: (p.intl && p.intl.caps) || 0 });
     return r;
   };
   // Keep the list bounded in very long saves: the least remembered go first, never a legend, a manager-to-be,
   // or anyone who played for a club you have managed
-  Sea.trimRetired = function (max = 1500) {
+  Sea.trimRetired = function (max = 50000) {
     const S = FM.S;
     if (S.retired.length <= max) return;
     const mine = new Set((S.user.history || []).map((h) => h.club).concat(S.user.clubId || []));
