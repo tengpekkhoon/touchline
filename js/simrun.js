@@ -22,6 +22,7 @@
     'transfers',
     'registration',
     'market',
+    'finance',
     'stories',
     'advice',
     'matchday',

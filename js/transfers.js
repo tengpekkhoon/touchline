@@ -93,6 +93,8 @@
         ok: false,
         msg: `You can't register him: ${FM.Reg.real() ? FM.Reg.canSign(club, p).why : 'foreign-player limit'}`,
       };
+    if (FM.Finance.frozen(p.wage * share))
+      return { ok: false, msg: 'The board have frozen the wage bill: no new wages until it comes down.' };
     const lvl = FM.Scouting.level();
     if (p.ca < lvl - 14 && W.age(p) > 21)
       return { ok: false, msg: `His club want him to play regularly — they don't think he'd get minutes with you.` };
@@ -268,7 +270,7 @@
           clubId: from.id,
         });
       }
-      if (from.sim === 'full' || from.sim === 'light') from.budget += cash * 0.5;
+      if (from.sim === 'full' || from.sim === 'light') from.budget += cash * FM.Finance.mix(from).sell; // selling leagues reinvest more
       from.bestSales = (from.bestSales || [])
         .concat([{ pid: p.id, name: W.name(p), fee, to: toId, year: S.year }])
         .sort((a, b) => b.fee - a.fee)

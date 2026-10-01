@@ -778,6 +778,7 @@
     if (Co.blocked(p)) return { ok: false, msg: `${W.name(p)}'s agent has broken off talks for now.` };
     if (FM.Reg.real() && !FM.Reg.canSign(club, p).ok)
       return { ok: false, msg: `You can't register him: ${FM.Reg.canSign(club, p).why}` };
+    if (FM.Finance.frozen(t.wage)) return { ok: false, msg: 'The board have frozen the wage bill.' };
     const ev = Co.evaluate(p, club, t, 'transfer');
     if (!ev.ok) {
       if (!ev.hard) Co.logDemand(p, ev, t);

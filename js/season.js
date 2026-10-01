@@ -305,6 +305,7 @@
     log.spend[k] = (log.spend[k] || 0) + v;
   };
   // Last competitive result per club (shown on the next opponent's match card)
+  Sea.lastResults = (id) => (FM.S.clubs[id] && FM.S.clubs[id].recent) || null;
   Sea.noteResult = function (fx, res) {
     const S = FM.S;
     [
@@ -312,6 +313,7 @@
       [fx.a, fx.h, res.ag, res.hg],
     ].forEach(([id, opp, gf, ga]) => {
       const c = S.clubs[id];
+      if (c) c.recent = (c.recent || []).concat(gf > ga ? 1 : gf < ga ? 0 : 0.5).slice(-5); // form: last five
       if (c)
         c.lastResult = {
           opp,
@@ -764,6 +766,7 @@
       delete p.suspNew;
     });
     FM.Injury.daily(); // rehab countdowns, returns, training knocks and illness
+    if (S.day % 8 === 0) FM.Finance.weekly(); // interest on debt, the board on the wage bill
     Sea.minimalSimWeek();
     Sea.freeAgents();
     if (employed) Sea.ensureUserSquad(14);
@@ -1030,19 +1033,32 @@
       wk = D.WAGE_WEEKS / days;
     Object.values(S.clubs).forEach((c) => {
       if (c.sim !== 'full') return;
-      const comp = S.comps[c.comp];
-      const R = Sea.revenuePotential(c);
-      // Broadcast (division-weighted) + commercial arrive every matchday; gate only on home days
-      let inc =
-        (R * 0.33 * (comp.tier === 1 ? 1 : comp.tier === 2 ? 0.7 : 0.5) * (comp.tvBoost || 1) +
-          R * 0.25 * (1 + (c.facilities.fanzone - 1) * 0.06)) /
-        days;
-      const home = todays.some((f) => f.h === c.id && !f.neutral);
-      if (home) {
-        const fill = U.clamp(0.5 + c.rep / 300 + c.fanMood / 400, 0.3, 1);
+      const comp = S.comps[c.comp],
+        F = FM.Finance;
+      // Broadcast and commercial money arrive every day, in the country's mix (FM.Finance); gate only on home days,
+      // from the crowd that turned up
+      const a = F.annual(c),
+        fin = (c.fin = c.fin || { tv: 0, com: 0, gate: 0, att: 0, homes: 0 });
+      const tv = a.tv / days,
+        com = a.com / days;
+      let gate = 0;
+      const hf = todays.find((f) => f.h === c.id && !f.neutral);
+      if (hf) {
+        const opp = FM.clubOf(hf.a),
+          { att, fill } = F.attendance(c, opp, c.rival === hf.a),
+          t = F.TICKETS[F.ticket(c)];
         const homes = Math.max(6, (comp.fixtures ? comp.fixtures.length / 2 : 11) + 2);
-        inc += ((R * 0.42) / homes) * (fill / 0.9) * (c.stadium.cap / (c.stadium.cap0 || c.stadium.cap));
+        gate = (a.gate / homes) * (fill / 0.85) * (c.stadium.cap / (c.stadium.cap0 || c.stadium.cap)) * t.price;
+        if (hf.res) hf.res.att = att;
+        fin.att += att;
+        fin.homes++;
+        fin.last = att;
+        if (t.mood) c.fanMood = U.clamp((c.fanMood ?? 60) + t.mood, 0, 100);
       }
+      fin.tv += tv;
+      fin.com += com;
+      fin.gate += gate;
+      let inc = tv + com + gate;
       const staffW = W.isUser(c.id) ? U.sum(W.userStaff(), (st) => st.wage) * wk : 0;
       const wages = (wageBill[c.id] || 0) * wk + staffW;
       if (W.isUser(c.id)) {
@@ -1515,7 +1531,9 @@
           }
         }
         c.budget = Math.max(5e5, Math.round((c.balance * 0.35) / 1e5) * 1e5);
-        if (c.balance < -8e6 && !c.admin) {
+        c.finLast = c.fin;
+        c.fin = null;
+        if (c.balance < FM.Finance.adminThreshold(c) && !c.admin) {
           c.admin = true;
           S.comps[c.comp].deductions = { ...(S.comps[c.comp].deductions || {}), [c.id]: 6 };
           FM.News.add({

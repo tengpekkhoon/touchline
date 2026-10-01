@@ -1791,7 +1791,7 @@
       `<div class="row" style="justify-content:space-around;text-align:center"><div>${C.crest(CL(f.h), 48)}<div class="small b">${esc(CL(f.h).name)}</div></div><div class="h1">${r.hg}–${r.ag}</div><div>${C.crest(CL(f.a), 48)}<div class="small b">${esc(CL(f.a).name)}</div></div></div>
       ${r.pens ? `<div class="center small dim">Penalties ${r.pens[0]}–${r.pens[1]}</div>` : ''}
       ${r.agg ? `<div class="center small b">Aggregate ${r.agg[0]}–${r.agg[1]}</div>` : ''}
-      <div class="center small dim" style="margin:6px 0">${r.xg ? `xG ${r.xg[0]} – ${r.xg[1]}` : ''}${r.poss ? ` · Possession ${r.poss[0]}% – ${r.poss[1]}%` : ''}${r.weather ? ` · ${r.weather}` : ''}${r.sim ? ` · ${FM.Tiers.LABEL[r.sim].toLowerCase()}` : ''}</div>
+      <div class="center small dim" style="margin:6px 0">${r.xg ? `xG ${r.xg[0]} – ${r.xg[1]}` : ''}${r.poss ? ` · Possession ${r.poss[0]}% – ${r.poss[1]}%` : ''}${r.weather ? ` · ${r.weather}` : ''}${r.att ? ` · ${r.att.toLocaleString()} crowd` : ''}${r.sim ? ` · ${FM.Tiers.LABEL[r.sim].toLowerCase()}` : ''}</div>
       <div class="card flat">${r.goals.map((g) => `<div class="row small" style="padding:4px 0;${g.side ? 'flex-direction:row-reverse;text-align:right' : ''}">${tag(g.side)}⚽ <b>${esc(P(g.pid) ? W.short(P(g.pid)) : '—')}</b> <span class="dim">${g.min || ''}${g.pen ? ' (pen)' : ''}</span></div>`).join('') || `<div class="dim small center">${r.hg + r.ag ? 'Scorers not recorded' : 'No goals'}</div>`}</div>
       <div class="row" style="align-items:flex-start;gap:12px">${[0, 1]
         .map(
@@ -1976,6 +1976,7 @@
       <div class="card"><div class="row"><div class="h3 grow">Weekly cash flow</div><span class="tiny"><span style="color:var(--good)">■</span> income <span style="color:var(--bad)">■</span> wages</span></div>
         <div class="row" style="align-items:flex-end;height:110px;gap:4px;margin-top:10px">${L.length ? L.map((l) => `<div class="grow row" style="align-items:flex-end;gap:1px;height:100%"><div class="grow" style="height:${(l.inc / mx) * 100}%;background:var(--good);border-radius:3px 3px 0 0"></div><div class="grow" style="height:${(l.exp / mx) * 100}%;background:var(--bad);border-radius:3px 3px 0 0;opacity:.8"></div></div>`).join('') : '<div class="dim small">Play a matchday to see cash flow.</div>'}</div>
         <div class="small dim" style="margin-top:8px">Home games bring gate receipts — bigger stadium, happier fans, more money.</div></div>
+      ${UI.incomeCard(c)}
       ${spendCard(c, s, sq)}
       ${UI.paymentsCard(c)}
       <div class="card"><div class="row"><div class="h3 grow">Transfer activity this season</div><b style="color:${net >= 0 ? 'var(--good)' : 'var(--bad)'}">${net >= 0 ? '+' : ''}${U.money(net)}</b></div>
@@ -1999,6 +2000,7 @@
       ['goal', 'Goal bonuses'],
       ['signing', 'Signing-on fees'],
       ['agent', 'Agent fees'],
+      ['interest', 'Interest on debt'],
     ];
     const total = U.sum(rows, ([k]) => sp[k] || 0),
       mx = Math.max(1, ...rows.map(([k]) => sp[k] || 0));

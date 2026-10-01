@@ -265,6 +265,45 @@
       <div class="tiny dim" style="margin-top:8px">Instalments fall due a year apart; add-ons when the player reaches the appearances agreed.</div></div>`;
   };
 
+  // ---------- Income, attendance, the wage bill ----------
+  UI.incomeCard = function (c) {
+    const F = FM.Finance,
+      f = c.fin || { tv: 0, com: 0, gate: 0, att: 0, homes: 0 },
+      a = F.annual(c),
+      mix = F.mix(c);
+    const total = f.tv + f.com + f.gate || 1;
+    const row = (l, v, note) =>
+      `<div class="row small" style="margin-top:8px"><span style="width:110px" class="dim">${l}</span><div class="grow">${C.bar((v / total) * 100, 'var(--good)')}</div><b style="width:72px;text-align:right">${U.money(v)}</b></div>${note ? `<div class="tiny dim" style="margin-left:110px">${note}</div>` : ''}`;
+    const ratio = F.wageRatio(c),
+      pctR = Math.round(ratio * 100),
+      col = ratio > F.LIMIT.freeze ? 'var(--bad)' : ratio > F.LIMIT.cut ? 'var(--warn)' : 'var(--good)';
+    const t = F.ticket(c),
+      avg = f.homes ? Math.round(f.att / f.homes) : 0,
+      cap = c.stadium.cap;
+    const fp = S().user.finPressure;
+    return `<div class="card"><div class="row"><div class="h3 grow">Income this season</div><b>${U.money(f.tv + f.com + f.gate)}</b></div>
+      ${row('TV money', f.tv, mix.tv >= 1.3 ? 'A rich TV deal: the biggest share of income here' : mix.tv <= 0.75 ? 'TV money is thin in this league' : '')}
+      ${row('Commercial', f.com)}
+      ${row('Matchday', f.gate, mix.gate >= 1.2 ? 'Packed grounds and cheap tickets: gate receipts matter most here' : '')}
+      ${mix.sell >= 0.75 ? `<div class="tiny dim" style="margin-top:8px">A selling league: ${Math.round(mix.sell * 100)}% of every fee you receive goes back into the transfer budget.</div>` : ''}
+      <div class="tiny dim" style="margin-top:6px">Expected over a season: ${U.money(a.tv + a.com + a.gate)}.</div></div>
+      <div class="card"><div class="row"><div class="h3 grow">Attendance</div><span class="small b">${avg ? `${avg.toLocaleString()} average` : 'No home games yet'}</span></div>
+        ${avg ? `<div style="margin-top:8px">${C.bar((avg / cap) * 100, 'var(--acc2)')}</div><div class="tiny dim" style="margin-top:4px">${Math.round((avg / cap) * 100)}% of ${cap.toLocaleString()} · last ${(f.last || 0).toLocaleString()} · results, fan mood, the opponent and derbies move it</div>` : ''}
+        <div class="h3" style="margin-top:12px">Ticket prices</div>
+        <div class="seg" style="margin-top:6px">${Object.keys(F.TICKETS)
+          .map((k) => `<button class="${t === k ? 'on' : ''}" data-act="tickets" data-v="${k}">${k}</button>`)
+          .join('')}</div>
+        <div class="tiny dim" style="margin-top:6px">${t === 'Low' ? 'Cheaper seats: fuller ground, happier fans, less money per fan.' : t === 'High' ? 'Dearer seats: more money per fan, emptier stands, grumbling in the terraces.' : 'Normal prices.'}</div></div>
+      <div class="card"><div class="row"><div class="h3 grow">Wages against revenue</div><b style="color:${col}">${pctR}%</b></div>
+        <div style="margin-top:8px">${C.bar(Math.min(100, pctR), col)}</div>
+        <div class="tiny dim" style="margin-top:6px">The board want wages under ${Math.round(F.LIMIT.cut * 100)}% of revenue: above it they cut the transfer budget, above ${Math.round(F.LIMIT.freeze * 100)}% they freeze new wages.${fp && fp.freeze && fp.year === S().year ? ' <b style="color:var(--bad)">Wage freeze in force.</b>' : ''}${c.balance < 0 ? ` In debt: ${Math.round(F.LIMIT.interest * 100)}% interest a month, and administration below ${U.money(-F.adminThreshold(c))}.` : ''}</div></div>`;
+  };
+  UI.acts.tickets = (d) => {
+    S().user.tickets = d.v;
+    UI.save();
+    UI.render();
+  };
+
   // ---------- Squad registration ----------
   UI.regLine = function (c) {
     const sum = FM.Reg.summary(c);

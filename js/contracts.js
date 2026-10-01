@@ -280,6 +280,11 @@
       };
     if (FM.Reg.real() && !FM.Reg.canSign(club, p).ok)
       return { ok: false, msg: `You can't register him: ${FM.Reg.canSign(club, p).why}` };
+    if (FM.Finance.frozen(t.wage))
+      return {
+        ok: false,
+        msg: 'The board have frozen the wage bill: sell or let a high earner go before adding wages.',
+      };
     const seller = p.clubId && s.clubs[p.clubId];
     const clause = seller && p.deal && p.deal.release;
     const triggered = clause && fee >= clause;
@@ -349,6 +354,11 @@
       return {
         ok: false,
         msg: `${W.name(p)} has signed a pre-contract with ${s.clubs[p.pre.c].name}. He leaves in the summer.`,
+      };
+    if (FM.Finance.frozen(t.wage - p.wage))
+      return {
+        ok: false,
+        msg: `The board have frozen the wage bill: a renewal can't pay him more than his ${U.money(p.wage)}/wk now.`,
       };
     const ev = Co.evaluate(p, club, t, 'renew');
     if (!ev.ok) {
