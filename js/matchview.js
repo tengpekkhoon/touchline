@@ -109,7 +109,14 @@
     return `<div class="card"><div class="h3">Before kick-off</div>${out.map(([i, t]) => `<div class="phrase" style="padding:6px 0;border-top:1px solid var(--line)"><span>${i}</span><span class="small">${esc(t)}</span></div>`).join('')}</div>`;
   };
   // Pre-match team talk: picked in the preview, delivered as the teams go out (live or instant)
-  const TALK_SHORT = { calm: 'Calm', focus: 'Focus', free: 'Enjoy it', fire: 'Fire up' };
+  const TALK_SHORT = {
+    calm: 'Calm',
+    focus: 'Focus',
+    free: 'Enjoy it',
+    fire: 'Fire up',
+    pressure: 'Demand',
+    tactics: 'Tactics',
+  };
   MV.talkCard = function (fx) {
     const Md = FM.Matchday,
       ctx = Md.talkContext(fx),
@@ -133,7 +140,21 @@
         )
         .join('')}</div>
       <div class="small muted" id="talkDesc" style="margin-top:8px;line-height:1.45">${MV.talkDesc(sugg)}</div>
-      ${capt ? `<div class="tiny dim" style="margin-top:6px">© ${esc(W.name(capt))} leads the team out${W.hasTrait(capt, 'Leader') ? ' — a Leader keeps heads level if the message misses' : ''}.</div>` : ''}</div>`;
+      ${capt ? `<div class="tiny dim" style="margin-top:6px">© ${esc(W.name(capt))} leads the team out${W.hasTrait(capt, 'Leader') ? ' — a Leader keeps heads level if the message misses' : ''}.</div>` : ''}</div>
+      <div class="card"><div class="h3">Warm-up</div>
+      <div class="seg" style="margin-top:8px">${Object.entries(Md.WARMUPS)
+        .map(
+          ([k, w]) =>
+            `<button class="${k === (MV.warm || 'standard') ? 'on' : ''}" data-act="warmPick" data-v="${k}">${w.label}</button>`,
+        )
+        .join('')}</div>
+      <div class="small muted" id="warmDesc" style="margin-top:8px">${esc(Md.WARMUPS[MV.warm || 'standard'].desc)}.</div></div>`;
+  };
+  UI.acts.warmPick = (d) => {
+    MV.warm = d.v;
+    document.querySelectorAll('[data-act=warmPick]').forEach((b) => b.classList.toggle('on', b.dataset.v === d.v));
+    const el = document.getElementById('warmDesc');
+    if (el) el.textContent = FM.Matchday.WARMUPS[d.v].desc + '.';
   };
   MV.talkDesc = (k) => `${esc(FM.Matchday.TALKS[k].desc)}.${k === MV.talkSugg ? " <b>💡 Assistant's pick.</b>" : ''}`;
   UI.acts.talkPick = (d) => {
@@ -196,6 +217,8 @@
     MV.us = m.sides[0].user ? 0 : 1;
     // Deliver the team talk chosen in the preview (once)
     const talkMsg = MV.talk && MV.talkCtx ? FM.Matchday.applyTalk(m, MV.talk, MV.talkCtx) : null;
+    if (MV.warm) FM.Matchday.applyWarmup(m, MV.warm);
+    MV.warm = null;
     MV.talk = null;
     if (talkMsg) MV.promptLog = (MV.promptLog || []).concat([`Pre-match team talk → ${talkMsg}`]);
     const capt = P(m.sides[MV.us].capt);

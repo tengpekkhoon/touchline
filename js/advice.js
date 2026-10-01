@@ -346,6 +346,37 @@
       nat: W.userClub().nat,
       vacant: true,
     };
+  // What each role's ability (1–20, 10 = an average professional) does, as multipliers and a line for the staff
+  // screen. Every number here is used somewhere in the game.
+  const pc = (x) => `${x >= 0 ? '+' : '−'}${Math.abs(Math.round(x * 100))}%`;
+  St.IMPACT = {
+    assistant: (a) => ({
+      fam: 1 + (a - 10) * 0.04,
+      text: `Tactics bed in ${pc((a - 10) * 0.04)} faster · sharper advice`,
+    }),
+    coach: (a) => ({
+      dev: (a - 10) * 0.12,
+      learn: 1 + (a - 10) * 0.05,
+      text: `Player development ${pc((a - 10) * 0.011)} · new positions learned ${pc((a - 10) * 0.05)} faster`,
+    }),
+    analyst: (a) => ({
+      sp: 1 + (a - 10) * 0.012,
+      text: `Set-piece chances ${pc((a - 10) * 0.012)} · opposition reports and bargains`,
+    }),
+    physio: (a) => ({
+      risk: 1 - (a - 10) * 0.012,
+      layoff: 1 - (a - 10) * 0.03,
+      rec: (a - 10) * 0.5,
+      text: `Injury risk ${pc(-(a - 10) * 0.012)} · layoffs ${pc(-(a - 10) * 0.03)} · recovery ${(a - 10) * 0.5 >= 0 ? '+' : '−'}${Math.abs((a - 10) * 0.5)} fitness a day`,
+    }),
+    director: (a) => ({
+      buy: 1 - (a - 10) * 0.008,
+      sell: 1 + (a - 10) * 0.01,
+      text: `Fees and wages you pay ${pc(-(a - 10) * 0.008)} · bids for your players ${pc((a - 10) * 0.01)}`,
+    }),
+    scout: () => ({ text: 'Finds and assesses players; better in the regions he knows' }),
+  };
+  St.impact = (key) => St.IMPACT[key](W.staffAbility(key));
   St.compensation = (st) => U.roundMoney(st.wage * 8 * Math.max(1, st.contract - S().year + 1));
   St.hire = function (id) {
     const s = S(),

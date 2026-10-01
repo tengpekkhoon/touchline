@@ -101,8 +101,7 @@
       if (head <= 0 && arc !== 'meteor') return;
       head = Math.max(0, head);
       const train =
-        (club ? club.facilities.training || 2 : 2) +
-        (club && W.isUser(club.id) ? (W.staffAbility('coach') - 10) * 0.12 : 0);
+        (club ? club.facilities.training || 2 : 2) + (club && W.isUser(club.id) ? FM.Staff.impact('coach').dev : 0);
       const mins = Math.min(0.45, p.season.apps * 0.03);
       const f = 0.55 + train * 0.09 + (p.hid.prof - 10) / 25 + mins;
       const early = arc === 'early' && a <= 21,

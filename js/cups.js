@@ -49,19 +49,34 @@
       c.winner = null;
       c.runnerUp = null;
     }
-    for (const c of W.continentals()) {
-      const feeders = W.leagues().filter((l) => l.rules.qualify && l.rules.qualify.to === c.id);
-      const want = feeders.reduce((t, l) => t + l.rules.qualify.n, 0);
+    // second-tier cups go second, so the main cups' entrants are taken first
+    for (const c of W.continentals().sort((a, b) => (a.tier || 1) - (b.tier || 1))) {
+      const def = D.CONTINENTALS.find((x) => x.id === c.id) || {};
+      // [league, how many, skipping the first k] for each feeder league
+      const feeders = def.feeders
+        ? Object.entries(def.feeders)
+            .map(([id, n]) => [S().comps[id], n, Cu.mainPlaces(id)])
+            .filter(([l]) => l)
+        : W.leagues()
+            .filter((l) => l.rules.qualify && l.rules.qualify.to === c.id)
+            .map((l) => [l, l.rules.qualify.n, 0]);
+      const want = feeders.reduce((t, [, n]) => t + n, 0);
       let entrants = (qualified && qualified[c.id]) || [];
       entrants = entrants.filter((id) => S().clubs[id]);
       if (entrants.length < want) {
+        const taken = new Set(
+          W.continentals()
+            .filter((x) => x !== c && x.clubs)
+            .flatMap((x) => x.clubs),
+        );
         entrants = [];
-        feeders.forEach((l) =>
+        feeders.forEach(([l, n, skip]) =>
           entrants.push(
             ...l.clubs
               .slice()
               .sort((a, b) => rep(b) - rep(a))
-              .slice(0, l.rules.qualify.n),
+              .filter((id) => !taken.has(id))
+              .slice(def.feeders ? 0 : skip, (def.feeders ? 0 : skip) + n),
           ),
         );
       }
@@ -115,6 +130,15 @@
     for (const c of W.worldCups()) Cu.setupWorld(c);
   };
 
+  // How many of a league's clubs go to its main continental cup (the second-tier cup takes the next places)
+  Cu.mainPlaces = (compId) => {
+    const l = D.LEAGUES.find((x) => x.id === compId);
+    return (l && l.rules && l.rules.qualify && l.rules.qualify.n) || 0;
+  };
+  // Saves made before a competition existed get it (empty until the next season's draw)
+  Cu.ensureContinentals = function (s) {
+    for (const c of D.CONTINENTALS) if (!s.comps[c.id]) s.comps[c.id] = { ...c, type: 'continental', clubs: [] };
+  };
   // Club World Cup: last season's continental finalists; in the first season, each continent's biggest entrants
   Cu.setupWorld = function (c) {
     // Seed order keeps same-continent clubs apart in the quarter-finals (1v8, 4v5, 2v7, 3v6)

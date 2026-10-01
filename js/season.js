@@ -357,7 +357,8 @@
         if (t === p.pos || t === 'GK' || p.pos === 'GK') return;
         const now = W.fitAt(p, t);
         if (now >= Sea.LEARN.max) return;
-        (p.alt = p.alt || {})[t] = Math.round(Math.min(Sea.LEARN.max, now + Sea.LEARN.step) * 1000) / 1000;
+        const step = Sea.LEARN.step * (sd.user && W.isUser(sd.club.id) ? FM.Staff.impact('coach').learn : 1);
+        (p.alt = p.alt || {})[t] = Math.round(Math.min(Sea.LEARN.max, now + step) * 1000) / 1000;
       });
     }
   };
@@ -503,8 +504,12 @@
     if (club.identity === 'fan' && gf >= 3) club.fanMood = Math.min(100, club.fanMood + 3);
     u.lastMatch = { fxId: fx.id, comp: fx.comp };
     // Familiarity grows with the tactic you used; switched to Plan B, both grow, at half the rate each
+    const famK = FM.Staff.impact('assistant').fam; // a good assistant drills the system in faster
     const grow = (t, k) =>
-      (t.fam = Math.min(100, (t.fam || 50) + Math.max(0.5, (100 - (t.fam || 50)) * 0.06) * k * FM.People.badgeBonus()));
+      (t.fam = Math.min(
+        100,
+        (t.fam || 50) + Math.max(0.5, (100 - (t.fam || 50)) * 0.06) * k * famK * FM.People.badgeBonus(),
+      ));
     const switched = m.sides[side] && m.sides[side].switched && u.tactic2;
     grow(u.tactic, switched ? 0.5 : 1);
     if (switched) grow(u.tactic2, 0.5);
@@ -755,12 +760,17 @@
     if (snap && !(S.settings || {}).noDigest) FM.Matchday.digest(today, snap);
     if (today && today.type === 'league') FM.Records.afterLeagueDay(today);
     // weekly processes
+    const recUser = employed ? FM.Staff.impact('physio').rec : 0; // a good physio gets your players fit sooner
     Object.values(S.players).forEach((p) => {
       if (p.retired) return;
       // older legs recover more slowly between matches (so veterans get rested more often)
       p.fitness = Math.min(
         100,
-        p.fitness + 30 + (p.attrs.stamina - 10) - Math.max(0, W.age(p) - 29) * Sea.AGE_RECOVERY,
+        p.fitness +
+          30 +
+          (p.attrs.stamina - 10) -
+          Math.max(0, W.age(p) - 29) * Sea.AGE_RECOVERY +
+          (recUser && W.isUser(p.clubId) ? recUser : 0),
       );
       if (p.susp && !p.suspNew) p.susp--;
       delete p.suspNew;
@@ -800,7 +810,10 @@
     if (S.user.sacked) W.goUnemployed('sacked');
     else if (!W.employed()) Sea.jobMarket();
     else if (!summary) FM.Injury.riskHim(Sea.userFixture()); // a key man nearly fit before a big game
-    if (!summary) FM.Market.newDay(); // deadline, trials, loanees, payments
+    if (!summary) {
+      FM.Market.newDay(); // deadline, trials, loanees, payments
+      FM.Stories.preMatchPress(); // a big game today: the press want a word first
+    }
     return summary;
   };
 
@@ -1226,6 +1239,13 @@
       // Qualification relationship: this league's top n enter another competition next season
       if (R.qualify)
         qualified[R.qualify.to] = (qualified[R.qualify.to] || []).concat(t.slice(0, R.qualify.n).map((r) => r.id));
+      // second-tier continental cups: the next places down
+      for (const cc of D.CONTINENTALS) {
+        const k = cc.feeders && cc.feeders[comp.id];
+        if (!k) continue;
+        const from = (R.qualify && R.qualify.n) || 0;
+        qualified[cc.id] = (qualified[cc.id] || []).concat(t.slice(from, from + k).map((r) => r.id));
+      }
       if (R.relegate) t.slice(-R.relegate.n).forEach((r) => moves.push([r.id, comp.id, R.relegate.to]));
       if (R.promote) {
         t.slice(0, R.promote.auto).forEach((r) => moves.push([r.id, comp.id, R.promote.to]));

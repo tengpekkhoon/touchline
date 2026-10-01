@@ -34,10 +34,32 @@
         FM.News.isOpen(n) ? true : FM.News.isClub(n, cid) ? ++club <= FM.News.CAP : ++world <= FM.News.CAP,
       );
     },
+    // What you follow (S.user.follow): clubs, players, competitions and nations whose news comes into your feed
+    follows() {
+      const u = FM.S.user;
+      if (!u) return { clubs: [], players: [], comps: [], nations: [] };
+      return (u.follow = u.follow || { clubs: [], players: [], comps: [], nations: [] });
+    },
+    followed(n) {
+      const f = FM.News.follows(),
+        S = FM.S;
+      if (!f.clubs.length && !f.players.length && !f.comps.length && !f.nations.length) return false;
+      if (n.clubId && f.clubs.includes(n.clubId)) return true;
+      if (n.pid && f.players.includes(n.pid)) return true;
+      const c = n.clubId && S.clubs[n.clubId];
+      if (c && c.comp && f.comps.includes(c.comp)) return true;
+      if (n.comp && f.comps.includes(n.comp)) return true;
+      const p = n.pid && S.players[n.pid];
+      if (p && f.nations.includes('n_' + p.nat) && /international|national|caps?\b|debut/i.test(n.title || ''))
+        return true;
+      if (n.deals) return n.deals.some((d) => (d.c && f.clubs.includes(d.c)) || (d.pid && f.players.includes(d.pid)));
+      return false;
+    },
     add(n) {
       const S = FM.S;
-      // The day's ordinary transfers and loans elsewhere go into one Transfer round-up (big deals keep their own story)
-      if (n.type === 'transfer' && !n.big && !FM.News.isClub(n, S.user && S.user.clubId)) {
+      // The day's ordinary transfers and loans elsewhere go into one Transfer round-up (big deals keep their own
+      // story, and so does a move by a player or club you follow)
+      if (n.type === 'transfer' && !n.big && !FM.News.isClub(n, S.user && S.user.clubId) && !FM.News.followed(n)) {
         let r = S.news.find((x) => x.type === 'roundup' && x.day === S.day && x.year === S.year);
         if (!r) {
           r = { id: FM.nextId('n'), day: S.day, year: S.year, read: false, type: 'roundup', deals: [] };
@@ -366,8 +388,12 @@
       });
     if (lost && ga - gf >= 2 && leader) W.squad(club.id).forEach((p) => (p.morale = Math.min(100, p.morale + 3)));
 
-    // Press conference (interactive)
-    if (
+    // Press conference (interactive): a question about the moment (a run of results, the board, a rumour, the
+    // kids) when one fits, else about the game
+    const topical = St.pressQuestion(club);
+    if (topical && Math.random() < 0.35 && !S.news.some((n) => n.type === 'press' && !n.resolved))
+      FM.News.add({ type: 'press', title: 'Post-match press conference', clubId: club.id, ...topical });
+    else if (
       (m.derby || upset || Math.abs(gf - ga) >= 3 || Math.random() < 0.12) &&
       !S.news.some((n) => n.type === 'press' && !n.resolved)
     ) {
@@ -417,6 +443,136 @@
     }
   };
 
+  // Journalists' questions for the moment you're in. Each returns { body, pid?, choices } or null.
+  St.PRESS_BANK = [
+    (c) => {
+      const r = c.recent || [];
+      if (r.length < 3 || r.slice(-3).some((x) => x !== 0)) return null;
+      return {
+        body: 'Three defeats in a row. Is the dressing room still with you?',
+        choices: [
+          { label: 'Back the players', fx: { morale: 3, board: -1 }, reply: 'The squad close ranks behind you.' },
+          {
+            label: 'Demand a reaction',
+            fx: { morale: -1, board: 2 },
+            reply: 'A message heard loud and clear, inside and outside the club.',
+          },
+          {
+            label: 'Point to the injuries',
+            fx: { fans: -2 },
+            reply: 'Some sympathy, and some eye-rolling in the stands.',
+          },
+        ],
+      };
+    },
+    (c) => {
+      const r = c.recent || [];
+      if (r.length < 3 || r.slice(-3).some((x) => x !== 1)) return null;
+      return {
+        body: "Three wins on the bounce. What's changed?",
+        choices: [
+          { label: 'Credit the players', fx: { morale: 3 }, reply: 'The players lap it up.' },
+          { label: 'One game at a time', fx: { board: 1 }, reply: 'Measured. The board like it.' },
+          {
+            label: "We're only getting started",
+            fx: { fans: 5, board: -1 },
+            reply: 'The fans are dreaming. So are the papers.',
+          },
+        ],
+      };
+    },
+    (c) => {
+      if ((c.boardConf ?? 60) >= 40) return null;
+      return {
+        body: 'The board are said to be losing patience. Are you worried about your job?',
+        choices: [
+          {
+            label: 'I have their backing',
+            fx: { board: -2, fans: 1 },
+            reply: 'Bold. The board may see it differently.',
+          },
+          { label: 'Results will answer it', fx: { board: 2 }, reply: 'The right tone for the boardroom.' },
+          { label: "I won't discuss it", fx: {}, reply: 'The story runs anyway.' },
+        ],
+      };
+    },
+    (c) => {
+      const p = W.squad(c.id)
+        .filter((q) => !q.loan && W.interest(q) >= 2)
+        .sort((a, b) => b.value - a.value)[0];
+      if (!p) return null;
+      return {
+        body: `There's talk of interest in ${W.name(p)}. Is he for sale?`,
+        pid: p.id,
+        choices: [
+          { label: 'Not for sale', fx: { fans: 3, player: 4 }, reply: `${W.short(p)} is glad to hear it.` },
+          { label: 'Everyone has a price', fx: { player: -6, board: 1 }, reply: `${W.short(p)} reads it as a hint.` },
+          { label: 'No comment', fx: {}, reply: 'The rumours carry on.' },
+        ],
+      };
+    },
+    (c) => {
+      const kid = W.squad(c.id).find(
+        (q) => W.age(q) <= 20 && q.season.apps >= 3 && q.form.length && U.avg(q.form) >= 7,
+      );
+      if (!kid) return null;
+      return {
+        body: `${W.name(kid)} has been excellent. How good can he become?`,
+        pid: kid.id,
+        choices: [
+          { label: 'The sky is the limit', fx: { player: 4, fans: 2 }, reply: `${W.short(kid)} grows another inch.` },
+          {
+            label: "Let's not get carried away",
+            fx: { player: 1, board: 1 },
+            reply: 'Keeping his feet on the ground.',
+          },
+        ],
+      };
+    },
+  ];
+  St.pressQuestion = function (c) {
+    for (const q of U.shuffle(St.PRESS_BANK)) {
+      const r = q(c);
+      if (r) return r;
+    }
+    return null;
+  };
+  // Before a big game (a derby, a knockout tie, a top side): the pre-match press conference. Mind games can
+  // lift your players or fire up theirs (FM.Match reads S.user.preMatch).
+  St.preMatchPress = function () {
+    const s = FM.S,
+      c = W.employed() && W.userClub(),
+      fx = c && FM.Season.userFixture();
+    if (!fx || fx.intl || s.news.some((n) => n.type === 'press' && !n.resolved && n.pre)) return;
+    const opp = FM.clubOf(fx.h === c.id ? fx.a : fx.h);
+    const big = c.rival === opp.id || fx.ko || fx.first || opp.rep >= 80;
+    if (!big || (s.user.preMatch && s.user.preMatch.day === s.day && s.user.preMatch.year === s.year)) return;
+    const mgr = opp.manager && s.staff[opp.manager];
+    FM.News.add({
+      type: 'press',
+      pre: { opp: opp.id },
+      title: `Pre-match press conference: ${opp.name}`,
+      body: `${mgr ? `${mgr.fn} ${mgr.ln} says his side fear nobody.` : `${opp.name} say they fear nobody.`} Your thoughts?`,
+      clubId: c.id,
+      choices: [
+        {
+          label: 'Praise them',
+          fx: { match: { us: 0.005, them: 0 } },
+          reply: 'Respectful. Nothing for them to pin on the dressing-room wall.',
+        },
+        {
+          label: 'Play mind games',
+          fx: { match: U.chance(0.55) ? { us: 0.02, them: 0 } : { us: 0, them: 0.02 } },
+          reply: '',
+        },
+        {
+          label: 'Play it down',
+          fx: { match: { us: 0.008, them: 0 }, board: 1 },
+          reply: 'Low-key. The players take the pressure off themselves.',
+        },
+      ],
+    });
+  };
   St.applyPress = function (n, i) {
     const c = W.userClub(),
       ch = n.choices[i],
@@ -424,6 +580,16 @@
     if (n.resolved) return;
     n.resolved = ch.label;
     const sq = W.squad(c.id);
+    if (f.player && n.pid && FM.S.players[n.pid])
+      FM.S.players[n.pid].morale = U.clamp(FM.S.players[n.pid].morale + f.player, 0, 100);
+    if (f.match && n.pre) {
+      FM.S.user.preMatch = { opp: n.pre.opp, day: FM.S.day, year: FM.S.year, us: f.match.us, them: f.match.them };
+      if (!ch.reply)
+        ch.reply =
+          f.match.us > 0
+            ? 'It gets under their skin. Your players are buzzing.'
+            : "It backfires: they've pinned it on their dressing-room wall.";
+    }
     if (f.morale)
       sq.forEach((p) => (p.morale = U.clamp(p.morale + f.morale + (W.hasTrait(p, 'Media Friendly') ? 2 : 0), 0, 100)));
     if (f.youth) sq.filter((p) => W.age(p) <= 21).forEach((p) => (p.morale = Math.min(100, p.morale + f.youth)));

@@ -118,6 +118,7 @@
       ${chips('feed', [
         ['club', 'My Club'],
         ['reply', waiting ? `🔔 Needs reply (${waiting})` : 'Needs reply'],
+        ['following', '⭐ Following'],
         ['world', 'World'],
       ])}
       ${UI.sub.feed === 'world' ? chips('wnews', WNEWS) : ''}
@@ -170,7 +171,8 @@
       f = UI.sub.feed,
       cid = club() ? club().id : null;
     let items = s.news;
-    if (f === 'club') items = items.filter((n) => FM.News.isClub(n, cid));
+    if (f === 'club') items = items.filter((n) => FM.News.isClub(n, cid) || FM.News.followed(n));
+    if (f === 'following') items = items.filter((n) => FM.News.followed(n));
     if (f === 'reply') items = items.filter(UI.isOpenDecision);
     if (f === 'stories') items = items.filter((n) => n.type === 'story');
     if (f === 'world') {
@@ -185,8 +187,9 @@
     }
     if (f === 'transfers') items = items.filter((n) => ['transfer', 'roundup', 'rumour', 'bid'].includes(n.type));
     items = items.filter((n) => !n.quiet || f === 'club');
+    const top = f === 'following' ? UI.followingPanel() : '';
     if (!items.length)
-      return `<div class="empty">${f === 'reply' ? 'Nothing is waiting for your reply.' : f === 'world' && UI.sub.wnews !== 'all' ? 'No world news on this topic yet.' : 'Nothing here yet. Play some football.'}</div>`;
+      return `${top}<div class="empty">${f === 'reply' ? 'Nothing is waiting for your reply.' : f === 'following' ? 'No news from what you follow yet.' : f === 'world' && UI.sub.wnews !== 'all' ? 'No world news on this topic yet.' : 'Nothing here yet. Play some football.'}</div>`;
     // New since you last looked: a dot on the card; everything shown now counts as read
     const shown = items.slice(0, 40);
     shown.forEach((n) => {
@@ -197,7 +200,7 @@
       n.read = true;
       delete n._new;
     });
-    return html;
+    return top + html;
   }
   // Open decisions are never cleared: a live bid, an unanswered press conference or meeting
   UI.isOpenDecision = FM.News.isOpen;
@@ -468,6 +471,7 @@
       ${chips('feed', [
         ['all', 'All'],
         ['stories', 'Stories'],
+        ['following', '⭐ Following'],
         ['world', 'World'],
         ['transfers', 'Transfers'],
       ])}
@@ -1008,7 +1012,7 @@
       nt
         ? `<span class="tap" data-act="nation" data-id="${nt.id}" style="text-decoration:underline dotted">${html}</span>`
         : html;
-    return `<div class="pcard-hero" style="--c1:${col}"><div class="row" style="align-items:flex-start"><div class="grow"><div class="tiny b" style="opacity:.85;letter-spacing:1px;text-transform:uppercase">${D.POS_NAME[p.pos]}${altLine(p)} · ${p.foot} foot</div><div class="h1" style="margin-top:6px">${esc(p.fn)}<br>${esc(p.ln)}</div><div class="small" style="margin-top:8px;opacity:.9">${natLink(`${C.flag(p.nat)} ${D.NATIONS[p.nat].name}`)} · ${age} yrs${c ? ' · ' + esc(c.name) : ''}</div></div>${c ? C.crest(c, 48) : ''}</div>
+    return `<div class="pcard-hero" style="--c1:${col}"><div class="row" style="align-items:flex-start"><div class="grow"><div class="tiny b" style="opacity:.85;letter-spacing:1px;text-transform:uppercase">${D.POS_NAME[p.pos]}${altLine(p)} · ${p.foot} foot</div><div class="h1" style="margin-top:6px">${esc(p.fn)}<br>${esc(p.ln)}</div>${own ? '' : `<div style="margin-top:6px">${UI.followBtn('player', p.id, true)}</div>`}<div class="small" style="margin-top:8px;opacity:.9">${natLink(`${C.flag(p.nat)} ${D.NATIONS[p.nat].name}`)} · ${age} yrs${c ? ' · ' + esc(c.name) : ''}</div></div>${c ? C.crest(c, 48) : ''}</div>
       <div class="row" style="margin-top:14px;gap:14px"><div><div class="tiny" style="opacity:.75">ABILITY</div>${C.playerStars(p)}</div><div><div class="tiny" style="opacity:.75">VALUE</div><b>${own || v.k >= 30 ? U.money(p.value) : '?'}</b></div><div><div class="tiny" style="opacity:.75">WAGE</div><b>${own || v.k >= 30 ? U.money(p.wage) + '/wk' : '?'}</b></div>${own ? `<div><div class="tiny" style="opacity:.75">MORALE</div><b>${me} ${ml}</b></div>` : ''}</div></div>
       <div class="sp"></div>
       ${ownActions}
@@ -1534,7 +1538,7 @@
       comp.sim && comp.sim !== 'full'
         ? `<div class="warnline" style="margin-bottom:8px">${FM.Tiers.ICON[comp.sim]} ${FM.Tiers.LABEL[comp.sim]} — ${comp.sim === 'light' ? 'results come from a fast statistical model; player stats are recorded.' : 'scores only; squads exist for scouting.'}</div>`
         : '';
-    return `${tier}<div class="card flat" style="padding:6px 10px"><table class="t"><tr><th>#</th><th class="l">Club</th><th>P</th><th>GD</th><th>Pts</th><th class="l">Form</th></tr>${t.map((r, i) => `<tr class="${zone(i)} ${W.isUser(r.id) ? 'me' : ''} tap" data-act="clubView" data-id="${r.id}"><td>${i + 1}</td><td class="l"><div class="row" style="gap:6px">${C.crest(CL(r.id), 18)}<span class="ellip" style="max-width:130px">${esc(CL(r.id).name)}</span></div></td><td>${r.p}</td><td>${r.gd > 0 ? '+' : ''}${r.gd}</td><td class="b">${r.pts}</td><td class="l">${C.form(r.form.slice(-3))}</td></tr>`).join('')}</table></div>
+    return `<div class="row" style="margin:0 2px 6px"><span class="grow"></span>${UI.followBtn('comp', cid, true)}</div>${tier}<div class="card flat" style="padding:6px 10px"><table class="t"><tr><th>#</th><th class="l">Club</th><th>P</th><th>GD</th><th>Pts</th><th class="l">Form</th></tr>${t.map((r, i) => `<tr class="${zone(i)} ${W.isUser(r.id) ? 'me' : ''} tap" data-act="clubView" data-id="${r.id}"><td>${i + 1}</td><td class="l"><div class="row" style="gap:6px">${C.crest(CL(r.id), 18)}<span class="ellip" style="max-width:130px">${esc(CL(r.id).name)}</span></div></td><td>${r.p}</td><td>${r.gd > 0 ? '+' : ''}${r.gd}</td><td class="b">${r.pts}</td><td class="l">${C.form(r.form.slice(-3))}</td></tr>`).join('')}</table></div>
       <div class="row tiny dim" style="gap:12px;margin:0 4px 12px;flex-wrap:wrap">${legend.map((l) => `<span>${l}</span>`).join('')}</div>
       ${po ? `<div class="card"><div class="h3">Playoffs</div>${po.sf.map((f) => fxLine(f)).join('')}${(po.sf2 || []).map((f) => fxLine(f)).join('')}${po.final ? fxLine(po.final) : ''}</div>` : ''}`;
   }

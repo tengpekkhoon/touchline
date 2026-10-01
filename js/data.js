@@ -1869,6 +1869,25 @@
     { id: 'AC', region: 'Asia', name: 'AFC Champions League Elite', short: 'ACLE', prize: 5e6 },
     { id: 'AF', region: 'Africa', name: 'CAF Champions League', short: 'CAF', prize: 3e6 },
     { id: 'NC', region: 'North America', name: 'CONCACAF Champions Cup', short: 'CCC', prize: 4e6 },
+    // Second-tier cups: the next places after each league's main continental spots (feeders: league → clubs)
+    {
+      id: 'EL',
+      region: 'Europe',
+      name: 'UEFA Europa League',
+      short: 'UEL',
+      prize: 5e6,
+      tier: 2,
+      feeders: { D1: 2, ES1: 2, DE1: 2, IT1: 2, FR1: 2, PT1: 1, NL1: 1, BE1: 1, TR1: 1, AT1: 1, GR1: 1 },
+    },
+    {
+      id: 'SA',
+      region: 'South America',
+      name: 'CONMEBOL Copa Sudamericana',
+      short: 'SUD',
+      prize: 2.5e6,
+      tier: 2,
+      feeders: { BR1: 4, AR1: 4 },
+    },
   ];
   // Club World Cup: last season's continental finalists (winners only from Africa and North America)
   // [competition, 0 = winner / 1 = runner-up], in seed order

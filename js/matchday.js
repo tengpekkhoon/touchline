@@ -134,6 +134,22 @@
     focus: { label: 'Stay focused', desc: 'No complacency. Best when we are favourites' },
     free: { label: 'Go and enjoy it', desc: 'Nothing to lose. Best as underdogs' },
     fire: { label: 'Fire them up', desc: 'For derbies and big nights. Hot-heads may overdo it' },
+    pressure: { label: 'Demand a win', desc: 'Pros respond to it; nervous players can freeze. Best as favourites' },
+    tactics: {
+      label: 'Talk tactics',
+      desc: 'Calm, clear instructions. A small, reliable lift that grows with familiarity',
+    },
+  };
+  // The warm-up: how the side starts and how its legs last
+  Md.WARMUPS = {
+    standard: { label: 'Standard', desc: 'The usual routine' },
+    intense: { label: 'Intense', desc: 'Sharp from the first whistle, but legs tire sooner' },
+    light: { label: 'Light', desc: 'Fresher legs late on, a slower start' },
+    setpieces: { label: 'Set pieces', desc: 'Rehearse corners and free kicks: better set-piece chances' },
+  };
+  Md.applyWarmup = function (m, kind) {
+    const sd = m.sides.find((s) => s.user);
+    if (sd && Md.WARMUPS[kind]) sd.warm = kind;
   };
   // Context the talk lands in: our chance of winning and how big the occasion is
   Md.talkContext = function (fx) {
@@ -146,7 +162,7 @@
     const derby = me.rival === opp.id;
     const comp = S.comps[fx.comp];
     const big = derby || !!fx.ko || !!fx.first || !!fx.intl || opp.rep >= 80 || (comp && comp.type === 'continental');
-    return { pw, fav: pw >= 0.5, under: pw < 0.33, big, derby };
+    return { pw, fav: pw >= 0.5, under: pw < 0.33, big, derby, fam: (S.user.tactic && S.user.tactic.fam) || 55 };
   };
   Md.suggestTalk = (ctx) => (ctx.derby ? 'fire' : ctx.under ? 'free' : ctx.fav ? 'focus' : ctx.big ? 'fire' : 'calm');
   // Per-player reaction to a talk (morale points)
@@ -163,6 +179,13 @@
         (volatile ? (ctx.big ? -2 : -3) : 0) +
         (W.hasTrait(p, 'Leader') ? 1 : 0) +
         (nervy && ctx.big ? -2 : 0);
+    if (kind === 'pressure')
+      d =
+        (ctx.fav ? 3 : ctx.under ? -2 : 0) +
+        (p.hid.prof >= 14 ? 2 : 0) +
+        (nervy ? -3 : 0) +
+        (W.hasTrait(p, 'Leader') ? 1 : 0);
+    if (kind === 'tactics') d = (ctx.fam >= 75 ? 2 : 1) + (p.hid.prof >= 15 ? 1 : 0);
     return d;
   };
   // Apply the talk to a live FM.Match (user side). Returns the dressing-room verdict.

@@ -84,6 +84,7 @@
   // Consistency fixes on every load: references to players who have since left or retired
   Sv.repair = function (s) {
     Sv.relink(s);
+    if (s.comps && FM.Cups) FM.Cups.ensureContinentals(s);
     const u = s.user,
       has = (id) => id && s.players[id] && !s.players[id].retired;
     const T = u && u.tactic;

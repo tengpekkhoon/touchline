@@ -43,7 +43,7 @@
     return U.roundMoney(f);
   };
   // A good sporting director shaves the fee and the agent's demands when you buy
-  T.dirFactor = () => 1 - (W.staffAbility('director') - 10) * 0.008;
+  T.dirFactor = () => FM.Staff.impact('director').buy;
   T.userAsk = (p) => U.roundMoney(T.askPrice(p) * T.dirFactor());
   T.wageDemand = function (p, toClub) {
     let w = Math.max(p.wage * 1.15, W.wageFor(p) * (0.8 + toClub.rep / 250));
@@ -698,7 +698,10 @@
     if (S.news.some((n) => n.type === 'bid' && n.data.pid === target.id && n.data.status === 'open')) return;
     // A club short at his position (or buying on deadline day) bids higher and has more room to go up
     const urg = FM.Market.urgency(b, target.pos);
-    let fee = U.roundMoney(target.value * U.rand(target.listed ? 0.75 : 0.9, 1.35) * urg);
+    // a good sporting director gets more out of the clubs bidding for your players
+    let fee = U.roundMoney(
+      target.value * U.rand(target.listed ? 0.75 : 0.9, 1.35) * urg * FM.Staff.impact('director').sell,
+    );
     const r = Math.random(),
       deal = r < 0.25 ? { inst: U.pick([2, 3]) } : r < 0.4 ? { addOn: U.roundMoney(fee * 0.15), addApps: 20 } : null;
     if (deal && deal.inst) fee = U.roundMoney(fee * (deal.inst === 3 ? 1.1 : 1.06)); // paying later costs them more

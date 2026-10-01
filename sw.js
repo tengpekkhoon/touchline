@@ -42,6 +42,7 @@ const FILES = [
   './js/ui-extra.js',
   './js/ui-alpha.js',
   './js/ui-market.js',
+  './js/ui-follow.js',
   './fonts/inter-var-latin.woff2',
   './fonts/inter-var-latin-ext.woff2',
   './fonts/barlow-condensed-600-latin.woff2',

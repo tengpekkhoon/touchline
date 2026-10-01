@@ -57,7 +57,7 @@
     if (p.injRisk) r *= Inj.CAL.reinjury * (p.injRisk.rushed ? 2.4 : 1);
     const med = c ? c.facilities.medical || 2 : 2;
     r *= 1.08 - med * 0.035;
-    if (c && W.isUser(c.id)) r *= 1 - (W.staffAbility('physio') - 10) * 0.012;
+    if (c && W.isUser(c.id)) r *= FM.Staff.impact('physio').risk;
     return r;
   };
 
@@ -77,7 +77,7 @@
       c = p.clubId && S().clubs[p.clubId];
     let w = t.lo + (t.hi - t.lo) * Math.pow(Math.random(), 1.6); // most injuries at the shorter end of the range
     w *= (1 + Math.max(0, age - 30) * 0.04) * (1.12 - (c ? c.facilities.medical || 2 : 2) * 0.04);
-    if (c && W.isUser(c.id)) w *= 1 - (W.staffAbility('physio') - 10) * 0.03;
+    if (c && W.isUser(c.id)) w *= FM.Staff.impact('physio').layoff;
     return Math.max(1, Math.round(w));
   };
 

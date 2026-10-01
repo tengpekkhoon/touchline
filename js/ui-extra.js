@@ -350,7 +350,8 @@
       return `<div class="card"><div class="row"><div style="font-size:26px">${st.vacant ? '🪑' : C.flag(st.nat)}</div><div class="grow"><div class="b">${esc(st.fn + ' ' + st.ln)}</div><div class="small dim">${esc(role)}${st.vacant ? '' : ` · ${esc(st.personality)} · age ${st.age}`}</div></div>${st.vacant ? '<span class="pill bad">Vacant</span>' : `<b>${U.money(st.wage)}/wk</b>`}</div>
         <div class="row small" style="margin-top:10px"><span class="dim" style="width:64px">Ability</span><div class="grow">${C.bar((st.ability / 20) * 100, st.ability >= 15 ? 'var(--good)' : st.ability >= 10 ? 'var(--acc2)' : 'var(--bad)')}</div><b style="margin-left:8px">${st.judge || st.ability}/20</b></div>
         ${st.regions ? `<div class="tiny dim" style="margin-top:6px">${esc(st.note || '')}</div>` : ''}
-        <div class="tiny dim" style="margin-top:6px">${r.effect}${st.vacant ? '' : ` · contract to ${st.contract}`}</div>
+        <div class="small" style="margin-top:6px">⚡ ${esc(FM.Staff.IMPACT[key](st.ability).text)}</div>
+        <div class="tiny dim" style="margin-top:4px">${r.effect}${st.vacant ? '' : ` · contract to ${st.contract}`}</div>
         <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm grow" data-act="staffMarket" data-role="${esc(role)}">${st.vacant ? 'Hire' : key === 'scout' ? 'Hire another' : 'Replace'}</button>${st.vacant ? '' : `<button class="btn sm grow danger" data-act="staffFire" data-id="${st.id}">Release (${U.money(FM.Staff.compensation(st))})</button>`}</div></div>`;
     };
     const wageBill = U.sum(W.userStaff(), (x) => x.wage);
@@ -1401,7 +1402,7 @@
     const games = s.intlLog.filter((g) => g.h === t.id || g.a === t.id).slice(0, 8);
     const rank = FM.Intl.ranked().indexOf(t) + 1;
     UI.sheet(
-      `<div class="hero" style="--c1:${t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0]};--c2:#111"><div class="row"><div style="font-size:46px">${C.flag(t.code)}</div><div class="grow"><div class="h1">${esc(t.name)}</div><div class="small" style="opacity:.9">World ranking #${rank} · Elo ${t.elo} · ${esc(D.NATIONS[t.code].style)}</div></div></div>
+      `<div class="hero" style="--c1:${t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0]};--c2:#111"><div class="row"><div style="font-size:46px">${C.flag(t.code)}</div><div class="grow"><div class="h1">${esc(t.name)}</div><div class="small" style="opacity:.9">World ranking #${rank} · Elo ${t.elo} · ${esc(D.NATIONS[t.code].style)}</div></div>${UI.followBtn('nation', t.id, true)}</div>
         ${
           Object.keys(t.titles).length
             ? `<div class="small" style="margin-top:8px">${Object.entries(t.titles)

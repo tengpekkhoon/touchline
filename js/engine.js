@@ -148,6 +148,18 @@
       this.bigGame = this.derby || this.heated || this.knockout || Math.min(hc.rep, ac.rep) >= 75;
       this.homeF = this.neutral ? 0 : Match.homeFactor(hc, ac, this.derby || this.heated);
       this.sides = [this.mkSide(hc, 0), this.mkSide(ac, 1)];
+      // What you said before the game (a pre-match press conference): it lifts your side, or theirs
+      const pm = FM.S.user && FM.S.user.preMatch;
+      if (pm && pm.year === FM.S.year && pm.day === FM.S.day) {
+        const us = this.sides.find((sd) => sd.user),
+          them = us && this.sides[1 - us.idx];
+        if (us && them.club.id === pm.opp) {
+          us.mods.att += pm.us;
+          us.mods.mid += pm.us;
+          them.mods.att += pm.them;
+          them.mods.mid += pm.them;
+        }
+      }
       // What the result was expected to be worth to the home side (win 1, draw ½): confidence moves against it
       const avg = (sd) => U.avg(sd.xi.filter(Boolean), (p) => p.ca);
       this.exp = FM.Season.expected(avg(this.sides[0]), avg(this.sides[1]), true, this.neutral);
@@ -338,6 +350,12 @@
       if (T.invFB) {
         mid *= 1.04;
         def *= 0.99;
+      }
+      // The warm-up: an intense one starts sharp, a light one slowly (the first 15 minutes)
+      if (sd.warm && this.minute <= 15) {
+        const w = sd.warm === 'intense' ? 1.03 : sd.warm === 'light' ? 0.98 : 1;
+        att *= w;
+        mid *= w;
       }
       // Rain: the ball skids and short passing suffers
       if (this.weather[0] === 'Rain' && (T.buildup === 'Short' || T.buildup === 'Possession')) mid *= 0.97;
@@ -600,6 +618,8 @@
             sp === 'fk'
               ? 0.45 + (Md.spScore(spTaker.p, 'fk') / 20) * 0.7
               : 0.6 + (Md.spScore(spTaker.p, 'cor') / 20) * 0.45;
+        if (sd.user && sd.club.sim !== 'nation') xg *= FM.Staff.impact('analyst').sp; // rehearsed routines
+        if (sd.warm === 'setpieces') xg *= 1.06;
       }
       if (type !== 'penalty') xg = U.clamp(xg * me.q * Math.sqrt(me.att / op.def), 0.01, 0.8);
       // Roles decide who gets on the end of things: shoot (who shoots), head (who wins crosses and corners), assist
@@ -886,7 +906,8 @@
       this.sides.forEach((sd) => {
         const pf =
           { 'High Press': 1.35, 'Mid Block': 1, 'Low Block': 0.82 }[sd.tactic.press] *
-          (this.weather[0] === 'Hot' ? CAL.heat : 1); // the heat drains legs
+          (this.weather[0] === 'Hot' ? CAL.heat : 1) * // the heat drains legs
+          (sd.warm === 'intense' ? 1.07 : sd.warm === 'light' ? 0.94 : 1); // and so does an intense warm-up
         const rfs = (sd.rfC = sd.rfC || []);
         for (const { p, i } of this.onPitch(sd)) {
           const t = sd.slots[i].t;
@@ -1485,6 +1506,37 @@
           { label: 'Keep calm', desc: 'Stay the course', apply: apply('calm') },
           { label: 'Demand more', desc: 'Risky with volatile players', apply: apply('demand') },
           { label: 'Praise them', desc: 'Best when playing well', apply: apply('praise') },
+          {
+            label: 'Tactical tweaks',
+            desc: "Fix what isn't working (your assistant's eye matters)",
+            apply: () => {
+              const k = 0.01 + (FM.Staff.impact('assistant').fam - 1) * 0.1;
+              if (op.xg > sd.xg) {
+                sd.mods.def += k + 0.01;
+                return 'Shape tightened where they were getting through.';
+              }
+              sd.mods.att += k + 0.01;
+              return 'A couple of tweaks to make the most of our pressure.';
+            },
+          },
+          {
+            label: 'Go for it',
+            desc: 'More attack, more risk at the back',
+            apply: () => {
+              sd.mods.att += diff < 0 ? 0.05 : 0.03;
+              sd.mods.def -= 0.03;
+              return diff < 0 ? 'Everyone forward: we need goals.' : 'We go looking for more.';
+            },
+          },
+          {
+            label: 'Shut up shop',
+            desc: 'Protect what we have',
+            apply: () => {
+              sd.mods.def += diff > 0 ? 0.05 : 0.02;
+              sd.mods.att -= 0.04;
+              return diff > 0 ? 'Back in shape. They will have to break us down.' : 'Cautious: keep it tight first.';
+            },
+          },
         ],
       };
     },
