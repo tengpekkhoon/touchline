@@ -4,7 +4,7 @@ Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/420
 
 ## At a glance
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are the first batches of playtest feedback (bugs, interface, speed, realism, transfer market, tactics and match engine). A second round of feedback added items to batches 2, 4 and 6; those for 2 and 4 are done. The rest of that backlog (big features, platform) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
+Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are playtest feedback batches 1–6 (bugs, interface, speed, realism, transfer market, tactics and match engine, big features), including a second round of feedback folded into batches 2, 4 and 6. Batch 7 (platform) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
 
 ```mermaid
 flowchart TB
@@ -344,7 +344,7 @@ Step 1 is done: the game installs to the home screen and plays offline (web app 
 
 ## Open questions and risks
 
-- **Licensing:** the prototype now uses real club, league and competition names (547 clubs; ratings, identities and finances are the game's own) with fictional players (known real name combinations are blocked). Club names and colours are trademarks: a store release needs licences or a fictional-name pack (the original fictional set is in git history, commit 4bad4f6).
+- **Licensing:** the prototype now uses real club, league and competition names (664 clubs; ratings, identities and finances are the game's own) with fictional players (known real name combinations are blocked). Club names and colours are trademarks: a store release needs licences or a fictional-name pack (the original fictional set is in git history, commit 4bad4f6).
 - **Tech stack for release:** proposed answer — keep the web engine inside a native wrapper (Capacitor) rather than porting; the game is plain HTML/CSS/JS with no server.
 - **Store updates:** JavaScript updates still normally go through store review, so fixes can't be pushed instantly.
 - **Performance at scale:** the 30-league world has about 11,300 players; a league day takes ~0.7–1.35 s and pre-season days ~0.15–0.2 s in Node, and saves are ~7 MB with the compact player format. Save size is not a constraint (the target is a downloadable app with native file storage); the 5 MB localStorage fallback only matters for the web prototype in private browsing. Mid-range phones are still untested (content gate).
