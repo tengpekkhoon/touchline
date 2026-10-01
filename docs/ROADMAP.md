@@ -4,7 +4,7 @@ Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/420
 
 ## At a glance
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are the first batches of playtest feedback (bugs, interface, speed, realism). The rest of that backlog (transfer market, tactics and match engine, big features) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
+Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are the first batches of playtest feedback (bugs, interface, speed, realism, transfer market). The rest of that backlog (tactics and match engine, big features) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
 
 ```mermaid
 flowchart TB
@@ -30,6 +30,7 @@ The web prototype runs on a phone browser with no build step, covering 547 real 
 
 | Build | What shipped |
 | --- | --- |
+| Playtest feedback, batch 4 | Transfer market depth. A deadline with a countdown, a warning three days out, deadline day (more AI buyers at a premium, late bids, the skip stops for it) and a window summary. Trials for free agents. A loan watch for loanees who aren't played (recall them, or tell the club to play them). Fee talks that go back and forth (clubs counter down to a floor, agents make their own proposals, you can counter bids for your players). A relative market (players who want away and clubs in debt sell cheaper; clubs short at a position pay more). Players choosing between clubs and saying why. Fees in instalments, add-ons and sell-on clauses, with payments to come in the finances. AI clubs replacing ageing starters. Each real league's foreign-player rules (homegrown quotas, non-EU limits, MLS international slots, foreign caps) for new careers. Calibration 48/49 and 47/49 on two seeds; over-30s' share of top-flight minutes now ends six seasons at 25% (was 27–30%). |
 | Playtest feedback, batches 1–3 | Three playtest reports worked through. Bugs (undefined nationalities, offers for your own loanees, captaincy switching, replaying lost matches), interface (feed of your club, needs-reply list, daily transfer round-up, tap any badge for the club, club picker search, money in the club's currency, readable crests), speed (pre-season days ~8× faster), realism (settled players after a move, fans judged against expectations, transfer-window rules, no foreign-player limit by default, auto pick with roles, market value by league and club, deeper squads, club icons and testimonials). Calibration now 48/49 measures in range on two seeds: title dominance, elite inflation, injuries and retirement ages fixed. |
 | Code cleanup | No gameplay change, proven by identical seeded test and calibration results. Removed dead code, merged duplicate name pools and the test tools' copied loaders (`tools/harness.mjs`), split the three largest files (clubs into `clubs.js`, player development and retirement into `careers.js`, the transfer market into `transfers.js`). ESLint and Prettier added (`npm run lint`, `npm run format`); every deploy now has to pass both before it goes live. |
 | World expansion and dynamic tiers | Your league, the one above and the one below always play in the full engine: relegated from the Premier League, League One switches from light to full; out of work, every league returns to its own tier. Ten more leagues in minimal simulation, in UEFA coefficient order: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland and Scotland (146 real clubs, 19 derbies such as the Old Firm and the Kıtalararası Derbi), with six new nations (Turkey, Czechia, Greece, Poland, Austria, Switzerland) and national teams. Name pools at least doubled for most nations (every nation 40+ first names and 43+ surnames), with more real-player combinations blocked. The world is now 547 clubs in 30 leagues, about 10,600 players and 35 national teams |
@@ -148,15 +149,15 @@ Playtest feedback grouped into seven batches, in working order; most important f
 
 *4 · Transfer market depth*
 
-- [ ] Warning X days before the transfer deadline, and a deadline-day event (M)
-- [ ] Trials for free agents (M)
-- [ ] Act when loanees aren't played enough: recall, or complain to the borrowing club (M)
-- [ ] Contract and transfer negotiation with back-and-forth (L)
-- [ ] Relative market: desperate buyers pay more; a player who wants out sells for less (L)
-- [ ] Player choice between clubs: several bidders, and he picks by league, playing time, wages and ambition, sometimes turning down a bigger club (M)
-- [ ] Sell-on clauses, add-ons and fees paid in instalments (M)
-- [ ] AI squad planning by age profile: replace players about to decline, not only weak spots (S)
-- [ ] Foreign-player rules that follow each real league: registration and homegrown rules (England's 8 homegrown in 25), non-EU limits (Spain, Italy), international slots (MLS), foreign-player caps (Brazil, Japan, Mexico) (M)
+- [x] Deadline: a warning three days before it with what you still have in hand, a deadline day (more AI clubs buying at a premium, late bids for your players, the skip stops for it) and a summary when the window shuts; the top bar counts the days down (M)
+- [x] Trials for free agents: up to three at a time for about two weeks; the coaches learn everything about him and report on his level, character and fitness; then sign him (he asks a little less), keep him another week or let him go. Other clubs can still sign him meanwhile; established players won't audition (M)
+- [x] Loanees who aren't played (under 40% of the borrowing club's games over six): recall him (at once in the window, otherwise when it opens), tell the club to play him (they pick him more), or leave him; a recall button on his profile too (M)
+- [x] Negotiation with back-and-forth: the selling club counters and comes down a little each round to a floor (three counters, then a final word; insulting offers twice and they stop talking for a few days); the agent makes his own proposal and softens a little when you keep coming close; you can counter AI bids for your players (they agree up to their limit, raise part of the way or pull out) (L)
+- [x] Relative market: a player who wants away, isn't playing or is unhappy, a club in debt and a surplus at his position all lower the price; a club short at the position or buying on deadline day pays more, and its bids for your players are higher (L)
+- [x] Player choice: sometimes other clubs are in for the same player (shown in your talks); once everything is agreed he weighs league, club, playing time, wages and home, and says why he chose. Your own players can turn down a move you agreed to a smaller club (M)
+- [x] Structured fees: up to three yearly instalments, add-ons after 25 appearances and sell-on clauses, valued by the selling club (money later is worth less, add-ons half, a sell-on more on a young player); AI bids for your players come structured too; payments to come and sell-on clauses on the finances screen (M)
+- [x] AI squad planning by age: a starter of 31+ (keepers 33+) with no heir in the squad is replaced by a player of his level aged 27 or under, and the weakest player in that part of the squad is sold on (S)
+- [x] Each real league's foreign-player rules (new careers; a setup option keeps one world-wide rule): England and Italy 8 homegrown in a 25-man list of over-21s, non-EU limits in Spain (3) and France (4), Italy's two non-EU signings from abroad a season, MLS's 8 international slots, foreign caps in Argentina, Mexico, Korea, Thailand and Turkey, matchday caps in Brazil (9) and Japan (5, Thais count as local). New worlds start within them, nobody signs a player they can't register, and the squad screen shows where you stand (M)
 
 *5 · Tactics depth*
 

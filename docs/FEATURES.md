@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-170 features are playable in the web prototype today. Build = the build that added it.
+179 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -180,10 +180,19 @@ Every feature from the game design document, with what is playable in the protot
 | UI | Money in your club's currency (£, €, $) with a setting; matchday N of 38 in the top bar; nothing shown as achieved before a ball is kicked | Playtest feedback |
 | Performance | Faster days: pre-season ~8× faster, league days about twice as fast | Playtest feedback |
 | World | AI managers' ability and their teams' familiarity with their tactics affect results; big clubs well off the pace sack their manager, so eras end | Playtest feedback |
+| Transfers | Transfer deadline: a countdown in the top bar, a warning three days out, deadline day (late bids, panic buys, the skip stops for it) and a summary when the window shuts | Playtest batch 4 |
+| Transfers | Trials for free agents: the coaches report on his level, character and fitness, then sign him, extend the trial or let him go | Playtest batch 4 |
+| Transfers | Loanees who aren't played: recall them, tell the borrowing club to play them, or leave them | Playtest batch 4 |
+| Transfers | Negotiation with back-and-forth: clubs counter and come down to a floor, agents make their own proposals, and you can counter bids for your players | Playtest batch 4 |
+| Transfers | Relative market: players who want away, clubs in debt and surplus players sell for less; clubs short at a position or buying on deadline day pay more | Playtest batch 4 |
+| Transfers | Players choose between clubs by league, club, playing time, wages and home, and say why; your players can turn down a move to a smaller club | Playtest batch 4 |
+| Transfers | Fees in yearly instalments, add-ons and sell-on clauses; payments to come on the finances screen | Playtest batch 4 |
+| Transfers | AI clubs replace ageing starters before they decline | Playtest batch 4 |
+| Squad | Each real league's foreign-player rules: homegrown quotas (England, Italy), non-EU limits (Spain, France, Italy), MLS international slots, foreign caps (Brazil, Japan, Argentina, Mexico and more) | Playtest batch 4 |
 
 ## Yet to be added
 
-56 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+48 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
 
 Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
 
@@ -191,14 +200,6 @@ Design principle from here: don't make the game deeper by adding more screens �
 
 | Area | Feature | Phase |
 | --- | --- | --- |
-| Transfers | Warning before the transfer deadline and a deadline-day event | Playtest 4 |
-| Transfers | Trials for free agents | Playtest 4 |
-| Transfers | Recall a loanee who is not playing, or complain to the borrowing club | Playtest 4 |
-| Transfers | Contract and transfer negotiation with back-and-forth | Playtest 4 |
-| Transfers | Relative market: desperate buyers pay more, a player who wants out sells for less | Playtest 4 |
-| Transfers | Player choice between clubs by league, playing time, wages and ambition | Playtest 4 |
-| Transfers | Sell-on clauses, add-ons and fees paid in instalments | Playtest 4 |
-| Transfers | AI squad planning by age profile | Playtest 4 |
 | Tactics | Primary and secondary tactic, each with its own familiarity | Playtest 5 |
 | Tactics | More formations and tactics; more player roles that matter in the engine | Playtest 5 |
 | Tactics | More positions and position versatility | Playtest 5 |

@@ -235,6 +235,7 @@
     meeting: ['🗣️', 'Player meeting'],
     medical: ['🩺', 'Medical'],
     contracts: ['📝', 'Contracts'],
+    desk: ['🤝', 'Transfer desk'],
   };
   UI.newsCard = function (n) {
     const s = S();
@@ -286,9 +287,10 @@
       const st = n.data.status;
       extra =
         st === 'open'
-          ? `<div class="row" style="margin-top:10px;gap:8px"><button class="btn sm pri" data-act="bid" data-id="${n.id}" data-v="1">Accept ${U.money(n.data.fee)}</button><button class="btn sm" data-act="bid" data-id="${n.id}" data-v="0">Reject</button><span class="grow"></span><button class="btn sm" data-act="player" data-id="${n.data.pid}">View</button></div>`
-          : `<div class="reply">${{ accepted: '✅ Accepted', rejected: '❌ Rejected', expired: '⌛ Expired', void: '—' }[st]}${n.reply ? ' — ' + esc(n.reply) : ''}</div>`;
+          ? UI.bidButtons(n) + (n.reply ? `<div class="reply">${esc(n.reply)}</div>` : '')
+          : `<div class="reply">${UI.BID_STATUS[st] || '—'}${n.reply ? ' — ' + esc(n.reply) : ''}</div>`;
     }
+    if (n.type === 'desk') extra = UI.deskChoices(n);
     if (n.type === 'contracts' && n.pids)
       extra = `<div class="chips" style="margin:10px 0 0;flex-wrap:wrap">${n.pids
         .filter((id) => P(id) && W.isUser(P(id).clubId))
@@ -410,7 +412,7 @@
     UI.afterDay(r.summary);
     if (!r.summary)
       UI.toast(
-        `⏩ ${r.n} day${r.n === 1 ? '' : 's'} simulated${r.newOffer ? ' — a new job offer has arrived' : !W.employed() ? ' — no new offers yet' : r.winChange ? (r.win0 ? ' — the transfer window has closed' : ' — the transfer window is open') : r.pending ? ' — a decision is waiting in the feed' : ''}`,
+        `⏩ ${r.n} day${r.n === 1 ? '' : 's'} simulated${r.newOffer ? ' — a new job offer has arrived' : !W.employed() ? ' — no new offers yet' : r.winChange ? (r.win0 ? ' — the transfer window has closed' : ' — the transfer window is open') : r.deadline ? " — it's deadline day" : r.pending ? ' — a decision is waiting in the feed' : ''}`,
         3500,
       );
   };
@@ -653,7 +655,7 @@
             })
             .join('')
         : `<div class="card flat list" style="padding:4px 12px">${list.map((p) => C.playerRow(p, extra(p), contractTag(p, q.sort === 'contract'))).join('')}</div>`;
-    return `<div class="row small dim" style="margin:0 2px 8px"><span>${sq.length} players</span><span>·</span><span>Wages ${U.money(U.sum(sq, (p) => p.wage))}/wk</span><span class="grow"></span><span>Foreign ${foreign} (${W.foreignLimitText()} in squad)</span></div>
+    return `<div class="row small dim" style="margin:0 2px 8px"><span>${sq.length} players</span><span>·</span><span>Wages ${U.money(U.sum(sq, (p) => p.wage))}/wk</span><span class="grow"></span><span>Foreign ${foreign}${FM.Reg.real() ? '' : ` (${W.foreignLimitText()} in squad)`}</span></div>${UI.regLine(club())}
       ${expiring ? `<button class="warnline tap" style="width:100%;text-align:left;border:0" data-act="sqFilter" data-v="expiring">⏳ ${expiring} contract${expiring === 1 ? '' : 's'} expire this season — unsigned players leave on a free. Show them ›</button>` : ''}
       <div class="small b dim" style="margin:4px 2px 0">SORT</div>${chipsRow('sqSort', q.sort, SQ_SORT)}<div class="small b dim" style="margin:0 2px">SHOW</div>${chipsRow('sqFilter', q.filter, SQ_FILTER)}
       ${list.length ? body : '<div class="empty">No players match this filter.</div>'}`;
@@ -959,7 +961,9 @@
     const ownActions = own
       ? UI.ownActions(p)
       : p.loan
-        ? `<div class="warnline">On loan at ${esc(CL(p.clubId).name)} from ${esc(CL(p.loan.from).name)} until the end of the season.</div>`
+        ? W.isUser(p.loan.from)
+          ? UI.loanLine(p)
+          : `<div class="warnline">On loan at ${esc(CL(p.clubId).name)} from ${esc(CL(p.loan.from).name)} until the end of the season.</div>`
         : '';
     const history = (p.history || []).slice().reverse();
     // The nation opens its national-team overview (nations without a national team in the world stay plain text)
@@ -1132,7 +1136,7 @@
     const newCount = Object.values(s.user.reports).filter((r) => r.isNew).length;
     const win = FM.Season.windowOpen();
     return (
-      `<div class="card flat row" style="padding:10px 14px"><span style="font-size:20px">${win ? '🟢' : '🔴'}</span><div class="grow"><div class="b small">Transfer window ${win ? 'OPEN' : 'closed'}</div><div class="tiny dim">${win ? 'Deals can be completed now.' : 'Opens pre-season and matchdays 12–14.'}</div></div><div class="col" style="align-items:flex-end"><div class="tiny dim">Budget</div><b>${U.money(club().budget)}</b></div></div>` +
+      `<div class="card flat row" style="padding:10px 14px"><span style="font-size:20px">${win ? '🟢' : '🔴'}</span><div class="grow"><div class="b small">Transfer window ${win ? 'OPEN' : 'closed'}</div><div class="tiny dim">${win ? `Deals can be completed now. ${UI.windowLabel()}.` : 'Opens pre-season and matchdays 12–14.'}</div></div><div class="col" style="align-items:flex-end"><div class="tiny dim">Budget</div><b>${U.money(club().budget)}</b></div></div>` +
       chips('scout', [
         ['scouts', 'Scouts'],
         ['reports', `Reports${newCount ? ` (${newCount})` : ''}`],
@@ -1840,6 +1844,7 @@
         <div class="row" style="align-items:flex-end;height:110px;gap:4px;margin-top:10px">${L.length ? L.map((l) => `<div class="grow row" style="align-items:flex-end;gap:1px;height:100%"><div class="grow" style="height:${(l.inc / mx) * 100}%;background:var(--good);border-radius:3px 3px 0 0"></div><div class="grow" style="height:${(l.exp / mx) * 100}%;background:var(--bad);border-radius:3px 3px 0 0;opacity:.8"></div></div>`).join('') : '<div class="dim small">Play a matchday to see cash flow.</div>'}</div>
         <div class="small dim" style="margin-top:8px">Home games bring gate receipts — bigger stadium, happier fans, more money.</div></div>
       ${spendCard(c, s, sq)}
+      ${UI.paymentsCard(c)}
       <div class="card"><div class="row"><div class="h3 grow">Transfer activity this season</div><b style="color:${net >= 0 ? 'var(--good)' : 'var(--bad)'}">${net >= 0 ? '+' : ''}${U.money(net)}</b></div>
         ${
           s.seasonLog.transfers

@@ -597,7 +597,7 @@
         n.day === FM.S.day &&
         n.year === FM.S.year &&
         ((n.type === 'bid' && n.data.status === 'open') ||
-          ((n.type === 'press' || n.type === 'meeting') && !n.resolved)),
+          ((n.type === 'press' || n.type === 'meeting' || n.type === 'desk') && !n.resolved)),
     );
   // What the day about to be played is called (progress indicator)
   Sea.dayLabel = function () {
@@ -630,8 +630,10 @@
       n = 0,
       winChange = false;
     const win0 = Sea.windowOpen(),
+      dd0 = FM.Market.isDeadline(),
       seen = new Set((S.user.offers || []).map((o) => o.id)),
       employed0 = W.employed();
+    let deadline = false;
     // Out of work: stop for any offer that wasn't on the table when the wait began (the window doesn't matter)
     const newOffer = () => !W.employed() && (S.user.offers || []).some((o) => !seen.has(o.id));
     do {
@@ -639,9 +641,11 @@
       summary = Sea.advance(null);
       n++;
       winChange = !summary && employed0 && Sea.windowOpen() !== win0;
+      deadline = !summary && employed0 && !dd0 && FM.Market.isDeadline(); // stop for deadline day
     } while (
       !summary &&
       !winChange &&
+      !deadline &&
       !Sea.userFixture() &&
       !S.user.sacked &&
       W.employed() === employed0 &&
@@ -650,7 +654,7 @@
       n < (W.employed() ? 12 : 21) &&
       !Sea.pendingDecision()
     );
-    return { summary, n, winChange, win0, pending: !summary && Sea.pendingDecision(), newOffer: newOffer() };
+    return { summary, n, winChange, win0, deadline, pending: !summary && Sea.pendingDecision(), newOffer: newOffer() };
   };
   Sea.skipToMatch = function (onDay) {
     const it = Sea.skipSteps();
@@ -719,6 +723,7 @@
       FM.Transfers.aiWindow();
       if (employed) {
         FM.Transfers.aiBidsForUser();
+        if (FM.Market.isDeadline()) FM.Transfers.aiBidsForUser(); // late bids
         FM.Contracts.releaseClauses();
       }
     }
@@ -736,6 +741,7 @@
     if (S.user.sacked) W.goUnemployed('sacked');
     else if (!W.employed()) Sea.jobMarket();
     else if (!summary) FM.Injury.riskHim(Sea.userFixture()); // a key man nearly fit before a big game
+    if (!summary) FM.Market.newDay(); // deadline, trials, loanees, payments
     return summary;
   };
 
@@ -902,6 +908,7 @@
     for (const p of U.shuffle(pool)) {
       if (p.freeSince == null) p.freeSince = now;
       if (Math.random() > (0.12 * 55) / S.calendar.length) continue; // agents take their time; clubs have other priorities (rate per week, whatever the calendar)
+      if (FM.Market.onTrial(p) && Math.random() < 0.5) continue; // on trial with you: he waits to hear back
       const waited = (S.year - Math.floor(p.freeSince / 1000)) * S.calendar.length + S.day - (p.freeSince % 1000);
       const lower = 8 + Math.min(14, waited * 0.4),
         want = D.SQUAD_TIER;
@@ -914,6 +921,7 @@
       });
       if (!fits.length) continue;
       const c = fits.sort((a, b) => b.rep - a.rep)[Math.floor(Math.random() * Math.min(3, fits.length))];
+      if (!FM.Transfers.canRegister(c, p)) continue;
       FM.Transfers.execute(p, c.id, 0, FM.Transfers.wageDemand(p, c));
       p.contract = S.year + (W.age(p) >= 30 ? 1 : U.randi(1, 2));
       delete p.freeSince;

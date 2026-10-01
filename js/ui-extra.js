@@ -45,7 +45,7 @@
       ${v.moneyball ? `<div class="warnline" style="margin-top:8px;color:var(--acc2);background:color-mix(in srgb,var(--acc2) 12%,transparent)">📊 ${esc(v.moneyball)}</div>` : ''}
       <div class="row small" style="margin-top:10px"><span class="grow muted">${isFree ? 'Free agent — wants' : 'Estimated fee'}</span><b>${isFree ? U.money(FM.Transfers.wageDemand(p, club())) + '/wk' : v.fee != null ? '~' + U.money(v.fee) : '?'}</b></div>
       ${loanT && loanT.available ? `<div class="row small" style="margin-top:4px"><span class="grow muted">Loan possible</span><b>~${Math.round(Math.min(1, loanT.share) * 100)}% of wages</b></div>` : ''}
-      <div class="row" style="gap:6px;margin-top:12px;flex-wrap:wrap"><button class="btn sm grow" data-act="scoutPlayer" data-id="${p.id}">🔭 Scout</button><button class="btn sm grow" data-act="shortlist" data-id="${p.id}">${s.user.shortlist.includes(p.id) ? '★ Listed' : '☆ Shortlist'}</button><button class="btn sm grow" data-act="compare" data-id="${p.id}">⚖️ Compare</button>${p.loan ? '' : `<button class="btn sm pri grow" data-act="offer" data-id="${p.id}">${isFree ? 'Offer contract' : 'Make offer'}</button>`}</div></div>`;
+      <div class="row" style="gap:6px;margin-top:12px;flex-wrap:wrap"><button class="btn sm grow" data-act="scoutPlayer" data-id="${p.id}">🔭 Scout</button><button class="btn sm grow" data-act="shortlist" data-id="${p.id}">${s.user.shortlist.includes(p.id) ? '★ Listed' : '☆ Shortlist'}</button><button class="btn sm grow" data-act="compare" data-id="${p.id}">⚖️ Compare</button>${UI.trialButton(p)}${p.loan ? '' : `<button class="btn sm pri grow" data-act="offer" data-id="${p.id}">${isFree ? 'Offer contract' : 'Make offer'}</button>`}</div></div>`;
   };
 
   UI.ownActions = function (p) {
@@ -502,7 +502,7 @@
       s = S();
     const newCount = Object.values(s.user.reports).filter((r) => r.isNew).length;
     const win = FM.Season.windowOpen();
-    const head = `<div class="card flat row" style="padding:10px 14px"><span style="font-size:20px">${win ? '🟢' : '🔴'}</span><div class="grow"><div class="b small">Transfer window ${win ? 'OPEN' : 'closed'}</div><div class="tiny dim">${win ? 'Transfers and loans can be completed.' : 'Opens pre-season and matchdays 12–14. Until then only free agents can sign.'}</div></div><div class="col" style="align-items:flex-end"><div class="tiny dim">Budget</div><b>${U.money(club().budget)}</b></div></div>`;
+    const head = `<div class="card flat row" style="padding:10px 14px"><span style="font-size:20px">${win ? '🟢' : '🔴'}</span><div class="grow"><div class="b small">Transfer window ${win ? 'OPEN' : 'closed'}</div><div class="tiny dim">${win ? `Transfers and loans can be completed. ${UI.windowLabel()}.` : 'Opens pre-season and matchdays 12–14. Until then only free agents can sign.'}</div></div><div class="col" style="align-items:flex-end"><div class="tiny dim">Budget</div><b>${U.money(club().budget)}</b></div></div>`;
     const tabs = [
       ['hub', 'Hub'],
       ['reports', `Reports${newCount ? ` (${newCount})` : ''}`],

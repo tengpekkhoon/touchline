@@ -7,13 +7,24 @@
 
   // News about your club and news about the wider game are capped separately (100 each), so a busy transfer
   // window can't push your own club's stories off the end; a decision still waiting on you is kept over older items
-  const CLUB_TYPES = ['press', 'bid', 'report', 'youth', 'dressing', 'board', 'meeting', 'medical', 'contracts'];
+  const CLUB_TYPES = [
+    'press',
+    'bid',
+    'report',
+    'youth',
+    'dressing',
+    'board',
+    'meeting',
+    'medical',
+    'contracts',
+    'desk',
+  ];
   FM.News = {
     CAP: 100,
     isClub: (n, clubId) => (clubId != null && n.clubId === clubId) || CLUB_TYPES.includes(n.type),
     isOpen: (n) =>
       (n.type === 'bid' && n.data && n.data.status === 'open') ||
-      ((n.type === 'press' || n.type === 'meeting' || n.type === 'medical') && !n.resolved),
+      ((n.type === 'press' || n.type === 'meeting' || n.type === 'medical' || n.type === 'desk') && !n.resolved),
     trim(S) {
       const cid = S.user && S.user.clubId;
       // open decisions take their club places first; the oldest other club items make room for them
@@ -1028,7 +1039,7 @@
           ];
         },
         () => {
-          if (S.rules.foreignLimit >= W.NO_LIMIT) return null; // you chose no limit: the federation leaves it be
+          if (S.rules.reg === 'real' || S.rules.foreignLimit >= W.NO_LIMIT) return null; // real league rules, or you chose no limit: the federation leaves it be
           S.rules.foreignLimit = U.pick([4, 5, 6, 8]);
           return [
             `New homegrown rule: max ${S.rules.foreignLimit} foreign players in a matchday squad`,

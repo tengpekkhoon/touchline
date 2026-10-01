@@ -108,7 +108,7 @@
     UI._offer = {
       pid: p.id,
       mode,
-      fee: p.clubId ? FM.Transfers.userAsk(p) : 0,
+      fee: p.clubId ? FM.Market.feeState(p).ask : 0, // where talks with his club stand
       terms: Co.defaultTerms(p, c, 'transfer'),
       share: 0.5,
       loanFee: 0,
@@ -166,7 +166,8 @@
         !renew && p.clubId
           ? `<div class="row" style="margin-top:12px"><div class="h3 grow">Transfer fee</div><span class="tiny dim">asking ~${U.money(T.userAsk(p))}</span></div>
           ${numIn('fee', o.fee, 'ngFee')}${stepBtns('fee', [-1e6, -1e5, -1e4, 1e4, 1e5, 1e6])}
-          ${clause ? `<div class="tiny" style="margin-top:6px;color:var(--acc2)">🔓 Release clause ${U.money(clause)} — pay it and ${esc(S().clubs[p.clubId].name)} can't refuse. <button class="btn sm" data-act="ngClause">Pay clause</button></div>` : ''}`
+          ${clause ? `<div class="tiny" style="margin-top:6px;color:var(--acc2)">🔓 Release clause ${U.money(clause)} — pay it and ${esc(S().clubs[p.clubId].name)} can't refuse. <button class="btn sm" data-act="ngClause">Pay clause</button></div>` : ''}
+          ${dealBlock(o, p)}`
           : '';
       const w = p.wage;
       body = `${fee}
@@ -200,11 +201,18 @@
         <div class="card flat" style="margin-top:14px"><div class="row small"><span class="grow">Package vs his demands</span><b style="color:${ev.ok ? 'var(--good)' : pct >= 90 ? 'var(--warn)' : 'var(--bad)'}">${ev.hard ? 'Refuses the role' : ev.ok ? 'Acceptable' : pct + '%'}</b></div>${C.bar(pct, ev.ok ? 'var(--good)' : pct >= 90 ? 'var(--warn)' : 'var(--bad)')}
           <div class="tiny dim" style="margin-top:6px">Total cost: ${U.money((renew ? 0 : o.fee) + t.wage * 52 * t.years + (t.bonus || 0) + Co.agentFee(p, o.fee, t.wage, mode))} incl. agent fee ${U.money(Co.agentFee(p, o.fee, t.wage, mode))}${t.release ? ` · a club paying ${U.money(t.release)} can take him` : ''}</div></div>`;
     }
+    const rivals = !renew && o.mode !== 'loan' ? FM.Market.rivals(p) : [];
+    const reg = !renew && FM.Reg.real() ? FM.Reg.canSign(c, p) : { ok: true };
+    const extraLines = `${rivals.length ? `<div class="warnline" style="margin-top:10px">⚔️ Also in for him: <b>${rivals.map((x) => esc(x.name)).join(', ')}</b>. Once everything is agreed he'll weigh up the league, the club, playing time, wages and home.</div>` : ''}${reg.ok ? '' : `<div class="warnline" style="margin-top:10px;color:var(--bad)">📋 ${esc(reg.why)}</div>`}`;
+    const agentBtn =
+      o.counterTerms && o.mode !== 'loan'
+        ? `<button class="btn block" style="margin-top:10px" data-act="ngAgentTerms">Take the agent's proposal: ${U.money(o.counterTerms.wage)}/wk, rest unchanged</button>`
+        : '';
     const html = `<div class="row">${C.pos(p)}<div class="grow b">${esc(W.name(p))} <span class="dim small">${W.age(p)}</span></div>${p.clubId && !renew ? C.crest(CL(p.clubId), 26) : renew ? '<span class="pill acc">Renewal</span>' : '<span class="pill">Free agent</span>'}</div>
       <div class="small dim" style="margin-top:6px">${renew ? `Current: ${U.money(p.wage)}/wk until ${p.contract}` : `Budget ${U.money(c.budget)} · Window ${FM.Season.windowOpen() ? '<b style="color:var(--acc)">open</b>' : '<b style="color:var(--bad)">closed</b>'}`}${dir.vacant ? '' : ` · ${esc(dir.fn + ' ' + dir.ln)} negotiating (${dir.ability}/20)`}</div>
       <div class="card flat row" style="margin-top:10px;padding:10px 12px"><span style="font-size:22px">${ag.icon}</span><div class="grow"><div class="small b">${esc(ag.name)} · ${esc(ag.firm)}</div><div class="tiny dim">${esc(ag.style)} — ${esc(ag.desc)} Agent fee ${Math.round(ag.fee * 100)}%.</div></div><div class="tiny dim" style="text-align:right">Patience<br>${Co.blocked(p) ? '<b style="color:var(--bad)">Walked out</b>' : dots(pat.left, ag.patience)}</div></div>
-      ${o.mode !== 'loan' ? talksLine(p) : ''}${tabs}${body}
-      ${msg ? `<div class="reply" style="margin-top:12px">${esc(msg)}</div>` : ''}
+      ${o.mode !== 'loan' ? talksLine(p) : ''}${extraLines}${tabs}${body}
+      ${msg ? `<div class="reply" style="margin-top:12px">${esc(msg)}</div>` : ''}${agentBtn}
       <button class="btn pri block" style="margin-top:16px" data-act="submitOffer">${o.mode === 'loan' ? 'Propose loan' : renew ? 'Offer new contract' : p.clubId ? 'Submit offer' : 'Offer contract'}</button>`;
     if (document.querySelector('.sheet-wrap .offer-sheet')) {
       const b = document.querySelector('.sheet-wrap:last-child .sh-body');
@@ -221,6 +229,57 @@
       last = log[log.length - 1];
     const closed = first > 0 ? Math.round((1 - last.gap / first) * 100) : 0;
     return `<div class="warnline" style="margin-top:10px">🗒️ ${log.length} offer${log.length === 1 ? '' : 's'} so far · last time the agent wanted <b>${U.money(last.need)}/wk</b> (you offered ${U.money(last.wage)})${log.length > 1 ? ` · gap ${U.money(first)} → ${U.money(last.gap)}${closed > 0 ? ` (${closed}% closed)` : ''}` : ''}</div>`;
+  };
+  // How the fee is paid (permanent transfers): instalments, an add-on, a sell-on clause for the seller
+  const dealOf = (o) =>
+    o.deal && (o.deal.inst > 1 || o.deal.addPct || o.deal.sellOn)
+      ? {
+          inst: o.deal.inst,
+          addOn: o.deal.addPct ? U.roundMoney(o.fee * o.deal.addPct) : 0,
+          addApps: 25,
+          sellOn: o.deal.sellOn,
+        }
+      : null;
+  function dealBlock(o, p) {
+    const d = (o.deal = o.deal || { inst: 1, addPct: 0, sellOn: 0 }),
+      deal = dealOf(o),
+      seller = S().clubs[p.clubId];
+    const st = FM.Market.feeState(p),
+      worth = FM.Market.dealValue(p, o.fee, deal);
+    return `<div class="h3" style="margin-top:12px">How you pay</div>${chipRow('ofDeal', 'inst', d.inst, [
+      [1, 'Up front'],
+      [2, '2 yearly instalments'],
+      [3, '3 yearly instalments'],
+    ])}
+      <div class="h3" style="margin-top:12px">Add-on <span class="tiny dim">(paid if he makes 25 appearances for you)</span></div>${chipRow(
+        'ofDeal',
+        'addPct',
+        d.addPct,
+        [[0, 'None'], ...[0.1, 0.2].map((f) => [f, `+${U.money(U.roundMoney(o.fee * f))}`])],
+      )}
+      <div class="h3" style="margin-top:12px">Sell-on for ${esc(seller.short)} <span class="tiny dim">(their share of his next fee)</span></div>${chipRow(
+        'ofDeal',
+        'sellOn',
+        d.sellOn,
+        [
+          [0, 'None'],
+          [0.1, '10%'],
+          [0.2, '20%'],
+        ],
+      )}
+      <div class="tiny dim" style="margin-top:8px">Worth ${U.money(worth)} to ${esc(seller.name)} today${st ? ` · they want ${U.money(st.ask)}${st.rounds ? ` (after ${st.rounds} counter${st.rounds === 1 ? '' : 's'})` : ''}` : ''}. Money later is worth less to them; add-ons count for half, a sell-on more on a young player.${deal ? ` You pay: ${FM.Market.describeDeal(o.fee, deal)}.` : ''}</div>`;
+  }
+  UI.acts.ofDeal = (d) => {
+    const o = UI._offer;
+    o.deal = o.deal || { inst: 1, addPct: 0, sellOn: 0 };
+    o.deal[d.k] = +d.v;
+    UI.offerSheet();
+  };
+  UI.acts.ngAgentTerms = () => {
+    const o = UI._offer;
+    if (o.counterTerms) o.terms = { ...o.counterTerms };
+    o.counterTerms = null;
+    UI.offerSheet();
   };
   UI.acts.ofMode = (d) => {
     UI._offer.mode = d.v;
@@ -278,14 +337,15 @@
         ? FM.Transfers.loanOffer(o.pid, o.share, o.loanFee)
         : o.mode === 'renew'
           ? Co.renewOffer(o.pid, { ...o.terms })
-          : Co.transferOffer(o.pid, p.clubId ? o.fee : 0, { ...o.terms });
-    if (r.ok) {
+          : Co.transferOffer(o.pid, p.clubId ? o.fee : 0, { ...o.terms }, dealOf(o));
+    if (r.ok || r.lost) {
       UI.closeAllSheets();
-      UI.toast(r.msg, 4000);
+      UI.toast(r.msg, r.lost ? 5000 : 4000);
       UI.save();
       UI.render();
       return;
     }
+    o.counterTerms = r.terms || null;
     if (r.counter) {
       if (o.mode === 'loan') o.share = r.counter;
       else o.fee = r.counter;
@@ -352,7 +412,7 @@
     } else UI.sheet(`<div class="attn-sheet">${UI.newsCard(n)}</div>`, { title: 'Needs your attention' });
   };
   // Answering from the attention sheet closes it
-  ['press', 'bid', 'meet'].forEach((k) => {
+  ['press', 'bid', 'meet', 'medical'].forEach((k) => {
     const f = UI.acts[k];
     UI.acts[k] = (d, el, e) => {
       const inSheet = el && el.closest('.attn-sheet');

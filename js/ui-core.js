@@ -390,7 +390,7 @@
         : md;
     const nt = !club && S.user.nation && S.nteams && S.nteams[S.user.nation];
     $('#topbar').innerHTML = club
-      ? `${C.crest(club, 30)}<div class="t-main"><div class="t-title">${esc(club.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${mdAll}${FM.Season.windowOpen() ? ' · <span style="color:var(--acc)">Window open</span>' : ''}</div></div><div class="money">${U.money(club.balance)}</div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`
+      ? `${C.crest(club, 30)}<div class="t-main"><div class="t-title">${esc(club.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${mdAll}${FM.Season.windowOpen() ? ` · <span style="color:var(--acc)">${UI.windowLabel()}</span>` : ''}</div></div><div class="money">${U.money(club.balance)}</div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`
       : `${C.avatar(S.user, 32)}<div class="t-main"><div class="t-title">${esc(S.user.name)}</div><div class="t-sub">${FM.Season.seasonLabel()} · ${md} · <span style="color:var(--warn)">Out of work</span>${nt ? ` · ${esc(nt.name)}` : ''}</div></div><button class="icon-btn settings-btn ${UI.tab === 'club' && UI.sub.club === 'settings' ? 'on' : ''}" data-act="openSettings" aria-label="Settings" title="Settings">⚙️</button>`;
     // Squad and scouting belong to a club; out of work they explain themselves instead
     const html = !club && ['squad', 'scout'].includes(UI.tab) ? UI.noClubView(UI.tab) : UI.screens[UI.tab]();
@@ -499,7 +499,7 @@
     club: null,
     q: '', // club picker search
     lg: 'all', // club picker league filter
-    rules: { win: 3, subs: 5, foreignLimit: W.NO_LIMIT, twoLegs: 1, awayGoals: 0 },
+    rules: { win: 3, subs: 5, reg: 1, foreignLimit: W.NO_LIMIT, twoLegs: 1, awayGoals: 0 },
     slot: 1,
   };
   // A career needs a manager's name: flag the empty fields and say which (updates as you type once shown)
@@ -604,7 +604,7 @@
           )
           .join('')}</div>`;
       body = `<div class="h1" style="margin-top:4vh">World rules</div><div class="tag">A taste of the World Editor. Change football before it begins.</div>
-        ${seg('win', [3, 2], 'Points for a win')}${seg('subs', [3, 5], 'Substitutions per match')}${seg('foreignLimit', [4, 6, 9, W.NO_LIMIT], 'Max foreign players in a matchday squad')}
+        ${seg('win', [3, 2], 'Points for a win')}${seg('subs', [3, 5], 'Substitutions per match')}${tog('reg', 'Foreign players', "Each league's real rules", 'One rule for all')}${NG.rules.reg ? '<div class="tiny" style="color:#6f7f96;margin-top:6px;line-height:1.5">Homegrown quotas in England and Italy, non-EU limits in Spain, Italy and France, international slots in MLS, foreign-player caps in Brazil, Japan, Mexico and more.</div>' : seg('foreignLimit', [4, 6, 9, W.NO_LIMIT], 'Max foreign players in a matchday squad')}
         ${tog('twoLegs', 'Continental knockouts and playoff semi-finals', 'Two legs', 'Single match')}${tog('awayGoals', 'Away goals rule (two-legged ties)', 'On', 'Off')}
         <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">30 leagues in 25 nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One, the Segunda División, Serie A, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. Five continental cups feed a Club World Cup. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
         ${NG.club === 'none' ? '<div class="small" style="color:#c8ff3d;margin-top:14px;line-height:1.5">🧳 You start out of work, with a modest reputation. Clubs in your range will make offers over the first weeks — the struggling ones first.</div>' : ''}
@@ -718,7 +718,12 @@
     setTimeout(() => {
       const theme = (FM.S && FM.S.settings) || { theme: document.documentElement.dataset.theme || 'dark', speed: 1 };
       FM.S = null;
-      W.newWorld({ ...NG.rules, twoLegs: !!NG.rules.twoLegs, awayGoals: !!NG.rules.awayGoals });
+      W.newWorld({
+        ...NG.rules,
+        reg: NG.rules.reg === 0 ? null : 'real',
+        twoLegs: !!NG.rules.twoLegs,
+        awayGoals: !!NG.rules.awayGoals,
+      });
       FM.S.settings = theme;
       FM.Season.init();
       if (NG.club === 'none') {

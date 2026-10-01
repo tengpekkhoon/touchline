@@ -148,6 +148,10 @@
     if (age >= 32 && t.years === 1) need *= 1.06;
     if (age <= 23 && p.hid.amb >= 14 && t.years >= 5) need *= 1.04;
     if (t.relegCut) need *= 1.03;
+    // Talks that keep coming close soften the agent a little (Co.logDemand); a happy trialist asks a little less
+    const ng = (S().user.neg || {})[p.id];
+    if (ng && ng.year === S().year && ng.ease) need *= ng.ease;
+    need *= FM.Market.trialDiscount(p, club);
     if (p.wantsOut && mode === 'renew') need *= 1.25;
     // Veterans staying put take less, an icon or a loyal servant most of all
     if (mode === 'renew' && age >= 32 && !p.wantsOut) {
@@ -183,6 +187,7 @@
     const n = Co.patience(p);
     (n.log = n.log || []).push({ gap: ev.gap, wage: t.wage, need: Math.round(t.wage + ev.gap) });
     n.log = n.log.slice(-8);
+    if (ev.gap <= ev.need * 0.12) n.ease = Math.max(0.94, (n.ease || 1) - 0.02); // close: they meet you part way
   };
   Co.talksSoFar = (p) => {
     const n = (S().user.neg || {})[p.id];
@@ -236,8 +241,10 @@
     return agentFee;
   };
 
-  // User bids for a player with a full contract package
-  Co.transferOffer = function (pid, fee, t) {
+  // User bids for a player with a full contract package. deal: how the fee is paid (FM.Market: instalments,
+  // add-on, sell-on). The selling club haggles over the fee (FM.Market.offerFee), the agent over the package, and
+  // other clubs chasing him may make him think again (FM.Market.choose).
+  Co.transferOffer = function (pid, fee, t, deal) {
     const s = S(),
       p = s.players[pid],
       club = W.userClub(),
@@ -264,21 +271,29 @@
         ok: false,
         msg: `${W.name(p)} has only just committed to ${s.clubs[p.clubId].name} and isn't looking to move.`,
       };
-    if (fee > club.budget) return { ok: false, msg: `That exceeds your transfer budget of ${U.money(club.budget)}.` };
+    if (!p.clubId) deal = null;
+    const cash = FM.Market.cashNow(fee, deal);
+    if (cash + (fee - cash) * 0.5 > club.budget)
+      return {
+        ok: false,
+        msg: `That exceeds your transfer budget of ${U.money(club.budget)}${deal && deal.inst > 1 ? ' (the board sets aside half of the later instalments)' : ''}.`,
+      };
+    if (FM.Reg.real() && !FM.Reg.canSign(club, p).ok)
+      return { ok: false, msg: `You can't register him: ${FM.Reg.canSign(club, p).why}` };
     const seller = p.clubId && s.clubs[p.clubId];
     const clause = seller && p.deal && p.deal.release;
     const triggered = clause && fee >= clause;
+    const value = FM.Market.dealValue(p, fee, deal);
     if (seller && !triggered) {
-      const ask = T.userAsk(p);
-      if (fee < ask * 0.85)
+      const r = FM.Market.offerFee(p, value, fee, deal);
+      if (!r.ok)
         return {
           ok: false,
-          msg: `${seller.name} reject the offer out of hand. They value him closer to ${U.money(ask)}.${clause ? ` His release clause is ${U.money(clause)}.` : ''}`,
+          counter: r.counter,
+          msg: r.msg + (clause ? ` His release clause is ${U.money(clause)}.` : ''),
         };
-      if (fee < ask)
-        return { ok: false, counter: ask, msg: `${seller.name} want ${U.money(ask)}. Close, but not enough.` };
     }
-    if (seller && W.hasTrait(p, 'Loyal') && T.isKey(p) && fee < T.userAsk(p) * 1.4 && !triggered)
+    if (seller && W.hasTrait(p, 'Loyal') && T.isKey(p) && value < T.userAsk(p) * 1.4 && !triggered)
       return { ok: false, msg: `${W.name(p)} is loyal to ${seller.name} and won't consider the move.` };
     if (seller && seller.rep > club.rep + 10 && p.hid.amb >= 12)
       return { ok: false, msg: `${W.name(p)} doesn't see ${club.name} as a step up.` };
@@ -286,6 +301,8 @@
     if (!ev.ok) {
       if (!ev.hard) Co.logDemand(p, ev, t);
       const walked = !ev.hard && Co.spendPatience(p);
+      // the agent's own proposal: the same package at the wage that would do it
+      const need = !ev.hard && !walked ? Co.wageNeeded(p, club, t, 'transfer') : null;
       return {
         ok: false,
         msg:
@@ -294,13 +311,25 @@
             ? ` Talks have broken down — the agent won't take calls for 6 matchdays.`
             : ` (${Co.patience(p).left} round${Co.patience(p).left === 1 ? '' : 's'} of patience left)`),
         gap: ev.gap,
+        terms: need != null ? { ...t, wage: need } : null,
       };
     }
-    T.execute(p, club.id, fee, t.wage);
+    // Everyone has agreed: now the player weighs your offer against any other club chasing him
+    const ch = FM.Market.choose(p, fee, t.wage, t.status);
+    if (ch.club !== club) {
+      T.execute(p, ch.club.id, p.clubId ? ch.fee : 0, ch.wage);
+      delete (s.user.neg || {})[p.id];
+      return {
+        ok: false,
+        lost: true,
+        msg: `${W.name(p)} has chosen ${ch.club.name} over you — ${ch.why} swung it.`,
+      };
+    }
+    T.execute(p, club.id, fee, t.wage, { deal });
     const af = Co.applyTerms(p, club, t, 'transfer', fee);
     return {
       ok: true,
-      msg: `✅ ${W.name(p)} signs for ${club.name}${triggered ? ' — release clause paid' : ''}! ${t.bonus ? `Signing-on fee ${U.money(t.bonus)}. ` : ''}Agent fee ${U.money(af)}.`,
+      msg: `✅ ${W.name(p)} signs for ${club.name}${triggered ? ' — release clause paid' : ''}!${ch.beat ? ` He turned down ${ch.beat.join(' and ')} to join you.` : ''} ${t.bonus ? `Signing-on fee ${U.money(t.bonus)}. ` : ''}Agent fee ${U.money(af)}.`,
     };
   };
 
@@ -328,6 +357,7 @@
             ? ' Talks have broken down for 6 matchdays.'
             : ` (${Co.patience(p).left} round${Co.patience(p).left === 1 ? '' : 's'} of patience left)`),
         gap: ev.gap,
+        terms: !ev.hard && !walked ? { ...t, wage: Co.wageNeeded(p, club, t, 'renew') } : null,
       };
     }
     const before = p.contract;

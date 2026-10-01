@@ -438,6 +438,12 @@
   function genSquad(club) {
     const lvl = W.levelFor(club.rep);
     const positions = randomPos(D.SQUAD_TIER[club.sim] || SQUAD);
+    const made = []; // nationality and age of each player so far: the squad starts within its league's rules
+    const nat = (age, pick) => {
+      const n = FM.Reg.genNat(club, made, age, pick);
+      made.push({ nat: n, age });
+      return n;
+    };
     positions.forEach((pos, i) => {
       const age = pickAge(pos);
       const starter = i % 2 === 0;
@@ -448,7 +454,14 @@
           92,
         ),
       );
-      const p = W.genPlayer({ nat: W.natFor(club), pos, age, ca, pa: W.potentialFor(ca, age), clubId: club.id });
+      const p = W.genPlayer({
+        nat: nat(age, () => W.natFor(club)),
+        pos,
+        age,
+        ca,
+        pa: W.potentialFor(ca, age),
+        clubId: club.id,
+      });
       FM.S.players[p.id] = p;
     });
     // Academy prospects
@@ -457,7 +470,7 @@
         pos = U.pick(['CB', 'CM', 'W', 'ST', 'FB', 'AM']);
       const ca = Math.round(lvl - U.randi(12, 20));
       const p = W.genPlayer({
-        nat: W.youthNat(club),
+        nat: nat(age, () => W.youthNat(club)),
         pos,
         age,
         ca,
@@ -583,14 +596,20 @@
 
   // Picks an XI (respecting a saved user lineup when valid) and a bench
   W.NO_LIMIT = 99; // rules.foreignLimit value for "no limit on foreign players"
-  W.foreignLimitText = () => (FM.S.rules.foreignLimit >= W.NO_LIMIT ? 'no limit' : `max ${FM.S.rules.foreignLimit}`);
+  W.foreignLimitText = () =>
+    FM.S.rules.reg === 'real'
+      ? "each league's own rules"
+      : FM.S.rules.foreignLimit >= W.NO_LIMIT
+        ? 'no limit'
+        : `max ${FM.S.rules.foreignLimit}`;
   W.pickXI = function (clubId, tactic, squad) {
     const slots = D.FORMATIONS[tactic.formation];
     const club = FM.clubOf(clubId);
     const pool = (squad || (club.sim === 'nation' ? FM.Intl.squad(club.code) : W.squad(clubId))).filter(W.available);
-    // Registration rule: at most rules.foreignLimit foreign players in the matchday squad (XI and bench)
-    const cap = club.sim === 'full' ? FM.S.rules.foreignLimit : Infinity;
-    const foreign = (p) => p.nat !== club.nat;
+    // Registration rules: caps on foreign (or non-EU) players in the matchday squad, XI and bench (FM.Reg)
+    const lims = FM.Reg.matchdayLimits(club);
+    const limited = (p) => lims.some((l) => l.f(p));
+    const over = (list) => lims.some((l) => list.filter((p) => p && l.f(p)).length > l.cap);
     const used = new Set();
     const xi = new Array(slots.length).fill(null);
     if (tactic.lineup) {
@@ -616,7 +635,8 @@
       for (const p of pool) {
         if (used.has(p.id)) continue;
         if (slots[i].t === 'GK' ? p.pos !== 'GK' : p.pos === 'GK') continue;
-        const v = W.effAt(p, slots[i].t) * W.fitnessPick(p);
+        // a loanee his parent club insisted should play gets the benefit of the doubt
+        const v = W.effAt(p, slots[i].t) * W.fitnessPick(p) * (p.loan && p.loan.promised ? 1.1 : 1);
         if (v > bv) {
           bv = v;
           best = p;
@@ -658,16 +678,16 @@
         }
       }
     }
-    // Over the foreign limit: take out the foreign starter whose best domestic replacement costs the least at his
-    // position, until the XI is within it (so the cap costs a little quality, not a keeper at wing-back)
+    // Over a limit: take out the limited starter whose best unlimited replacement costs the least at his position,
+    // until the XI is within every limit (so the cap costs a little quality, not a keeper at wing-back)
     const slotVal = (p, i) =>
       !p || (slots[i].t === 'GK') !== (p.pos === 'GK') ? 0 : W.effAt(p, slots[i].t) * W.fitnessPick(p);
-    while (xi.filter((p) => p && foreign(p)).length > cap) {
+    while (lims.length && over(xi)) {
       let pick = null;
       xi.forEach((p, i) => {
-        if (!p || !foreign(p)) return;
+        if (!p || !lims.some((l) => l.f(p) && xi.filter((q) => q && l.f(q)).length > l.cap)) return;
         const sub = pool
-          .filter((q) => !used.has(q.id) && !foreign(q))
+          .filter((q) => !used.has(q.id) && !limited(q))
           .reduce((b, q) => (slotVal(q, i) > slotVal(b, i) ? q : b), null);
         const loss = slotVal(p, i) - slotVal(sub, i) + (sub ? 0 : 1e6);
         if (!pick || loss < pick.loss) pick = { i, sub, loss };
@@ -677,14 +697,14 @@
       used.add(pick.sub.id);
       xi[pick.i] = pick.sub;
     }
-    let foreignLeft = cap - xi.filter((p) => p && foreign(p)).length;
-    // Bench: a keeper, then cover for defence, midfield and attack, then the best of the rest (within the limit)
+    const left = lims.map((l) => l.cap - xi.filter((p) => p && l.f(p)).length);
+    // Bench: a keeper, then cover for defence, midfield and attack, then the best of the rest (within the limits)
     const rest = pool.filter((p) => !used.has(p.id)).sort((a, b) => b.ca - a.ca);
     const bench = [];
     const add = (p) => {
-      if (!p || bench.includes(p) || bench.length >= 9 || (foreign(p) && foreignLeft <= 0)) return;
+      if (!p || bench.includes(p) || bench.length >= 9 || lims.some((l, k) => l.f(p) && left[k] <= 0)) return;
       bench.push(p);
-      if (foreign(p)) foreignLeft--;
+      lims.forEach((l, k) => l.f(p) && left[k]--);
     };
     add(rest.find((p) => p.pos === 'GK'));
     for (const g of ['DEF', 'MID', 'ATT']) add(rest.find((p) => D.POS_GROUP[p.pos] === g));
@@ -850,6 +870,7 @@
         win: opts.win || 3,
         subs: opts.subs || 5,
         foreignLimit: opts.foreignLimit ?? W.NO_LIMIT, // like the real Premier League: no cap unless chosen
+        reg: opts.reg === undefined ? 'real' : opts.reg, // 'real': each league's own registration rules (FM.Reg)
         twoLegs: opts.twoLegs ?? true,
         awayGoals: !!opts.awayGoals,
       },

@@ -20,6 +20,8 @@
     'people',
     'scouting',
     'transfers',
+    'registration',
+    'market',
     'stories',
     'advice',
     'matchday',

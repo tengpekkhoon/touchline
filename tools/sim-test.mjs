@@ -49,6 +49,48 @@ Sea.apply = function (fx, m) {
 const trends = [],
   leagueSize = Object.fromEntries(W.leagues().map((l) => [l.id, l.clubs.length]));
 const U = FM.U;
+// Act like a player in the market now and then (seeded): counter bids, run trials, bid with structured fees and
+// haggle through the club's counters and the agent's proposals
+function marketMoves() {
+  if (!W.employed() || FM.S.user.sacked) return;
+  const S0 = FM.S,
+    me = W.userClub();
+  for (const n of S0.news)
+    if (n.type === 'bid' && n.data.status === 'open' && U.chance(0.3)) FM.Transfers.counterBid(n, 1.15);
+  if (U.chance(0.04)) {
+    const fa = Object.values(S0.players).find((p) => !p.clubId && !p.retired && FM.Market.canTrial(p).ok);
+    if (fa && FM.Market.startTrial(fa.id).ok) stats.trials = (stats.trials || 0) + 1;
+  }
+  if (!Sea.windowOpen() || !U.chance(0.1)) return;
+  const lvl = W.levelFor(me.rep);
+  const p = U.pick(
+    Object.values(S0.players).filter(
+      (q) =>
+        q.clubId &&
+        !W.isUser(q.clubId) &&
+        !q.loan &&
+        !FM.Transfers.isSettled(q) &&
+        q.ca > lvl - 6 &&
+        q.ca < lvl + 2 &&
+        S0.clubs[q.clubId].rep < me.rep &&
+        FM.Transfers.userAsk(q) < me.budget * 0.4,
+    ),
+  );
+  if (!p) return;
+  let fee = Math.round(FM.Market.feeState(p).ask * 0.8),
+    terms = FM.Contracts.defaultTerms(p, me, 'transfer');
+  const deal = U.chance(0.5) ? { inst: 2, addOn: 0, addApps: 25, sellOn: 0.1 } : null;
+  for (let i = 0; i < 6; i++) {
+    const r = FM.Contracts.transferOffer(p.id, fee, { ...terms }, deal);
+    if (r.ok || r.lost) {
+      stats[r.ok ? 'bought' : 'lostToRival'] = (stats[r.ok ? 'bought' : 'lostToRival'] || 0) + 1;
+      return;
+    }
+    if (r.counter) fee = r.counter;
+    else if (r.terms) terms = r.terms;
+    else return;
+  }
+}
 let tSeason = Date.now();
 for (let s = 0; s < SEASONS; s++) {
   let summary = null,
@@ -76,6 +118,7 @@ for (let s = 0; s < SEASONS; s++) {
       check(!!fx.res, `user fixture ${fx.id} has no result after applyUserMatch`);
       stats.userMatches++;
     }
+    marketMoves();
     // The worker transport: the world crosses to the worker and back as JSON
     roundTrip();
     summary = stats.days % 5 === 4 ? Sea.skipToMatch().summary : Sea.advance(null);
@@ -161,6 +204,44 @@ for (let s = 0; s < SEASONS; s++) {
   check(
     full.every((c) => Number.isFinite(c.rep) && c.rep >= 1 && c.rep <= 99),
     `season ${s + 1}: a club reputation left 1–99`,
+  );
+  // Registration (each league's rules): squads stay within them (an academy intake can tip one a little over), and
+  // no matchday squad breaks them
+  if (S0.rules.reg === 'real') {
+    const R = FM.Reg,
+      ruled = Object.values(S0.clubs).filter((c) => R.rulesFor(c));
+    const over = ruled.filter((c) => {
+      const st = R.status(c),
+        r = st.r;
+      return (
+        (r.squad && st.nonHG > r.squad - r.hg + 2) ||
+        (r.nonEU && st.nonEU > r.nonEU + 2) ||
+        (r.foreign && st.foreign > r.foreign + 2)
+      );
+    });
+    check(
+      over.length <= ruled.length * 0.05,
+      `season ${s + 1}: ${over.length}/${ruled.length} clubs well over their registration limits (e.g. ${over[0] && over[0].name})`,
+    );
+    const badXI = ruled.filter((c) => {
+      const T = W.isUser(c.id) ? S0.user.tactic : c.tactic,
+        { xi, bench } = W.pickXI(c.id, T),
+        md = xi.concat(bench).filter(Boolean);
+      return R.matchdayLimits(c).some((l) => md.filter(l.f).length > l.cap);
+    });
+    check(
+      badXI.length <= 1,
+      `season ${s + 1}: ${badXI.length} matchday squads break their league's limits (e.g. ${badXI[0] && badXI[0].name})`,
+    );
+    trend.regOver = over.length;
+  }
+  check(
+    (S0.payments || []).every((x) => Number.isFinite(x.amt) && x.amt >= 0 && S0.clubs[x.from] && S0.clubs[x.to]),
+    `season ${s + 1}: a broken entry in the payments ledger`,
+  );
+  check(
+    Object.values(S0.clubs).every((c) => Number.isFinite(c.balance) && Number.isFinite(c.budget)),
+    `season ${s + 1}: a club balance or budget is not a number`,
   );
   tSeason = Date.now();
   console.log(`season ${s + 1} done · ${((Date.now() - t0) / 1000).toFixed(1)}s`);
@@ -404,7 +485,8 @@ check(refuse(FM.SAVE_VERSION + 1) === 'too-new', 'future save not refused as too
 // ---- report ----
 const secs = ((Date.now() - t0) / 1000).toFixed(1);
 console.log(
-  `${stats.matches} matches · ${gpm.toFixed(2)} goals/match · ${stats.userMatches} user matches · ${stats.days} sim steps · save ${(packed.length / 1e6).toFixed(2)} MB · ${secs}s`,
+  `${stats.matches} matches · ${gpm.toFixed(2)} goals/match · ${stats.userMatches} user matches · ${stats.days} sim steps · save ${(packed.length / 1e6).toFixed(2)} MB · ${secs}s
+  market: ${stats.bought || 0} signed, ${stats.lostToRival || 0} lost to a rival, ${stats.trials || 0} trials, ${(S.payments || []).length} payments pending`,
 );
 if (fails.length) {
   console.error(`\nFAILED (${fails.length}):\n - ` + fails.join('\n - '));
