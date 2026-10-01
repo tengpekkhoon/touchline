@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-169 features are playable in the web prototype today. Build = the build that added it.
+170 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -163,7 +163,7 @@ Every feature from the game design document, with what is playable in the protot
 | Players | Larger name pools for every nation (40+ first names, 43+ surnames each), fewer repeated names, real-player combinations blocked | World expansion and dynamic tiers |
 | Feed | Home feed of your club by default, a Needs reply list for bids, press, meetings and medical calls, and one daily Transfer round-up instead of dozens of stories | Playtest feedback |
 | Clubs | Tap any club badge or name for its overview: squad first, next five fixtures, transfer history in and out | Playtest feedback |
-| International | Tap a country in results, group tables, knockout ties or job vacancies to see its squad | Playtest feedback |
+| International | Tap a country in results, group tables, knockout ties, job vacancies or a player's profile to see its squad | Playtest feedback |
 | Setup | No foreign-player limit by default (like the real Premier League); with a limit, the best XI is picked within it and the pre-match screen warns about anyone out of position | Playtest feedback |
 | Setup | Club picker with search (club or city) and a league filter; an error if the manager has no name | Playtest feedback |
 | Scouting | Scouting assignments by nationality; scout grades weigh potential more for younger players | Playtest feedback |
@@ -175,7 +175,8 @@ Every feature from the game design document, with what is playable in the protot
 | Clubs | Club icons: long-servers with a tag, a testimonial in their tenth season, fans furious if one is sold; veterans take pay cuts to stay | Playtest feedback |
 | Stories | Fans judge results against expectations: a draw away to a giant is good news, a home defeat as favourites is not | Playtest feedback |
 | Match | Results are saved at full time and a match left mid-way is finished on load with the same result every time (no replays) | Playtest feedback |
-| Match | Realistic passing totals and accuracy in match stats; pitch dots in a kit that stands out from the grass | Playtest feedback |
+| Match | Realistic passing totals and accuracy in match stats; clubs wear their own colours on the pitch (green kits get a white outline; only a clash with the opponent changes kit) | Playtest feedback |
+| Match | Every match event (goals, chances, cards, injuries, substitutions) tagged in its team's colour, live and in key moments; scorers tagged the same way in match reports | Playtest feedback |
 | UI | Money in your club's currency (£, €, $) with a setting; matchday N of 38 in the top bar; nothing shown as achieved before a ball is kicked | Playtest feedback |
 | Performance | Faster days: pre-season ~8× faster, league days about twice as fast | Playtest feedback |
 | World | AI managers' ability and their teams' familiarity with their tactics affect results; big clubs well off the pace sack their manager, so eras end | Playtest feedback |

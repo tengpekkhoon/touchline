@@ -131,9 +131,9 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Nationality as a scouting criterion (S)
 - [x] "Fan culture" section becomes "Club culture" (S)
 - [x] More crest designs in real club colours (M)
-- [ ] Tap the nation on a player's profile to open the nation overview (S)
-- [ ] Match events coloured by team (substitutions, cards, goals), so you can tell at a glance whose they are (S)
-- [ ] Green clubs keep their own kit on the pitch; contrast comes from the dot's outline (only a clash with the other team changes kit) (S)
+- [x] Tap the nation on a player's profile to open the nation overview (S)
+- [x] Match events coloured by team (substitutions, cards, goals), so you can tell at a glance whose they are (S)
+- [x] Green clubs keep their own kit on the pitch; contrast comes from the dot's outline (only a clash with the other team changes kit) (S)
 
 *3 · Realism of existing systems*
 

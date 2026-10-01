@@ -419,7 +419,7 @@
   MV.showEvent = function (e) {
     if (e.k === 'goal') {
       const mine = e.side === MV.us;
-      MV.banner(`GOAL · ${e.min}`, e.text, true);
+      MV.banner(`GOAL · ${e.min}`, e.text, true, e.side);
       const f = document.getElementById('mFlash');
       f.innerHTML = `<span style="${mine ? '' : 'text-shadow:0 0 40px rgba(255,80,80,.9),0 6px 0 rgba(0,0,0,.4)'}">GOAL!</span>`;
       setTimeout(() => (f.innerHTML = ''), 1700);
@@ -428,32 +428,32 @@
       void sc.offsetWidth;
       sc.classList.add('pop');
       if (mine) FM.Native.haptic('goal');
-      MV.ticker(`⚽ ${e.min} ${e.text}`);
+      MV.ticker(`⚽ ${e.min} ${e.text}`, e.side);
     } else if (e.k === 'chance') {
-      if (e.big) MV.banner(`${e.outcome === 'saved' ? 'SAVE' : 'CHANCE'} · ${e.min}`, e.text);
-      MV.ticker(`${e.outcome === 'saved' ? '🧤' : '💨'} ${e.min} ${e.text}`);
+      if (e.big) MV.banner(`${e.outcome === 'saved' ? 'SAVE' : 'CHANCE'} · ${e.min}`, e.text, false, e.side);
+      MV.ticker(`${e.outcome === 'saved' ? '🧤' : '💨'} ${e.min} ${e.text}`, e.side);
     } else if (e.text) {
-      if (e.big) MV.banner(`${e.min || ''}`, e.text);
-      MV.ticker(`${e.min ? e.min + ' ' : ''}${e.text}`);
+      if (e.big) MV.banner(`${e.min || ''}`, e.text, false, e.side);
+      MV.ticker(`${e.min ? e.min + ' ' : ''}${e.text}`, e.side);
     }
     MV.updateHUD();
   };
 
-  MV.banner = function (k, text, goal) {
+  MV.banner = function (k, text, goal, side) {
     const wrap = document.getElementById('mWrap');
     if (!wrap) return;
     wrap.querySelectorAll('.m-banner').forEach((b) => b.remove());
     const b = document.createElement('div');
     b.className = 'm-banner' + (goal ? ' goal' : '');
-    b.innerHTML = `<div class="k">${esc(k)}</div>${esc(text)}`;
+    b.innerHTML = `<div class="k">${MV.teamTag(MV.m, side)}${esc(k)}</div>${esc(text)}`;
     wrap.appendChild(b);
     clearTimeout(MV._bt);
     MV._bt = setTimeout(() => b.remove(), goal ? 3200 : 2600);
   };
-  MV.ticker = function (t) {
+  MV.ticker = function (t, side) {
     const el = document.getElementById('mTicker');
     if (!el) return;
-    el.insertAdjacentHTML('afterbegin', `<div>${esc(t)}</div>`);
+    el.insertAdjacentHTML('afterbegin', `<div>${MV.teamTag(MV.m, side)}${esc(t)}</div>`);
     while (el.children.length > 2) el.lastChild.remove();
   };
   MV.updateHUD = function () {
@@ -626,7 +626,8 @@
     const r = Math.max(6, w * 0.022);
     m.sides.forEach((sd, k) => {
       const c1 = MV.kit(m, k),
-        ring = U.ink(c1) === '#fff' || U.ink(c1) === '#ffffff' ? 'rgba(255,255,255,.95)' : 'rgba(0,0,0,.85)';
+        green = MV.onGrass(c1),
+        ring = green || U.ink(c1) === '#fff' || U.ink(c1) === '#ffffff' ? 'rgba(255,255,255,.95)' : 'rgba(0,0,0,.85)';
       sd.xi.forEach((p, i) => {
         if (!p || sd.sentOff[p.id]) return;
         const d = st.dots[k][i],
@@ -639,7 +640,7 @@
         x.arc(cx, cy, r, 0, Math.PI * 2);
         x.fillStyle = sd.slots[i].t === 'GK' ? (k ? '#f59e0b' : '#a3e635') : c1;
         x.fill();
-        x.lineWidth = 2.5;
+        x.lineWidth = green && sd.slots[i].t !== 'GK' ? 3.5 : 2.5;
         x.strokeStyle = sd.slots[i].t === 'GK' ? 'rgba(0,0,0,.85)' : ring; // contrasting ring so every dot stands off the grass
         x.stroke();
         if (sd.injured[p.id]) {
@@ -811,7 +812,7 @@
     const i = MV._subOut,
       ev = MV.m.makeSub(sd, i, d.id, null);
     if (ev) {
-      MV.ticker(ev.text);
+      MV.ticker(ev.text, ev.side);
       const g = MV.toGlobal(MV.us, sd.slots[i].x, 0.02);
       MV.st.dots[MV.us][i] = { x: g.x, y: g.y };
       if (MV.st.ball.side === MV.us && MV.st.ball.slot === i) MV.st.ball.slot = MV.m.kickoffSlot(sd);
@@ -821,19 +822,24 @@
   };
 
   // ---------------- Post-match ----------------
-  // The colour a side wears on the pitch: its main colour, unless that is too close to the grass (then its second
-  // colour); the away side changes too if both teams would look alike
+  // The colour a side wears on the pitch: always its main colour (green clubs too: MV.onGrass gives their dots a
+  // white outline instead); only the away side changes, to its second colour, when both teams would look alike
   const GRASS = [31, 122, 63];
   const rgb = (h) => (/^#[0-9a-f]{6}$/i.test(h) ? [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)) : null);
   const dist = (a, b) => (a && b ? Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) : 999);
   MV.kit = function (m, k) {
-    const pick = (club, avoid) => {
-      const [c1, c2] = club.colors;
-      const bad = (c) => dist(rgb(c), GRASS) < 90 || (avoid && dist(rgb(c), rgb(avoid)) < 80);
-      return bad(c1) && !bad(c2) ? c2 : c1;
-    };
-    const home = pick(m.sides[0].club);
-    return k === 0 ? home : pick(m.sides[1].club, home);
+    const home = m.sides[0].club.colors[0];
+    if (k === 0) return home;
+    const [c1, c2] = m.sides[1].club.colors;
+    const clash = (c) => dist(rgb(c), rgb(home)) < 80;
+    return clash(c1) && !clash(c2) ? c2 : c1;
+  };
+  MV.onGrass = (c) => dist(rgb(c), GRASS) < 90; // a kit that blends into the pitch
+  // A small pill in the side's kit colour, so every event says at a glance whose it is
+  MV.teamTag = function (m, k) {
+    if (!m || (k !== 0 && k !== 1)) return '';
+    const c = MV.kit(m, k);
+    return `<b class="ev-team" style="background:${c};color:${U.ink(c)}">${esc(m.sides[k].club.short)}</b>`;
   };
   MV.post = function () {
     const m = MV.m;
@@ -933,7 +939,7 @@
           .filter((e) => ['goal', 'red', 'injury', 'sub', 'pens'].includes(e.k) || (e.k === 'chance' && e.big))
           .map(
             (e) =>
-              `<div class="row small" style="padding:5px 0;border-top:1px solid var(--line)"><span class="dim" style="width:40px">${e.min || ''}</span><span class="grow">${e.k === 'goal' ? '⚽ ' : e.k === 'chance' ? (e.outcome === 'saved' ? '🧤 ' : '💨 ') : ''}${esc(e.text)}</span></div>`,
+              `<div class="row small" style="padding:5px 0;border-top:1px solid var(--line)"><span class="dim" style="width:40px">${e.min || ''}</span><span class="grow">${MV.teamTag(m, e.side)}${e.k === 'goal' ? '⚽ ' : e.k === 'chance' ? (e.outcome === 'saved' ? '🧤 ' : '💨 ') : ''}${esc(e.text)}</span></div>`,
           )
           .join('')}</div>
         ${MV.promptLog && MV.promptLog.length ? `<div class="card"><div class="h3">Your decisions</div>${MV.promptLog.map((l) => `<div class="small muted" style="margin-top:6px">📋 ${esc(l)}</div>`).join('')}</div>` : ''}`;
