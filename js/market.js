@@ -63,7 +63,10 @@
       if (left === 1) M.deadlineDay();
       M.trialsDaily();
       M.loanWatch();
+      M.preWatch();
+      M.aiLoanBids();
     }
+    M.aiPreContracts();
     M.payDue();
     M.expire();
   };
@@ -96,7 +99,7 @@
     FM.News.add({
       type: 'club',
       title: '⏰ Deadline day',
-      body: 'The window shuts tonight. Clubs are scrambling: expect late bids, panic buys and asking prices that move. Anything you want done has to be done today.',
+      body: 'The window shuts at 23:00. Follow it hour by hour from the Home screen: late bids, panic buys, deals collapsing at the last minute. Anything you want done has to be done today.',
       clubId: c.id,
     });
   };
@@ -135,7 +138,15 @@
     const ch = n.choices[i],
       p = S().players[n.pid];
     n.resolved = ch.label;
-    const r = (n.kind === 'trial' ? trialChoice : n.kind === 'loan' ? loanChoice : () => ({ msg: '' }))(n, ch.k, p);
+    const r = (
+      n.kind === 'trial'
+        ? trialChoice
+        : n.kind === 'loan'
+          ? loanChoice
+          : n.kind === 'pre'
+            ? preChoice
+            : () => ({ msg: '' })
+    )(n, ch.k, p);
     n.reply = r.msg;
     return r;
   };
@@ -261,6 +272,12 @@
     }
     return { msg: gone ? 'He has moved on.' : `${W.name(p)} leaves with the staff's best wishes.` };
   }
+  function preChoice(n, k, p) {
+    if (!p || !W.isUser(p.clubId)) return { msg: 'He is no longer at the club.' };
+    if (k === 'renew') return { msg: 'Talk to his agent before they do.', renew: p.id };
+    if (p.preWarned) p.preWarned.until = now(); // he'll agree with them now
+    return { msg: `${W.name(p)} will leave on a free in the summer.` };
+  }
   // A player whose trial went well settles for a little less while it's fresh (Co.evaluate)
   M.trialDiscount = (p, club) => (p.trial && p.trial.c === club.id && now() < p.trial.until ? 0.95 : 1);
 
@@ -356,6 +373,8 @@
     const c = S().clubs[p.clubId];
     let f = 1;
     if (M.wantsAway(p)) f *= 0.85;
+    // running down his contract: better a fee now than nothing in the summer
+    if (p.contract <= S().year && !T().isKey(p)) f *= 0.75;
     if (c.balance < 0) f *= c.balance < -2e7 ? 0.8 : 0.9;
     if (!W.isUser(c.id)) {
       const same = W.squad(c.id).filter((q) => q.pos === p.pos && !q.loan).length;
@@ -645,5 +664,394 @@
     const stay = total(M.appeal(p, home, p.wage, FM.Contracts.expectedStatus(p, home)));
     const go = total(M.appeal(p, buyer, FM.Transfers.wageDemand(p, buyer), FM.Contracts.expectedStatus(p, buyer)));
     return go < stay - 1.2 && Math.random() < 0.7;
+  };
+
+  // ---------- Deadline day, hour by hour ----------
+  // On deadline day the AI market runs in hourly slices you step through (or let run): deals land on a ticker,
+  // late bids arrive, a move collapses now and then, until the window shuts at 23:00. Whatever hours are left
+  // when the day is played run at once (Sea.advance → M.finishDeadline).
+  M.DD_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+  M.dd = () => {
+    const d = state().dd;
+    return d && d.year === S().year && d.day === S().day ? d : null;
+  };
+  M.startDeadline = function () {
+    const s = S();
+    if (!M.isDeadline()) return null;
+    return M.dd() || (state().dd = { year: s.year, day: s.day, i: 0, log: [] });
+  };
+  // Play the next hour: returns the new ticker lines
+  M.deadlineHour = function () {
+    const s = S(),
+      d = M.startDeadline();
+    if (!d || d.i >= M.DD_HOURS.length) return [];
+    const hour = M.DD_HOURS[d.i++],
+      share = 1 / M.DD_HOURS.length,
+      n0 = s.seasonLog.transfers.length,
+      bids0 = s.news.filter((n) => n.type === 'bid').length,
+      lines = [];
+    FM.Transfers.aiWindow(share);
+    if (W.employed() && Math.random() < 0.35) FM.Transfers.aiBidsForUser();
+    if (W.employed() && Math.random() < 0.15) M.aiLoanBids(true);
+    const deals = s.seasonLog.transfers.slice(n0).filter((t) => !t.loan || t.fee);
+    const uc = W.userClub(),
+      mine = (t) => uc && (t.to === uc.id || t.from === uc.id),
+      league = (t) => uc && [t.to, t.from].some((id) => id && s.clubs[id] && s.clubs[id].comp === uc.comp);
+    // the ticker: your deals and your league's first, then the biggest elsewhere
+    deals
+      .sort((a, b) => mine(b) - mine(a) || league(b) - league(a) || b.fee - a.fee)
+      .slice(0, 6)
+      .forEach((t) =>
+        lines.push({
+          h: hour,
+          pid: t.pid,
+          t: `${t.name} ${t.from && s.clubs[t.from] ? `${s.clubs[t.from].short} → ` : ''}${s.clubs[t.to].short}${t.fee ? ` · ${U.money(t.fee)}` : t.loan ? ' · loan' : ' · free'}`,
+          k: mine(t) ? 'mine' : league(t) ? 'league' : 'world',
+        }),
+      );
+    if (deals.length > 6)
+      lines.push({ h: hour, t: `…and ${deals.length - 6} more deals around the world`, k: 'world' });
+    s.news
+      .filter((n) => n.type === 'bid' && n.data.status === 'open')
+      .slice(0, s.news.filter((n) => n.type === 'bid').length - bids0)
+      .forEach((n) => lines.push({ h: hour, t: `📨 ${n.title}`, k: 'bid', nid: n.id }));
+    // a move that falls through at the last minute (a failed medical, a late hitch over personal terms)
+    if (Math.random() < 0.18) {
+      const cands = Object.values(s.players).filter((p) => p.clubId && !p.loan && p.ca >= 68 && !T().isSettled(p));
+      const p = cands.length && U.pick(cands),
+        c =
+          p &&
+          U.pick(
+            Object.values(s.clubs).filter(
+              (x) => x.sim === 'full' && x.id !== p.clubId && x.rep > s.clubs[p.clubId].rep,
+            ),
+          );
+      if (p && c)
+        lines.push({
+          h: hour,
+          pid: p.id,
+          t: `❌ ${W.name(p)}'s move to ${c.name} collapses ${U.pick(['over his medical', 'over personal terms', 'after a late counter-bid', 'as the paperwork misses the deadline'])}`,
+          k: 'world',
+        });
+    }
+    if (hour === 23) lines.push({ h: hour, t: '🔒 The window is shut.', k: 'mine' });
+    d.log = lines.concat(d.log).slice(0, 80);
+    return lines;
+  };
+  // The day is being played: any hours not stepped through run now. Returns true if the day's market is handled.
+  M.finishDeadline = function () {
+    const d = M.dd();
+    if (!d) return false;
+    while (d.i < M.DD_HOURS.length) M.deadlineHour();
+    return true;
+  };
+  const T = () => FM.Transfers;
+
+  // ---------- Pre-contracts ----------
+  // A player in the last season of his contract can agree to join you on a free in the summer, from the mid-season
+  // window on (p.pre = { c: club, terms }); at the season's end he moves (Sea.endSeason → M.completePre).
+  M.preOpen = () => FM.Season.baseRound() >= 11;
+  M.canPre = function (p) {
+    const s = S();
+    if (!p.clubId || W.isUser(p.clubId))
+      return { ok: false, msg: 'Only players at other clubs can be signed on a pre-contract.' };
+    if (p.contract > s.year)
+      return {
+        ok: false,
+        msg: `His contract runs until ${p.contract}: a pre-contract is only possible in its final season.`,
+      };
+    if (p.loan) return { ok: false, msg: 'He is out on loan; try his parent club after the season.' };
+    if (!M.preOpen()) return { ok: false, msg: 'Pre-contracts open with the mid-season window (matchday 12).' };
+    if (p.pre)
+      return { ok: false, msg: `${W.name(p)} has already agreed to join ${s.clubs[p.pre.c].name} in the summer.` };
+    return { ok: true };
+  };
+  // Agree a pre-contract with full terms (the agent haggles as for a free agent; other clubs may compete)
+  M.preContract = function (pid, t) {
+    const s = S(),
+      p = s.players[pid],
+      club = W.userClub(),
+      Co = FM.Contracts;
+    const chk = M.canPre(p);
+    if (!chk.ok) return chk;
+    if (Co.blocked(p)) return { ok: false, msg: `${W.name(p)}'s agent has broken off talks for now.` };
+    if (FM.Reg.real() && !FM.Reg.canSign(club, p).ok)
+      return { ok: false, msg: `You can't register him: ${FM.Reg.canSign(club, p).why}` };
+    const ev = Co.evaluate(p, club, t, 'transfer');
+    if (!ev.ok) {
+      if (!ev.hard) Co.logDemand(p, ev, t);
+      const walked = !ev.hard && Co.spendPatience(p);
+      return {
+        ok: false,
+        msg: ev.msg + (walked ? ' Talks have broken down for now.' : ''),
+        terms: !ev.hard && !walked ? { ...t, wage: Co.wageNeeded(p, club, t, 'transfer') } : null,
+      };
+    }
+    const ch = M.choose(p, 0, t.wage, t.status);
+    if (ch.club !== club) {
+      p.pre = { c: ch.club.id, wage: ch.wage };
+      return {
+        ok: false,
+        lost: true,
+        msg: `${W.name(p)} has agreed to join ${ch.club.name} in the summer instead — ${ch.why} swung it.`,
+      };
+    }
+    p.pre = { c: club.id, terms: { ...t } };
+    W.addInterest(p, 1);
+    FM.News.add({
+      type: 'transfer',
+      title: `${W.name(p)} agrees to join ${club.name} in the summer`,
+      body: `A pre-contract: he leaves ${s.clubs[p.clubId].name} on a free when his deal runs out.`,
+      pid: p.id,
+      clubId: club.id,
+      big: true,
+    });
+    return { ok: true, msg: `✅ ${W.name(p)} will join you on a free when his contract ends this summer.` };
+  };
+  // Season end: the pre-contract comes good (returns true if he moved)
+  M.completePre = function (p) {
+    const s = S(),
+      pre = p.pre;
+    delete p.pre;
+    const to = pre && s.clubs[pre.c];
+    if (!to || p.retired) return false;
+    if (W.isUser(to.id)) {
+      FM.Transfers.execute(p, to.id, 0, pre.terms.wage, { pre: true });
+      FM.Contracts.applyTerms(p, to, pre.terms, 'transfer', 0);
+      FM.News.add({
+        type: 'club',
+        title: `${W.name(p)} arrives on his pre-contract`,
+        body: 'Signed in the winter, here for the new season.',
+        pid: p.id,
+        clubId: to.id,
+      });
+    } else FM.Transfers.execute(p, to.id, 0, pre.wage || FM.Transfers.wageDemand(p, to), { pre: true });
+    return true;
+  };
+  // AI clubs approach good players in the last year of their contracts; yours get a warning first (a desk
+  // decision: open talks or let him go), and agree if you haven't renewed him within a week
+  M.PRE_DAILY = 0.15;
+  M.aiPreContracts = function () {
+    const s = S();
+    if (!M.preOpen() || Math.random() > M.PRE_DAILY * W.dayScale()) return;
+    const uc = W.userClub();
+    // your own players first: the best one running down his contract
+    if (uc) {
+      for (const p of W.squad(uc.id)) {
+        if (p.contract > s.year || p.pre || p.preWarned || p.loan) continue;
+        if (p.ca < W.levelFor(uc.rep) - 6) continue;
+        const suitor = Object.values(s.clubs)
+          .filter(
+            (c) =>
+              (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id) && Math.abs(W.levelFor(c.rep) - p.ca) <= 8,
+          )
+          .sort((a, b) => b.rep - a.rep)[0];
+        if (!suitor) continue;
+        p.preWarned = { c: suitor.id, until: now() + 7 };
+        M.desk({
+          kind: 'pre',
+          title: `${suitor.name} approach ${W.name(p)} about a pre-contract`,
+          body: `His contract ends this summer and they want him on a free. Renew him now, or he'll probably agree to go.`,
+          pid: p.id,
+          rec: 0,
+          def: 1,
+          choices: [
+            { k: 'renew', label: 'Open contract talks' },
+            { k: 'let', label: 'Let him go in the summer' },
+          ],
+        });
+        break;
+      }
+    }
+    // AI to AI: a club signs a good player from elsewhere for the summer
+    const cands = Object.values(s.players).filter(
+      (p) =>
+        p.clubId &&
+        !W.isUser(p.clubId) &&
+        !p.pre &&
+        !p.loan &&
+        p.contract <= s.year &&
+        p.ca >= 62 &&
+        !FM.Season.aiRenews(p, s.clubs[p.clubId]),
+    );
+    const p = cands.length && U.pick(cands);
+    if (p) {
+      const c = Object.values(s.clubs)
+        .filter(
+          (x) =>
+            x.sim === 'full' &&
+            !W.isUser(x.id) &&
+            x.id !== p.clubId &&
+            Math.abs(W.levelFor(x.rep) - p.ca) <= 6 &&
+            FM.Transfers.canRegister(x, p),
+        )
+        .sort((a, b) => b.rep - a.rep)[0];
+      if (c) p.pre = { c: c.id, wage: FM.Transfers.wageDemand(p, c) };
+    }
+  };
+  // Your warned players: if not renewed in time, the suitor gets him
+  M.preWatch = function () {
+    const uc = W.userClub(),
+      s = S();
+    if (!uc) return;
+    for (const p of W.squad(uc.id)) {
+      const w = p.preWarned;
+      if (!w || p.pre || now() < w.until) continue;
+      delete p.preWarned;
+      if (p.contract > s.year || !s.clubs[w.c]) continue; // renewed meanwhile
+      if (W.hasTrait(p, 'Loyal') && Math.random() < 0.5) continue;
+      p.pre = { c: w.c, wage: FM.Transfers.wageDemand(p, s.clubs[w.c]) };
+      FM.News.add({
+        type: 'club',
+        title: `${W.name(p)} agrees to join ${s.clubs[w.c].name} in the summer`,
+        body: 'A pre-contract: he plays out the season for you, then leaves on a free.',
+        pid: p.id,
+        clubId: uc.id,
+      });
+    }
+  };
+
+  // ---------- Loan offers for your players ----------
+  // Clubs ask to borrow your youngsters who aren't playing and your fringe seniors: wage share, the minutes they
+  // promise and sometimes an option to buy (exercised at the season's end if he did well: T.endLoans)
+  M.aiLoanBids = function (force) {
+    const s = S(),
+      uc = W.userClub();
+    if (!uc || !FM.Season.windowOpen() || (!force && Math.random() > 0.25 * W.dayScale())) return;
+    const games = FM.Season.gamesPlayed(uc.id);
+    const xi = new Set(
+      W.pickXI(uc.id, s.user.tactic)
+        .xi.filter(Boolean)
+        .map((p) => p.id),
+    );
+    const cands = W.squad(uc.id).filter(
+      (p) =>
+        !p.loan &&
+        !xi.has(p.id) &&
+        W.age(p) >= 18 &&
+        W.age(p) <= 29 &&
+        p.season.apps <= Math.max(2, games * 0.3) &&
+        !s.news.some((n) => n.type === 'bid' && n.data.pid === p.id && n.data.status === 'open'),
+    );
+    const p = cands.length && U.wpick(cands, (q) => (W.age(q) <= 22 ? 2 : 1) * (q.pa - q.ca + 5));
+    if (!p) return;
+    const dest = M.loanTarget(p);
+    if (!dest) return;
+    const starts = W.levelFor(dest.rep) <= p.ca + 2;
+    const share = Math.min(1, Math.round((0.5 + Math.random() * 0.4 + (starts ? 0.1 : 0)) * 20) / 20);
+    const buy = W.age(p) >= 21 && Math.random() < 0.35 ? U.roundMoney(p.value * U.rand(1.05, 1.3)) : 0;
+    FM.News.add({
+      type: 'bid',
+      title: `${dest.name} want ${W.name(p)} on loan`,
+      body: `${starts ? 'They see him as a regular starter' : 'He would be in their rotation'} in the ${s.comps[dest.comp] ? s.comps[dest.comp].name : 'league'}, and they'd pay ${Math.round(share * 100)}% of his wages${buy ? `, with an option to buy him for ${U.money(buy)} in the summer` : ''}.`,
+      pid: p.id,
+      clubId: dest.id,
+      data: { pid: p.id, from: dest.id, fee: 0, status: 'open', loan: { share, starts, buy } },
+    });
+  };
+  // Where a player would go on loan: a smaller club where he'd start or rotate, at a level that stretches him,
+  // in the strongest league that fits
+  M.loanTarget = function (p) {
+    const s = S(),
+      parent = s.clubs[p.clubId],
+      g = D.POS_GROUP[p.pos];
+    const fits = Object.values(s.clubs).filter((c) => {
+      if ((c.sim !== 'full' && c.sim !== 'light') || c.id === p.clubId || W.isUser(c.id)) return false;
+      if (c.rep >= parent.rep - 3) return false;
+      const lvl = W.levelFor(c.rep);
+      if (p.ca < lvl - 6 || p.ca > lvl + 10) return false;
+      const best = W.squad(c.id)
+        .filter((q) => D.POS_GROUP[q.pos] === g)
+        .sort((a, b) => b.ca - a.ca)[g === 'GK' ? 0 : 2];
+      return (!best || best.ca <= p.ca + 2) && W.squad(c.id).length < W.squadTarget(c) + 3;
+    });
+    // the higher the level he'd still start at, the better for his development
+    return fits.sort((a, b) => leagueTop(b) + b.rep * 0.5 - (leagueTop(a) + a.rep * 0.5))[0] || null;
+  };
+
+  // ---------- Fan and board reactions to your transfers ----------
+  M.reactions = function (p, from, to, fee, flags = {}) {
+    const uc = W.userClub();
+    if (!uc || flags.pre) return; // a pre-contract was reacted to when it was agreed
+    const buying = to.id === uc.id;
+    const sq = W.squad(uc.id).filter((q) => q.id !== p.id);
+    const xiAvg = U.avg(sq.sort((a, b) => b.ca - a.ca).slice(0, 11), (q) => q.ca);
+    const a = W.age(p),
+      posts = [],
+      board = [];
+    const handle = () =>
+      U.pick([
+        `@${uc.short}_ultras`,
+        `@${uc.city}Loyal`,
+        `@${uc.name.split(' ').pop()}Faithful`,
+        '@TheRealTerraceTalk',
+        `@${uc.short}Til1Die`,
+      ]);
+    let mood = 0,
+      conf = 0;
+    if (buying) {
+      const star = p.ca >= xiAvg + 4 || fee >= 2.5e7;
+      if (star) {
+        mood += 4;
+        posts.push(
+          `What a signing. ${W.short(p)} is exactly what we needed 🔥`,
+          `${uc.name} mean business this season.`,
+        );
+      } else if (p.ca < xiAvg - 8 && fee > 0) {
+        mood -= 2;
+        posts.push(`${U.money(fee)} for ${W.short(p)}? Who's watched him play?`, 'Not convinced by this one.');
+      } else posts.push(`Welcome ${W.short(p)}! Solid addition.`, `Squad needed depth, this does the job.`);
+      if (from && from.id === uc.rival) {
+        mood += 3;
+        posts.push(`Taking ${W.short(p)} from ${from.short}. Love it 😂`);
+      }
+      // the board: fee against the budget, wages, age
+      if (fee > 0 && a >= 30 && fee >= 5e6) {
+        conf -= 2;
+        board.push(`The board question ${U.money(fee)} on a ${a}-year-old with little resale value.`);
+      } else if (a <= 23 && p.pa >= xiAvg + 2) {
+        conf += 1;
+        board.push('The board like the investment in a young player with resale value.');
+      }
+      if (p.wage >= 2 * U.avg(sq, (q) => q.wage) && p.ca < xiAvg + 4) {
+        conf -= 1;
+        board.push(`The board raise an eyebrow at ${U.money(p.wage)} a week for a player who isn't a star.`);
+      }
+    } else {
+      const ranked = W.squad(uc.id)
+        .concat([p])
+        .sort((x, y) => y.ca - x.ca);
+      const key = ranked.indexOf(p) < 3,
+        fav = (p.form.length >= 4 && U.avg(p.form) >= 7) || (p.cult || 0) >= 10;
+      if (to.id === uc.rival) {
+        mood -= 8;
+        posts.push(`Selling ${W.short(p)} to ${to.short}?! Unforgivable.`, 'Board out. Today.');
+      } else if (key || fav) {
+        mood -= 5;
+        posts.push(`Gutted to see ${W.short(p)} go. One of our best.`, `${U.money(fee)} isn't enough for him.`);
+      } else if (fee >= p.value * 1.2) {
+        mood += 1;
+        posts.push(`${U.money(fee)} for ${W.short(p)} is great business.`);
+      } else posts.push(`Thanks for everything, ${W.short(p)}.`);
+      if (fee >= p.value * 1.1 || (a >= 29 && fee > 0)) {
+        conf += 1;
+        board.push(`The board welcome ${U.money(fee)} for ${W.short(p)}${a >= 29 ? ', sold at the right time' : ''}.`);
+      } else if (key && fee < p.value * 0.9) {
+        conf -= 2;
+        board.push(`The board are unhappy that one of the club's best players went for less than he's worth.`);
+      }
+    }
+    uc.fanMood = U.clamp((uc.fanMood ?? 60) + mood, 0, 100);
+    uc.boardConf = U.clamp((uc.boardConf ?? 60) + conf, 0, 100);
+    if (posts.length)
+      FM.News.add({
+        type: 'social',
+        title: `Fans react: ${W.name(p)} ${buying ? 'arrives' : 'leaves'}`,
+        posts: posts.slice(0, 3).map((t) => ({ h: handle(), t, likes: U.randi(40, 900) * (Math.abs(mood) + 1) })),
+        clubId: uc.id,
+        pid: p.id,
+      });
+    if (board.length)
+      FM.News.add({ type: 'board', title: 'The board on the deal', body: board.join(' '), clubId: uc.id, pid: p.id });
   };
 })();

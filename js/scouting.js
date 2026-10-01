@@ -339,7 +339,61 @@
       v.grade = '?';
       v.rec = 'Scout';
     }
+    Sc.deeper(p, v, k);
     return v;
+  };
+  // What scouting reveals, rung by rung (the report shows what the next rung will add)
+  Sc.LADDER = [
+    [10, 'an estimate of his ability'],
+    [20, 'his stronger foot and second positions'],
+    [25, 'an estimate of his potential'],
+    [35, 'the role that suits him'],
+    [40, 'his attributes, roughly'],
+    [50, 'his personality'],
+    [55, 'his injury history'],
+    [60, 'his traits'],
+    [65, 'his situation: happy, unsettled or on his way out'],
+    [70, 'his exact attributes'],
+    [75, 'hidden attributes: consistency, big games, professionalism'],
+    [90, 'his mentality, his wage demands and his agent'],
+  ];
+  Sc.nextRung = (k) => Sc.LADDER.find(([at]) => at > k) || null;
+  Sc.deeper = function (p, v, k) {
+    if (k >= 20) {
+      v.foot = p.foot;
+      v.alt = Object.entries(p.alt || {})
+        .filter(([, x]) => x >= 0.8)
+        .map(([t]) => t);
+    }
+    if (k >= 35 && D.ROLES[p.pos]) v.role = FM.bestRole(p, p.pos);
+    if (k >= 65) {
+      const s = FM.S,
+        M = FM.Market;
+      v.situation = p.pre
+        ? `Has agreed to join ${s.clubs[p.pre.c] ? s.clubs[p.pre.c].name : 'another club'} in the summer`
+        : !p.clubId
+          ? 'Looking for a club'
+          : FM.Transfers.isSettled(p)
+            ? 'Settled: he has only just signed or renewed'
+            : M.wantsAway(p)
+              ? 'Unsettled: he would welcome a move, and his club would sell'
+              : p.contract <= s.year
+                ? 'Running down his contract: a free in the summer, or a pre-contract now'
+                : 'Content where he is';
+    }
+    if (k >= 90) {
+      const h = p.hid,
+        word = (x, hi, lo, mid) => (x >= 15 ? hi : x <= 6 ? lo : mid);
+      v.mental = [
+        word(h.amb, 'Driven to reach the top', 'Happy with his lot', 'Ambitious enough'),
+        word(h.loy, 'Fiercely loyal to his club', 'Will go wherever suits him', 'Loyal, within reason'),
+        word(h.temp, 'Ice-cool under provocation', 'A short fuse', 'Keeps his head most of the time'),
+        word(h.lead, 'A natural leader', 'Keeps himself to himself', 'Talks on the pitch when needed'),
+      ];
+      const c = FM.S.user && FM.S.clubs[FM.S.user.clubId];
+      if (c) v.wageAsk = FM.Transfers.wageDemand(p, c);
+      v.agent = FM.Contracts.agentInfo(p);
+    }
   };
 
   // Best targets across all reports, for the scouting home screen and the assistant

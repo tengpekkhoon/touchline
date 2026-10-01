@@ -157,6 +157,31 @@
     const S = FM.S;
     Object.values(S.players).forEach((p) => {
       if (!p.loan) return;
+      // An option to buy: the borrower takes it up if he played most of their games
+      const o = p.loan;
+      if (
+        o.buy &&
+        !W.isUser(p.clubId) &&
+        S.clubs[p.clubId] &&
+        W.spell(p).apps >= 15 &&
+        S.clubs[p.clubId].budget >= o.buy
+      ) {
+        const buyer = S.clubs[p.clubId],
+          parent = S.clubs[o.from];
+        W.spell(p).to = S.year - 1;
+        delete p.loan;
+        p.clubId = parent.id; // the sale is from the parent club
+        T.execute(p, buyer.id, o.buy, T.wageDemand(p, buyer));
+        if (W.isUser(parent.id))
+          FM.News.add({
+            type: 'club',
+            title: `${buyer.name} make ${W.name(p)}'s move permanent`,
+            body: `They took up the option to buy him for ${U.money(o.buy)}.`,
+            pid: p.id,
+            clubId: parent.id,
+          });
+        return;
+      }
       const sp = W.spell(p);
       if (sp) sp.to = S.year - 1;
       const parent = p.loan.from,
@@ -290,6 +315,7 @@
       age: W.age(p),
     });
     FM.Stories.transfer(p, from, to, fee, { ...flags, intl });
+    if (W.isUser(toId) || (from && W.isUser(from.id))) FM.Market.reactions(p, from, to, fee, flags);
   };
 
   const nationOf = (clubId) => (clubId && FM.S.clubs[clubId] ? FM.S.clubs[clubId].nat : null);
@@ -442,7 +468,9 @@
   };
   // In the window, good free agents don't stay unemployed: the best club at his level that has room signs him.
   // (Once it has shut, free agents only fill real squad gaps: Sea.freeAgents.)
-  T.aiTopFreeAgents = function () {
+  // A daily quota in whole deals: share = the part of the day being played (deadline day runs hour by hour)
+  const quota = (q) => Math.floor(q) + (Math.random() < q % 1 ? 1 : 0);
+  T.aiTopFreeAgents = function (share = 1) {
     const full = Object.values(FM.S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id));
     Object.values(FM.S.players)
       .filter((p) => !p.clubId && !p.retired && W.age(p) <= 33)
@@ -453,10 +481,10 @@
           .filter((c) => W.levelFor(c.rep) >= p.ca - 8 && W.levelFor(c.rep) <= p.ca + 4 && W.squad(c.id).length < 26)
           .sort((a, b) => b.rep - a.rep);
         const c = suitors.find((x) => T.canRegister(x, p));
-        if (c && Math.random() < 0.6 * W.dayScale()) T.execute(p, c.id, 0, T.wageDemand(p, c));
+        if (c && Math.random() < 0.6 * W.dayScale() * share) T.execute(p, c.id, 0, T.wageDemand(p, c));
       });
   };
-  T.aiWindow = function () {
+  T.aiWindow = function (share = 1) {
     const S = FM.S;
     const full = Object.values(S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id));
     const market = Object.values(S.players).filter(
@@ -468,11 +496,11 @@
         W.age(p) >= 19 &&
         W.age(p) <= (p.pos === 'GK' ? 31 : 29),
     );
-    const k = W.dayScale() * (full.length / 110); // per-day quotas tuned on 110 clubs and 22 league days
+    const k = W.dayScale() * (full.length / 110) * share; // per-day quotas tuned on 110 clubs and 22 league days
     const dd = FM.Market.isDeadline(); // deadline day: more clubs in the market, paying a premium
     const mkt = indexMarket(market);
     U.shuffle(full)
-      .slice(0, Math.round(T.AI_SHOPPERS * k * (dd ? 1.6 : 1)))
+      .slice(0, quota(T.AI_SHOPPERS * k * (dd ? 1.6 : 1)))
       .forEach((c) => {
         const sq = W.squad(c.id);
         if (T.fillGap(c, sq, mkt)) return; // squad gaps come first, while the window is open
@@ -517,7 +545,7 @@
         T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c) * (dd ? 1.1 : 1)), T.wageDemand(p, c));
         T.offload(c, D.POS_GROUP[p.pos], full);
       });
-    T.aiTopFreeAgents();
+    T.aiTopFreeAgents(share);
 
     // Marquee raid: a giant prises the best young talent out of another country
     if (Math.random() < 0.35 * k) {
@@ -569,15 +597,15 @@
       }
     }
 
-    T.aiLoans(full);
-    if (FM.Season.baseRound() >= 10) T.winterExits(full);
+    T.aiLoans(full, share);
+    if (FM.Season.baseRound() >= 10) T.winterExits(full, share);
   };
 
   // Loans: clubs send players who aren't getting games to clubs where they will. Young ones (22 and under, with
   // room to grow) go to develop; some fringe seniors go to stay sharp or off the wage bill. The borrower must
   // be a smaller club where he'd start or rotate, and the parent keeps enough bodies in his position.
   T.LOANS_PER_DAY = 40;
-  T.aiLoans = function (full) {
+  T.aiLoans = function (full, share = 1) {
     const levels = new Map(); // club|group → starter level (a loan changes only the borrowing club's)
     const levelOf = (c, g) => {
       const key = c.id + '|' + g;
@@ -594,7 +622,8 @@
       if (c.sim === 'minimal' || a < 18 || a > 29) return false;
       return a <= 22 ? p.pa - p.ca >= 5 && p.ca >= W.levelFor(c.rep) - 30 : p.ca < W.levelFor(c.rep) - 4;
     });
-    for (let i = 0; i < Math.round(T.LOANS_PER_DAY * W.dayScale() * (full.length / 110)) && pool.length; i++) {
+    const n = quota(T.LOANS_PER_DAY * W.dayScale() * (full.length / 110) * share);
+    for (let i = 0; i < n && pool.length; i++) {
       const k = pool.splice(Math.floor(Math.random() * pool.length), 1)[0],
         parent = S.clubs[k.clubId],
         g = D.POS_GROUP[k.pos];
@@ -625,10 +654,13 @@
     }
   };
   // Winter exits: a few clubs with a bloated squad agree to cancel the contract of a veteran who isn't playing
-  T.winterExits = function (full) {
+  T.winterExits = function (full, share = 1) {
     const S = FM.S,
       played = Math.max(2, FM.Season.baseRound() * 0.25 * 1.7);
-    for (const c of U.shuffle(full.slice()).slice(0, Math.max(1, Math.round(4 * W.dayScale() * (full.length / 110))))) {
+    for (const c of U.shuffle(full.slice()).slice(
+      0,
+      quota(Math.max(1, 4 * W.dayScale() * (full.length / 110)) * share),
+    )) {
       const sq = W.squad(c.id);
       if (sq.length <= W.squadTarget(c) + 2) continue;
       const p = sq
@@ -694,6 +726,7 @@
     }
     if (accept) return T.completeBid(n, p);
     n.data.status = 'rejected';
+    if (n.data.loan) return 'Loan offer turned down.';
     if (FM.People.onBidRejected(p, n.data.fee))
       return `Bid rejected. ${W.name(p)} feels betrayed — you promised to let him go for the right offer.`;
     if (!W.hasTrait(p, 'Loyal') && p.hid.amb >= 13 && !T.isSettled(p)) {
@@ -706,6 +739,17 @@
   T.completeBid = function (n, p) {
     const S = FM.S,
       buyer = S.clubs[n.data.from];
+    if (n.data.loan) {
+      if (!T.canRegister(buyer, p)) {
+        n.data.status = 'void';
+        return `${buyer.name} can't register him under their league's rules — the loan is off.`;
+      }
+      n.data.status = 'accepted';
+      T.loan(p, buyer.id, n.data.loan.share, 0);
+      if (n.data.loan.buy) p.loan.buy = n.data.loan.buy;
+      if (n.data.loan.starts) p.loan.promised = true;
+      return `${W.name(p)} joins ${buyer.name} on loan${n.data.loan.buy ? ` (option to buy: ${U.money(n.data.loan.buy)})` : ''}.`;
+    }
     if (!T.canRegister(buyer, p)) {
       n.data.status = 'void';
       return `${buyer.name} can't register ${W.name(p)} under their league's rules — the deal is off.`;
@@ -717,6 +761,55 @@
     n.data.status = 'accepted';
     T.execute(p, buyer.id, n.data.fee, null, { deal: n.data.deal });
     return `${W.name(p)} has joined ${buyer.name} for ${FM.Market.describeDeal(n.data.fee, n.data.deal)}.`;
+  };
+  // Negotiate a bid for your player in full: your fee and how it's paid (instalments, add-on, a sell-on clause for
+  // you). The bidder accepts anything that costs them no more than their limit; above it they come back part of
+  // the way (three times at most), and a demand far beyond it twice and they walk away.
+  T.negotiateBid = function (n, fee, deal) {
+    const S = FM.S,
+      d = n.data,
+      p = S.players[d.pid],
+      buyer = S.clubs[d.from],
+      M = FM.Market;
+    if (d.status !== 'open') return { msg: 'Already resolved.' };
+    if (!p || !W.isUser(p.clubId)) {
+      d.status = 'void';
+      return { msg: 'The player is no longer at the club.' };
+    }
+    if (!FM.Season.windowOpen()) {
+      d.status = 'expired';
+      return { msg: 'The window has closed — the bid lapsed.' };
+    }
+    const cost = M.dealValue(p, fee, deal),
+      max = d.max || d.fee,
+      now = M.dealValue(p, d.fee, d.deal);
+    if (cost <= max * 1.005) {
+      d.fee = fee;
+      d.deal = deal;
+      return { done: true, msg: `${buyer.name} agree to ${M.describeDeal(fee, deal)}. ` + T.completeBid(n, p) };
+    }
+    if (cost > max * 1.6) {
+      d.angry = (d.angry || 0) + 1;
+      if (d.angry >= 2) {
+        d.status = 'withdrawn';
+        return { msg: `${buyer.name} find your demands insulting and pull out.` };
+      }
+      return { msg: `${buyer.name} won't even discuss that. Their offer stands at ${M.describeDeal(d.fee, d.deal)}.` };
+    }
+    d.rounds = (d.rounds || 0) + 1;
+    if (d.rounds > 3) {
+      d.status = 'withdrawn';
+      return { msg: `${buyer.name} have gone as far as they will and walk away.` };
+    }
+    const target = Math.min(max, now + (cost - now) * U.rand(0.4, 0.7));
+    d.fee = M.feeFor(p, target, deal);
+    d.deal = deal;
+    n.title = `${buyer.name} improve their offer for ${W.name(p)}`;
+    n.read = false;
+    return {
+      counter: d.fee,
+      msg: `${buyer.name} come back with ${M.describeDeal(d.fee, deal)}${d.rounds >= 3 ? ' — their final offer' : ''}.`,
+    };
   };
   // Ask the bidding club for more (mult × their bid). Up to what they'd pay, they agree; beyond it they raise their
   // bid part of the way, twice at most, or walk away
@@ -734,6 +827,7 @@
       d.status = 'expired';
       return 'The window has closed — the bid lapsed.';
     }
+    if (d.loan) return 'Loan offers are accepted or turned down.';
     const ask = U.roundMoney(d.fee * mult);
     if (ask <= (d.max || d.fee)) {
       d.fee = ask;

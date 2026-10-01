@@ -1228,7 +1228,7 @@
           .map((t) => {
             const from = t.from && CL(t.from),
               to = CL(t.to);
-            return `<div class="row small tap" style="padding:9px 0;border-top:1px solid var(--line)" data-act="player" data-id="${t.pid}"><div class="grow" style="min-width:0"><div class="b ellip">${C.flag(t.nat)} ${esc(t.name)} ${t.intl ? '<span class="pill acc">INTL</span>' : ''}</div><div class="tiny dim ellip">${from ? `${C.flag(from.nat)} ${esc(from.short)}` : 'Free agent'} → ${C.flag(to.nat)} ${esc(to.name)}${t.age ? ` · age ${t.age}` : ''}</div></div><b>${t.fee ? U.money(t.fee) : 'Free'}</b></div>`;
+            return `<div class="row small tap" style="padding:9px 0;border-top:1px solid var(--line)" data-act="player" data-id="${t.pid}"><div class="grow" style="min-width:0"><div class="b ellip">${C.flag(t.nat)} ${esc(t.name)} ${t.intl ? '<span class="pill acc">INTL</span>' : ''}</div><div class="tiny dim ellip">${from ? `${C.flag(from.nat)} ${esc(from.short)}` : 'Free agent'} → ${C.flag(to.nat)} ${esc(to.name)}${t.age ? ` · age ${t.age}` : ''}</div></div>${C.fee(t.fee, W.isUser(t.to) ? 'in' : W.isUser(t.from) ? 'out' : null)}</div>`;
           })
           .join('') || '<div class="empty">No deals yet this season. The market moves when the window is open.</div>'
       }</div>`;
@@ -1390,7 +1390,6 @@
     if (S().comps[t] && S().comps[t].type === 'league' && t !== mine) opts.push([t, lname(S().comps[t])]);
     opts.push(['world', '🗺️ All leagues']);
     if (W.cups().length || W.continentals().length) opts.push(['cups', 'Cups']);
-    if (FM.S.nteams) opts.push(['intl', '🌍 International']);
     opts.push(['fixtures', 'Fixtures'], ['stats', 'Stats']);
     return (
       chips('league', opts) +
@@ -1400,13 +1399,14 @@
           ? statsView()
           : t === 'cups'
             ? cupsView()
-            : t === 'intl'
-              ? UI.intlView()
-              : t === 'world'
-                ? worldView()
-                : tableView(t))
+            : t === 'world'
+              ? worldView()
+              : tableView(t))
     );
   };
+  // International football has its own tab: national teams, rankings, tournaments and your national job
+  UI.screens.intl = () =>
+    FM.S.nteams ? UI.intlView() : '<div class="empty">International football starts with your first season.</div>';
   // Every league in the world, grouped by continent, with its simulation tier
   function worldView() {
     const s = S(),
@@ -1887,7 +1887,7 @@
             .filter((t) => W.isUser(t.to) || W.isUser(t.from))
             .map(
               (t) =>
-                `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)"><span>${W.isUser(t.to) ? '⬅️' : '➡️'}</span><span class="grow">${esc(t.name)}</span><b>${U.money(t.fee)}</b></div>`,
+                `<div class="row small tap" data-act="player" data-id="${t.pid}" style="padding:6px 0;border-top:1px solid var(--line)"><span>${W.isUser(t.to) ? '⬅️' : '➡️'}</span><span class="grow">${esc(t.name)}${t.loan ? ' <span class="pill">LOAN</span>' : ''}</span>${C.fee(t.fee, W.isUser(t.to) ? 'in' : 'out', t.loan)}</div>`,
             )
             .join('') || '<div class="small dim" style="margin-top:6px">No deals yet.</div>'
         }</div>`;
@@ -1963,7 +1963,7 @@
         (x) => '⭐' + x.cult,
         (x) => `${x.derbyGoals} derby goals · ${x.apps} apps`,
       )}
-      <div class="sec"><div class="h3">Biggest sales</div></div><div class="card flat" style="padding:2px 14px">${(c.bestSales || []).length ? c.bestSales.map((b, i) => `<div class="legend-row"><div class="rank">${i + 1}</div><div class="grow"><div class="b">${esc(b.name)}</div><div class="tiny dim">to ${esc(CL(b.to).name)} · ${b.year}</div></div><div class="era">${U.money(b.fee)}</div></div>`).join('') : '<div class="empty">No big sales yet.</div>'}</div>`;
+      <div class="sec"><div class="h3">Biggest sales</div></div><div class="card flat" style="padding:2px 14px">${(c.bestSales || []).length ? c.bestSales.map((b, i) => `<div class="legend-row ${P(b.pid) ? 'tap' : ''}" ${P(b.pid) ? `data-act="player" data-id="${b.pid}"` : ''}><div class="rank">${i + 1}</div><div class="grow"><div class="b">${esc(b.name)}</div><div class="tiny dim">to ${esc(CL(b.to).name)} · ${b.year}</div></div><div class="era" style="color:var(--bad)">${U.money(b.fee)}</div></div>`).join('') : '<div class="empty">No big sales yet.</div>'}</div>`;
   }
   function archiveView() {
     const s = S();

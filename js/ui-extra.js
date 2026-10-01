@@ -40,7 +40,13 @@
       <div class="phrase"><span>🧠</span><span>${v.personality ? `Personality: <b>${esc(v.personality)}</b>` : '<span class="dim">Personality unknown (50%)</span>'}</span></div>
       <div class="phrase"><span>🩺</span><span>${v.injury ? esc(v.injury) : '<span class="dim">Injury history unknown (55%)</span>'}</span></div>
       ${v.hidden ? v.hidden.map((h) => `<div class="phrase"><span>🔍</span><span>${esc(h)}</span></div>`).join('') : '<div class="phrase"><span>🔍</span><span class="dim">Hidden attributes unlock at 75%</span></div>'}
+      ${v.foot ? `<div class="phrase"><span>🦶</span><span>${esc(v.foot)}-footed${v.alt && v.alt.length ? ` · can also play ${v.alt.join(', ')}` : ''}</span></div>` : ''}
+      ${v.role ? `<div class="phrase"><span>🎭</span><span>Best suited to <b>${esc(v.role)}</b></span></div>` : ''}
+      ${v.situation ? `<div class="phrase"><span>📋</span><span>${esc(v.situation)}</span></div>` : ''}
+      ${v.mental ? v.mental.map((t) => `<div class="phrase"><span>🧭</span><span>${esc(t)}</span></div>`).join('') : ''}
+      ${v.agent ? `<div class="phrase"><span>💼</span><span>${esc(v.agent.name)} (${esc(v.agent.style)}) · would want ~${U.money(v.wageAsk)}/wk from us</span></div>` : ''}
       <div class="phrase"><span>🧩</span><span>Tactical fit: best as <b>${v.fit.slot}</b> (${esc(v.fit.role)}) in your ${s.user.tactic.formation}</span></div>
+      ${!v.own && FM.Scouting.nextRung(v.k) ? `<div class="tiny dim" style="margin-top:6px">🔭 ${Math.round(v.k)}% known · at ${FM.Scouting.nextRung(v.k)[0]}%: ${esc(FM.Scouting.nextRung(v.k)[1])}</div>` : ''}
       <div class="phrase"><span>📈</span><span>Potential confidence: <b>${v.confidence}</b></span></div>
       ${v.moneyball ? `<div class="warnline" style="margin-top:8px;color:var(--acc2);background:color-mix(in srgb,var(--acc2) 12%,transparent)">📊 ${esc(v.moneyball)}</div>` : ''}
       <div class="row small" style="margin-top:10px"><span class="grow muted">${isFree ? 'Free agent — wants' : 'Estimated fee'}</span><b>${isFree ? U.money(FM.Transfers.wageDemand(p, club())) + '/wk' : v.fee != null ? '~' + U.money(v.fee) : '?'}</b></div>
@@ -690,6 +696,139 @@
     UI.render();
   };
 
+  // ---------- Shared filters for Reports, Search and Free agents ----------
+  // Everything is judged on what your scouts know (their estimates), never the hidden truth
+  UI._sf = {
+    pos: 'any',
+    age: 'any',
+    level: 'any',
+    price: 'any',
+    wage: 'any',
+    contract: 'any',
+    nat: 'any',
+    comp: 'any',
+    avail: 'any',
+    more: false,
+  };
+  const SF_AGE = { any: [0, 99], u19: [0, 19], u21: [0, 21], u23: [0, 23], prime: [24, 29], vet: [30, 99] };
+  const SF_PRICE = { any: Infinity, m1: 1e6, m5: 5e6, m20: 2e7 };
+  const SF_WAGE = { any: Infinity, k10: 1e4, k25: 2.5e4, k50: 5e4, k100: 1e5 };
+  const sfActive = () => Object.entries(UI._sf).filter(([k, v]) => k !== 'more' && v !== 'any').length;
+  // Your XI's level: "a starter for us" means at least that
+  const myLevel = () => {
+    const c = club();
+    return c ? U.avg(W.pickXI(c.id, S().user.tactic).xi.filter(Boolean), (p) => p.ca) : 60;
+  };
+  const mid = (r) => (r ? (r[0] + r[1]) / 2 : null);
+  function sfApply(players) {
+    const f = UI._sf,
+      s = S(),
+      me = club(),
+      lvl = f.level === 'any' ? 0 : myLevel();
+    return players.filter((p) => {
+      if (f.pos !== 'any' && p.pos !== f.pos) return false;
+      const a = W.age(p),
+        [lo, hi] = SF_AGE[f.age];
+      if (a < lo || a > hi) return false;
+      if (f.nat !== 'any' && p.nat !== f.nat) return false;
+      if (f.comp !== 'any' && !(p.clubId && CL(p.clubId).comp === f.comp)) return false;
+      if (f.contract !== 'any' && !(p.clubId && p.contract <= s.year + (f.contract === 'now' ? 0 : 1))) return false;
+      if (f.avail === 'free' && p.clubId) return false;
+      if (f.avail === 'loan' && !(p.clubId && !p.loan && FM.Transfers.loanTerms(p).available)) return false;
+      if (f.avail === 'cheap' && !(p.clubId && FM.Market.wantsAway(p))) return false;
+      if (f.level !== 'any' || f.price !== 'any') {
+        const v = FM.Scouting.view(p),
+          ca = mid(v.ca),
+          pa = mid(v.pa);
+        if (f.level === 'starter' && !(ca != null && ca >= lvl)) return false;
+        if (f.level === 'squad' && !(ca != null && ca >= lvl - 6)) return false;
+        if (f.level === 'prospect' && !(a <= 21 && pa != null && pa >= lvl + 2)) return false;
+        if (f.price !== 'any') {
+          const fee = p.clubId ? v.fee : 0;
+          if (fee == null) return false;
+          if (f.price === 'budget' ? fee > (me ? me.budget : 0) : fee > SF_PRICE[f.price]) return false;
+        }
+      }
+      if (f.wage !== 'any' && me && FM.Transfers.wageDemand(p, me) > SF_WAGE[f.wage]) return false;
+      return true;
+    });
+  }
+  function sfPanel() {
+    const f = UI._sf,
+      n = sfActive();
+    const row = (k, opts) =>
+      `<div class="chips" style="margin-top:4px">${opts.map(([v, l]) => `<button class="chip ${f[k] === v ? 'on' : ''}" data-act="sf" data-k="${k}" data-v="${v}">${l}</button>`).join('')}</div>`;
+    const sel = (k, opts) =>
+      `<select data-input="sfSel" data-k="${k}" style="flex:1;min-width:0;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)">${opts.map(([v, l]) => `<option value="${esc(v)}" ${f[k] === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`;
+    const more = f.more
+      ? `<div class="row" style="gap:6px;margin-top:6px;flex-wrap:wrap">${sel('wage', [
+          ['any', 'Any wage'],
+          ...Object.keys(SF_WAGE)
+            .filter((k) => k !== 'any')
+            .map((k) => [k, `Wants ≤ ${U.money(SF_WAGE[k])}/wk`]),
+        ])}${sel('contract', [
+          ['any', 'Any contract'],
+          ['now', 'Ends this season'],
+          ['next', 'Ends within a year'],
+        ])}</div>
+        <div class="row" style="gap:6px;margin-top:6px;flex-wrap:wrap">${sel('nat', [
+          ['any', 'Any nationality'],
+          ...Object.entries(D.NATIONS)
+            .sort((a, b) => a[1].name.localeCompare(b[1].name))
+            .map(([k, x]) => [k, `${x.flag} ${x.name}`]),
+        ])}${sel('comp', [['any', 'Any league'], ...W.leagues().map((c) => [c.id, c.name.replace('The ', '')])])}</div>
+        <div class="row" style="gap:6px;margin-top:6px">${sel('avail', [
+          ['any', 'Any availability'],
+          ['loan', 'Available on loan'],
+          ['cheap', 'Wants away / sells cheaply'],
+          ['free', 'Free agents only'],
+        ])}</div>`
+      : '';
+    return `<div class="card flat" style="padding:8px 10px;margin-bottom:8px">
+      ${row('pos', [['any', 'All'], ...D.POS.map((x) => [x, x])])}
+      ${row('age', [
+        ['any', 'Any age'],
+        ['u19', '≤19'],
+        ['u21', '≤21'],
+        ['u23', '≤23'],
+        ['prime', '24–29'],
+        ['vet', '30+'],
+      ])}
+      ${row('level', [
+        ['any', 'Any level'],
+        ['starter', 'Would start for us'],
+        ['squad', 'Squad player'],
+        ['prospect', 'Prospect'],
+      ])}
+      ${row('price', [
+        ['any', 'Any fee'],
+        ['budget', 'Within budget'],
+        ['m1', `≤ ${U.money(1e6)}`],
+        ['m5', `≤ ${U.money(5e6)}`],
+        ['m20', `≤ ${U.money(2e7)}`],
+      ])}
+      ${more}
+      <div class="row" style="margin-top:6px;gap:6px"><button class="btn sm" data-act="sfMore">${f.more ? 'Fewer filters ▴' : 'More filters ▾'}</button><span class="grow"></span>${n ? `<button class="btn sm" data-act="sfReset">Clear ${n} filter${n === 1 ? '' : 's'}</button>` : ''}</div></div>`;
+  }
+  UI.acts.sf = (d) => {
+    UI._sf[d.k] = d.v;
+    UI.render();
+  };
+  UI.acts.sfSel = (d, el) => {
+    UI._sf[d.k] = el.value;
+    UI.render();
+  };
+  UI.acts.sfMore = () => {
+    UI._sf.more = !UI._sf.more;
+    UI.render();
+  };
+  UI.acts.sfReset = () => {
+    const more = UI._sf.more;
+    Object.keys(UI._sf).forEach((k) => (UI._sf[k] = 'any'));
+    UI._sf.more = more;
+    UI.render();
+  };
+
   UI._rf = { grade: 'all', pos: 'any', age: 99, sort: 'grade' };
   function reportsView() {
     const s = S(),
@@ -699,8 +838,8 @@
       .filter(({ p }) => p && !W.isUser(p.clubId))
       .map((x) => ({ ...x, v: FM.Scouting.view(x.p) }));
     if (f.grade !== 'all') reps = reps.filter((x) => (f.grade === 'AB' ? ['A', 'B'] : [f.grade]).includes(x.v.grade));
-    if (f.pos !== 'any') reps = reps.filter((x) => D.POS_GROUP[x.p.pos] === f.pos);
-    reps = reps.filter((x) => W.age(x.p) <= f.age);
+    const keep = new Set(sfApply(reps.map((x) => x.p)));
+    reps = reps.filter((x) => keep.has(x.p));
     const sorts = {
       grade: (a, b) => b.v.score - a.v.score,
       newest: (a, b) => b.r.year - a.r.year || b.r.day - a.r.day,
@@ -717,20 +856,8 @@
         (id) => P(id) && !W.isUser(P(id).clubId) && FM.Scouting.view(P(id)).grade === g,
       ).length;
     return `<div class="row" style="gap:6px;margin-bottom:8px">${['A', 'B', 'C', 'D'].map((g) => `<div class="kpi tap grow" style="padding:8px;text-align:center" data-act="rf" data-k="grade" data-v="${f.grade === g ? 'all' : g}">${gradeBadge(g, 24)}<div class="tiny dim" style="margin-top:4px">${cnt(g)}</div></div>`).join('')}</div>
-      ${chipRow('rf', 'pos', f.pos, [
-        ['any', 'All'],
-        ['GK', 'GK'],
-        ['DEF', 'DEF'],
-        ['MID', 'MID'],
-        ['ATT', 'ATT'],
-      ])}
+      ${sfPanel()}
       <div class="row" style="justify-content:flex-end;gap:6px;margin:-2px 0 6px;flex-wrap:wrap">${nDis ? `<button class="btn sm ${f.dismissed ? 'pri' : ''}" data-act="rfDismissed">${f.dismissed ? '← Back to reports' : `Dismissed (${nDis})`}</button>` : ''}${!f.dismissed && cnt('C') + cnt('D') ? `<button class="btn sm" data-act="dismissWeak">🗑 Dismiss all C & D (${cnt('C') + cnt('D')})</button>` : ''}</div>
-      ${chipRow('rf', 'age', f.age, [
-        [99, 'Any age'],
-        [21, '≤21'],
-        [25, '≤25'],
-        [29, '≤29'],
-      ])}
       ${chipRow('rf', 'sort', f.sort, [
         ['grade', 'Sort: grade'],
         ['newest', 'Newest'],
@@ -765,20 +892,12 @@
           .toLowerCase()
           .includes(q.text.toLowerCase()),
       );
-    if (q.pos !== 'any') ps = ps.filter((p) => D.POS_GROUP[p.pos] === q.pos);
     if (q.region !== 'any') ps = ps.filter((p) => FM.Scouting.region(p) === q.region);
-    if (q.comp !== 'any') ps = ps.filter((p) => p.clubId && CL(p.clubId).comp === q.comp);
-    ps.sort((a, b) => FM.Scouting.know(b.id) - FM.Scouting.know(a.id) || b.value - a.value);
+    // the cheap filters first, so the scouting estimates are worked out only for what's left
+    ps = sfApply(ps).sort((a, b) => FM.Scouting.know(b.id) - FM.Scouting.know(a.id) || b.value - a.value);
     return `<input type="text" placeholder="Search players, clubs or nations…" value="${esc(q.text)}" data-input="searchText" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);margin-bottom:6px">
-      ${chipRow('q', 'pos', q.pos, [
-        ['any', 'All'],
-        ['GK', 'GK'],
-        ['DEF', 'DEF'],
-        ['MID', 'MID'],
-        ['ATT', 'ATT'],
-      ])}
-      ${chipRow('q', 'comp', q.comp, [['any', 'Any league'], ...W.leagues().map((c) => [c.id, c.name.replace('The ', '')])])}
       ${chipRow('q', 'region', q.region, [['any', 'Everywhere'], ...Object.entries(D.REGIONS)])}
+      ${sfPanel()}
       <div class="card flat list" style="padding:4px 12px">${
         ps
           .slice(0, 50)
@@ -793,18 +912,10 @@
 
   UI._fq = { pos: 'any' };
   function freeView() {
-    const q = UI._fq;
-    let ps = Object.values(S().players).filter((p) => !p.clubId && !p.retired);
-    if (q.pos !== 'any') ps = ps.filter((p) => D.POS_GROUP[p.pos] === q.pos);
+    let ps = sfApply(Object.values(S().players).filter((p) => !p.clubId && !p.retired));
     ps = ps.map((p) => ({ p, v: FM.Scouting.view(p) })).sort((a, b) => b.v.score - a.v.score || b.p.ca - a.p.ca);
     return `<div class="small muted" style="margin:0 2px 8px">Out-of-contract players can sign any time, window open or not — no fee, but they want a signing-on bonus and slightly higher wages. Scout them to see what you're getting.</div>
-      ${chipRow('fq', 'pos', q.pos, [
-        ['any', 'All'],
-        ['GK', 'GK'],
-        ['DEF', 'DEF'],
-        ['MID', 'MID'],
-        ['ATT', 'ATT'],
-      ])}
+      ${sfPanel()}
       <div class="card flat list" style="padding:4px 12px">${
         ps
           .slice(0, 60)
@@ -873,7 +984,7 @@
           .map((t) => {
             const from = t.from && CL(t.from),
               to = CL(t.to);
-            return `<div class="row small tap" style="padding:9px 0;border-top:1px solid var(--line)" data-act="player" data-id="${t.pid}"><div class="grow" style="min-width:0"><div class="b ellip">${C.flag(t.nat)} ${esc(t.name)} ${t.loan ? '<span class="pill">LOAN</span>' : ''} ${t.intl ? '<span class="pill acc">INTL</span>' : ''}</div><div class="tiny dim ellip">${from ? `${C.flag(from.nat)} ${esc(from.short)}` : 'Free agent'} → ${C.flag(to.nat)} ${esc(to.name)}${t.age ? ` · age ${t.age}` : ''}</div></div><b>${t.fee ? U.money(t.fee) : t.loan ? 'Loan' : 'Free'}</b></div>`;
+            return `<div class="row small tap" style="padding:9px 0;border-top:1px solid var(--line)" data-act="player" data-id="${t.pid}"><div class="grow" style="min-width:0"><div class="b ellip">${C.flag(t.nat)} ${esc(t.name)} ${t.loan ? '<span class="pill">LOAN</span>' : ''} ${t.intl ? '<span class="pill acc">INTL</span>' : ''}</div><div class="tiny dim ellip">${from ? `${C.flag(from.nat)} ${esc(from.short)}` : 'Free agent'} → ${C.flag(to.nat)} ${esc(to.name)}${t.age ? ` · age ${t.age}` : ''}</div></div>${C.fee(t.fee, W.isUser(t.to) ? 'in' : W.isUser(t.from) ? 'out' : null, t.loan)}</div>`;
           })
           .join('') || '<div class="empty">No deals yet this season.</div>'
       }</div>`;

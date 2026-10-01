@@ -4,7 +4,7 @@ Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/420
 
 ## At a glance
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are the first batches of playtest feedback (bugs, interface, speed, realism, transfer market, tactics and match engine). A second round of feedback added items to batches 2, 4 and 6. The rest of that backlog (those additions, big features, platform) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
+Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are the first batches of playtest feedback (bugs, interface, speed, realism, transfer market, tactics and match engine). A second round of feedback added items to batches 2, 4 and 6; those for 2 and 4 are done. The rest of that backlog (big features, platform) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
 
 ```mermaid
 flowchart TB
@@ -30,6 +30,7 @@ The web prototype runs on a phone browser with no build step, covering 547 real 
 
 | Build | What shipped |
 | --- | --- |
+| Playtest feedback, round 2 (batches 2 and 4) | International tab. Scouting filters (position, age, level against your XI, fee, wage, contract, nationality, league, availability), judged on your scouts' estimates. Transfer fees in green (in) and red (out), and every transfer history links to the player. Deadline day hour by hour: a live ticker of deals, late bids and collapses until 23:00. Pre-contracts from the mid-season window, for you and AI clubs (yours get a warning first). Players running down their contracts sell cheaper. Fan and board reactions to your transfers. Full negotiation of bids for your players (fee, instalments, add-on, sell-on). Loan offers for your players, some with an option to buy. Loan suggestions that name where he'd play. Scouting reveals more, rung by rung (foot and second positions, best role, situation, mentality, wage demands, agent). Calibration 51/51 on both seeds. |
 | Playtest feedback, batch 5 | Tactics depth. Plan A and Plan B, each with its own familiarity, switchable mid-match. Six more formations, a width instruction and a Wing Play build-up. Roles that decide who shoots, creates, wins headers and wins the ball back, plus ten new roles. Positions by side (the stronger foot matters on the flanks), second positions and learning new ones. Keeper howlers and big-game stars. Home advantage that varies with the crowd, stadium, derbies and travel. Weather by climate and season (rain, snow, heat). Club confidence from recent results. A calibrated amount of upset. Calibration 51/51 and 50/51 on two seeds (two new measures: underdog wins, keeper errors); title races more open (top-three champions 83–87%). |
 | Playtest feedback, batch 4 | Transfer market depth. A deadline with a countdown, a warning three days out, deadline day (more AI buyers at a premium, late bids, the skip stops for it) and a window summary. Trials for free agents. A loan watch for loanees who aren't played (recall them, or tell the club to play them). Fee talks that go back and forth (clubs counter down to a floor, agents make their own proposals, you can counter bids for your players). A relative market (players who want away and clubs in debt sell cheaper; clubs short at a position pay more). Players choosing between clubs and saying why. Fees in instalments, add-ons and sell-on clauses, with payments to come in the finances. AI clubs replacing ageing starters. Each real league's foreign-player rules (homegrown quotas, non-EU limits, MLS international slots, foreign caps) for new careers. Calibration 48/49 and 47/49 on two seeds; over-30s' share of top-flight minutes now ends six seasons at 25% (was 27–30%). |
 | Playtest feedback, batches 1–3 | Three playtest reports worked through. Bugs (undefined nationalities, offers for your own loanees, captaincy switching, replaying lost matches), interface (feed of your club, needs-reply list, daily transfer round-up, tap any badge for the club, club picker search, money in the club's currency, readable crests), speed (pre-season days ~8× faster), realism (settled players after a move, fans judged against expectations, transfer-window rules, no foreign-player limit by default, auto pick with roles, market value by league and club, deeper squads, club icons and testimonials). Calibration now 48/49 measures in range on two seeds: title dominance, elite inflation, injuries and retirement ages fixed. |
@@ -136,10 +137,10 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Tap the nation on a player's profile to open the nation overview (S)
 - [x] Match events coloured by team (substitutions, cards, goals), so you can tell at a glance whose they are (S)
 - [x] Green clubs keep their own kit on the pitch; contrast comes from the dot's outline (only a clash with the other team changes kit) (S)
-- [ ] International tab on the bottom bar: national teams, rankings, tournaments and your national job in one place (now inside the League tab) (S–M)
-- [ ] More filters in the scouting hub: position, age, ability, potential, value, wage, contract end, nationality, league, and loan or free-agent availability (S–M)
-- [ ] Transfer lists show fees for players coming in in green and going out in red (S)
-- [ ] Tap a player's name in any transfer history (finances, club overview, round-ups) to open his profile (S)
+- [x] International tab on the bottom bar: national teams, rankings, tournaments and your national job in one place (now inside the League tab) (S–M)
+- [x] More filters in the scouting hub: position, age, ability, potential, value, wage, contract end, nationality, league, and loan or free-agent availability (S–M)
+- [x] Transfer lists show fees for players coming in in green and going out in red (S)
+- [x] Tap a player's name in any transfer history (finances, club overview, round-ups) to open his profile (S)
 
 *3 · Realism of existing systems*
 
@@ -163,14 +164,14 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Structured fees: up to three yearly instalments, add-ons after 25 appearances and sell-on clauses, valued by the selling club (money later is worth less, add-ons half, a sell-on more on a young player); AI bids for your players come structured too; payments to come and sell-on clauses on the finances screen (M)
 - [x] AI squad planning by age: a starter of 31+ (keepers 33+) with no heir in the squad is replaced by a player of his level aged 27 or under, and the weakest player in that part of the squad is sold on (S)
 - [x] Each real league's foreign-player rules (new careers; a setup option keeps one world-wide rule): England and Italy 8 homegrown in a 25-man list of over-21s, non-EU limits in Spain (3) and France (4), Italy's two non-EU signings from abroad a season, MLS's 8 international slots, foreign caps in Argentina, Mexico, Korea, Thailand and Turkey, matchday caps in Brazil (9) and Japan (5, Thais count as local). New worlds start within them, nobody signs a player they can't register, and the squad screen shows where you stand (M)
-- [ ] Deadline day as a live event that advances hour by hour: late bids, deals collapsing and completing, a ticker of the market, until the window shuts at midnight (M)
-- [ ] Pre-contracts: a player whose contract ends this season can be signed in the window before it expires (from January), free, joining in the summer; your own expiring players can be approached too (M)
-- [ ] A player running down his contract whom his club wants to sell loses market value: the club takes less rather than lose him for nothing (S)
-- [ ] Fan and board reactions to transfers in and out: delight at a statement signing, anger at selling a favourite, the board on fees, wages and age profile (S–M)
-- [ ] Negotiate bids for your players: a full negotiation (fee, instalments, add-ons, sell-on clause), not only the two counter buttons (M)
-- [ ] Loan offers for your players from other clubs, with wage share, minutes promised and an option to buy (S–M)
-- [ ] Smarter loan suggestions: who needs games, where he'd start at the right level, in a league that suits his development, and when to recall (S–M)
-- [ ] Deeper scouting reveals more: the potential range narrows, hidden attributes, traits, personality, injury history and how he'd fit your system, step by step as knowledge grows (M)
+- [x] Deadline day as a live event that advances hour by hour: late bids, deals collapsing and completing, a ticker of the market, until the window shuts at midnight (M)
+- [x] Pre-contracts: a player whose contract ends this season can be signed in the window before it expires (from January), free, joining in the summer; your own expiring players can be approached too (M)
+- [x] A player running down his contract whom his club wants to sell loses market value: the club takes less rather than lose him for nothing (S)
+- [x] Fan and board reactions to transfers in and out: delight at a statement signing, anger at selling a favourite, the board on fees, wages and age profile (S–M)
+- [x] Negotiate bids for your players: a full negotiation (fee, instalments, add-ons, sell-on clause), not only the two counter buttons (M)
+- [x] Loan offers for your players from other clubs, with wage share, minutes promised and an option to buy (S–M)
+- [x] Smarter loan suggestions: who needs games, where he'd start at the right level, in a league that suits his development, and when to recall (S–M)
+- [x] Deeper scouting reveals more: the potential range narrows, hidden attributes, traits, personality, injury history and how he'd fit your system, step by step as knowledge grows (M)
 
 *5 · Tactics depth*
 

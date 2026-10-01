@@ -55,8 +55,30 @@ function marketMoves() {
   if (!W.employed() || FM.S.user.sacked) return;
   const S0 = FM.S,
     me = W.userClub();
-  for (const n of S0.news)
-    if (n.type === 'bid' && n.data.status === 'open' && U.chance(0.3)) FM.Transfers.counterBid(n, 1.15);
+  const M = FM.Market;
+  // deadline day: follow a few hours live before the day is played (the rest run with the day)
+  if (M.isDeadline() && !M.dd()) for (let h = 0; h < 5; h++) M.deadlineHour();
+  // sell only fringe players (a manager who sells his best players gets sacked, and the job checks need a job)
+  const core = new Set(
+    W.squad(me.id)
+      .sort((a, b) => b.ca - a.ca)
+      .slice(0, 16)
+      .map((p) => p.id),
+  );
+  for (const n of S0.news) {
+    if (n.type !== 'bid' || n.data.status !== 'open' || core.has(n.data.pid)) continue;
+    if (n.data.loan) {
+      if (U.chance(0.5)) FM.Transfers.respondBid(n, true);
+    } else if (U.chance(0.2))
+      FM.Transfers.negotiateBid(n, U.roundMoney(n.data.fee * 1.2), { inst: 2, addOn: 0, sellOn: 0.1 });
+    else if (U.chance(0.3)) FM.Transfers.counterBid(n, 1.15);
+  }
+  // a pre-contract for someone at the end of his deal
+  if (M.preOpen() && U.chance(0.05)) {
+    const lvl0 = W.levelFor(me.rep);
+    const q = Object.values(S0.players).find((x) => M.canPre(x).ok && x.ca >= lvl0 - 8 && x.ca <= lvl0 + 2);
+    if (q && M.preContract(q.id, FM.Contracts.defaultTerms(q, me, 'transfer')).ok) stats.pre = (stats.pre || 0) + 1;
+  }
   if (U.chance(0.04)) {
     const fa = Object.values(S0.players).find((p) => !p.clubId && !p.retired && FM.Market.canTrial(p).ok);
     if (fa && FM.Market.startTrial(fa.id).ok) stats.trials = (stats.trials || 0) + 1;
@@ -505,7 +527,7 @@ check(refuse(FM.SAVE_VERSION + 1) === 'too-new', 'future save not refused as too
 const secs = ((Date.now() - t0) / 1000).toFixed(1);
 console.log(
   `${stats.matches} matches · ${gpm.toFixed(2)} goals/match · ${stats.userMatches} user matches · ${stats.days} sim steps · save ${(packed.length / 1e6).toFixed(2)} MB · ${secs}s
-  market: ${stats.bought || 0} signed, ${stats.lostToRival || 0} lost to a rival, ${stats.trials || 0} trials, ${(S.payments || []).length} payments pending; Plan B used ${stats.planB || 0}×`,
+  market: ${stats.bought || 0} signed, ${stats.lostToRival || 0} lost to a rival, ${stats.trials || 0} trials, ${(S.payments || []).length} payments pending; Plan B used ${stats.planB || 0}×, ${stats.pre || 0} pre-contracts`,
 );
 if (fails.length) {
   console.error(`\nFAILED (${fails.length}):\n - ` + fails.join('\n - '));

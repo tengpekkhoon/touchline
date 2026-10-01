@@ -759,7 +759,7 @@
     } // one year of growth per season, whatever its length
     if (employed) FM.Scouting.tick();
     if (Sea.windowOpen()) {
-      FM.Transfers.aiWindow();
+      if (!FM.Market.finishDeadline()) FM.Transfers.aiWindow(); // deadline day may have run hour by hour
       if (employed) {
         FM.Transfers.aiBidsForUser();
         if (FM.Market.isDeadline()) FM.Transfers.aiBidsForUser(); // late bids
@@ -1369,6 +1369,9 @@
       p.flagMinutes = false;
       p.lastGrowth = 0;
       if (Math.random() < Sea.retireChance(p)) return Sea.retire(p);
+      // a pre-contract agreed in the winter: he moves on a free now
+      if (p.pre && FM.Market.completePre(p)) return W.refresh(p);
+      delete p.preWarned;
       if (p.clubId && p.contract < S.year) {
         const c = S.clubs[p.clubId];
         if (W.isUser(p.clubId)) {

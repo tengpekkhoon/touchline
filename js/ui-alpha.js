@@ -104,7 +104,12 @@
       return UI.toast(
         `${W.name(p)} is on loan at ${CL(p.clubId).name}. Try again when he returns to ${CL(p.loan.from).name}.`,
       );
-    const mode = p.clubId && !p.loan && FM.Scouting.view(p).rec === 'Loan' ? 'loan' : 'transfer';
+    const mode =
+      p.clubId && !p.loan && FM.Scouting.view(p).rec === 'Loan'
+        ? 'loan'
+        : p.clubId && FM.Market.canPre(p).ok && !FM.Season.windowOpen()
+          ? 'pre' // window shut: a pre-contract is the only way to get him
+          : 'transfer';
     UI._offer = {
       pid: p.id,
       mode,
@@ -135,14 +140,23 @@
     const dir = FM.Staff.get('director'),
       ag = Co.agentInfo(p),
       pat = Co.patience(p);
-    const tabs = loanable
-      ? `<div class="seg" style="margin:10px 0">${[
-          ['transfer', 'Permanent'],
-          ['loan', 'Loan'],
-        ]
-          .map(([k, l]) => `<button class="${o.mode === k ? 'on' : ''}" data-act="ofMode" data-v="${k}">${l}</button>`)
-          .join('')}</div>`
-      : '';
+    // Pre-contract: a player in the final season of his deal can agree now to join on a free in the summer
+    const preOk = !renew && p.clubId && FM.Market.canPre(p).ok;
+    const modes = [
+      ['transfer', 'Permanent'],
+      ...(loanable ? [['loan', 'Loan']] : []),
+      ...(preOk ? [['pre', 'Pre-contract']] : []),
+    ];
+    const tabs =
+      modes.length > 1
+        ? `<div class="seg" style="margin:10px 0">${modes
+            .map(
+              ([k, l]) => `<button class="${o.mode === k ? 'on' : ''}" data-act="ofMode" data-v="${k}">${l}</button>`,
+            )
+            .join(
+              '',
+            )}</div>${o.mode === 'pre' ? `<div class="tiny dim" style="margin:-4px 2px 8px">No fee: his contract ends this summer and he joins you then. Other clubs may be after him too.</div>` : ''}`
+        : '';
     let body = '';
     if (o.mode === 'loan') {
       body = `<div class="h3" style="margin-top:12px">Share of wages you pay</div>${chipRow('ofSet', 'share', o.share, [
@@ -163,7 +177,7 @@
       const pct = ev.hard ? 0 : U.clamp(Math.round((ev.value / ev.need) * 100), 0, 100);
       const clause = p.clubId && !renew && p.deal && p.deal.release;
       const fee =
-        !renew && p.clubId
+        !renew && p.clubId && o.mode !== 'pre'
           ? `<div class="row" style="margin-top:12px"><div class="h3 grow">Transfer fee</div><span class="tiny dim">asking ~${U.money(T.userAsk(p))}</span></div>
           ${numIn('fee', o.fee, 'ngFee')}${stepBtns('fee', [-1e6, -1e5, -1e4, 1e4, 1e5, 1e6])}
           ${clause ? `<div class="tiny" style="margin-top:6px;color:var(--acc2)">🔓 Release clause ${U.money(clause)} — pay it and ${esc(S().clubs[p.clubId].name)} can't refuse. <button class="btn sm" data-act="ngClause">Pay clause</button></div>` : ''}
@@ -213,7 +227,7 @@
       <div class="card flat row" style="margin-top:10px;padding:10px 12px"><span style="font-size:22px">${ag.icon}</span><div class="grow"><div class="small b">${esc(ag.name)} · ${esc(ag.firm)}</div><div class="tiny dim">${esc(ag.style)} — ${esc(ag.desc)} Agent fee ${Math.round(ag.fee * 100)}%.</div></div><div class="tiny dim" style="text-align:right">Patience<br>${Co.blocked(p) ? '<b style="color:var(--bad)">Walked out</b>' : dots(pat.left, ag.patience)}</div></div>
       ${o.mode !== 'loan' ? talksLine(p) : ''}${extraLines}${tabs}${body}
       ${msg ? `<div class="reply" style="margin-top:12px">${esc(msg)}</div>` : ''}${agentBtn}
-      <button class="btn pri block" style="margin-top:16px" data-act="submitOffer">${o.mode === 'loan' ? 'Propose loan' : renew ? 'Offer new contract' : p.clubId ? 'Submit offer' : 'Offer contract'}</button>`;
+      <button class="btn pri block" style="margin-top:16px" data-act="submitOffer">${o.mode === 'loan' ? 'Propose loan' : o.mode === 'pre' ? 'Offer pre-contract' : renew ? 'Offer new contract' : p.clubId ? 'Submit offer' : 'Offer contract'}</button>`;
     if (document.querySelector('.sheet-wrap .offer-sheet')) {
       const b = document.querySelector('.sheet-wrap:last-child .sh-body');
       const y = b ? b.scrollTop : 0;
@@ -335,9 +349,11 @@
     const r =
       o.mode === 'loan'
         ? FM.Transfers.loanOffer(o.pid, o.share, o.loanFee)
-        : o.mode === 'renew'
-          ? Co.renewOffer(o.pid, { ...o.terms })
-          : Co.transferOffer(o.pid, p.clubId ? o.fee : 0, { ...o.terms }, dealOf(o));
+        : o.mode === 'pre'
+          ? FM.Market.preContract(o.pid, { ...o.terms })
+          : o.mode === 'renew'
+            ? Co.renewOffer(o.pid, { ...o.terms })
+            : Co.transferOffer(o.pid, p.clubId ? o.fee : 0, { ...o.terms }, dealOf(o));
     if (r.ok || r.lost) {
       UI.closeAllSheets();
       UI.toast(r.msg, r.lost ? 5000 : 4000);
@@ -514,7 +530,10 @@
       });
     }
     moves.sort((a, b) => b.y - a.y);
-    const feeText = (m) => (m.fee == null ? '' : m.fee ? U.money(m.fee) : 'Free');
+    const feeText = (m) =>
+      m.fee == null
+        ? ''
+        : `<span style="color:${m.dir === 'in' ? 'var(--good)' : 'var(--bad)'}">${m.fee ? U.money(m.fee) : 'Free'}</span>`;
     const movesCard = moves.length
       ? `<div class="card"><div class="row"><div class="h3 grow">Transfer history</div><span class="tiny dim">${moves.filter((m) => m.dir === 'in').length} in · ${moves.filter((m) => m.dir === 'out').length} out</span></div>${moves
           .slice(0, 12)
@@ -782,8 +801,7 @@
   };
   UI.acts.goNation = () => {
     UI.closeAllSheets();
-    UI.sub.league = 'intl';
-    UI.go('league');
+    UI.go('intl');
   };
 
   // ======================= International: my nation, qualifiers, finals =======================

@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-188 features are playable in the web prototype today. Build = the build that added it.
+199 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -198,10 +198,21 @@ Every feature from the game design document, with what is playable in the protot
 | Match | Weather by climate and time of year: rain, snow and heat each change the game; the forecast shows before kick-off | Playtest batch 5 |
 | Match | Club confidence from recent results against expectations (up to Â±3%), shown on the club overview and before kick-off | Playtest batch 5 |
 | Match | A calibrated amount of upset: underdogs win as often as in real football | Playtest batch 5 |
+| Interface | International tab on the bottom bar | Playtest round 2 |
+| Scouting | Scouting filters: position, age, level against your XI, fee, wage, contract, nationality, league, availability (on your scouts' estimates) | Playtest round 2 |
+| Transfers | Fees in green for players in, red for players out; every transfer history links to the player | Playtest round 2 |
+| Transfers | Deadline day hour by hour: a live ticker of deals, late bids and collapses until 23:00 | Playtest round 2 |
+| Transfers | Pre-contracts from the mid-season window, for you and AI clubs | Playtest round 2 |
+| Transfers | Players running down their contracts sell cheaper | Playtest round 2 |
+| Transfers | Fan and board reactions to your transfers | Playtest round 2 |
+| Transfers | Full negotiation of bids for your players (fee, instalments, add-on, sell-on) | Playtest round 2 |
+| Transfers | Loan offers for your players, some with an option to buy | Playtest round 2 |
+| Transfers | Loan suggestions that name where he'd play | Playtest round 2 |
+| Scouting | Scouting reveals more, rung by rung: foot, second positions, best role, situation, mentality, wage demands, agent | Playtest round 2 |
 
 ## Yet to be added
 
-59 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+47 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
 
 Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
 
@@ -209,18 +220,6 @@ Design principle from here: don't make the game deeper by adding more screens â€
 
 | Area | Feature | Phase |
 | --- | --- | --- |
-| Interface | International tab on the bottom bar | Playtest 2 |
-| Scouting | More filters in the scouting hub (position, age, ability, potential, value, wage, contract, nationality, league, availability) | Playtest 2 |
-| Transfers | Fees in green for players in, red for players out | Playtest 2 |
-| Transfers | Tap a name in any transfer history to open the player's profile | Playtest 2 |
-| Transfers | Deadline day as a live event, hour by hour | Playtest 4 |
-| Transfers | Pre-contracts in the window before a contract expires | Playtest 4 |
-| Transfers | A player running down his contract whom his club wants to sell loses value | Playtest 4 |
-| Transfers | Fan and board reactions to transfers in and out | Playtest 4 |
-| Transfers | Full negotiation of bids for your players | Playtest 4 |
-| Transfers | Loan offers for your players from other clubs | Playtest 4 |
-| Transfers | Smarter loan suggestions | Playtest 4 |
-| Scouting | Deeper scouting reveals more (potential range, hidden attributes, traits, personality, injuries, fit) | Playtest 4 |
 | Stats | Keeper stats: saves, save %, clean sheets, goals prevented | Playtest 6 |
 | Stats | Season-by-season stats on the player profile, every season kept | Playtest 6 |
 | Competitions | B teams in Spain and Germany: never promoted into their parent's division, players contracted to the parent club | Playtest 6 |

@@ -84,6 +84,9 @@
   C.fitColor = (f) => (f >= 90 ? 'var(--good)' : f >= 75 ? 'var(--acc2)' : f >= 60 ? 'var(--warn)' : 'var(--bad)');
   C.fit = (f) => `<div class="fitbar"><i style="width:${f}%;background:${C.fitColor(f)}"></i></div>`;
   // Match fitness: bar plus percentage, coloured by how ready he is to start
+  // A transfer fee: green for a player coming in, red for one going out (dir null: someone else's deal)
+  C.fee = (fee, dir, loan) =>
+    `<b style="white-space:nowrap${dir === 'in' ? ';color:var(--good)' : dir === 'out' ? ';color:var(--bad)' : ''}">${fee ? U.money(fee) : loan ? 'Loan' : 'Free'}</b>`;
   C.fitTag = (f) => {
     f = Math.round(f);
     return `<span class="fitw" title="Match fitness">${C.fit(f)}<span style="color:${C.fitColor(f)}">${f}%</span></span>`;
@@ -313,6 +316,7 @@
     ['squad', '👕', 'Squad'],
     ['scout', '🔭', 'Scouting'],
     ['league', '🏆', 'League'],
+    ['intl', '🌍', 'International'],
     ['club', '🏟️', 'Club'],
   ];
   UI.mount = function () {

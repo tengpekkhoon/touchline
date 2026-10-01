@@ -345,6 +345,11 @@
       };
     if (W.hasTrait(p, 'Mercenary') && p.morale < 50)
       return { ok: false, msg: `${W.name(p)} won't discuss a new deal right now — he's unhappy.` };
+    if (p.pre && !W.isUser(p.pre.c))
+      return {
+        ok: false,
+        msg: `${W.name(p)} has signed a pre-contract with ${s.clubs[p.pre.c].name}. He leaves in the summer.`,
+      };
     const ev = Co.evaluate(p, club, t, 'renew');
     if (!ev.ok) {
       if (!ev.hard) Co.logDemand(p, ev, t);

@@ -98,7 +98,12 @@
           p.id,
         ),
       );
-    sq.filter((p) => W.age(p) <= 21 && !xi.includes(p) && !p.loan).forEach((p) => {
+    // Loans: a young player with room to grow who isn't getting games, if we can spare him at his position, and
+    // where he'd actually play (FM.Market.loanTarget) — not just "needs minutes"
+    const games = FM.Season.gamesPlayed(c.id),
+      groupCount = (g) => sq.filter((q) => !q.loan && D.POS_GROUP[q.pos] === g).length,
+      NEED = { GK: 2, DEF: 6, MID: 5, ATT: 4 };
+    sq.filter((p) => W.age(p) <= 23 && !xi.includes(p) && !p.loan).forEach((p) => {
       const rivals = xi.filter(
         (q, i) => q && D.POS_GROUP[slots[i].t === 'WB' ? 'FB' : slots[i].t] === D.POS_GROUP[p.pos],
       );
@@ -111,15 +116,26 @@
           `${W.short(p)} (${W.age(p)}) is ready. He's as good as ${W.short(weakest)} already.`,
           p.id,
         );
-      else if (p.pa - p.ca >= 15 && p.season.apps === 0 && W.age(p) >= 18 && p.ca >= W.levelFor(c.rep) - 20)
+      else if (
+        p.pa - p.ca >= 6 &&
+        W.age(p) >= 18 &&
+        p.season.apps <= Math.max(2, games * 0.3) &&
+        groupCount(D.POS_GROUP[p.pos]) > NEED[D.POS_GROUP[p.pos]]
+      ) {
+        const dest = FM.Market.loanTarget(p),
+          comp = dest && s.comps[dest.comp];
+        if (!dest) return;
+        const starts = W.levelFor(dest.rep) <= p.ca + 2,
+          open = FM.Season.windowOpen();
         add(
           'loan:' + p.id,
           2,
           '✈️',
-          `${W.short(p)} needs minutes. A season-long loan would speed up his development.`,
+          `${W.short(p)} (${W.age(p)}, ${p.pos}) needs games: ${p.season.apps} so far. ${dest.name}${comp ? ` (${comp.name})` : ''} would ${starts ? 'start him' : 'give him minutes'} at a level that stretches him.${open ? '' : ' Loans reopen with the window.'}`,
           p.id,
-          { label: 'Loan out', act: 'loanOut', id: p.id },
+          open ? { label: 'Loan out', act: 'loanOut', id: p.id } : null,
         );
+      }
     });
     // Weak area of the squad
     const groups = ['GK', 'DEF', 'MID', 'ATT'].map((g) => {
