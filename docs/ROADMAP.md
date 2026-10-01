@@ -131,12 +131,15 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Nationality as a scouting criterion (S)
 - [x] "Fan culture" section becomes "Club culture" (S)
 - [x] More crest designs in real club colours (M)
+- [ ] Tap the nation on a player's profile to open the nation overview (S)
+- [ ] Match events coloured by team (substitutions, cards, goals), so you can tell at a glance whose they are (S)
+- [ ] Green clubs keep their own kit on the pitch; contrast comes from the dot's outline (only a clash with the other team changes kit) (S)
 
 *3 · Realism of existing systems*
 
 - [x] Title dominance: champion from the pre-season top 3 in 80–90% of seasons (was ~90–100%). AI clubs' tactical familiarity now counts like yours, a new manager's ideas take time to land, and a big club well off the pace sacks its manager; AI managers' ability counts too (about −2.5% to +3%) (L)
 - [x] Elite creep: players already at 75+ grow at half the rate; the top 200's trend is now about +0.2 a season (was +0.4), top-100 age 26.6 (M)
-- [x] Small calibration misses: squad injured now 8.3–8.6% (training injuries up slightly), top-100 age in range, retirement age from a top flight 33.7–33.8 (was 33.0–33.2: released veterans who are still decent now look for a club lower down instead of retiring on the spot). Still open: over-30s' share of top-flight minutes creeps from ~22% to ~30% over six seasons (real 17–28) (S)
+- [x] Small calibration misses: squad injured now 8.3–8.6% (training injuries up slightly), top-100 age in range, retirement age from a top flight 33.7–33.8 (was 33.0–33.2: released veterans who are still decent now look for a club lower down instead of retiring on the spot). Over-30s' share of top-flight minutes: older players now recover more slowly between matches and get rested more, so it stays at 18–26% across six seasons (was creeping to ~30%; real 17–28); still rising slowly, worth watching in longer saves (S)
 - [x] Club icons (250+ appearances, or 8+ seasons and 150+): ⭐ tag, testimonial in the tenth season, fans furious if sold, usually kept by AI clubs; veterans 32+ take pay cuts to stay; new worlds start with a club history so icons exist from day one (S–M)
 - [x] Bigger squads and more depth at the start (M–L; watch save size and simulation time)
 - [x] Scout valuations reflect both current and potential ability (M)
@@ -153,6 +156,7 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [ ] Player choice between clubs: several bidders, and he picks by league, playing time, wages and ambition, sometimes turning down a bigger club (M)
 - [ ] Sell-on clauses, add-ons and fees paid in instalments (M)
 - [ ] AI squad planning by age profile: replace players about to decline, not only weak spots (S)
+- [ ] Foreign-player rules that follow each real league: registration and homegrown rules (England's 8 homegrown in 25), non-EU limits (Spain, Italy), international slots (MLS), foreign-player caps (Brazil, Japan, Mexico) (M)
 
 *5 · Tactics depth*
 
@@ -164,6 +168,7 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [ ] Home advantage that varies with crowd, stadium, derbies and fan mood, not one fixed boost (S–M)
 - [ ] Weather that matters: rain slows passing and adds errors, snow lowers scoring, heat adds fatigue (S–M)
 - [ ] Form streaks: a confidence value that builds with good games and fades with bad ones (±3%) (M)
+- [ ] Upsets: a limited, calibrated amount of randomness so underdogs win as often as in real football (league and cup upset rates measured against real ones) (S–M)
 
 *6 · Big features*
 
@@ -177,10 +182,14 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [ ] Attendance that reacts to results, ticket prices and stadium size (S–M)
 - [ ] A second-tier continental cup (Europa League equivalent) (M)
 - [ ] More of the lower pyramid (L; watch save size and speed)
+- [ ] Follow clubs, competitions, nations and players: their news in your feed and a Following screen (M)
+- [ ] Reserve and youth teams (U21, U18) with their own fixtures, promotion to the first team and loans from them (L–XL)
+- [ ] Groundwork for historical stats and historical saves: per-season player and club stats kept in an archive, and a data model that can start a save in a past season (L)
 
 *7 · Platform*
 
 - [ ] "Report a problem" that exports the save through the share sheet (S); crash reporting stays in Beta
+- [ ] Test suite beyond regression, calibration and career shapes (all seeded, run headless): sim speed (time per day and per season, on a throttled CPU too), career sim (a manager across 10+ seasons: sackings, jobs, national team, retirement), transfer market (fees, windows, loans, free agents, squad sizes per club stay sane), squad building (every club can field a legal XI and bench at every position, within registration rules), finances (no club drifts into impossible debt or wealth), competitions (fixtures, tables, promotion and relegation, cup draws and continental qualification add up), save round-trip and migrations from every old version, long-run stability (20+ seasons without drift or errors), save size and memory, and a UI smoke test that opens every screen and sheet in a headless browser (M)
 
 **Alpha 2 · Editor and history**
 
