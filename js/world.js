@@ -404,6 +404,7 @@
     ga: 0,
     xga: 0,
     yapps: 0,
+    ic: 0,
   });
   W.STAT_KEYS = Object.keys(W.blankSeason());
   // One history row per season and club from a season's numbers ({ y, c, apps, g, a, r, ... })
@@ -418,6 +419,7 @@
     sh: st.sh,
     kp: st.kp,
     tk: st.tk,
+    ic: st.ic,
     cs: st.cs,
     sv: st.sv,
     ga: st.ga,
@@ -1492,7 +1494,26 @@
   // stored as arrays, common keys are shortened, defaults are dropped, and derived fields (ability, value,
   // personality) are recomputed on load. Unknown keys pass through untouched.
   const HID = ['cons', 'inj', 'prof', 'amb', 'loy', 'temp', 'big', 'lead'];
-  const HIST = ['y', 'c', 'apps', 'g', 'r', 'a', 'mins', 'sh', 'kp', 'tk', 'cs', 'sv', 'ga', 'xga', 'motm', 'yc', 'rc']; // history row fields, packed in this order (old saves: the first five)
+  const HIST = [
+    'y',
+    'c',
+    'apps',
+    'g',
+    'r',
+    'a',
+    'mins',
+    'sh',
+    'kp',
+    'tk',
+    'cs',
+    'sv',
+    'ga',
+    'xga',
+    'motm',
+    'yc',
+    'rc',
+    'ic',
+  ]; // history row fields, packed in this order (old saves: the first five)
   const SEASON = [
     'apps',
     'goals',
@@ -1513,6 +1534,7 @@
     'ga',
     'xga',
     'yapps',
+    'ic',
   ];
   const KEYS = {
     fn: 'f',

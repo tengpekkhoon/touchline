@@ -171,8 +171,9 @@
       f = UI.sub.feed,
       cid = club() ? club().id : null;
     let items = s.news;
-    if (f === 'club') items = items.filter((n) => FM.News.isClub(n, cid) || FM.News.followed(n));
-    if (f === 'following') items = items.filter((n) => FM.News.followed(n));
+    // My Club is only your club; what you follow elsewhere has its own Following feed
+    if (f === 'club') items = items.filter((n) => FM.News.isClub(n, cid));
+    if (f === 'following') items = items.filter((n) => FM.News.followed(n) && !FM.News.isClub(n, cid));
     if (f === 'reply') items = items.filter(UI.isOpenDecision);
     if (f === 'stories') items = items.filter((n) => n.type === 'story');
     if (f === 'world') {
@@ -1079,7 +1080,7 @@
           cell(st.ast, 'Assists', p90(st.ast) !== '—' ? `${p90(st.ast)} per 90` : ''),
           cell(st.sh || 0, 'Shots', st.sh ? `${st.sot || 0} on target` : ''),
           cell(st.kp || 0, 'Chances made'),
-          cell(st.tk || 0, 'Tackles won'),
+          cell(st.tk || 0, 'Tackles', st.ic ? `${st.ic} interceptions` : ''),
           cell(avg, 'Avg rating'),
           cell(st.motm, 'MOTM', st.yc || st.rc ? `${st.yc}🟨 ${st.rc}🟥` : ''),
         ];

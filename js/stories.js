@@ -21,6 +21,7 @@
   ];
   FM.News = {
     CAP: 100,
+    // About your club: its own news, and decisions and reports for you (a bid names the bidding club)
     isClub: (n, clubId) => (clubId != null && n.clubId === clubId) || CLUB_TYPES.includes(n.type),
     isOpen: (n) =>
       (n.type === 'bid' && n.data && n.data.status === 'open') ||
@@ -43,6 +44,8 @@
     followed(n) {
       const f = FM.News.follows(),
         S = FM.S;
+      const fav = S.user && S.user.favClub;
+      if (fav && n.clubId === fav) return true; // your boyhood club counts as followed
       if (!f.clubs.length && !f.players.length && !f.comps.length && !f.nations.length) return false;
       if (n.clubId && f.clubs.includes(n.clubId)) return true;
       if (n.pid && f.players.includes(n.pid)) return true;

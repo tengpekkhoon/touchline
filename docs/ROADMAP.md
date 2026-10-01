@@ -4,7 +4,7 @@ Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/420
 
 ## At a glance
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are playtest feedback batches 1–6 (bugs, interface, speed, realism, transfer market, tactics and match engine, big features), including a second round of feedback folded into batches 2, 4 and 6. A third round adds items to batches 1, 2, 5 and 7 (marked "round 3"); those and batch 7 (platform) are next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
+Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are playtest feedback batches 1–6 (bugs, interface, speed, realism, transfer market, tactics and match engine, big features), including a second round of feedback folded into batches 2, 4 and 6. A third round adds items to batches 1, 5 and 7 (marked "round 3"); those and batch 7 (platform) are next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
 
 ```mermaid
 flowchart TB
@@ -92,9 +92,10 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Transfers and loans only while the window is open; free agents any time. AI clubs fix squad gaps in the window with transfers or free agents, and after it shuts sign free agents only for gaps that remain; free agents are mostly journeymen (S–M)
 - [x] Fan reactions judged against expectations: a draw with a better team isn't bad news; a loss to a much better team is neutral (M)
 - [x] Career-shape test (`npm run test:regens`) deterministic under a fixed seed (S–M)
-- [ ] Long text never overlaps or gets cut off: labels and values wrap cleanly on narrow screens (e.g. "Stadium: Tottenham Hotspur Stadium" ran over its label) (S–M) — round 3
-- [ ] Match ticker: only penalties are labelled PENALTY; other goals say how they were scored (S) — round 3
-- [ ] Followed news about other clubs, players and competitions goes to the Following feed, never the My Club feed (S) — round 3
+- [x] Long text never overlaps or gets cut off: labels keep their width and long values wrap beside them on narrow screens (e.g. "Stadium: Tottenham Hotspur Stadium" ran over its label); every main screen checked at phone width (S–M) — round 3
+- [x] Penalties look and read like penalties: taken from the spot on the pitch (direct free kicks from a dead ball too), and the commentary says who won it ("Penalty to TOT! …"); no other goal is labelled a penalty (S) — round 3
+- [x] Followed news about other clubs, players and competitions goes to the Following feed, never the My Club feed; your boyhood club counts as followed (S) — round 3
+- [x] Tackles and interceptions in every match (not only the ones drawn on the pitch), about 25 a team as in real football, and each one adds to the player's match rating; defenders and holding midfielders no longer rate lowest (S–M) — round 3
 
 *1b · Playtest report fixes*
 
@@ -145,7 +146,6 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] More filters in the scouting hub: position, age, ability, potential, value, wage, contract end, nationality, league, and loan or free-agent availability (S–M)
 - [x] Transfer lists show fees for players coming in in green and going out in red (S)
 - [x] Tap a player's name in any transfer history (finances, club overview, round-ups) to open his profile (S)
-- [ ] Navigation by screen size: keep the bottom tab bar on phones (thumb reach, platform convention for five destinations) and switch to a side rail on tablets and landscape, where a bottom bar wastes width (S–M) — round 3
 
 *3 · Realism of existing systems*
 
@@ -189,7 +189,7 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Weather that matters, by climate and time of year: rain hurts short passing and makes keepers fumble, snow (cold countries, midwinter) means fewer chances, heat (warm countries early and late in the season, the tropics) tires legs faster; the forecast shows before kick-off and the match is played in it (S–M)
 - [x] Confidence: every club's results against what was expected of them build it up or wear it down (up to ±3% strength), recent games counting most; shown as Flying / Confident / Steady / Shaky / Low on the club overview and before kick-off, half-reset each summer (M)
 - [x] Upsets: each side's form on the day varies a little (capped), calibrated so a bottom-half side beats a top-four side ~14% of the time (real 9–18%, new measure) and cup upsets stay at ~20%; champions from the pre-season top three fell to 83–87% (was 90–97%) (S–M)
-- [ ] Passing and movement that visibly follow the chosen tactics, in the engine and on the pitch: short build-up plays out from the back in triangles, direct goes long early, counter breaks fast after winning the ball, possession circulates; width, pressing height and roles (inverted full-backs, false 9, wing-backs) show in where players stand and run (L) — round 3
+- [x] Passing and movement that visibly follow the chosen tactics: short build-up plays out from the back (centre-backs split, the holding midfielder drops, the keeper joins in), possession recycles (5–6 passes a spell, a touch before each), direct goes long and first time (2 passes), counter breaks with 1–3 fast passes after winning the ball, Wing Play goes through the flanks; width stretches or tucks in the shape, a low block stays compact, a high press pushes the front line on, and counter sides leave their forwards up (L) — round 3
 
 *6 · Big features*
 

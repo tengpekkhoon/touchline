@@ -12,6 +12,8 @@
   // target, ~0.3 penalties, ~4 cards). Re-run tools/calibrate.mjs after any engine change.
   const CAL = (FM.CAL = {
     aiFam: 1, // AI clubs' tactical familiarity counts like yours (0 = off)
+    defActs: 0.7, // chance per minute that the side without the ball makes a tackle or interception (~25 a match, as real)
+    defRating: 0.07, // what each tackle or interception adds to the player's match rating
     mgr: 0.006, // an AI manager's ability (8–17, 12 neutral) scales his side's strength by this per point (about −2.5% to +3%)
     chanceRate: 0.14, // shot opportunities per minute per side, before strengths and tactics
     xgScale: 0.82, // scales open-play chance quality
@@ -99,23 +101,40 @@
     return out;
   };
 
+  // Who wins the ball back, by slot (relative): centre-backs and holding midfielders most, keepers never
+  const DEF_SHARE = { GK: 0, CB: 3, FB: 2.2, WB: 2, DM: 3.2, CM: 2, AM: 0.9, W: 1, ST: 0.5 };
+
   // Position of a slot's player in that side's frame (x → attacking goal)
   FM.Pos = function (side, i, inPoss, ball) {
     const s = side.slots[i];
     let x = s.x,
       y = s.y;
     const role = D.ROLES[s.t][side.tactic.roles[i]] || {};
+    const T = side.tactic,
+      front = s.t === 'ST' || s.t === 'W' || s.t === 'AM';
     if (inPoss) {
       x += 0.1 + (role.dx || 0);
       let pull = role.in || 0;
-      if (side.tactic.invFB && s.t === 'FB') {
+      if (T.invFB && s.t === 'FB') {
         pull = 0.3;
         x += 0.08;
       }
       y += (0.5 - y) * pull;
-      if (side.tactic.buildup === 'Counter') x -= 0.04;
+      if (T.buildup === 'Counter') x -= front ? 0 : 0.04;
+      // width: wide stretches the shape to the touchlines, narrow tucks it in
+      if (s.t !== 'GK') y = 0.5 + (y - 0.5) * (T.width === 'Wide' ? 1.15 : T.width === 'Narrow' ? 0.85 : 1);
+      // playing out from the back: the centre-backs split and the holding midfielder drops between them
+      if ((T.buildup === 'Short' || T.buildup === 'Possession') && ball.x < 0.4) {
+        if (s.t === 'CB') y = 0.5 + (y - 0.5) * 1.5;
+        if (s.t === 'DM') x -= 0.06;
+      }
+      if (T.buildup === 'Possession' && (s.t === 'FB' || s.t === 'WB')) x += 0.05; // full-backs push on
+      if (T.buildup === 'Direct' && s.t === 'ST') x += 0.05; // a target to hit early
     } else {
-      x += { 'High Press': 0.08, 'Mid Block': 0, 'Low Block': -0.09 }[side.tactic.press] || 0;
+      x += { 'High Press': 0.08, 'Mid Block': 0, 'Low Block': -0.09 }[T.press] || 0;
+      if (T.press === 'High Press' && front) x += 0.04; // the front line presses high
+      if (T.press === 'Low Block' && s.t !== 'GK') y = 0.5 + (y - 0.5) * 0.88; // compact: no gaps between the lines
+      if (T.buildup === 'Counter' && (s.t === 'ST' || s.t === 'W')) x += 0.06; // forwards stay up to break
     }
     if (s.t !== 'GK') {
       x += (ball.x - 0.5) * 0.38;
@@ -215,7 +234,7 @@
           sd.st[p.id] = p.fitness;
           sd.rating[p.id] = 6.3;
           sd.on[p.id] = 0;
-          sd.ps[p.id] = { pass: 0, kp: 0, sh: 0, sot: 0, tk: 0, tch: 0, sv: 0, ga: 0, xga: 0 };
+          sd.ps[p.id] = { pass: 0, kp: 0, sh: 0, sot: 0, tk: 0, ic: 0, tch: 0, sv: 0, ga: 0, xga: 0 };
         }
       });
       // On the day: form (a little luck either way, capped), confidence from recent results, and the best player
@@ -448,6 +467,7 @@
       H.possAcc = (H.possAcc || 0) + possH;
       A.possAcc = (A.possAcc || 0) + 1 - possH;
 
+      this.defend(1 - possSide);
       if (this.live || this.o.track) this.circulate(possSide, out, chanceSide >= 0);
       let impulse = (dH - dA) * 0.6;
       if (chanceSide >= 0) {
@@ -491,12 +511,40 @@
       return out;
     }
 
+    // Winning the ball back, in every match (not only the ones drawn on the pitch): the side without the ball makes
+    // a tackle or an interception, mostly through its defenders and midfielders, ball-winning roles and the best
+    // tacklers and readers of the game. A tackler wins it with his tackling, an interceptor with his positioning;
+    // a high press makes more tackles, a low block more interceptions. Each one counts in his stats and rating.
+    defend(k) {
+      if (Math.random() >= CAL.defActs) return;
+      const sd = this.sides[k],
+        on = this.onPitch(sd);
+      if (!on.length) return;
+      const o = U.wpick(on, ({ p, i }) => {
+        const t = sd.slots[i].t,
+          role = D.ROLES[t] && D.ROLES[t][sd.tactic.roles[i]];
+        return (
+          (DEF_SHARE[t] || 0) *
+          (1 + ((role && role.win) || 0) * 20 + ((role && role.press) || 0) * 8) *
+          (0.6 + (p.attrs.tackling + p.attrs.positioning) / 40)
+        );
+      });
+      if (!o) return;
+      const a = o.p.attrs,
+        lean = { 'High Press': 1.15, 'Low Block': 0.85 }[sd.tactic.press] || 1;
+      const tackle = Math.random() < U.clamp((a.tackling / (a.tackling + a.positioning)) * 1.2 * lean, 0.25, 0.8);
+      const ps = sd.ps[o.p.id];
+      if (ps) tackle ? ps.tk++ : (ps.ic = (ps.ic || 0) + 1);
+      if (sd.rating[o.p.id] != null) sd.rating[o.p.id] += CAL.defRating;
+    }
+
     // ball circulation for the visual script + passing network/heat map
     circulate(side, out, leadingToChance) {
       const sd = this.sides[side];
       const on = this.onPitch(sd);
       if (!on.length) return;
-      if (this.ball.side !== side) {
+      const won = this.ball.side !== side;
+      if (won) {
         // turnover: nearest defender wins it back
         const bx = 1 - this.ball.x,
           by = 1 - this.ball.y;
@@ -511,29 +559,39 @@
           }
         }
         this.ball = { side, slot: best.i, x: bx, y: by };
-        out.script.push({ k: 'win', side, to: best.i });
-        const ps = sd.ps[best.p.id];
-        if (ps) ps.tk++;
+        out.script.push({ k: 'win', side, to: best.i }); // drawn only: tackles and interceptions are counted in defend()
       }
-      const n = leadingToChance ? U.randi(1, 3) : U.randi(2, 5);
-      const direct = sd.tactic.buildup === 'Direct' || sd.tactic.buildup === 'Counter';
+      // How the side moves the ball follows its build-up (Match.PASSING): how many passes, how far, how forward
+      const T = sd.tactic,
+        P = Match.PASSING[T.buildup] || Match.PASSING.Short,
+        broke = won && T.buildup === 'Counter'; // a counter: straight forward, fast, before they recover
+      let n = broke ? U.randi(1, 3) : U.randi(P.n[0], P.n[1]);
+      if (leadingToChance) n = Math.min(n, 3);
+      const wideW = (T.width === 'Wide' ? 0.5 : T.width === 'Narrow' ? -0.4 : 0) + (P.wide || 0);
       for (let k = 0; k < n; k++) {
         const from = this.ball.slot;
         const fp = FM.Pos(sd, from, true, this.ball);
-        const cands = on.filter((o) => o.i !== from && sd.slots[o.i].t !== 'GK');
-        const to = U.wpick(cands, (o) => {
+        const deep = this.ball.x < 0.4;
+        // the keeper is part of it when a short side plays out from the back
+        const cands = on.filter((o) => o.i !== from && (sd.slots[o.i].t !== 'GK' || (deep && P.gk && !broke)));
+        const pick = U.wpick(cands, (o) => {
           const pp = FM.Pos(sd, o.i, true, this.ball);
           const dist = Math.hypot(pp.x - fp.x, pp.y - fp.y);
-          const prog = pp.x - fp.x;
+          const prog = pp.x - fp.x,
+            wide = Math.abs(pp.y - 0.5) > 0.25;
           return (
-            Math.exp(-dist * (direct ? 2.5 : 5)) *
-            (1 + Math.max(-0.5, prog) * (direct ? 3 : 1.5)) *
+            Math.exp(-dist * (broke ? 2 : P.reach)) *
+            (prog >= 0 ? 1 + prog * (broke ? 5 : P.prog) : P.back) *
+            (wide ? Math.max(0.2, 1 + wideW) : 1 - Math.min(0.3, wideW * 0.3)) *
+            (sd.slots[o.i].t === 'GK' ? P.gk : 1) *
             (0.5 + o.p.attrs.passing / 20)
           );
-        }).i;
+        });
+        if (!pick) break;
+        const to = pick.i;
         const tp = FM.Pos(sd, to, true, this.ball);
         this.ball = { side, slot: to, x: tp.x, y: tp.y };
-        out.script.push({ k: 'pass', side, from, to });
+        out.script.push({ k: 'pass', side, from, to, fast: broke || P.fast, slow: P.slow });
         const key = from < to ? `${from}-${to}` : `${to}-${from}`;
         sd.passes[key] = (sd.passes[key] || 0) + 1;
         sd.passCount++;
@@ -788,9 +846,20 @@
             fast: true,
             ctype: type, // the match view sends the runner early for a through ball or a counter
           });
-        else if (this.ball.slot !== shooter.i)
+        else if (this.ball.slot !== shooter.i && type !== 'penalty' && ev.sp !== 'fk')
           out.script.push({ k: 'pass', side, from: this.ball.slot, to: shooter.i });
-        out.script.push({ k: 'shot', side, from: shooter.i, outcome, xg, type, gk: gk && gk.i, big: ev.big });
+        // a penalty or a direct free kick is taken from a dead ball (the view puts it on the spot), not played in
+        out.script.push({
+          k: 'shot',
+          side,
+          from: shooter.i,
+          outcome,
+          xg,
+          type,
+          gk: gk && gk.i,
+          big: ev.big,
+          dead: type === 'penalty' ? 'pen' : ev.sp === 'fk' ? 'fk' : null,
+        });
         const sp = FM.Pos(sd, shooter.i, true, { x: 0.8, y: 0.5 });
         this.touch(sd, { x: Math.max(sp.x, 0.78), y: sp.y });
         if (outcome === 'goal') this.ball = { side: 1 - side, slot: this.kickoffSlot(od), x: 0.5, y: 0.5 };
@@ -968,7 +1037,7 @@
       sd.st[pIn.id] = pIn.fitness;
       sd.rating[pIn.id] = 6.3;
       sd.on[pIn.id] = m;
-      sd.ps[pIn.id] = { pass: 0, kp: 0, sh: 0, sot: 0, tk: 0, tch: 0, sv: 0, ga: 0, xga: 0 };
+      sd.ps[pIn.id] = { pass: 0, kp: 0, sh: 0, sot: 0, tk: 0, ic: 0, tch: 0, sv: 0, ga: 0, xga: 0 };
       if (out) sd.off[out.id] = m;
       const ev = {
         k: 'sub',
@@ -1116,6 +1185,16 @@
     }
   }
   FM.Match = Match;
+  // How each build-up moves the ball in the matches drawn on the pitch: passes per spell (n), how sharply distance
+  // cuts a pass's chance (reach: high = short passes), how much forward passes are favoured (prog) and backward
+  // ones allowed (back), the keeper's part in it (gk), a lean to the flanks (wide) and the tempo (fast / slow)
+  Match.PASSING = {
+    Short: { n: [3, 6], reach: 6, prog: 1.2, back: 0.35, gk: 1 },
+    Possession: { n: [4, 8], reach: 6.5, prog: 0.7, back: 0.55, gk: 0.7, slow: true },
+    Direct: { n: [1, 3], reach: 1.3, prog: 3.5, back: 0.05, gk: 0, fast: true },
+    Counter: { n: [2, 4], reach: 3, prog: 2.5, back: 0.15, gk: 0 },
+    'Wing Play': { n: [2, 5], reach: 4, prog: 1.5, back: 0.2, gk: 0.1, wide: 1 },
+  };
   // Build-up styles: [attack, midfield, defence, chance rate, chance quality]
   Match.BUILDUP = {
     Short: [1, 1.04, 1, 1, 1.05],
@@ -1210,11 +1289,15 @@
           wide: [`Corner comes to ${n}, header goes wide.`],
           blocked: [`Set-piece cleared at the near post.`],
         },
+        // a penalty says it was one, and who won it: on the pitch it is taken from the spot
         penalty: {
-          goal: [`PENALTY… ${n} sends ${gn} the wrong way!`],
-          saved: [`PENALTY SAVED! ${gn} guesses right and denies ${n}!`],
-          wide: [`${n} blazes the penalty over!`],
-          blocked: [`${n}'s penalty hits the post!`],
+          goal: [
+            `Penalty to ${m.sides[ev.side].club.short}! ${n} steps up and sends ${gn} the wrong way.`,
+            `${n} is brought down in the box — and converts the penalty himself!`,
+          ],
+          saved: [`Penalty to ${m.sides[ev.side].club.short}… saved! ${gn} guesses right and denies ${n}!`],
+          wide: [`Penalty to ${m.sides[ev.side].club.short}, but ${n} blazes it over!`],
+          blocked: [`Penalty to ${m.sides[ev.side].club.short}… ${n} hits the post!`],
         },
       };
       if (ev.sp === 'fk') {

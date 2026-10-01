@@ -207,6 +207,7 @@
         st.sot = (st.sot || 0) + (ps.sot || 0);
         st.kp = (st.kp || 0) + (ps.kp || 0);
         st.tk = (st.tk || 0) + (ps.tk || 0);
+        st.ic = (st.ic || 0) + (ps.ic || 0);
         st.pas = (st.pas || 0) + (ps.pass || 0);
         if (conceded === 0 && mins >= 60) st.cs = (st.cs || 0) + 1;
         if (p.pos === 'GK') {

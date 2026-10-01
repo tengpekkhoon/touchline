@@ -281,6 +281,17 @@ main::-webkit-scrollbar {
 .muted {
   color: var(--ink2);
 }
+/* Label · value rows: the label keeps its width and a long value wraps beside it, never over it */
+.row > .grow.muted {
+  flex: 1 0 auto;
+  max-width: 60%;
+}
+.row > .grow.muted ~ b,
+.row > .grow.muted ~ span {
+  min-width: 0;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
 .dim {
   color: var(--ink3);
 }

@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-217 features are playable in the web prototype today. Build = the build that added it.
+222 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -227,10 +227,15 @@ Every feature from the game design document, with what is playable in the protot
 | Feed | Follow clubs, competitions, nations and players: their news in your feed and a Following screen | Playtest batch 6 |
 | Match | More natural movement: a back line that moves together, goal-side marking, jockeying, early runs in behind, spacing, first touches | Playtest batch 6 |
 | World | Groundwork for saves that start in a past season | Playtest batch 6 |
+| UI | Labels keep their width and long values wrap beside them (e.g. long stadium names) | Playtest round 3 |
+| Match | Penalties taken from the spot and free kicks from a dead ball on the pitch; the commentary says who won the penalty | Playtest round 3 |
+| Feed | Followed news in the Following feed, never My Club; your boyhood club counts as followed | Playtest round 3 |
+| Match | Tackles and interceptions in every match, about 25 a team, each adding to the player's match rating | Playtest round 3 |
+| Match | Passing and shape that follow your tactics: playing out from the back, recycling possession, going long, breaking fast, wing play; width, compact blocks, high presses | Playtest round 3 |
 
 ## Yet to be added
 
-46 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+41 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
 
 Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
 
@@ -238,11 +243,6 @@ Design principle from here: don't make the game deeper by adding more screens â€
 
 | Area | Feature | Phase |
 | --- | --- | --- |
-| UI | Long text wraps cleanly and never overlaps its label (e.g. long stadium names) | Playtest 1 |
-| Match | Ticker labels only penalties PENALTY; other goals say how they were scored | Playtest 1 |
-| Feed | Followed news about other clubs, players and competitions in the Following feed, not My Club | Playtest 1 |
-| UI | Bottom tab bar on phones, side rail on tablets and landscape | Playtest 2 |
-| Match | Passing and movement that visibly follow the chosen tactics (build-up, width, pressing, roles) | Playtest 5 |
 | Tools | Wonderkid test: how often wonderkids reach world class, stall, flop or peak early, against real careers | Playtest 7 |
 | Tools | Real-stats converter: real player numbers into in-game attributes, ability and potential | Playtest 7 |
 | Platform | "Report a problem" that exports your save | Playtest 7 |

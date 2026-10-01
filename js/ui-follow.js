@@ -1,5 +1,5 @@
-// Following: clubs, players, competitions and nations you follow. Their news comes into your feed (My Club, and
-// a Following chip with a panel of how each is doing); a ☆ on their screens toggles it.
+// Following: clubs, players, competitions and nations you follow. Their news comes into the Following feed (with a
+// panel of how each is doing), never My Club; a ☆ on their screens toggles it.
 (function () {
   const FM = window.FM,
     UI = FM.UI,
@@ -27,7 +27,7 @@
       el.classList.toggle('pri', !on);
       el.textContent = on ? '☆ Follow' : '★ Following';
     }
-    UI.toast(on ? 'No longer following' : 'Following: their news comes into your feed');
+    UI.toast(on ? 'No longer following' : 'Following: their news comes into your Following feed');
   };
 
   // How each followed club, player, competition and nation is doing, above their news

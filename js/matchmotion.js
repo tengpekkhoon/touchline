@@ -25,14 +25,20 @@
           to = st.dots[a.side][a.to];
         const d = from && to ? dist(from, to) : 0.2;
         // Take a touch / dribble first (more often after receiving, less when first-timing it)
-        if (!a.fast && Math.random() < (prevWasPass ? 0.5 : 0.3))
-          acts.push({ k: 'carry', side: a.side, slot: a.from, nat: U.rand(220, 420) });
+        // a patient side takes a touch and looks up; a counter or a direct side plays it first time
+        if (!a.fast && Math.random() < (prevWasPass ? (a.slow ? 0.6 : 0.5) : 0.3))
+          acts.push({ k: 'carry', side: a.side, slot: a.from, nat: U.rand(220, 420) * (a.slow ? 1.2 : 1) });
         const lofted = a.k === 'cross' || d > 0.36;
-        acts.push({ ...a, lofted, nat: U.clamp((d / (lofted ? 0.6 : 0.95)) * 1000, 200, 1000) * (a.fast ? 0.8 : 1) });
+        acts.push({
+          ...a,
+          lofted,
+          nat: U.clamp((d / (lofted ? 0.6 : 0.95)) * 1000, 200, 1000) * (a.fast ? 0.8 : a.slow ? 1.15 : 1),
+        });
         prevWasPass = true;
       } else if (a.k === 'shot') {
-        if (a.type !== 'penalty' && Math.random() < 0.6)
-          acts.push({ k: 'carry', side: a.side, slot: a.from, nat: 240, pre: true });
+        if (a.dead)
+          acts.push({ k: 'spot', side: a.side, slot: a.from, dead: a.dead, nat: 900 }); // the ball placed, the run-up
+        else if (Math.random() < 0.6) acts.push({ k: 'carry', side: a.side, slot: a.from, nat: 240, pre: true });
         acts.push({ ...a, nat: a.type === 'longshot' ? 520 : 380 });
         prevWasPass = false;
       } else if (a.k === 'win') {
@@ -93,6 +99,20 @@
           g = MV.toGlobal(nx.side, U.clamp(f.x + 0.12, 0.05, 0.9), U.clamp(f.y + (0.5 - f.y) * 0.25, 0.08, 0.92));
         st.override[`${nx.side}:${nx.to}`] = { x: g.x, y: g.y, sprint: true };
       }
+    }
+    if (a.k === 'spot') {
+      // A dead ball: on the penalty spot (or where the free kick was given), the taker a few steps behind it
+      const f = a.dead === 'pen' ? { x: 0.885, y: 0.5 } : { x: U.rand(0.68, 0.76), y: U.rand(0.3, 0.7) };
+      const g = MV.toGlobal(a.side, f.x, f.y),
+        t = MV.toGlobal(a.side, f.x - 0.035, f.y + 0.01);
+      b.x = g.x;
+      b.y = g.y;
+      b.h = 0;
+      b.side = a.side;
+      b.slot = a.slot;
+      st.override[`${a.side}:${a.slot}`] = { x: t.x, y: t.y, sprint: true };
+      st.act = { kind: 'spot', a, t: 0, dur: a.dur };
+      return;
     }
     if (a.k === 'carry') {
       // Dribble: carrier pushes forward (and a little sideways) with the ball at his feet
