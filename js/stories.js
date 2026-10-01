@@ -496,6 +496,25 @@
         }
       }
     }
+    // A big club well off the pace changes manager: from a third of the way into the season, a club expected in
+    // the top four sitting five or more places below that may sack him (once a season)
+    for (const comp of W.leagues()) {
+      if (comp.tier !== 1 || FM.Season.gamesPlayed(comp.clubs[0]) < Math.round(comp.fixtures.length / 3)) continue;
+      for (const id of comp.clubs) {
+        const c = C(id);
+        if (W.isUser(id) || !c.manager || c.sackedYear === S.year) continue;
+        const exp = FM.Season.expectedPos(c);
+        if (exp <= 4 && W.position(id) >= exp + 5 && Math.random() < 0.04) {
+          c.sackedYear = S.year;
+          const old = S.staff[c.manager];
+          St.newManager(
+            c,
+            `${c.name} sack ${old.fn} ${old.ln}`,
+            `${U.ordinal(W.position(id))} is not good enough for a club of ${c.name}'s standing.`,
+          );
+        }
+      }
+    }
     // Wonderkid hype
     if (Math.random() < 0.12) {
       const young = Object.values(S.players).filter(
@@ -609,6 +628,7 @@
     FM.Records.managerChange(c, old, nm, from);
     c.manager = nm.id;
     c.tactic = W.aiTactic(c);
+    c.tactic.fam = 45; // his ideas take time to land
     FM.News.add({
       type: 'world',
       cat: 'managers',

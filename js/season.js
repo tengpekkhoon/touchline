@@ -261,6 +261,8 @@
         winner.rep = Math.min(99, winner.rep + 1);
       }
     }
+    Sea.growFam(hc);
+    Sea.growFam(ac);
     // fan mood (AI too): the result against what was expected, judged by the clubs' standing (±5 for a 50–50 game)
     [hc, ac].forEach((c, k) => {
       const w = k ? res.ag > res.hg : res.hg > res.ag,
@@ -302,6 +304,12 @@
           day: S.day,
         };
     });
+  };
+  // An AI club's set-up settles in with every match, as yours does (a new manager starts it lower)
+  Sea.growFam = function (c) {
+    if (!c || W.isUser(c.id) || !c.tactic) return;
+    const f = c.tactic.fam ?? 70;
+    c.tactic.fam = Math.min(100, f + Math.max(0.5, (100 - f) * 0.06));
   };
   Sea.applyFriendly = function (fx, m) {
     const S = FM.S,
@@ -1070,6 +1078,7 @@
 
   // ---------- Season end ----------
   Sea.endSeason = function () {
+    Sea.testimonials();
     const S = FM.S,
       log = S.seasonLog,
       club = W.userClub();
@@ -1326,7 +1335,11 @@
           if (S.user.tactic.lineup) S.user.tactic.lineup = S.user.tactic.lineup.map((x) => (x === p.id ? null : x));
         } else if (Sea.aiRenews(p, c)) {
           p.contract = S.year + (W.age(p) >= 31 ? 1 : U.randi(1, 3));
-          p.wage = Math.max(p.wage, W.wageFor(p));
+          // veterans renew nearer their market wage (up to a quarter less); younger players never take a cut
+          p.wage =
+            W.age(p) >= 32
+              ? Math.round(Math.max(W.wageFor(p), p.wage * 0.75) / 50) * 50
+              : Math.max(p.wage, W.wageFor(p));
           FM.Transfers.settle(p);
         } else {
           W.spell(p).to = S.year - 1;
@@ -1463,6 +1476,8 @@
     S.user.preseason = {};
     S.user.previewSeen = false;
     S.user.tactic.fam = Math.round((S.user.tactic.fam ?? 60) * 0.75); // new faces, rusty over the summer
+    for (const c of Object.values(S.clubs))
+      if (c.tactic && c.tactic.fam != null && !W.isUser(c.id)) c.tactic.fam = Math.round(c.tactic.fam * 0.75);
     W.refreshStaffPool();
     // expectations for the new season
     if (uc)

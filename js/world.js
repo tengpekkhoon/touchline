@@ -989,6 +989,21 @@
     FM.Intl.setup();
     FM.Cups.setupSeason(null);
     S.calendar = W.buildCalendar();
+    // A world with a past: players of 22+ have been at their club for a while (most 1–3 seasons, a few long-servers
+    // a decade), with appearances to match their standing, so long-serving captains are club icons from day one
+    for (const id in S.players) {
+      const p = S.players[id],
+        c = p.clubId && S.clubs[p.clubId],
+        age = W.age(p);
+      if (!c || age < 22) continue;
+      const yrs = Math.min(age - 18, Math.floor(-Math.log(1 - Math.random()) * 3));
+      if (yrs <= 0) continue;
+      const share = p.ca >= W.levelFor(c.rep) - 2 ? 0.85 : p.ca >= W.levelFor(c.rep) - 10 ? 0.5 : 0.2;
+      const sp = W.spell(p);
+      sp.from = S.year - yrs;
+      sp.apps = Math.round(yrs * 40 * share * U.rand(0.8, 1.1));
+      p.career.apps += sp.apps;
+    }
     for (const id in S.players) S.players[id].value = W.value(S.players[id]); // priced with their final club and contract
     return S;
   };

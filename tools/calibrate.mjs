@@ -16,8 +16,12 @@ const W = FM.W,
 if (args.set)
   for (const kv of String(args.set).split(',')) {
     const [k, v] = kv.split('=');
-    if (!(k in FM.CAL)) throw new Error('unknown calibration key ' + k);
-    FM.CAL[k] = +v;
+    // a bare key is an engine knob (FM.CAL); a dotted path reaches any setting, e.g. Season.YOUTH.wonder=0.003
+    const path = k.includes('.') ? k.split('.') : ['CAL', k];
+    const obj = path.slice(0, -1).reduce((o, part) => o && o[part], FM),
+      key = path.at(-1);
+    if (!obj || !(key in obj)) throw new Error('unknown setting ' + k);
+    obj[key] = +v;
   }
 
 W.newWorld({ win: 3, subs: 5, twoLegs: true, awayGoals: false }); // default rules (no foreign-player limit)
@@ -489,6 +493,16 @@ show('\nMarket', marketRows);
 const all = rows.length + careerRows.length + injRows.length + marketRows.length - skipped;
 console.log(`\n${all - off}/${all} in range · goals per match by season: ${seasonGoals.join(', ')}`);
 console.log(`Tactical equilibrium (chance-rate factor) after each season: ${seasonGoals.era.join(', ')}`);
+// Which leagues are too predictable: champions' pre-season reputation rank, by league
+{
+  const by = {};
+  for (const t of titles) (by[t.comp] = by[t.comp] || []).push(t.rank);
+  console.log(
+    `Champion's pre-season rank by league: ${Object.entries(by)
+      .map(([id, r]) => `${FM.S.comps[id].short} ${r.join('/')}`)
+      .join(' · ')}`,
+  );
+}
 console.log(
   `Top-flight minutes by 30+ % by season: ${car.bySeason.join(', ')} · world top-200 ability by season: ${car.eliteCA.map((x) => x.toFixed(1)).join(', ')}`,
 );

@@ -133,10 +133,10 @@ Playtest feedback grouped into seven batches, in working order; most important f
 
 *3 · Realism of existing systems*
 
-- [ ] Title dominance: champion from the pre-season top 3 in 70–90% of seasons (now ~90%, 83–97% by seed), through club dynamics: eras end when managers leave, squads age or money runs short, and a strong manager can build a new power (L)
-- [ ] Elite creep: the world's top 200 players gain 0.35–0.5 ability a season (real −0.2 to +0.2); gentler top of the growth curve and slight decline at the peak (M)
-- [ ] Small calibration misses: squad injured at any time 7.7% (real 8–15), retirement age from a top flight 33.0 (real 33.5–36.5), top-100 players' age 25.7–26.3 (real 26.5–29) (S)
-- [ ] Loyal long-servers become club icons (fan favourite, testimonial); veterans accept pay cuts to stay (S–M)
+- [x] Title dominance: champion from the pre-season top 3 in 80–90% of seasons (was ~90–100%). AI clubs' tactical familiarity now counts like yours, a new manager's ideas take time to land, and a big club well off the pace sacks its manager (L)
+- [x] Elite creep: players already at 75+ grow at half the rate; the top 200's trend is now about +0.2 a season (was +0.4), top-100 age 26.6 (M)
+- [x] Small calibration misses: squad injured now 8.3–8.6% (training injuries up slightly), top-100 age in range. Known issue: retirement age from a top flight stays at ~33.1 (real 33.5–36.5) whatever the retirement and renewal settings, so the measure itself needs a look; over-30s' minutes creep toward 28–30% by season six (S)
+- [x] Club icons (250+ appearances, or 8+ seasons and 150+): ⭐ tag, testimonial in the tenth season, fans furious if sold, usually kept by AI clubs; veterans 32+ take pay cuts to stay; new worlds start with a club history so icons exist from day one (S–M)
 - [x] Bigger squads and more depth at the start (M–L; watch save size and simulation time)
 - [x] Scout valuations reflect both current and potential ability (M)
 - [x] Market value from league, club, transfer interest, current and potential ability, and age (L)

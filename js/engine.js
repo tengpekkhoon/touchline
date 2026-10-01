@@ -11,6 +11,7 @@
   // Tuned against real top-flight averages (goals 2.6–2.9, home/draw/away ~45/25/30, ~24 shots and ~8.5 on
   // target, ~0.3 penalties, ~4 cards). Re-run tools/calibrate.mjs after any engine change.
   const CAL = (FM.CAL = {
+    aiFam: 1, // AI clubs' tactical familiarity counts like yours (0 = off)
     mgr: 0, // an AI manager's ability (8–17, 12 neutral) scales his side's strength by this per point (0 = off; under calibration)
     chanceRate: 0.14, // shot opportunities per minute per side, before strengths and tactics
     xgScale: 0.82, // scales open-play chance quality
@@ -313,8 +314,10 @@
         mid *= CAL.homeMid;
         def *= CAL.homeDef;
       }
-      if (sd.user && sd.club.sim !== 'nation' && FM.S.user.tactic.fam != null) {
-        const f = 1 + (FM.S.user.tactic.fam - 60) * 0.0008;
+      const famNow =
+        sd.club.sim === 'nation' ? null : sd.user ? FM.S.user.tactic.fam : CAL.aiFam ? (sd.tactic.fam ?? 70) : null;
+      if (famNow != null) {
+        const f = 1 + (famNow - 60) * 0.0008;
         att *= f;
         mid *= f;
         def *= f;

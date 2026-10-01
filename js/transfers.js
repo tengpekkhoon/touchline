@@ -215,11 +215,22 @@
   };
 
   T.execute = function (p, toId, fee, wage, flags = {}) {
+    const icon = W.isUser(p.clubId) && FM.Season.isIcon(p);
     const S = FM.S,
       from = p.clubId && S.clubs[p.clubId],
       to = S.clubs[toId];
     if (from) {
       from.balance += fee;
+      if (icon) {
+        from.fanMood = Math.max(0, from.fanMood - 10);
+        FM.News.add({
+          type: 'club',
+          title: `Fans furious as club icon ${W.name(p)} is sold`,
+          body: `${W.spell(p).apps} appearances for ${from.name}, and now he's gone to ${S.clubs[toId].name}. The supporters won't forget this one.`,
+          pid: p.id,
+          clubId: from.id,
+        });
+      }
       if (from.sim === 'full' || from.sim === 'light') from.budget += fee * 0.5;
       from.bestSales = (from.bestSales || [])
         .concat([{ pid: p.id, name: W.name(p), fee, to: toId, year: S.year }])

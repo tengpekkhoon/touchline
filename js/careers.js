@@ -37,6 +37,7 @@
       }
     return CURVE[CURVE.length - 1][1];
   };
+  Sea.CURVE = CURVE; // exposed for calibration (tools/calibrate.mjs --set Season.CURVE.8.1=-0.6)
   Sea.AGE_STRETCH = { GK: 0.75, CB: 0.92, DM: 0.96, CM: 0.97 };
   // A player's own ageing clock: -1.2..+1.2 years, from his id so it never changes and needs no save field
   Sea.clock = (p) => {
@@ -108,6 +109,7 @@
         fast = early || (arc === 'burnout' && a <= p.arc.peak);
       g = Math.min(g * f * (early ? 3 : fast ? 1.3 : 1), head * (early ? 1.2 : 0.45)) * frac * U.rand(0.6, 1.4); // closing in on potential slows down: players keep improving into their mid-twenties
       if (arc === 'stall') g *= 0.2;
+      if (p.ca >= Sea.ELITE.from) g *= Sea.ELITE.growth; // the very best grow more slowly: keeps the elite from inflating
       if (p.inj && (p.inj.out || 0) >= 8) g *= 0.4; // months on the treatment table cost development
     } else {
       g = g * frac * (1.25 - p.hid.prof / 40) * U.rand(0.7, 1.3);
@@ -249,6 +251,39 @@
 
   // Chance a player retires this summer: age (keepers last longer), still good enough for his club,
   // a long injury late in a career, and professionalism
+  // ---------- Club icons ----------
+  // A long-server at his club (250+ appearances, or 8+ seasons and 150+): fans adore him, he takes less to stay,
+  // and selling him is not forgiven
+  Sea.isIcon = function (p) {
+    const sp = p.clubId && W.spell(p);
+    if (!sp || sp.loan || sp.c !== p.clubId) return false;
+    return sp.apps >= 250 || (FM.S.year - sp.from >= 8 && sp.apps >= 150);
+  };
+  // A testimonial in his tenth season at your club: a full house, a lift for the fans, a little income
+  Sea.testimonials = function () {
+    const S = FM.S,
+      c = W.userClub();
+    if (!c) return;
+    for (const p of W.squad(c.id)) {
+      const sp = W.spell(p);
+      if (!sp || sp.loan || sp.c !== c.id || S.year - sp.from !== 9 || sp.apps < 150 || p.testimonial) continue;
+      p.testimonial = S.year;
+      const gate = U.roundMoney((c.stadium ? c.stadium.cap : 20000) * 25);
+      c.balance += gate;
+      c.fanMood = Math.min(100, c.fanMood + 3);
+      FM.News.add({
+        type: 'club',
+        title: `Testimonial for ${W.name(p)}: a full house says thank you`,
+        body: `Ten seasons and ${sp.apps} appearances for ${c.name}. The stadium sold out to honour him, raising ${U.money(gate)}.`,
+        pid: p.id,
+        clubId: c.id,
+      });
+    }
+  };
+  // Players already at elite level (75+) grow at half the usual rate: without it the world's top 200 gained ~0.4
+  // ability a season (calibrated: trend +0.18, top-100 age 26.6 over six seasons)
+  Sea.ELITE = { from: 75, growth: 0.5 };
+  Sea.RETIRE_TOP = 1; // retirement chance multiplier for players at top-flight clubs
   Sea.retireChance = function (p) {
     const a = W.age(p) - (p.pos === 'GK' ? 2 : 0);
     if (a < 32) return 0;
@@ -258,6 +293,7 @@
       const gap = p.ca - Sea.squadMedian(c.id);
       r *= gap >= 4 ? 0.7 : gap >= -3 ? 0.9 : 1.5;
     }
+    if (c && FM.S.comps[c.comp] && FM.S.comps[c.comp].tier === 1) r *= Sea.RETIRE_TOP;
     if (p.inj && (p.inj.out || 0) >= 12) r *= 1.8;
     if (p.hid.prof >= 15) r *= 0.8;
     if (p.arc && p.arc.k === 'ageless') r *= 0.35;
@@ -265,11 +301,15 @@
   };
   // AI clubs renewing an expiring contract: younger squad players usually, veterans (one year at a time) only
   // while they are still clearly good enough — which is how most careers wind down before retirement
+  // Veterans (31+): renewed while clearly good enough (ability over the squad median by more than age - gapAge),
+  // otherwise only by chance; a club icon usually gets another year
+  Sea.VET = { gapAge: 30, chance: 0.15, icon: 0.6 };
   Sea.aiRenews = function (p, c) {
     const a = W.age(p),
       gap = p.ca - Sea.squadMedian(c.id);
     if (a < 31) return c.sim === 'minimal' || gap >= -2 || Math.random() < 0.6;
-    return gap >= a - 30 || Math.random() < (c.sim === 'minimal' ? 0.4 : 0.15);
+    if (Sea.isIcon(p) && Math.random() < Sea.VET.icon) return true;
+    return gap >= a - Sea.VET.gapAge || Math.random() < (c.sim === 'minimal' ? 0.4 : Sea.VET.chance);
   };
   Sea.retire = function (p) {
     const S = FM.S;

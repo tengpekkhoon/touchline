@@ -41,7 +41,7 @@
     BY[type] ? BY[type].part : type === 'Illness' ? 'illness' : String(type).split(' ')[0].toLowerCase();
 
   // Tuning knobs (checked by `npm run calibrate`)
-  Inj.CAL = { match: 0.00047, light: 0.032, train: 0.008, ill: 0.002, reinjury: 2.5, riskDays: 6 };
+  Inj.CAL = { match: 0.00047, light: 0.032, train: 0.0095, ill: 0.002, reinjury: 2.5, riskDays: 6 };
 
   // Calendar days per real week: the countdown runs on matchdays, the layoff is quoted in weeks
   Inj.perWeek = () => Math.max(1, (S().calendar ? S().calendar.length : 60) / 46);

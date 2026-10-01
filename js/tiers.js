@@ -35,7 +35,10 @@
       const c = S().clubs[clubId];
       const { xi, bench } = W.pickXI(clubId, c.tactic, Ti.roster(clubId));
       cache.v[clubId] = {
-        r: (U.avg(xi.filter(Boolean), (p) => p.ca) || W.levelFor(c.rep)) * FM.managerBoost(c, W.isUser(clubId)),
+        r:
+          (U.avg(xi.filter(Boolean), (p) => p.ca) || W.levelFor(c.rep)) *
+          FM.managerBoost(c, W.isUser(clubId)) *
+          (FM.CAL.aiFam && !W.isUser(clubId) && c.tactic ? 1 + ((c.tactic.fam ?? 70) - 60) * 0.0008 : 1),
         xi: xi.filter(Boolean),
         bench,
       };

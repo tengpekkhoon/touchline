@@ -966,6 +966,7 @@
       <div class="row" style="margin-top:14px;gap:14px"><div><div class="tiny" style="opacity:.75">ABILITY</div>${C.playerStars(p)}</div><div><div class="tiny" style="opacity:.75">VALUE</div><b>${own || v.k >= 30 ? U.money(p.value) : '?'}</b></div><div><div class="tiny" style="opacity:.75">WAGE</div><b>${own || v.k >= 30 ? U.money(p.wage) + '/wk' : '?'}</b></div>${own ? `<div><div class="tiny" style="opacity:.75">MORALE</div><b>${me} ${ml}</b></div>` : ''}</div></div>
       <div class="sp"></div>
       ${ownActions}
+      ${FM.Season.isIcon(p) ? `<div style="margin-bottom:6px"><span class="trait" title="${esc(`${p.career.spells.at(-1).apps} appearances for ${CL(p.clubId).name}`)}">⭐ Club icon</span></div>` : ''}
       ${v.traits.length || own ? `<div style="margin-bottom:8px">${(own ? p.traits : v.traits).map((t) => `<span class="trait" title="${esc(D.TRAITS[t].desc)}">${D.TRAITS[t].icon} ${t}</span>`).join('')}${own ? `<span class="trait">🧠 ${esc(p.personality)}</span>` : ''}</div>` : ''}
       ${own && p.traits.length ? `<div class="small dim" style="margin:-2px 2px 12px">${p.traits.map((t) => D.TRAITS[t].desc).join(' ')}</div>` : ''}
       ${report}

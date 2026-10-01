@@ -149,6 +149,11 @@
     if (age <= 23 && p.hid.amb >= 14 && t.years >= 5) need *= 1.04;
     if (t.relegCut) need *= 1.03;
     if (p.wantsOut && mode === 'renew') need *= 1.25;
+    // Veterans staying put take less, an icon or a loyal servant most of all
+    if (mode === 'renew' && age >= 32 && !p.wantsOut) {
+      need *= FM.Season.isIcon(p) || W.hasTrait(p, 'Loyal') ? 0.75 : 0.88;
+      notes.push('happy to take less to stay');
+    }
     const ok = value >= need - 1;
     const gap = Math.max(0, Math.round((need - value) / 50) * 50);
     return {
