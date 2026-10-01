@@ -201,7 +201,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## Yet to be added
 
-44 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+59 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
 
 Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
 
@@ -209,6 +209,21 @@ Design principle from here: don't make the game deeper by adding more screens â€
 
 | Area | Feature | Phase |
 | --- | --- | --- |
+| Interface | International tab on the bottom bar | Playtest 2 |
+| Scouting | More filters in the scouting hub (position, age, ability, potential, value, wage, contract, nationality, league, availability) | Playtest 2 |
+| Transfers | Fees in green for players in, red for players out | Playtest 2 |
+| Transfers | Tap a name in any transfer history to open the player's profile | Playtest 2 |
+| Transfers | Deadline day as a live event, hour by hour | Playtest 4 |
+| Transfers | Pre-contracts in the window before a contract expires | Playtest 4 |
+| Transfers | A player running down his contract whom his club wants to sell loses value | Playtest 4 |
+| Transfers | Fan and board reactions to transfers in and out | Playtest 4 |
+| Transfers | Full negotiation of bids for your players | Playtest 4 |
+| Transfers | Loan offers for your players from other clubs | Playtest 4 |
+| Transfers | Smarter loan suggestions | Playtest 4 |
+| Scouting | Deeper scouting reveals more (potential range, hidden attributes, traits, personality, injuries, fit) | Playtest 4 |
+| Stats | Keeper stats: saves, save %, clean sheets, goals prevented | Playtest 6 |
+| Stats | Season-by-season stats on the player profile, every season kept | Playtest 6 |
+| Competitions | B teams in Spain and Germany: never promoted into their parent's division, players contracted to the parent club | Playtest 6 |
 | Staff | Staff ratings with real impact | Playtest 6 |
 | Players | Better player stats view; training and analytics tabs | Playtest 6 |
 | Match | More realistic player and ball movement in the match view | Playtest 6 |

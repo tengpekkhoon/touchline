@@ -4,7 +4,7 @@ Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/420
 
 ## At a glance
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are the first batches of playtest feedback (bugs, interface, speed, realism, transfer market, tactics and match engine). The rest of that backlog (big features, platform) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
+Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are the first batches of playtest feedback (bugs, interface, speed, realism, transfer market, tactics and match engine). A second round of feedback added items to batches 2, 4 and 6. The rest of that backlog (those additions, big features, platform) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
 
 ```mermaid
 flowchart TB
@@ -78,7 +78,7 @@ The order below is proposed; each phase ends when its gate passes, not on a date
 
 **Playtest feedback backlog (next, before Alpha 2)**
 
-Playtest feedback grouped into seven batches, in working order; most important first within each. Sizes: S under half a day, M one to two days, L several days, XL a week or more.
+Playtest feedback grouped into seven batches, in working order; most important first within each. Sizes: S under half a day, M one to two days, L several days, XL a week or more. Save size is not a constraint: the game is headed for a downloadable app, not the browser, so long histories and bigger worlds are fine; simulation speed still is.
 
 *1 · Bugs and wrong behaviour*
 
@@ -136,6 +136,10 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Tap the nation on a player's profile to open the nation overview (S)
 - [x] Match events coloured by team (substitutions, cards, goals), so you can tell at a glance whose they are (S)
 - [x] Green clubs keep their own kit on the pitch; contrast comes from the dot's outline (only a clash with the other team changes kit) (S)
+- [ ] International tab on the bottom bar: national teams, rankings, tournaments and your national job in one place (now inside the League tab) (S–M)
+- [ ] More filters in the scouting hub: position, age, ability, potential, value, wage, contract end, nationality, league, and loan or free-agent availability (S–M)
+- [ ] Transfer lists show fees for players coming in in green and going out in red (S)
+- [ ] Tap a player's name in any transfer history (finances, club overview, round-ups) to open his profile (S)
 
 *3 · Realism of existing systems*
 
@@ -159,6 +163,14 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Structured fees: up to three yearly instalments, add-ons after 25 appearances and sell-on clauses, valued by the selling club (money later is worth less, add-ons half, a sell-on more on a young player); AI bids for your players come structured too; payments to come and sell-on clauses on the finances screen (M)
 - [x] AI squad planning by age: a starter of 31+ (keepers 33+) with no heir in the squad is replaced by a player of his level aged 27 or under, and the weakest player in that part of the squad is sold on (S)
 - [x] Each real league's foreign-player rules (new careers; a setup option keeps one world-wide rule): England and Italy 8 homegrown in a 25-man list of over-21s, non-EU limits in Spain (3) and France (4), Italy's two non-EU signings from abroad a season, MLS's 8 international slots, foreign caps in Argentina, Mexico, Korea, Thailand and Turkey, matchday caps in Brazil (9) and Japan (5, Thais count as local). New worlds start within them, nobody signs a player they can't register, and the squad screen shows where you stand (M)
+- [ ] Deadline day as a live event that advances hour by hour: late bids, deals collapsing and completing, a ticker of the market, until the window shuts at midnight (M)
+- [ ] Pre-contracts: a player whose contract ends this season can be signed in the window before it expires (from January), free, joining in the summer; your own expiring players can be approached too (M)
+- [ ] A player running down his contract whom his club wants to sell loses market value: the club takes less rather than lose him for nothing (S)
+- [ ] Fan and board reactions to transfers in and out: delight at a statement signing, anger at selling a favourite, the board on fees, wages and age profile (S–M)
+- [ ] Negotiate bids for your players: a full negotiation (fee, instalments, add-ons, sell-on clause), not only the two counter buttons (M)
+- [ ] Loan offers for your players from other clubs, with wage share, minutes promised and an option to buy (S–M)
+- [ ] Smarter loan suggestions: who needs games, where he'd start at the right level, in a league that suits his development, and when to recall (S–M)
+- [ ] Deeper scouting reveals more: the potential range narrows, hidden attributes, traits, personality, injury history and how he'd fit your system, step by step as knowledge grows (M)
 
 *5 · Tactics depth*
 
@@ -177,15 +189,18 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [ ] Staff ratings with real impact (M–L)
 - [ ] More options for press conferences, journalist questions, warm-up and half-time talks (M–L)
 - [ ] Better player stats view (M)
+- [ ] Keeper stats: saves, save %, clean sheets, goals conceded and goals prevented (xG faced minus conceded) instead of goals and assists (S–M)
+- [ ] Season-by-season stats on the player profile: a row per season and club (apps, goals, assists, rating; keepers their own), every season kept (M)
 - [ ] Training and analytics tabs (L–XL)
 - [ ] More realistic player and ball movement in the match view (XL)
 - [ ] Club finances by country: TV money in England, gate receipts in Germany, player sales in Brazil and Portugal (M)
 - [ ] Wage-to-revenue pressure: budgets cut above ~70%, debt, forced sales and, at worst, administration (M)
 - [ ] Attendance that reacts to results, ticket prices and stadium size (S–M)
 - [ ] A second-tier continental cup (Europa League equivalent) (M)
-- [ ] More of the lower pyramid (L; watch save size and speed)
+- [ ] More of the lower pyramid (L; watch simulation speed)
 - [ ] Follow clubs, competitions, nations and players: their news in your feed and a Following screen (M)
 - [ ] Reserve and youth teams (U21, U18) with their own fixtures, promotion to the first team and loans from them (L–XL)
+- [ ] B teams in Spain and Germany (Real Madrid Castilla, Barça Atlètic, Bayern II, ...) as in real life: reserve sides in the lower divisions that can never be promoted into their parent club's division, with players contracted to the parent club and moving freely between the two (L)
 - [ ] Groundwork for historical stats and historical saves: per-season player and club stats kept in an archive, and a data model that can start a save in a past season (L)
 
 *7 · Platform*
@@ -330,6 +345,6 @@ Step 1 is done: the game installs to the home screen and plays offline (web app 
 - **Licensing:** the prototype now uses real club, league and competition names (547 clubs; ratings, identities and finances are the game's own) with fictional players (known real name combinations are blocked). Club names and colours are trademarks: a store release needs licences or a fictional-name pack (the original fictional set is in git history, commit 4bad4f6).
 - **Tech stack for release:** proposed answer — keep the web engine inside a native wrapper (Capacitor) rather than porting; the game is plain HTML/CSS/JS with no server.
 - **Store updates:** JavaScript updates still normally go through store review, so fixes can't be pushed instantly.
-- **Performance at scale:** the 30-league world has about 11,300 players; a league day takes ~0.7–1.35 s and pre-season days ~0.15–0.2 s in Node, and saves are ~7 MB with the compact player format. IndexedDB and native files handle that, but saves no longer fit the 5 MB localStorage fallback (private browsing). Mid-range phones are still untested (content gate).
+- **Performance at scale:** the 30-league world has about 11,300 players; a league day takes ~0.7–1.35 s and pre-season days ~0.15–0.2 s in Node, and saves are ~7 MB with the compact player format. Save size is not a constraint (the target is a downloadable app with native file storage); the 5 MB localStorage fallback only matters for the web prototype in private browsing. Mid-range phones are still untested (content gate).
 - **Balance:** calibration is 50–51/51 in range on two seeds (title dominance, elite growth, injuries, retirement ages and upsets in range; over-30s' share of top-flight minutes ends six seasons at 24–25%, real 17–28, though it still rises from ~19% early on); one seed still shows the elite improving a little too fast. Finances and difficulty still need tuning from playtests.
 - **Scope:** the editor and history modes are large; they may need to ship after 1.0.
