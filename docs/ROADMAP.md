@@ -26,7 +26,7 @@ flowchart TB
 
 ## Shipped
 
-The web prototype runs on a phone browser with no build step, covering 547 real clubs in 30 real leagues across 25 nations in three simulation tiers, and 29 national teams. Newest build first.
+The web prototype runs on a phone browser with no build step, covering 547 real clubs in 30 real leagues across 27 nations in three simulation tiers, and 35 national teams. Newest build first.
 
 | Build | What shipped |
 | --- | --- |
@@ -326,9 +326,9 @@ Step 1 is done: the game installs to the home screen and plays offline (web app 
 
 ## Open questions and risks
 
-- **Licensing:** the prototype now uses real club, league and competition names (401 clubs; ratings, identities and finances are the game's own) with fictional players (known real name combinations are blocked). Club names and colours are trademarks: a store release needs licences or a fictional-name pack (the original fictional set is in git history, commit 4bad4f6).
+- **Licensing:** the prototype now uses real club, league and competition names (547 clubs; ratings, identities and finances are the game's own) with fictional players (known real name combinations are blocked). Club names and colours are trademarks: a store release needs licences or a fictional-name pack (the original fictional set is in git history, commit 4bad4f6).
 - **Tech stack for release:** proposed answer — keep the web engine inside a native wrapper (Capacitor) rather than porting; the game is plain HTML/CSS/JS with no server.
 - **Store updates:** JavaScript updates still normally go through store review, so fixes can't be pushed instantly.
-- **Performance at scale:** Alpha 1's 20-league world simulates a matchday in ~0.3 s in the browser, and a compact player format keeps saves at ~3 MB for about 4,400–5,000 players (down from ~5.5 MB). IndexedDB handles that; the 5 MB localStorage fallback (private browsing) is now within reach but tight as worlds grow.
-- **Balance:** finances, player development and title dominance by rich clubs need tuning from playtests.
+- **Performance at scale:** the 30-league world has about 11,300 players; a league day takes ~0.7–1.35 s and pre-season days ~0.15–0.2 s in Node, and saves are ~7 MB with the compact player format. IndexedDB and native files handle that, but saves no longer fit the 5 MB localStorage fallback (private browsing). Mid-range phones are still untested (content gate).
+- **Balance:** calibration is 48/49 in range (title dominance, elite growth, injuries and retirement ages now fixed); still open: over-30s' share of top-flight minutes creeps from ~22% to ~30% over six seasons (real 17–28). Finances and difficulty still need tuning from playtests.
 - **Scope:** the editor and history modes are large; they may need to ship after 1.0.
