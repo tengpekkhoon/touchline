@@ -118,7 +118,7 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Match log: an injury is logged before the substitution it causes (S)
 - [x] Club picker: search box and league filter; compact footer that doesn't cover the list (M)
 - [x] Crest letters on a solid band so stripes never cross them; badge only at tiny sizes (S)
-- [x] Pitch dots get a contrasting outline, and the second kit colour when the first is too close to the grass (S)
+- [x] Pitch dots get a contrasting outline (S). Clubs always keep their own colours: a green kit gets a white outline, and only a clash with the other team changes kit (batch 2)
 - [ ] Later, if days still feel slow on a mid-range phone: pre-compute the next day in the background (M–L)
 
 *2 · Quick interface wins*
