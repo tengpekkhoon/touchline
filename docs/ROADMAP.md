@@ -4,7 +4,7 @@ Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/420
 
 ## At a glance
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are playtest feedback batches 1–6 (bugs, interface, speed, realism, transfer market, tactics and match engine, big features), including a second round of feedback folded into batches 2, 4 and 6. Batch 7 (platform) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
+Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are playtest feedback batches 1–6 (bugs, interface, speed, realism, transfer market, tactics and match engine, big features), including a second round of feedback folded into batches 2, 4 and 6. A third round adds items to batches 1, 2, 5 and 7 (marked "round 3"); those and batch 7 (platform) are next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
 
 ```mermaid
 flowchart TB
@@ -92,6 +92,9 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Transfers and loans only while the window is open; free agents any time. AI clubs fix squad gaps in the window with transfers or free agents, and after it shuts sign free agents only for gaps that remain; free agents are mostly journeymen (S–M)
 - [x] Fan reactions judged against expectations: a draw with a better team isn't bad news; a loss to a much better team is neutral (M)
 - [x] Career-shape test (`npm run test:regens`) deterministic under a fixed seed (S–M)
+- [ ] Long text never overlaps or gets cut off: labels and values wrap cleanly on narrow screens (e.g. "Stadium: Tottenham Hotspur Stadium" ran over its label) (S–M) — round 3
+- [ ] Match ticker: only penalties are labelled PENALTY; other goals say how they were scored (S) — round 3
+- [ ] Followed news about other clubs, players and competitions goes to the Following feed, never the My Club feed (S) — round 3
 
 *1b · Playtest report fixes*
 
@@ -142,6 +145,7 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] More filters in the scouting hub: position, age, ability, potential, value, wage, contract end, nationality, league, and loan or free-agent availability (S–M)
 - [x] Transfer lists show fees for players coming in in green and going out in red (S)
 - [x] Tap a player's name in any transfer history (finances, club overview, round-ups) to open his profile (S)
+- [ ] Navigation by screen size: keep the bottom tab bar on phones (thumb reach, platform convention for five destinations) and switch to a side rail on tablets and landscape, where a bottom bar wastes width (S–M) — round 3
 
 *3 · Realism of existing systems*
 
@@ -185,6 +189,7 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Weather that matters, by climate and time of year: rain hurts short passing and makes keepers fumble, snow (cold countries, midwinter) means fewer chances, heat (warm countries early and late in the season, the tropics) tires legs faster; the forecast shows before kick-off and the match is played in it (S–M)
 - [x] Confidence: every club's results against what was expected of them build it up or wear it down (up to ±3% strength), recent games counting most; shown as Flying / Confident / Steady / Shaky / Low on the club overview and before kick-off, half-reset each summer (M)
 - [x] Upsets: each side's form on the day varies a little (capped), calibrated so a bottom-half side beats a top-four side ~14% of the time (real 9–18%, new measure) and cup upsets stay at ~20%; champions from the pre-season top three fell to 83–87% (was 90–97%) (S–M)
+- [ ] Passing and movement that visibly follow the chosen tactics, in the engine and on the pitch: short build-up plays out from the back in triangles, direct goes long early, counter breaks fast after winning the ball, possession circulates; width, pressing height and roles (inverted full-backs, false 9, wing-backs) show in where players stand and run (L) — round 3
 
 *6 · Big features*
 
@@ -209,6 +214,8 @@ Playtest feedback grouped into seven batches, in working order; most important f
 
 - [ ] "Report a problem" that exports the save through the share sheet (S); crash reporting stays in Beta
 - [ ] Test suite beyond regression, calibration and career shapes (all seeded, run headless): sim speed (time per day and per season, on a throttled CPU too), career sim (a manager across 10+ seasons: sackings, jobs, national team, retirement), transfer market (fees, windows, loans, free agents, squad sizes per club stay sane), squad building (every club can field a legal XI and bench at every position, within registration rules), finances (no club drifts into impossible debt or wealth), competitions (fixtures, tables, promotion and relegation, cup draws and continental qualification add up), save round-trip and migrations from every old version, long-run stability (20+ seasons without drift or errors), save size and memory, and a UI smoke test that opens every screen and sheet in a headless browser (M)
+- [ ] Wonderkid test (`npm run test:wonderkids`): over 10+ seeded seasons, how many wonderkids each intake produces, how many reach world class, how many stall, flop or peak early, and how their careers compare with real ones (S–M) — round 3
+- [ ] Real-stats converter: a tool that turns a real player's numbers (age, position, minutes, goals, assists, xG, passes, tackles, saves, league strength) into in-game attributes, ability and potential, for the editor and database packs (M–L) — round 3
 
 **Alpha 2 · Editor and history**
 

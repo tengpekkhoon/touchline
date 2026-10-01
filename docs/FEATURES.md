@@ -230,7 +230,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## Yet to be added
 
-39 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
+46 features remain, grouped by the roadmap phase they belong to. The polish backlog and mobile readiness step 2 are done; device builds come before Beta.
 
 Alpha 2 rows are listed in priority order: the editor architecture, historical seasons, youth, career histories, rivalries, world news, relationships, records, economics, then community infrastructure. **Living world** items deepen the simulated world after Alpha 2 and can be pulled forward one at a time.
 
@@ -238,6 +238,13 @@ Design principle from here: don't make the game deeper by adding more screens �
 
 | Area | Feature | Phase |
 | --- | --- | --- |
+| UI | Long text wraps cleanly and never overlaps its label (e.g. long stadium names) | Playtest 1 |
+| Match | Ticker labels only penalties PENALTY; other goals say how they were scored | Playtest 1 |
+| Feed | Followed news about other clubs, players and competitions in the Following feed, not My Club | Playtest 1 |
+| UI | Bottom tab bar on phones, side rail on tablets and landscape | Playtest 2 |
+| Match | Passing and movement that visibly follow the chosen tactics (build-up, width, pressing, roles) | Playtest 5 |
+| Tools | Wonderkid test: how often wonderkids reach world class, stall, flop or peak early, against real careers | Playtest 7 |
+| Tools | Real-stats converter: real player numbers into in-game attributes, ability and potential | Playtest 7 |
 | Platform | "Report a problem" that exports your save | Playtest 7 |
 | Editor | Database and world editor — architecture first, UI after. World (countries, cities, continents, rules) · Clubs (clubs, stadiums, facilities, finances, rivalries) · Players (attributes, contracts, personalities, nationalities) · Staff (managers, coaches, scouts, agents) · Competitions (leagues, cups, continental, international) · Rules (promotion/relegation, registration, foreign players, transfer windows, points, playoffs, prize money) · History (historical starts, events, scenarios, alternate history) | Alpha 2 |
 | History | Historical eras from 1992 with era-appropriate rules | Alpha 2 |
