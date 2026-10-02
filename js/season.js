@@ -656,14 +656,30 @@
     else Sea.apply(fx, m);
   };
   // A decision waiting in today's feed (stops a multi-day skip)
-  Sea.pendingDecision = () =>
-    FM.S.news.some(
-      (n) =>
-        n.day === FM.S.day &&
-        n.year === FM.S.year &&
-        ((n.type === 'bid' && n.data.status === 'open') ||
-          ((n.type === 'press' || n.type === 'meeting' || n.type === 'desk') && !n.resolved)),
-    );
+  const newDecision = (n) =>
+    n.day === FM.S.day &&
+    n.year === FM.S.year &&
+    ((n.type === 'bid' && n.data.status === 'open') ||
+      ((n.type === 'press' || n.type === 'meeting' || n.type === 'desk') && !n.resolved));
+  Sea.pendingDecision = () => FM.S.news.some(newDecision);
+  // What stopped a skip, in words: "2 offers for your players and a press conference need a reply"
+  Sea.pendingText = function () {
+    const c = {};
+    for (const n of FM.S.news.filter(newDecision))
+      c[n.type === 'bid' && n.data && n.data.loan ? 'loan' : n.type] =
+        (c[n.type === 'bid' && n.data && n.data.loan ? 'loan' : n.type] || 0) + 1;
+    const NAME = {
+      bid: ['an offer for one of your players', 'offers for your players'],
+      loan: ['a loan offer for one of your players', 'loan offers for your players'],
+      press: ['a press conference', 'press conferences'],
+      meeting: ['a player who wants a meeting', 'players who want a meeting'],
+      desk: ['a transfer decision', 'transfer decisions'],
+    };
+    const parts = Object.entries(c).map(([k, n]) => (n === 1 ? NAME[k][0] : `${n} ${NAME[k][1]}`));
+    if (!parts.length) return '';
+    const total = Object.values(c).reduce((t, n) => t + n, 0);
+    return `${parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts.at(-1) : parts[0]} ${total > 1 ? 'need' : 'needs'} a reply`;
+  };
   // What the day about to be played is called (progress indicator)
   Sea.dayLabel = function () {
     const S = FM.S,
@@ -719,7 +735,17 @@
       n < (W.employed() ? 12 : 21) &&
       !Sea.pendingDecision()
     );
-    return { summary, n, winChange, win0, deadline, pending: !summary && Sea.pendingDecision(), newOffer: newOffer() };
+    return {
+      summary,
+      n,
+      winChange,
+      win0,
+      deadline,
+      pending: !summary && Sea.pendingDecision(),
+      pendingText: !summary && Sea.pendingText(),
+      cap: !summary && n >= (W.employed() ? 12 : 21),
+      newOffer: newOffer(),
+    };
   };
   Sea.skipToMatch = function (onDay) {
     const it = Sea.skipSteps();

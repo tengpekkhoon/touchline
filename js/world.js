@@ -833,10 +833,16 @@
       const locked = new Set(
         (tactic.lineup || []).map((pid, i) => (xi[i] && xi[i].id === pid ? i : -1)).filter((i) => i >= 0),
       );
+      // a natural (or accomplished) player is preferred: an improvised one must be clearly better to start
+      // (the assistant flags anyone out of position with a natural within 4% of him)
+      const natural = (p, i) => {
+        const f = W.fitAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]);
+        return f >= 0.95 ? 1 : f < 0.8 ? 0.95 : 0.98;
+      };
       const val = (p, i) =>
         !p || (slots[i].t === 'GK') !== (p.pos === 'GK')
           ? 0
-          : W.effAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]) * W.fitnessPick(p);
+          : W.effAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]) * W.fitnessPick(p) * natural(p, i);
       for (let pass = 0, better = true; better && pass < 4; pass++) {
         better = false;
         for (let i = 0; i < slots.length; i++) {

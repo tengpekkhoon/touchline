@@ -491,6 +491,19 @@
     if (!(await UI.load(+d.n))) return;
     UI.applyTheme();
     UI.mount();
+    UI.finishPendingDay();
+  };
+  // Your result is saved at full time, but the rest of that day (every other match) runs when you leave the
+  // post-match screens. Closed before then, the save holds a half-played day: finish it as soon as it loads.
+  UI.finishPendingDay = async function () {
+    if (!FM.S || !FM.S.user || UI.simBusy || !FM.Season.today()) return;
+    // our match today has its result, but other fixtures of the day are still unplayed
+    const fxs = FM.Season.dayFixtures(),
+      mine = fxs.find((f) => W.isMine(f.h) || W.isMine(f.a));
+    if (!mine || !mine.res || fxs.every((f) => f.res)) return;
+    const r = await FM.SimRunner.run('day');
+    UI.afterDay(r && r.summary);
+    UI.toast('The rest of the matchday has been played', 3000);
   };
 
   const NG = {

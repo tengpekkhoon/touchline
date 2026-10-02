@@ -4,7 +4,7 @@ Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/420
 
 ## At a glance
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are playtest feedback batches 1–6 (bugs, interface, speed, realism, transfer market, tactics and match engine, big features), including a second round of feedback folded into batches 2, 4 and 6. A third round adds items to batches 1, 5 and 7 (marked "round 3"); those and batch 7 (platform) are next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
+Four prototype builds, Alpha 1, the polish and small-features backlogs and mobile readiness step 2 are done, and so are playtest feedback batches 1–6 (bugs, interface, speed, realism, transfer market, tactics and match engine, big features), including a second round of feedback folded into batches 2, 4 and 6. A third and fourth round add items to batches 1, 5 and 7 (marked "round 3" and "round 4"); batch 7 (platform) is next, then Alpha 2 (editor and history) and a living-world backlog; device builds and a native store release follow. Phases are ordered but not yet dated.
 
 ```mermaid
 flowchart TB
@@ -96,6 +96,11 @@ Playtest feedback grouped into seven batches, in working order; most important f
 - [x] Penalties look and read like penalties: taken from the spot on the pitch (direct free kicks from a dead ball too), and the commentary says who won it ("Penalty to TOT! …"); no other goal is labelled a penalty (S) — round 3
 - [x] Followed news about other clubs, players and competitions goes to the Following feed, never the My Club feed; your boyhood club counts as followed (S) — round 3
 - [x] Tackles and interceptions in every match (not only the ones drawn on the pitch), about 25 a team as in real football, and each one adds to the player's match rating; defenders and holding midfielders no longer rate lowest (S–M) — round 3
+- [x] Leaving on the full-time screen no longer leaves a half-played round: a save that loads with your result in but the rest of the day unplayed finishes the day at once (S) — round 4
+- [x] Auto pick prefers natural and accomplished players: an improvised one must be clearly better (5%) to start, so the assistant's "a natural there is just as effective" note no longer contradicts it (improvised starters across 58 top-flight squads 19 → 10, flagged 7 → 0) (S) — round 4
+- [x] "Next match" says why it stopped ("Stopped after 2 days: 2 offers for your players need a reply") and opens the Needs reply list (S) — round 4
+- [x] One out-of-position warning before kick-off, not two (S) — round 4
+- [x] Finishing checked against xG over full seasons: goals 0.98 per xG (every chance type 0.92–1.01), 32% of shots on target scored, teams over or under their xG by −17 to +13 goals a season, as in real leagues; no change needed (S) — round 4
 
 *1b · Playtest report fixes*
 

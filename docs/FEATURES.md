@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-222 features are playable in the web prototype today. Build = the build that added it.
+225 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -232,6 +232,9 @@ Every feature from the game design document, with what is playable in the protot
 | Feed | Followed news in the Following feed, never My Club; your boyhood club counts as followed | Playtest round 3 |
 | Match | Tackles and interceptions in every match, about 25 a team, each adding to the player's match rating | Playtest round 3 |
 | Match | Passing and shape that follow your tactics: playing out from the back, recycling possession, going long, breaking fast, wing play; width, compact blocks, high presses | Playtest round 3 |
+| Season | A half-played matchday (left on the full-time screen) is finished as the save loads | Playtest round 4 |
+| Tactics | Auto pick prefers natural and accomplished players over improvised ones | Playtest round 4 |
+| UI | "Next match" says why it stopped and opens the Needs reply list | Playtest round 4 |
 
 ## Yet to be added
 

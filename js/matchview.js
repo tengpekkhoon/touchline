@@ -87,15 +87,7 @@
         '🔋',
         `${tired.map((p) => `${W.short(p)} (${Math.round(p.fitness)}%)`).join(', ')} ${tired.length === 1 ? 'is' : 'are'} short of match fitness — injury risk and a weaker second half.`,
       ]);
-    const oop = xi.filter((p, i) => {
-      const slot = D.FORMATIONS[(nt ? FM.clubOf(W.isMine(fx.h) ? fx.h : fx.a).tactic : FM.S.user.tactic).formation][i];
-      return slot && W.fitAt(p, slot.t) < 0.8;
-    });
-    if (oop.length)
-      out.push([
-        '🧩',
-        `${oop.map((p) => W.short(p)).join(', ')} ${oop.length === 1 ? 'is' : 'are'} playing out of position.`,
-      ]);
+    // (players out of position have their own warning above the reminders)
     if (xi.length < 11) out.push(['⚠️', `Only ${xi.length} fit players for the starting XI.`]);
     if (!nt) {
       const leaving = xi.filter((p) => !p.loan && p.contract <= FM.S.year);

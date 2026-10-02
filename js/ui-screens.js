@@ -413,11 +413,26 @@
   UI.acts.skipToMatch = async () => {
     const r = await FM.SimRunner.run('toMatch');
     if (!r) return;
+    // stopped for a decision: say what it is and open the list of things waiting for a reply
+    if (!r.summary && r.pending && W.employed()) UI.sub.feed = 'reply';
     UI.afterDay(r.summary);
+    const days = `${r.n} day${r.n === 1 ? '' : 's'}`;
     if (!r.summary)
       UI.toast(
-        `⏩ ${r.n} day${r.n === 1 ? '' : 's'} simulated${r.newOffer ? ' — a new job offer has arrived' : !W.employed() ? ' — no new offers yet' : r.winChange ? (r.win0 ? ' — the transfer window has closed' : ' — the transfer window is open') : r.deadline ? " — it's deadline day" : r.pending ? ' — a decision is waiting in the feed' : ''}`,
-        3500,
+        r.newOffer
+          ? `⏩ ${days} simulated — a new job offer has arrived`
+          : !W.employed()
+            ? `⏩ ${days} simulated — no new offers yet`
+            : r.winChange
+              ? `⏸ Stopped after ${days}: the transfer window has ${r.win0 ? 'closed' : 'opened'}`
+              : r.deadline
+                ? `⏸ Stopped after ${days}: it's deadline day`
+                : r.pending
+                  ? `⏸ Stopped after ${days}: ${r.pendingText || 'a decision needs a reply'}`
+                  : r.cap
+                    ? `⏩ ${days} simulated (the longest skip) — your next match is further off`
+                    : `⏩ ${days} simulated`,
+        r.pending ? 5000 : 3500,
       );
   };
   UI.acts.preview = () => FM.MatchView.preview();
@@ -2306,6 +2321,7 @@
       UI.tab = 'home';
       UI.mount();
       UI.toast(`Backup imported into slot ${n}`, 3000);
+      UI.finishPendingDay();
     } catch (e) {
       console.warn(e);
       UI.toast('⚠️ Could not import: ' + (e.message || 'storage error'), 4500);
