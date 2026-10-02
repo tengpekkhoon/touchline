@@ -112,6 +112,7 @@
     const sp = W.spell(p);
     if (sp) sp.to = S.year;
     p.loan = { from: from.id, share, fee, year: S.year, wg: FM.Season.gamesPlayed(toId), wa: 0 }; // wg/wa: minutes watch
+    p.team = undefined; // out on loan he plays for the borrower's first team, not a youth side
     W.startSpell(p, toId);
     W.spell(p).loan = true;
     W.spell(p).signed = true;
@@ -183,6 +184,7 @@
       const parent = p.loan.from,
         was = p.clubId;
       delete p.loan;
+      p.team = undefined; // back in the first-team squad (the youth sides are re-sorted each summer)
       W.startSpell(p, parent);
       if (W.isUser(parent))
         FM.News.add({

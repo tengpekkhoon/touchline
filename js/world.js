@@ -448,6 +448,8 @@
     if (p.clubId && p.clubId !== clubId && p.season && p.season.apps > 0)
       (p.splits = p.splits || []).push({ c: p.clubId, s: { ...p.season } });
     p.clubId = clubId;
+    if (p.team) p.team = undefined; // a new club (or a loan): he joins its first-team squad, not a youth side
+    delete p.teamSet;
     const fresh = sqIdx.S === FM.S && sqIdx.ver === W.rosterVer;
     W.rosterVer++;
     if (fresh) {
@@ -765,14 +767,16 @@
     const club = FM.clubOf(clubId);
     let pool = (squad || (club.sim === 'nation' ? FM.Intl.squad(club.code) : W.squad(clubId))).filter(W.available);
     // Youth-side players (U21, U18) only step up when the first-team squad is short
-    if (club.sim !== 'nation' && pool.some((p) => p.team)) {
-      const first = pool.filter((p) => !p.team);
+    // (a loanee is never one of them: he came to play for the first team)
+    const youth = (p) => p.team && !p.loan;
+    if (club.sim !== 'nation' && pool.some(youth)) {
+      const first = pool.filter((p) => !youth(p));
       pool =
         first.length >= 16
           ? first
           : first.concat(
               pool
-                .filter((p) => p.team)
+                .filter(youth)
                 .sort((a, b) => b.ca - a.ca)
                 .slice(0, 16 - first.length),
             );

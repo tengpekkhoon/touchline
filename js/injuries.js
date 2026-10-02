@@ -238,11 +238,13 @@
       n.reply = `He's available — ${back >= 4 ? 'the physio is uneasy' : 'fingers crossed'}.`;
     } else if (ch.k === 'wait') n.reply = 'He will complete his rehab.';
   };
-  Inj.expireDecisions = function () {
+  // Unanswered decisions are left to the head physio after two days; all = at the season's end (the match a
+  // "risk him?" was about has been played)
+  Inj.expireDecisions = function (all) {
     const s = S();
     for (const n of s.news) {
       if (n.type !== 'medical' || n.resolved) continue;
-      if (s.year > n.year || s.day - n.day >= 2) {
+      if (all || s.year > n.year || s.day - n.day >= 2) {
         Inj.resolve(n, n.rec || 0);
         n.resolved = `Head physio decided: ${n.resolved}`;
       }

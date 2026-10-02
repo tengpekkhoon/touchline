@@ -356,6 +356,7 @@
     if (sp) sp.to = s.year;
     const parent = p.loan.from;
     delete p.loan;
+    p.team = undefined;
     W.startSpell(p, parent);
   };
 

@@ -847,6 +847,7 @@
       (c) =>
         (c.sim === 'full' || lower(c)) &&
         c.comp &&
+        !c.parent && // a B team's job goes with the parent club's set-up, not to an outside manager
         !taken.has(c.id) &&
         c.id !== justLeft &&
         c.rep <= u.rep + 14 &&
@@ -1417,6 +1418,7 @@
   Sea.newSeason = function (entry) {
     const S = FM.S;
     Sea.settleEra();
+    FM.Injury.expireDecisions(true); // last season's medical questions are settled before the year turns
     S.year++;
     FM.Analytics.newSeason();
     FM.Transfers.endLoans();

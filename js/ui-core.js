@@ -582,7 +582,8 @@
         const q = plain(NG.q.trim());
         const html = D.LEAGUE_CLUBS.map(([cid, key, nat], i) => {
           if (NG.lg !== 'all' && NG.lg !== cid) return '';
-          const rows = D[key].filter((r) => !q || plain(r[0]).includes(q) || plain(r[2] || '').includes(q));
+          // B teams (row[9] names the parent) aren't yours to manage: their players belong to the parent club
+          const rows = D[key].filter((r) => !r[9] && (!q || plain(r[0]).includes(q) || plain(r[2] || '').includes(q)));
           return rows.length
             ? `<div class="small b" style="color:${cols[i]};margin:16px 0 8px;letter-spacing:1px">${D.NATIONS[nat].flag} ${names[cid].toUpperCase()} · ${D.NATIONS[nat].name.toUpperCase()}</div>${rows.map((r) => row(r, tier[cid])).join('')}`
             : '';
@@ -704,6 +705,7 @@
   // Pick any club at random and scroll it into view
   UI.acts.ngRandom = () => {
     const all = D.allClubRows()
+      .filter((r) => !r[9]) // not a B team
       .map((r) => 'c_' + r[1])
       .filter((id) => id !== NG.club);
     NG.club = U.pick(all);

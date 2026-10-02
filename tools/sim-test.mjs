@@ -332,7 +332,7 @@ for (let s = 0; s < SEASONS; s++) {
 }
 
 // ---- training and youth sides ----
-{
+if (W.employed()) {
   const Tr = FM.Training,
     t = Tr.get(),
     p = W.squad(W.userClub().id).find((x) => x.pos !== 'GK' && !x.loan);
@@ -345,6 +345,14 @@ for (let s = 0; s < SEASONS; s++) {
   Object.assign(t, { focus: 'balanced', intensity: 'normal' });
   FM.Youth.round();
   check(FM.Youth.table('ENG', 'u21').length >= 40, 'no English U21 league table');
+  // only under-22s at their own full or light club play in a youth side (never a loanee: he plays for the borrower)
+  const wrongYouth = Object.values(FM.S.players).filter(
+    (x) => !x.retired && x.team && (x.loan || W.age(x) > 22 || !FM.Youth.hasYouth(FM.S.clubs[x.clubId])),
+  );
+  check(
+    wrongYouth.length === 0,
+    `${wrongYouth.length} players in youth sides who shouldn't be (e.g. ${wrongYouth[0] && wrongYouth[0].id})`,
+  );
   const b = FM.Youth.bTeamOf('c_RMA');
   check(b && FM.Youth.owner(b.id) === 'c_RMA', 'Real Madrid Castilla does not belong to Real Madrid');
 }
