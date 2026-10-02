@@ -137,6 +137,11 @@
         Math.round(Math.min(utility ? 0.98 : 0.96, base + U.rand(0.05, utility ? 0.18 : 0.13)) * 100) / 100;
     }
   };
+  // His overall in a slot: his ability at that position, less what playing out of position costs him (his own position
+  // and any he has learned: no cost). The number on the pitch, so an improvised full-back reads lower than the same
+  // player in his own place. (Fitness and morale are form, not ability, and are left out.)
+  W.slotOverall = (p, slotType, slot, role) =>
+    Math.round(W.calcCA(p, slotType) * (0.62 + 0.38 * W.fitAt(p, slotType, slot, role)));
   W.effAt = function (p, slotType, slot, role) {
     const fit = W.fitAt(p, slotType, slot, role);
     return W.calcCA(p, slotType) * (0.62 + 0.38 * fit) * (0.8 + 0.2 * (p.fitness / 100)) * (0.95 + p.morale / 1000);
@@ -1238,6 +1243,7 @@
       wbPos: 2, // wing-backs are a position from the start (older saves convert theirs on load)
       wmPos: 1, // so are wide midfielders (LM/RM)
       compRules: 2, // and each league's real promotion, relegation and play-off rules
+      clubAbbr: 1, // clubs show their real abbreviations and nicknames
       rules: {
         win: opts.win || 3,
         subs: opts.subs || 5,
@@ -1273,11 +1279,13 @@
     S.comps.CWC = { id: 'CWC', type: 'world', name: 'FIFA Club World Cup', short: 'CWC', clubs: [], prize: 1e7 };
 
     const mkClub = (row, compId, nat, sim) => {
-      const [name, short, city, c1, c2, identity, rep] = row;
+      const [name, code, city, c1, c2, identity, rep] = row;
+      const info = D.CLUB_INFO[code] || [],
+        short = info[0] || code.replace(/([A-Z]{3,})\d$/, '$1'); // what the game shows: the club's real abbreviation
       const stadium =
         row[7] || { MEX: `Estadio ${city}`, MAR: `Stade de ${city}`, SRB: `Stadion ${city}` }[nat] || `${city} Stadium`;
       const cap = row[8] || Math.round((8000 + (rep - 40) * 900) / 500) * 500;
-      const id = 'c_' + short,
+      const id = 'c_' + code,
         parent = row[9] ? 'c_' + row[9] : null; // a B team's parent club
       const lvl = W.levelFor(rep),
         idt = D.IDENTITY[identity];
@@ -1289,6 +1297,7 @@
         id,
         name,
         short,
+        nick: info[1] || '', // its nickname, where it has a well-known one
         city,
         nat,
         colors: [c1, c2],
@@ -1315,7 +1324,7 @@
         chant: U.pick(D.CHANTS)
           .replace('{city}', city)
           .replace('{short}', short)
-          .replace('{nick}', name.split(' ').pop()),
+          .replace('{nick}', (info[1] || name.split(' ').pop()).replace(/^(The|Die|Les|Los|Los|Le|La|El|Il|De) /, '')),
         tradition: U.pick(D.TRADITIONS),
         rival: null,
         derby: null,

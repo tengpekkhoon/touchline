@@ -143,6 +143,16 @@
       for (const l of FM.D.LEAGUES)
         if (s.comps[l.id] && s.comps[l.id].type === 'league') s.comps[l.id].rules = JSON.parse(JSON.stringify(l.rules));
     }
+    // real-life club abbreviations and nicknames (the id keeps the club's code)
+    if (!s.clubAbbr && s.clubs && FM.D.CLUB_INFO) {
+      s.clubAbbr = 1;
+      for (const [id, c] of Object.entries(s.clubs)) {
+        const code = id.slice(2),
+          info = FM.D.CLUB_INFO[code];
+        c.short = (info && info[0]) || code.replace(/([A-Z]{3,})\d$/, '$1');
+        if (info && info[1] && !c.nick) c.nick = info[1];
+      }
+    }
     // the world ranking is a coefficient now (it was an Elo rating, 1500 for an average side)
     for (const t of Object.values(s.nteams || {}))
       if (t.coef == null && t.elo != null) {

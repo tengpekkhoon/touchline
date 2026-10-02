@@ -1095,6 +1095,565 @@
     ['Flint Town United', 'FLI', 'Flint', '#FFFFFF', '#E30613', 'fan', 37],
   ];
 
+  // Real-life abbreviations (as on the league's broadcasts) and nicknames, by the club's code (the part of its id
+  // after c_). An empty abbreviation keeps the code; no nickname means there is no widely used one.
+  FM.D.CLUB_INFO = Object.fromEntries(
+    `MCI||Citizens
+LIV||Reds
+ARS||Gunners
+CHE||Blues
+MUN||Red Devils
+NEW||Magpies
+TOT||Spurs
+AVL||Villans
+BHA||Seagulls
+NFO||Tricky Trees
+WHU||Hammers
+CRY||Eagles
+BOU||Cherries
+FUL||Cottagers
+BRE||Bees
+EVE||Toffees
+WOL||Wolves
+LEE||Whites
+SUN||Black Cats
+BUR||Clarets
+LEI||Foxes
+SOU||Saints
+IPS||Tractor Boys
+SHU||Blades
+MID||Boro
+BIR||Blues
+WBA||Baggies
+NCI|NOR|Canaries
+COV||Sky Blues
+WAT||Hornets
+WRX|WRE|Red Dragons
+STK||Potters
+HUL||Tigers
+SWA||Swans
+DER||Rams
+SHW||Owls
+BLB||Rovers
+BRC||Robins
+QPR||Hoops
+PNE||Lilywhites
+MIL||Lions
+POM|POR|Pompey
+CHA||Addicks
+OXF||U's
+CAR||Bluebirds
+LUT||Hatters
+HUD||Terriers
+BWA|BOL|Trotters
+PLY||Pilgrims
+REA||Royals
+BNS|BAR|Tykes
+WIG||Latics
+STO|SCO|Hatters
+BFD|BRA|Bantams
+BLP||Seasiders
+PBO||Posh
+ROT||Millers
+LIN||Imps
+DON||Rovers
+LEY||O's
+WYC||Chairboys
+MNS||Stags
+EXE||Grecians
+PVA||Valiants
+WIM||Dons
+STV||Boro
+NTN||Cobblers
+BRT||Brewers
+ACS|ACC|Stanley
+BNT||Bees
+BRW||Bluebirds
+BRR||Pirates
+BRO||Lilywhites
+CAMU|CAM|U's
+CHT||Robins
+CHF||Spireites
+COL||U's
+CRAW|CRA|Red Devils
+CREW|CRE|Railwaymen
+FLE||Cod Army
+GILL|GIL|Gills
+GRI||Mariners
+HARR|HAR|Sulphurites
+MKD||Dons
+NWP||Exiles
+NCO||Magpies
+OLD||Latics
+SAL||Ammies
+SHR||Shrews
+SWI||Robins
+TRA||Rovers
+WAL||Saddlers
+RMA||Los Blancos
+FCB|BAR|Blaugrana
+ATM||Colchoneros
+ATH||Lions
+VIL||Yellow Submarine
+RSO|SOC|La Real
+BET||Verdiblancos
+SEV||Nervionenses
+GIR||Blanquivermells
+VAL||Los Che
+CEL||Celestes
+OSA||Los Rojillos
+MLL||Bermellones
+RCD|ESP|Periquitos
+RAY||Franjirrojos
+GET||Azulones
+ALA||Babazorros
+OVI||Carbayones
+LEV||Granotes
+ELC||Franjiverdes
+DEP||Super Depor
+LPA||Canarias
+VLD|VLL|Pucela
+MAL||Boquerones
+ALM||Indálicos
+ZAR||Maños
+LEG||Pepineros
+GRA||Nazaríes
+SPG|SPG|Mareona
+RSA|RAC|Racinguistas
+CAD||Submarino Amarillo
+EIB||Armeros
+CAS||Orelluts
+AND||Tricolores
+HUE||Azulgranas
+ALB||Queso Mecánico
+BGS||Burgaleses
+CCF||Blanquiverdes
+MIR||Jabatos
+RSS|RSB|Txuri-urdin
+CYD||Cultural
+CEU||Caballas
+RMC||Castilla
+BAT||Barça Atlètic
+BIA|BIL|Cachorros
+BAY|FCB|Die Roten
+BVB||Die Schwarzgelben
+B04||Werkself
+RBL||Die Roten Bullen
+SGE||Die Adler
+VFB||Die Schwaben
+SCF||Breisgau-Brasilianer
+WOB||Die Wölfe
+BMG||Die Fohlen
+HSV||Die Rothosen
+KOE||Geißböcke
+SVW||Die Werderaner
+M05||Nullfünfer
+FCU||Die Eisernen
+TSG||Kraichgauer
+AUG|FCA|Fuggerstädter
+STP||Kiezkicker
+HDH|FCH|Die Schlossherren
+BSC||Die Alte Dame
+S04||Knappen
+KSV||Störche
+VFLB|BOC|Die Unabsteigbaren
+F95||Fortunen
+H96||Die Roten
+FCKL|FCK|Die Roten Teufel
+SCPA|SCP|Die Ostwestfalen
+FCNB|FCN|Der Club
+KSC||Die Badener
+D98||Lilien
+SGF||Kleeblatt
+FCMA|FCM|Die Blau-Weißen
+EBS||Die Löwen
+PRM||Preußen
+SVE||Elfen
+DSC||Die Arminen
+SGD||Die Schwarz-Gelben
+VFS|VFS|
+BVZ|BVZ|
+TSZ|TSZ|
+M60||Die Löwen
+FCE||Lausitzer
+FCH|HRO|Kogge
+SVWW|WIE|Die Wehener
+VKO|VIK|
+SVM|SVM|Die Buwe
+AUE||Veilchen
+AAC||Kartoffelkäfer
+SCV||
+OSN||Die Lila-Weißen
+RWE||Die Rot-Weißen
+JAH||Jahn
+ULM||Spatzen
+MSV||Zebras
+FCS||Die Blauschwarzen
+FCI||Schanzer
+S05||
+PSG||Les Parisiens
+OMA|OM|Les Phocéens
+ASM|MON|Les Monégasques
+OLY|OL|Les Gones
+LIL||Les Dogues
+NIC||Les Aiglons
+REN||Les Rouge et Noir
+RCL|LEN|Les Sang et Or
+RCS|STR|Le Racing
+SBR|BRE|Les Pirates
+TFC|TOU|Les Violets
+NAN||Les Canaris
+PFC||
+LOR||Les Merlus
+AUX||Les Auxerrois
+HAC|HAV|Les Ciel et Marine
+ANG||Les Scoistes
+FCM|MET|Les Grenats
+MHS||Les Pailladins
+STE|ASSE|Les Verts
+SDR|REI|Les Rouge et Blanc
+EAG|GUI|Les Rouge et Noir
+PAU||
+ANN||
+LAV||Les Tangos
+GRE2|GF38|Les Isérois
+AMI||Les Licornes
+RSF||Les Audoniens
+ROD||Les Ruthénois
+CF63|CLE|Les Clermontois
+USL|DUN|Les Dunkerquois
+SCBA|BAS|Les Corses
+LMF||Les Sang et Or
+ASN|ASNL|Les Chardons
+USB||
+ETA|ETR|Les Troyens
+INT||Nerazzurri
+JUV||Bianconeri
+NAP||Partenopei
+ACM|MIL|Rossoneri
+ATA||La Dea
+ROM||Giallorossi
+LAZ||Biancocelesti
+BOL||Rossoblù
+FIO||Viola
+COM||Lariani
+TOR||Granata
+UDI||Friulani
+GEN||Grifone
+PAR||Crociati
+CAG||Isolani
+SAS||Neroverdi
+VER||Gialloblù
+LEC||Salentini
+CRE||Grigiorossi
+PIS||Nerazzurri
+MNZ|MON|Biancorossi
+VEN||Arancioneroverdi
+EMP||Azzurri
+PAL2|PAL|Rosanero
+SAM||Blucerchiati
+BARI|BAI|Galletti
+SPE||Aquilotti
+MOD||Canarini
+CTZ||Aquile
+CES||Cavallucci Marini
+JST|JUS|Vespe
+SUD2|SUD|Biancorossi
+REG||Granata
+CAR2|CAR|Apuani
+PAD||Biancoscudati
+MAN||Virgiliani
+ENT||Diavoli Neri
+AVE||Lupi
+PES||Delfini
+FRO||Giallazzurri
+AJA||Godenzonen
+PSV||Boeren
+FEY||De Club van het Zuiden
+AZA|AZ|Kaaskoppen
+TWE||Tukkers
+UTR||Domstedelingen
+GAE||Deventenaren
+NEC||Nijmegenaren
+HEE||Superfriezen
+GRO||Trots van het Noorden
+SPR|SPA|Het Kasteel
+PEC||Blauwvingers
+FSI|FOR|Limburgers
+NAC||Mat Kleur
+HER||Superboeren
+VOL||
+EXC||Kralingers
+TEL||
+BEN|SLB|Águias
+FCP||Dragões
+SCP||Leões
+SCB||Arsenalistas
+VSC||Conquistadores
+SCL||Santa
+FAM||Famalicenses
+EST||Canarinhos
+GIL||Galos
+ARO||Arouquenses
+RAV||Rioavistas
+MOR||Cónegos
+CPI||Gansos
+CDN|NAC|Alvinegros
+AVS||
+EAM|AMA|Tricolores
+ALV||
+TON||Auriverdes
+RIV||Millonarios
+BOC||Xeneizes
+RAC||La Academia
+IND||Rojos
+ELP|EST|Pincharratas
+SLO||Cuervos
+VEL||El Fortín
+TAL||La T
+ROS||Canallas
+LAN||Granate
+ARJ|ARG|El Bicho
+NOB||Leprosos
+HUR||El Globo
+DYJ||El Halcón
+BEL||Piratas
+GLP||El Lobo
+GOD||El Tomba
+TIG||El Matador
+UNI||Tatengues
+INS||La Gloria
+BAN||El Taladro
+IRI||La Leonera
+ATU||El Decano
+PLA||Calamares
+BAR||El Guapo
+CCD||Ferroviario
+SAR||El Verde
+RIE||El Malevo
+MIA||Herons
+LAF|LAFC|Black and Gold
+LAG||Galaxy
+SEA||Sounders
+CIN||Orange and Blue
+CLB||Black and Gold
+PHI||Union
+NYC||Pigeons
+ATL||Five Stripes
+NYR|RBNY|Red Bulls
+NSH||Boys in Gold
+ORL||Lions
+VAN||Whitecaps
+PTI|POR|Timbers
+MIN||Loons
+SDG|SD|Black and Blue
+RSL||Claret and Cobalt
+DAL||Burn
+CLT||Crown
+HOU||Dynamo
+SKC||Wizards
+STL||Citys
+RAP|COL|Rapids
+AUS|ATX|Verde and Black
+CHI||Fire
+DCU|DC|Black-and-Red
+NER|NE|Revs
+TRT|TOR|Reds
+MTL||Les Bleus
+SJE|SJ|Quakes
+VIS||Vissel
+KAS|KSM|Antlers
+URA||Reds
+SFH|HIR|Purple Archers
+KAW||Frontale
+YFM||Tricolor
+GAM||Blue and Blacks
+MAC||Zelvia
+FCT|TOK|Tokyo
+KSW|KSR|Sun Kings
+NAG|NGO|Grampus
+CER|C-O|Sakura
+AVI|FUK|Avispa
+KYO||Purple Sanga
+NII||Swans
+SBM|SHO|Bellmare
+TVE|TKV|Verdy
+SHI|SHM|S-Pulse
+OKA||Fagiano
+YFC||
+AME||Águilas
+MTY||Rayados
+TGR|TIG|Felinos
+CHV|GUA|Rebaño Sagrado
+CAZ||La Máquina
+TOL||Diablos Rojos
+PUM||Pumas
+PAC||Tuzos
+LEO||La Fiera
+SLA|SAN|Guerreros
+ATS||Rojinegros
+TIJ||Xolos
+NCX|NEC|Rayos
+QRO||Gallos Blancos
+PUE||La Franja
+JUA||Bravos
+ASL||Atlético
+MAZ||Cañoneros
+ENY||People's Elephant
+RAN|ENR|Flying Antelopes
+RVU||Pride of Rivers
+KPI|KAN|Sai Masu Gida
+LOB||Pride of Benue
+PLU||Peace Boys
+ULS||Tigers
+JBH|JEO|Green Motors
+POH||Steelers
+SEO||
+GWA||Penguins
+GAN||Orange
+JEJ||Mandarins
+DGU|DAE|Sky Blue
+BRU|BUR|Thunder Castle
+BGP||The Rabbits
+PRT||Dockers
+CRA|CRU|Beetles
+CHB|CHO|Sharks
+RAT||Dragons
+CZV||Crveno-beli
+FKP|PAR|Crno-beli
+VOJ||Vojvoda
+WAC||Les Rouges
+RCA||Les Verts
+FAR||Les Militaires
+CLB2|CLU|Blauw-Zwart
+USG||Les Unionistes
+AND2|AND|Mauves
+GNK||Smurfen
+GNT||Buffalo's
+ANT||The Great Old
+STL2|STA|Rouches
+CER2|CER|Groen-Zwart
+KVM|MEC|Malinwa
+CHL|CHA|Zebras
+STV2|STV|Kanaries
+ZWA||Essevee
+GAL|GS|Aslanlar
+FEN|FB|Sarı Kanaryalar
+BJK||Kara Kartallar
+TS||Bordo Mavililer
+IBFK|IBB|Turuncu-Lacivertliler
+SAM2|SAM|Kızıl-Beyazlılar
+GOZ|GÖZ|Göz-Göz
+SLA2|SLA|Sešívaní
+SPA||Letenští
+PLZ||Viktoria
+BAN2|BAN|Slezané
+OLY2|OLY|Thrylos
+PAO||Prasini
+AEK||Enosis
+PAOK||Dikefalos Aetos
+ARI||Kitrini
+BOD||Glimt
+BRA2|BRA|Brann
+VIK||Vikings
+RBK||Troillongan
+MOL||Moldejuvelene
+LPO||Kolejorz
+RAK||Medalicy
+JAG||Duma Podlasia
+LEG2|LEG|Legioniści
+POG||Portowcy
+GOR||Trójkolorowi
+CRA2|CRA|Pasy
+WID||Widzewiacy
+FCK||Løverne
+FCM2|FCM|Ulvene
+BIF||Drengene fra Vestegnen
+RBS||Die Roten Bullen
+STU||Blackies
+RAP2|RAP|Die Grün-Weißen
+FAK||Veilchen
+LASK|LAS|Die Linzer
+BAS||Rotblau
+YB||Gelb-Schwarze
+SER||Grenat
+FCZ||Stadtzürcher
+GCZ||Hoppers
+CEL2|CEL|Bhoys
+RAN2|RAN|Gers
+HEA||Jambos
+ABE||Dons
+HIB||Hibees
+MOT2|MOT|Well
+DUN2|DUN|Terrors
+KIL||Killie
+SMI|STM|Buddies
+DND||Dark Blues
+LIV2|LIV|Lions
+FAL||Bairns
+MCY||Cityzens
+SYD||Sky Blues
+MVC||Big V
+WSW||Wanderers
+CCM||Mariners
+BRQ|BRI|Roar
+AUC|AUK|
+ADU|ADE|Reds
+WPX|WEL|Nix
+MAF|MAC|Bulls
+NJE|NEW|Jets
+PGL|PER|Glory
+FTC||Fradi
+PAK||Atomvárosiak
+DVS||Loki
+UJP||Lilák
+MTK||Kékek
+SHL|SHE|Reds
+SRO|SRFC|Hoops
+DRY|DER|Candystripes
+BHI|BOH|Gypsies
+SPAT|STP|Saints
+DRO||Drogs
+GAU|GAL|Tribesmen
+SLR|SLI|Bit o' Red
+WFI|WAT|Blues
+DDK|DUN|Lilywhites
+TNS||Saints
+BAL||Lakesiders
+CQN||Nomads
+HAV||Bluebirds
+BTU||Dragons
+CMU||Archers
+LLA||Reds
+CAE||Canaries
+NEW2|NEW|Robins
+COL2|COL|Seagulls
+FLI||Silkmen
+FLA||Mengão
+PAL||Verdão
+COR||Timão
+SAO||Tricolor Paulista
+BOT||Fogão
+CAM||Galo
+GRE||Imortal
+SCI|INT|Colorado
+FLU||Tricolor das Laranjeiras
+CRU||Raposa
+VAS||Gigante da Colina
+SAN||Peixe
+BAH||Esquadrão
+FTZ|FOR|Leão do Pici
+RBB||Massa Bruta
+CEA||Vozão
+SPT||Leão da Ilha
+VIT||Leão da Barra
+JVD|JUV|Ju
+MSL|MIR|Leão Caipira`
+      .split('\n')
+      .map((l) => l.split('|'))
+      .map(([code, abbr, nick]) => [code, [abbr, nick]]),
+  );
+
   FM.D.RIVALS.push(
     ['CLB2', 'CER2', 'Brugse derby'],
     ['AND2', 'STL2', 'Classique'],

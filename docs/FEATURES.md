@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-251 features are playable in the web prototype today. Build = the build that added it.
+253 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -256,6 +256,8 @@ Every feature from the game design document, with what is playable in the protot
 | International | A coefficient ranking (about 50 for an average nation, 90 and over for the best) replaces the Elo rating; older saves convert | Playtest round 7 |
 | Competitions | More cups: domestic cups in Italy (Coppa Italia), Portugal, the Netherlands, Argentina, the USA (U.S. Open Cup) and Japan (Emperor's Cup), and three more continental cups: the UEFA Conference League (the places after the Europa League's), the AFC Champions League Two and the CAF Confederation Cup; older saves get them at the next season's draw | Playtest round 7 |
 | Competitions | Real rules per competition (see COMPETITION_RULES.md): each league's own tiebreakers (head-to-head in Spain, Italy and Portugal, wins first in Brazil and MLS, goals scored first in Korea), UEFA's head-to-head in group tables, two-legged semi-finals in the Coppa Italia and Taça, a two-legged Copa do Brasil, neutral grounds for the FA Cup semi-finals and the Copa Argentina, single-match centralised AFC Elite knockouts, two-legged CAF and CONCACAF finals, two-legged play-off finals in Spain and Italy, Germany's relegation play-offs (16th against the 3rd of the division below), and no away goals anywhere | Playtest round 7 |
+| Clubs | Real-life abbreviations (OM, OL, SLB, ASSE, BAR, MIL, ...) and nicknames (Gunners, Los Blancos, Die Roten, Bhoys, ...) for 538 clubs, shown on the club screens and in the chants; older saves get them | Playtest round 7 |
+| Players | Overall at the slot: the number on the pitch is his overall at that position (an improvised full-back reads lower than in his own place), the profile shows his overall and his overall at each position he can play, and its tooltip explains how overall maps to stars | Playtest round 7 |
 | UI | Bottom bar: six equal columns, icons and labels on one line (International is Nations) | Playtest round 7 |
 | Players | Keeper profiles: keeper attribute groups and realistic outfield skills; clean sheets on the career line | Playtest round 6 |
 | Season | A half-played matchday (left on the full-time screen) is finished as the save loads | Playtest round 4 |

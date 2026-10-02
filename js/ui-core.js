@@ -87,6 +87,21 @@
     const p = pot != null ? (Math.round(pot * 2) / 2 / 5) * 100 : b;
     return `<span class="stars" style="background:linear-gradient(90deg,var(--gold) ${a}%,color-mix(in srgb,var(--gold) 55%,transparent) ${a}% ${Math.max(b, a)}%,color-mix(in srgb,var(--gold) 28%,transparent) ${Math.max(b, a)}% ${Math.max(p, b)}%,var(--line2) ${Math.max(p, b)}%);-webkit-background-clip:text;background-clip:text;color:transparent">★★★★★</span>`;
   };
+  // His overall: the number (1–100) the stars are drawn from. A scouted player's is a range.
+  C.playerOverall = function (p) {
+    const v = FM.Scouting.view(p);
+    if (v.own) return String(Math.round(p.ca));
+    if (!v.ca) return '?';
+    return v.ca[0] === v.ca[1] ? String(v.ca[0]) : `${v.ca[0]}–${v.ca[1]}`;
+  };
+  // Overall at each position he can play (his own first), when his attributes are known
+  C.posOveralls = function (p) {
+    if (p.pos === 'GK') return '';
+    const at = (t) => Math.round(W.calcCA(p, t) * (0.62 + 0.38 * W.fitAt(p, t)));
+    return [[W.posLabel(p), Math.round(p.ca)], ...W.canPlay(p).map(([t]) => [W.altLabel(p, t), at(t)])]
+      .map(([l, n]) => `${l} ${n}`)
+      .join(' · ');
+  };
   C.playerStars = function (p) {
     const v = FM.Scouting.view(p);
     if (v.own) return C.stars(W.stars(p.ca), W.stars(p.ca), W.stars(p.pa));
