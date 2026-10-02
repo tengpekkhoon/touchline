@@ -16,7 +16,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import { spawn, fork } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -459,6 +459,59 @@ async function getTunables() {
   return tunables;
 }
 
+// ---------- The world host: one headless world to look inside ----------
+let host = null,
+  hostSeq = 0,
+  hostProgress = null;
+const hostWait = new Map();
+function ensureHost() {
+  if (host) return host;
+  host = fork(path.join(ROOT, 'tools/worldhost.mjs'), [], {
+    cwd: ROOT,
+    stdio: ['ignore', 'inherit', 'inherit', 'ipc'],
+  });
+  host.on('message', (m) => {
+    if (m.progress) hostProgress = { ...m.progress, at: Date.now() };
+    else if (m.id && hostWait.has(m.id)) {
+      hostWait.get(m.id)(m);
+      hostWait.delete(m.id);
+    }
+  });
+  host.on('exit', () => {
+    for (const f of hostWait.values()) f({ ok: false, error: 'The world host stopped' });
+    hostWait.clear();
+    host = null;
+    hostProgress = null;
+  });
+  return host;
+}
+const hostCall = (cmd, args) =>
+  new Promise((resolve) => {
+    const h = ensureHost();
+    const id = ++hostSeq;
+    hostWait.set(id, resolve);
+    hostProgress = null;
+    h.send({ id, cmd, args });
+  });
+const HOST_CMDS = new Set([
+  'newWorld',
+  'loadSave',
+  'exportSave',
+  'overview',
+  'clubs',
+  'club',
+  'players',
+  'player',
+  'table',
+  'feed',
+  'scan',
+  'advance',
+  'matchLab',
+  'inspectSave',
+  'timeline',
+  'ping',
+]);
+
 // ---------- HTTP ----------
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -741,9 +794,21 @@ const server = http.createServer(async (req, res) => {
       const b = await json(req);
       return send(res, 200, { ok: stopGroup(+b.id) });
     }
+    if (p === '/api/world/progress') return send(res, 200, hostProgress || {});
+    if (p === '/api/world/reset' && req.method === 'POST') {
+      if (host) host.kill();
+      return send(res, 200, { ok: true });
+    }
+    if (p.startsWith('/api/world/') && req.method === 'POST') {
+      const cmd = p.split('/').pop();
+      if (!HOST_CMDS.has(cmd)) return send(res, 404, { error: 'Unknown command' });
+      const r = await hostCall(cmd, await json(req));
+      return send(res, r.ok ? 200 : 400, r.ok ? r.result : { error: r.error });
+    }
     send(res, 404, { error: 'Not found' });
   } catch (e) {
     send(res, 500, { error: String(e.message || e) });
   }
 });
+process.on('exit', () => host && host.kill());
 server.listen(PORT, '127.0.0.1', () => console.log(`Touchline developer dashboard: http://localhost:${PORT}`));

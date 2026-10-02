@@ -237,6 +237,8 @@
         <button data-t="trends">Trends</button>
         <button data-t="matrix">Seeds</button>
         <button data-t="sweep">Sweep</button>
+        <button data-t="world">World</button>
+        <button data-t="saves">Saves</button>
         <button data-t="conv">Converter</button>
         <button data-t="imp">Importer</button>
         <button data-t="game">Game</button>
@@ -462,6 +464,51 @@
           <div></div>
         </div>
         <div class="card" id="sview" style="margin-top: 14px" hidden></div>
+      </section>
+
+      <!-- WORLD -->
+      <section id="world">
+        <div class="card">
+          <div class="row">
+            <b id="wstat" class="dim">No world yet.</b>
+            <span style="flex: 1"></span>
+            <label class="p">Seed <input id="wseed" type="number" value="7" style="width: 70px" /></label>
+            <button class="b" id="wnew">New world</button>
+            <label class="b ghost" style="cursor: pointer"
+              >Open a save<input type="file" id="wopen" accept=".touchline,.json" hidden
+            /></label>
+            <button class="b ghost" id="wexport">Export</button>
+            <button class="b ghost" id="wreset" title="Throw the world away">Reset</button>
+          </div>
+          <div class="row" style="margin-top: 10px" id="wnav">
+            <button class="b ghost" data-v="overview">Overview</button>
+            <button class="b ghost" data-v="clubs">Clubs</button>
+            <button class="b ghost" data-v="players">Players</button>
+            <button class="b ghost" data-v="tables">Tables</button>
+            <button class="b ghost" data-v="feed">Feed</button>
+            <button class="b ghost" data-v="scan">Scan</button>
+            <button class="b ghost" data-v="replay">Replay</button>
+            <button class="b ghost" data-v="lab">Match lab</button>
+          </div>
+          <div id="wbusy" class="tiny dim" style="margin-top: 8px" hidden></div>
+        </div>
+        <div id="wview" style="margin-top: 14px"></div>
+        <div class="card" id="wdetail" style="margin-top: 14px" hidden></div>
+      </section>
+
+      <!-- SAVES -->
+      <section id="saves">
+        <p class="dim">
+          What is inside a save file: version and the upgrades it needs, where its bytes go, what an upgrade adds or
+          removes, and whether it survives a pack and unpack. It does not open the save as the world (use Open a save on
+          the World tab for that).
+        </p>
+        <div class="card">
+          <div class="row">
+            <input type="file" id="sfile" accept=".touchline,.json" /><button class="b" id="sgo2">Inspect</button>
+          </div>
+        </div>
+        <div class="card" id="sres" style="margin-top: 14px" hidden></div>
       </section>
 
       <!-- GAME -->
@@ -994,6 +1041,567 @@
         groupList('sweep');
       }
       initLoop();
+      // ---------- See inside a world ----------
+      const wapi = async (cmd, args) => {
+        const r = await fetch('/api/world/' + cmd, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(args || {}),
+        });
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || 'failed');
+        return j;
+      };
+      const money = (v) =>
+        Math.abs(v) >= 1e9
+          ? (v / 1e9).toFixed(1) + 'B'
+          : Math.abs(v) >= 1e6
+            ? (v / 1e6).toFixed(1) + 'M'
+            : Math.abs(v) >= 1e3
+              ? (v / 1e3).toFixed(0) + 'k'
+              : String(v);
+      const b64 = (file) =>
+        new Promise((res) => {
+          const fr = new FileReader();
+          fr.onload = () => res(String(fr.result).split(',')[1]);
+          fr.readAsDataURL(file);
+        });
+      let WO = null; // the overview of the world
+      let WV = 'overview';
+      const busy = async (label, fn) => {
+        const el = $('#wbusy');
+        el.hidden = false;
+        el.textContent = label + '…';
+        const t = setInterval(async () => {
+          try {
+            const p = await api('world/progress');
+            if (p.of) el.textContent = `${label}… ${p.played} of ${p.of}`;
+          } catch (e) {}
+        }, 1500);
+        try {
+          return await fn();
+        } finally {
+          clearInterval(t);
+          el.hidden = true;
+        }
+      };
+      function setOverview(o) {
+        WO = o;
+        $('#wstat').textContent =
+          `${o.year} · day ${o.day}/${o.days} · ${o.label || o.today} · ${o.players.toLocaleString()} players · ${o.clubs} clubs${o.user ? ' · managing ' + o.user.name : ''}`;
+        $('#wstat').className = '';
+      }
+      async function refreshWorld() {
+        try {
+          setOverview(await wapi('overview'));
+        } catch (e) {
+          WO = null;
+          $('#wstat').textContent = 'No world yet.';
+          $('#wstat').className = 'dim';
+        }
+      }
+      const showErr = (e) => ($('#wview').innerHTML = `<div class="card no">${esc(e.message || e)}</div>`);
+      $('#wnew').onclick = async () => {
+        try {
+          setOverview(await busy('Building a world', () => wapi('newWorld', { seed: +$('#wseed').value })));
+          wview('overview');
+        } catch (e) {
+          showErr(e);
+        }
+      };
+      $('#wopen').onchange = async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        try {
+          const o = await busy('Opening the save', async () =>
+            wapi('loadSave', { b64: await b64(f), seed: +$('#wseed').value }),
+          );
+          setOverview(o);
+          wview('overview');
+        } catch (er) {
+          showErr(er);
+        }
+      };
+      $('#wexport').onclick = async () => {
+        try {
+          const r = await busy('Writing the save', () => wapi('exportSave'));
+          const a = document.createElement('a');
+          a.href = 'data:application/octet-stream;base64,' + r.b64;
+          a.download = `dev-world-${WO ? WO.year : ''}-d${WO ? WO.day : ''}.touchline`;
+          a.click();
+        } catch (e) {
+          showErr(e);
+        }
+      };
+      $('#wreset').onclick = async () => {
+        await api('world/reset', {});
+        WO = null;
+        $('#wstat').textContent = 'No world yet.';
+        $('#wstat').className = 'dim';
+        $('#wview').innerHTML = '';
+        $('#wdetail').hidden = true;
+      };
+      $('#wnav').onclick = (e) => {
+        const v = e.target.dataset && e.target.dataset.v;
+        if (v) wview(v);
+      };
+      async function wview(v) {
+        WV = v;
+        document.querySelectorAll('#wnav button').forEach((b) => b.classList.toggle('on', b.dataset.v === v));
+        if (!WO && v !== 'overview') await refreshWorld();
+        if (!WO)
+          return ($('#wview').innerHTML =
+            '<div class="card dim">Make a world or open a save first (the buttons above).</div>');
+        try {
+          await WVIEWS[v]();
+        } catch (e) {
+          showErr(e);
+        }
+      }
+      const th = (cols) => `<thead><tr>${cols.map((c) => `<th>${c}</th>`).join('')}</tr></thead>`;
+      const leagueOpts = (all = true) =>
+        (all ? '<option value="">All leagues</option>' : '') +
+        WO.leagues.map((l) => `<option value="${l.id}">${esc(l.name)} (${l.sim})</option>`).join('');
+
+      const WVIEWS = {
+        async overview() {
+          if (!WO) await refreshWorld();
+          if (!WO)
+            return ($('#wview').innerHTML =
+              '<div class="card dim">Make a world or open a save first (the buttons above).</div>');
+          const o = await wapi('overview');
+          setOverview(o);
+          $('#wview').innerHTML = `<div class="grid">${[
+            [
+              'Players',
+              o.players.toLocaleString(),
+              `${o.freeAgents} free agents · ${o.retired.toLocaleString()} retired`,
+            ],
+            [
+              'Clubs',
+              o.clubs,
+              Object.entries(o.clubsBySim)
+                .map(([k, v]) => k + ' ' + v)
+                .join(' · '),
+            ],
+            ['Feed', o.news, `${o.archive} archived seasons`],
+            [
+              'Since you made it',
+              o.counters.matches.toLocaleString() + ' matches',
+              `${o.counters.goals.toLocaleString()} goals · ${o.counters.transfers} transfers`,
+            ],
+            ['Save version', o.version, 'seed ' + o.seed],
+          ]
+            .map(
+              ([a, b, c]) =>
+                `<div class="card"><div class="tiny dim">${a}</div><h3 style="font-size:20px;margin:2px 0">${b}</h3><div class="tiny dim">${esc(c)}</div></div>`,
+            )
+            .join('')}</div>
+            <h2>Leagues</h2><div class="card" style="padding:4px 8px"><table>${th(['League', 'Tier', 'Simulation', 'Clubs', ''])}<tbody>${o.leagues
+              .map(
+                (l) =>
+                  `<tr class="click" data-league="${l.id}"><td>${esc(l.name)}</td><td>${l.tier}</td><td class="dim">${l.sim}</td><td>${l.clubs}</td><td class="dim">open ›</td></tr>`,
+              )
+              .join('')}</tbody></table></div>`;
+          $('#wview').onclick = (e) => {
+            const tr = e.target.closest('[data-league]');
+            if (tr) {
+              WCLUB.league = tr.dataset.league;
+              wview('clubs');
+            }
+          };
+        },
+        async clubs() {
+          const f = WCLUB;
+          $('#wview').innerHTML =
+            `<div class="card"><div class="row"><select id="cl_l">${leagueOpts()}</select><input id="cl_q" placeholder="club" value="${esc(f.q || '')}" style="width:140px" /><select id="cl_f"><option value="">Every club</option>${[
+              ['hardFail', 'Cannot field a legal side'],
+              ['noKeeper', 'No keeper in goal'],
+              ['benchShort', 'Bench under 5'],
+              ['smallSquad', 'Squad under 18'],
+              ['bigSquad', 'Squad over 40'],
+              ['negBalance', 'Negative balance'],
+              ['manyInjured', '6+ injured'],
+              ['noManager', 'No manager'],
+            ]
+              .map(([k, l]) => `<option value="${k}">${l}</option>`)
+              .join(
+                '',
+              )}</select><select id="cl_s">${['rep', 'xiCA', 'squad', 'bench', 'injured', 'balance', 'wages', 'board', 'name'].map((k) => `<option value="${k}">sort: ${k}</option>`).join('')}</select><button class="b" id="cl_go">Show</button><span class="tiny dim" id="cl_n"></span></div></div><div class="card" style="margin-top:10px;padding:4px 8px"><table id="cl_t"></table></div>`;
+          $('#cl_l').value = f.league || '';
+          $('#cl_f').value = f.filter || '';
+          $('#cl_s').value = f.sort || 'rep';
+          const go = async () => {
+            Object.assign(WCLUB, {
+              league: $('#cl_l').value,
+              q: $('#cl_q').value,
+              filter: $('#cl_f').value,
+              sort: $('#cl_s').value,
+            });
+            const r = await wapi('clubs', { ...WCLUB, dir: WCLUB.sort === 'name' ? 1 : -1, limit: 200 });
+            $('#cl_n').textContent = `${r.total} clubs${r.total > 200 ? ' (first 200)' : ''}`;
+            $('#cl_t').innerHTML =
+              th([
+                'Club',
+                'League',
+                'Rep',
+                'Squad',
+                'GK',
+                'XI',
+                'Bench',
+                'Inj',
+                'Balance',
+                'Wages/wk',
+                'Board',
+                'Manager',
+              ]) +
+              `<tbody>${r.rows
+                .map(
+                  (c) =>
+                    `<tr class="click" data-club="${c.id}"><td>${esc(c.name)}${c.user ? ' ★' : ''}</td><td class="dim">${c.comp}</td><td>${c.rep}</td><td class="${c.squad < 18 || c.squad > 40 ? 'down' : ''}">${c.squad}</td><td class="${c.keepers < 2 ? 'no' : ''}">${c.keepers}</td><td class="${c.full && c.keeper ? '' : 'no'}">${c.xiCA}</td><td class="${c.bench < 5 ? 'down' : ''}">${c.bench}</td><td>${c.injured}</td><td class="${c.balance < 0 ? 'no' : ''}">${money(c.balance)}</td><td class="dim">${money(c.wages)}</td><td>${c.board}%</td><td class="dim">${esc(c.manager)}</td></tr>`,
+                )
+                .join('')}</tbody>`;
+          };
+          $('#cl_go').onclick = go;
+          $('#cl_f').onchange = $('#cl_l').onchange = $('#cl_s').onchange = go;
+          $('#cl_t').onclick = (e) => {
+            const tr = e.target.closest('[data-club]');
+            if (tr) showClub(tr.dataset.club);
+          };
+          go();
+        },
+        async players() {
+          const f = WPL;
+          $('#wview').innerHTML =
+            `<div class="card"><div class="row"><input id="pl_q" placeholder="name" value="${esc(f.q || '')}" style="width:130px"/><select id="pl_pos"><option value="">Any position</option>${['GK', 'DEF', 'MID', 'ATT', 'CB', 'FB', 'WB', 'DM', 'CM', 'WM', 'AM', 'W', 'ST'].map((x) => `<option>${x}</option>`).join('')}</select><select id="pl_l">${leagueOpts()}</select><label class="p">age <input id="pl_a1" type="number" style="width:54px" value="${f.minAge ?? ''}"/>–<input id="pl_a2" type="number" style="width:54px" value="${f.maxAge ?? ''}"/></label><label class="p">ability <input id="pl_c1" type="number" style="width:54px" value="${f.minCa ?? ''}"/>–<input id="pl_c2" type="number" style="width:54px" value="${f.maxCa ?? ''}"/></label><label class="p"><input id="pl_free" type="checkbox" ${f.free ? 'checked' : ''}/> free agents</label><label class="p"><input id="pl_flat" type="checkbox" ${f.flat ? 'checked' : ''}/> flat attributes</label><select id="pl_s">${['ca', 'pa', 'age', 'value', 'wage', 'sd', 'name'].map((k) => `<option value="${k}">sort: ${k}</option>`).join('')}</select><button class="b" id="pl_go">Show</button><span class="tiny dim" id="pl_n"></span></div></div><div class="card" style="margin-top:10px;padding:4px 8px"><table id="pl_t"></table></div>`;
+          $('#pl_pos').value = f.pos || '';
+          $('#pl_l').value = f.league || '';
+          $('#pl_s').value = f.sort || 'ca';
+          const go = async () => {
+            Object.assign(WPL, {
+              q: $('#pl_q').value,
+              pos: $('#pl_pos').value,
+              league: $('#pl_l').value,
+              minAge: $('#pl_a1').value,
+              maxAge: $('#pl_a2').value,
+              minCa: $('#pl_c1').value,
+              maxCa: $('#pl_c2').value,
+              free: $('#pl_free').checked,
+              flat: $('#pl_flat').checked,
+              sort: $('#pl_s').value,
+            });
+            const r = await wapi('players', {
+              ...WPL,
+              flat: WPL.flat ? 1 : 0,
+              dir: WPL.sort === 'name' ? 1 : -1,
+              limit: 200,
+            });
+            $('#pl_n').textContent = `${r.total.toLocaleString()} players${r.total > 200 ? ' (first 200)' : ''}`;
+            $('#pl_t').innerHTML =
+              th([
+                'Name',
+                'Pos',
+                'Age',
+                'Nat',
+                'Club',
+                'Ability',
+                'Potential',
+                'Morale',
+                'Contract',
+                'Value',
+                'Spread',
+              ]) +
+              `<tbody>${r.rows
+                .map(
+                  (p) =>
+                    `<tr class="click" data-player="${p.id}"><td>${esc(p.name)}${p.inj ? ' 🚑' : ''}</td><td>${p.pos}</td><td>${p.age}</td><td class="dim">${p.nat}</td><td class="dim">${esc(p.clubName)}</td><td><b>${p.ca}</b></td><td class="dim">${p.pa}</td><td>${p.morale}</td><td class="dim">${p.contract}</td><td class="dim">${money(p.value)}</td><td class="${p.sd < 1 ? 'down' : 'dim'}">${p.sd}</td></tr>`,
+                )
+                .join('')}</tbody>`;
+          };
+          $('#pl_go').onclick = go;
+          $('#pl_t').onclick = (e) => {
+            const tr = e.target.closest('[data-player]');
+            if (tr) showPlayer(tr.dataset.player);
+          };
+          go();
+        },
+        async tables() {
+          $('#wview').innerHTML =
+            `<div class="card"><div class="row"><select id="tb_l">${leagueOpts(false)}</select></div></div><div class="card" style="margin-top:10px;padding:4px 8px"><table id="tb_t"></table></div>`;
+          const go = async () => {
+            const r = await wapi('table', { comp: $('#tb_l').value });
+            $('#tb_t').innerHTML =
+              th(['#', 'Club', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts']) +
+              `<tbody>${r.rows.map((x) => `<tr class="click" data-club="${x.id}"><td>${x.pos}</td><td>${esc(x.name)}</td><td>${x.p}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf}</td><td>${x.ga}</td><td>${x.gd}</td><td><b>${x.pts}</b></td></tr>`).join('')}</tbody>`;
+          };
+          $('#tb_l').onchange = go;
+          $('#tb_t').onclick = (e) => {
+            const tr = e.target.closest('[data-club]');
+            if (tr) showClub(tr.dataset.club);
+          };
+          go();
+        },
+        async feed() {
+          const r = await wapi('feed', { limit: 80 });
+          $('#wview').innerHTML =
+            `<div class="card">${r.map((n) => `<div style="padding:6px 0;border-bottom:1px solid var(--line)"><span class="tiny dim">${n.year} d${n.day + 1} · ${esc(n.paper || n.type)}</span><div>${esc(n.title || '')}</div>${n.body ? `<div class="tiny dim">${esc(String(n.body).slice(0, 200))}</div>` : ''}</div>`).join('') || '<span class="dim">The feed is empty.</span>'}</div>`;
+        },
+        async scan() {
+          $('#wview').innerHTML = '<div class="card dim">Scanning…</div>';
+          const r = await wapi('scan');
+          $('#wview').innerHTML =
+            `<div class="tiny dim" style="margin-bottom:8px">${r.year} day ${r.day}</div><div class="card" style="padding:4px 8px"><table>${th(['Check', 'Found', 'Examples'])}<tbody>${r.checks
+              .map(
+                (c) =>
+                  `<tr><td>${esc(c.check)}</td><td class="${c.n ? 'down' : 'ok'}"><b>${c.n}</b></td><td class="dim">${c.examples.map(esc).join('<br>')}</td></tr>`,
+              )
+              .join('')}</tbody></table></div>`;
+        },
+        async replay() {
+          const t = await wapi('timeline');
+          const tl = t.timeline;
+          const spark2 = (vals, color = '#c8ff3d') => {
+            if (vals.length < 2) return '';
+            const W = 260,
+              H = 40,
+              lo = Math.min(...vals),
+              hi = Math.max(...vals) || 1;
+            const y = (v) => H - 3 - ((v - lo) / (hi - lo || 1)) * (H - 6);
+            return `<svg width="${W}" height="${H}"><polyline fill="none" stroke="${color}" stroke-width="1.4" points="${vals.map((v, i) => `${3 + (i * (W - 6)) / (vals.length - 1)},${y(v)}`).join(' ')}"/></svg><span class="tiny dim"> ${fmtN(lo)}–${fmtN(hi)}</span>`;
+          };
+          const league = tl.filter((r) => r.type === 'league' && r.matches);
+          $('#wview').innerHTML =
+            `<div class="card"><div class="row"><button class="b" data-adv="1">+1 day</button><button class="b" data-adv="7">+7 days</button><button class="b" data-adv="30">+30 days</button><button class="b ghost" data-end="1">To season end</button><span style="flex:1"></span><label class="p">Run until <select id="rp_until"><option value="">—</option>${[
+              ['hardFail', 'a club cannot field a legal side'],
+              ['noKeeper', 'a club has no keeper in goal'],
+              ['bigDebt', 'a club is in impossible debt'],
+              ['injuryWave', 'over 12% of players are injured'],
+              ['userSacked', 'the manager is sacked'],
+            ]
+              .map(([k, l]) => `<option value="${k}">${l}</option>`)
+              .join(
+                '',
+              )}</select></label><label class="p">at most <input id="rp_max" type="number" value="120" style="width:64px"/> days</label><button class="b" data-until="1">Run</button></div>${t.firstFailures.hard ? `<div class="no" style="margin-top:8px">First legal-squad failure: ${t.firstFailures.hard.year} day ${t.firstFailures.hard.day}: ${esc(t.firstFailures.hard.text)}</div>` : ''}</div>
+            ${
+              tl.length
+                ? `<div class="two" style="margin-top:12px"><div class="card"><div class="tiny dim">Injured, % of players</div>${spark2(
+                    tl.map((r) => r.injuredPct),
+                    '#ffb020',
+                  )}</div><div class="card"><div class="tiny dim">Free agents</div>${spark2(
+                    tl.map((r) => r.freeAgents),
+                    '#6f86a3',
+                  )}</div><div class="card"><div class="tiny dim">Goals per match (league days)</div>${spark2(league.map((r) => r.goals / r.matches))}</div><div class="card"><div class="tiny dim">Transfers per day</div>${spark2(
+                    tl.map((r) => r.transfers),
+                    '#3ddc84',
+                  )}</div><div class="card"><div class="tiny dim">Time to play a day (ms)</div>${spark2(
+                    tl.map((r) => r.ms),
+                    '#ff5d5d',
+                  )}</div><div class="card"><div class="tiny dim">Players in the world</div>${spark2(
+                    tl.map((r) => r.players),
+                    '#6f86a3',
+                  )}</div></div>
+            <h2>Days played</h2><div class="card" style="padding:4px 8px;max-height:360px;overflow:auto"><table>${th(['Day', 'What', 'Matches', 'Goals', 'Transfers', 'Injured', 'Free agents', 'ms', ''])}<tbody>${tl
+              .slice()
+              .reverse()
+              .slice(0, 150)
+              .map(
+                (r) =>
+                  `<tr><td>${r.year} d${r.day}</td><td class="dim">${esc(r.label)}</td><td>${r.matches}</td><td>${r.goals}</td><td>${r.transfers}</td><td>${r.injuredPct}%</td><td>${r.freeAgents}</td><td class="dim">${r.ms}</td><td class="down">${esc(r.flag || '')}</td></tr>`,
+              )
+              .join('')}</tbody></table></div>`
+                : '<div class="card dim" style="margin-top:12px">No days played yet. Step the world on with the buttons, then open Clubs, Players or Scan to look at it where it stopped.</div>'
+            }`;
+          const play = async (args) => {
+            try {
+              const r = await busy('Playing', () => wapi('advance', args));
+              setOverview(r.overview);
+              await WVIEWS.replay();
+              if (r.stopped)
+                $('#wview').insertAdjacentHTML(
+                  'afterbegin',
+                  `<div class="card no" style="margin-bottom:10px">Stopped: ${esc(r.stopped)}. The world is as it was at that moment: look at it in Clubs, Players or Scan.</div>`,
+                );
+              else if (r.seasonEnded)
+                $('#wview').insertAdjacentHTML(
+                  'afterbegin',
+                  '<div class="card ok" style="margin-bottom:10px">The season ended.</div>',
+                );
+            } catch (e) {
+              showErr(e);
+            }
+          };
+          document.querySelectorAll('[data-adv]').forEach((b) => (b.onclick = () => play({ days: +b.dataset.adv })));
+          document.querySelector('[data-end]').onclick = () => play({ until: 'seasonEnd', maxDays: 400 });
+          document.querySelector('[data-until]').onclick = () =>
+            play({ until: $('#rp_until').value || null, days: +$('#rp_max').value || 120 });
+        },
+        async lab() {
+          const o = WO;
+          const clubs = await wapi('clubs', { sort: 'rep', limit: 300 });
+          const list = clubs.rows.filter((c) => c.sim === 'full');
+          $('#wview').innerHTML =
+            `<datalist id="lab_c">${list.map((c) => `<option value="${esc(c.name)}"></option>`).join('')}</datalist><div class="card"><div class="two"><div><h3>Home</h3><input id="lb_h" list="lab_c" placeholder="club" style="width:100%" value="${esc(list[0].name)}"/><div class="tiny dim" style="margin:8px 0 4px">Tactic change for the second run (blank = the club's own)</div><div class="row">${tacticSel('h', o)}</div></div><div><h3>Away</h3><input id="lb_a" list="lab_c" placeholder="club" style="width:100%" value="${esc(list[1].name)}"/><div class="tiny dim" style="margin:8px 0 4px">Tactic change for the second run</div><div class="row">${tacticSel('a', o)}</div></div></div><div class="row" style="margin-top:12px"><label class="p">Matches <input id="lb_n" type="number" value="500" min="20" max="3000" style="width:80px"/></label><button class="b" id="lb_go">Simulate</button><span class="tiny dim">a second run is made only if you changed a tactic; the world is put back exactly as it was</span></div></div><div class="card" id="lb_res" style="margin-top:12px" hidden></div>`;
+          const byName = (n) => (list.find((c) => c.name === n) || {}).id;
+          $('#lb_go').onclick = async () => {
+            const h = byName($('#lb_h').value),
+              a = byName($('#lb_a').value);
+            if (!h || !a) return alert('Pick two clubs from the list');
+            const tac = (s) =>
+              Object.fromEntries(
+                ['formation', 'buildup', 'press', 'width']
+                  .map((k) => [k, $(`#lb_${s}_${k}`).value])
+                  .filter(([, v]) => v),
+              );
+            $('#lb_res').hidden = false;
+            $('#lb_res').innerHTML = '<span class="dim">Simulating…</span>';
+            try {
+              const r = await busy('Simulating', () =>
+                wapi('matchLab', { home: h, away: a, runs: +$('#lb_n').value, home2: tac('h'), away2: tac('a') }),
+              );
+              const rows = [
+                ['Home win %', 'home'],
+                ['Draw %', 'draw'],
+                ['Away win %', 'away'],
+                ['Home goals', 'goalsHome'],
+                ['Away goals', 'goalsAway'],
+                ['Home xG', 'xgHome'],
+                ['Away xG', 'xgAway'],
+                ['Home shots', 'shotsHome'],
+                ['Away shots', 'shotsAway'],
+                ['Home on target', 'sotHome'],
+                ['Away on target', 'sotAway'],
+                ['Home possession %', 'possHome'],
+                ['Yellows', 'yellows'],
+                ['Reds', 'reds'],
+                ['0–0 %', 'nilNil'],
+                ['Home points per game', 'ppg'],
+              ];
+              $('#lb_res').innerHTML =
+                `<h3>${esc(r.home.name)} (XI ${r.home.xiCA}) v ${esc(r.away.name)} (XI ${r.away.xiCA}) · ${r.base.n} matches</h3><table style="margin-top:8px"><thead><tr><th>Measure</th><th>As they are</th>${r.alt ? '<th>With the change</th><th>Difference</th>' : ''}</tr></thead><tbody>${rows
+                  .map(
+                    ([l, k]) =>
+                      `<tr><td>${l}</td><td>${r.base[k]}${k === 'ppg' ? ' ± ' + r.base.ppgCI : ''}</td>${r.alt ? `<td>${r.alt[k]}${k === 'ppg' ? ' ± ' + r.alt.ppgCI : ''}</td><td class="${r.alt[k] > r.base[k] ? 'up' : r.alt[k] < r.base[k] ? 'down' : 'dim'}">${r.alt[k] > r.base[k] ? '+' : ''}${(r.alt[k] - r.base[k]).toFixed(2)}${k === 'ppg' && Math.abs(r.alt.ppg - r.base.ppg) < Math.hypot(r.base.ppgCI, r.alt.ppgCI) ? ' (within noise)' : ''}</td>` : ''}</tr>`,
+                  )
+                  .join(
+                    '',
+                  )}</tbody></table><div class="tiny dim" style="margin-top:8px">Commonest scorelines (home–away): ${r.base.scorelines.map(([k, v]) => `${k} ${v}%`).join(' · ')}</div>`;
+            } catch (e) {
+              $('#lb_res').innerHTML = `<span class="no">${esc(e.message)}</span>`;
+            }
+          };
+        },
+      };
+      const tacticSel = (s, o) =>
+        [
+          ['formation', o.formations],
+          ['buildup', o.buildups],
+          ['press', o.presses],
+          ['width', o.widths],
+        ]
+          .map(
+            ([k, vals]) =>
+              `<select id="lb_${s}_${k}"><option value="">${k}</option>${vals.map((v) => `<option>${v}</option>`).join('')}</select>`,
+          )
+          .join('');
+      const WCLUB = { sort: 'rep' },
+        WPL = { sort: 'ca' };
+
+      const ord = (n) => n + ['th', 'st', 'nd', 'rd'][n % 10 > 3 || (n > 10 && n < 14) ? 0 : n % 10];
+      // detail panels
+      async function showClub(id) {
+        const c = await wapi('club', { id });
+        const el = $('#wdetail');
+        el.hidden = false;
+        el.innerHTML = `<div class="row"><h3 style="margin:0">${esc(c.name)}</h3><span class="dim tiny">${esc(c.leagueName)} · ${c.position ? ord(c.position) : ''} · rep ${c.rep} · ${esc(c.identity)}</span></div>
+          <div class="grid" style="margin-top:10px">${[
+            ['Squad', `${c.squad} · ${c.keepers} keepers · ${c.injured} injured`],
+            ['XI / bench', `${c.xiCA} · ${c.bench} on the bench${c.keeper ? '' : ' · NO KEEPER'}`],
+            ['Tactic', `${c.tactic.formation} · ${c.tactic.buildup} · ${c.tactic.press} · ${c.tactic.width}`],
+            ['Money', `${money(c.balance)} balance · ${money(c.revenue)} revenue · ${money(c.wages)}/wk wages`],
+            ['Mood', `board ${c.board}% · fans ${c.fans}%`],
+            ['Manager', c.manager || '—'],
+            ['Stadium', `${esc(c.stadium.name)} · ${c.stadium.cap.toLocaleString()}`],
+            [
+              'Facilities',
+              Object.entries(c.facilities)
+                .map(([k, v]) => k + ' ' + v)
+                .join(' · '),
+            ],
+          ]
+            .map(([a, b]) => `<div><div class="tiny dim">${a}</div>${esc(b)}</div>`)
+            .join('')}</div>
+          <table style="margin-top:12px">${th(['', 'Name', 'Pos', 'Age', 'Ability', 'Pot', 'Morale', 'Apps', 'Goals', 'Contract', 'Wage'])}<tbody>${c.squadRows.map((p) => `<tr class="click" data-player="${p.id}"><td>${p.xi ? '●' : ''}</td><td>${esc(p.name)}${p.inj ? ' 🚑' : ''}</td><td>${p.pos}</td><td>${p.age}</td><td><b>${p.ca}</b></td><td class="dim">${p.pa}</td><td>${p.morale}</td><td class="dim">${p.apps}</td><td class="dim">${p.goals}</td><td class="dim">${p.contract}</td><td class="dim">${money(p.wage)}</td></tr>`).join('')}</tbody></table>`;
+        el.onclick = (e) => {
+          const tr = e.target.closest('[data-player]');
+          if (tr) showPlayer(tr.dataset.player);
+        };
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+      async function showPlayer(id) {
+        const p = await wapi('player', { id });
+        const el = $('#wdetail');
+        el.hidden = false;
+        const bar = (v) =>
+          `<div style="background:#0b121b;border-radius:4px;height:8px;width:120px;display:inline-block;vertical-align:middle"><div style="width:${(v / 20) * 100}%;height:8px;border-radius:4px;background:${v >= 15 ? 'var(--good)' : v >= 10 ? 'var(--acc)' : v >= 6 ? 'var(--warn)' : 'var(--bad)'}"></div></div>`;
+        el.innerHTML = `<div class="row"><h3 style="margin:0">${esc(p.name)}</h3><span class="dim tiny">${p.pos} · ${p.age} · ${p.nat} · ${esc(p.clubName)} · ability ${p.ca} / potential ${p.pa} · ${p.foot} foot · value ${money(p.value)} · wage ${money(p.wage)}/wk · contract ${p.contract}</span>${p.club ? `<a href="#" class="tiny" data-club="${p.club}">club ›</a>` : ''}</div>
+          <div class="two" style="margin-top:10px"><div><table>${Object.entries(p.attrs)
+            .map(([k, v]) => `<tr><td class="dim">${k}</td><td>${v}</td><td>${bar(v)}</td></tr>`)
+            .join('')}</table><div class="tiny dim" style="margin-top:6px">attribute spread (sd) ${p.sd}</div></div>
+          <div><div class="tiny dim">Positions</div>${p.positions.map((x) => `${x.t} ${x.fam} ${x.ovr}`).join(' · ')}<div class="tiny dim" style="margin-top:8px">Hidden</div>${Object.entries(
+            p.hidden || {},
+          )
+            .map(([k, v]) => k + ' ' + v)
+            .join(
+              ' · ',
+            )}<div class="tiny dim" style="margin-top:8px">Traits</div>${(p.traits || []).join(', ') || '—'}${p.personality ? `<div class="tiny dim" style="margin-top:8px">Personality</div>${esc(typeof p.personality === 'string' ? p.personality : JSON.stringify(p.personality))}` : ''}${p.arc ? `<div class="tiny dim" style="margin-top:8px">Career arc</div>${esc(JSON.stringify(p.arc))}` : ''}<div class="tiny dim" style="margin-top:8px">This season</div>${p.season.apps} apps · ${p.season.goals} goals · ${p.season.ast} assists${p.season.apps ? ' · rating ' + (p.season.rsum / p.season.apps).toFixed(2) : ''}<div class="tiny dim" style="margin-top:8px">Career</div>${p.career.apps} apps · ${p.career.goals} goals</div></div>
+          ${
+            p.history.length
+              ? `<table style="margin-top:10px">${th(['Season', 'Club', 'Apps', 'Goals', 'Assists', 'Rating'])}<tbody>${p.history
+                  .slice(-10)
+                  .reverse()
+                  .map(
+                    (h) =>
+                      `<tr><td>${h.y ?? h.year ?? ''}</td><td class="dim">${esc(h.c || h.club || '')}</td><td>${h.apps ?? ''}</td><td>${h.goals ?? ''}</td><td>${h.ast ?? ''}</td><td>${h.rsum && h.apps ? (h.rsum / h.apps).toFixed(2) : ''}</td></tr>`,
+                  )
+                  .join('')}</tbody></table>`
+              : ''
+          }`;
+        el.onclick = (e) => {
+          const a = e.target.closest('[data-club]');
+          if (a) {
+            e.preventDefault();
+            showClub(a.dataset.club);
+          }
+        };
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // saves
+      $('#sgo2').onclick = async () => {
+        const f = $('#sfile').files[0];
+        if (!f) return;
+        $('#sres').hidden = false;
+        $('#sres').innerHTML = '<span class="dim">Reading…</span>';
+        try {
+          const o = await wapi('inspectSave', { b64: await b64(f) });
+          const max = o.sections[0] ? o.sections[0].bytes : 1;
+          $('#sres').innerHTML =
+            `${o.error ? `<div class="no">${esc(o.error)}</div>` : ''}<div class="grid"><div class="card"><div class="tiny dim">Version</div><h3 style="font-size:20px;margin:2px 0">${o.version} → ${o.current}</h3><div class="tiny dim">${o.migrations.length ? o.migrations.join(', ') : 'current'}</div></div><div class="card"><div class="tiny dim">Size</div><h3 style="font-size:20px;margin:2px 0">${(o.bytes / 1048576).toFixed(1)} MB</h3><div class="tiny dim">${(o.gzip / 1048576).toFixed(1)} MB as a .touchline file</div></div><div class="card"><div class="tiny dim">Counts</div>${Object.entries(
+              o.counts,
+            )
+              .map(([k, v]) => k + ' ' + v.toLocaleString())
+              .join(
+                '<br>',
+              )}</div><div class="card"><div class="tiny dim">Per player</div><h3 style="font-size:20px;margin:2px 0">${o.bytesPerPlayer} bytes</h3><div class="tiny dim">${o.packedPlayers ? 'compact format' : 'full objects'} · ${o.year} day ${o.day}</div></div></div>
+            <h2>Where the bytes go</h2><div class="card" style="padding:4px 8px"><table>${o.sections.map((s) => `<tr><td>${esc(s.key)}</td><td style="width:50%"><div style="background:var(--acc);height:8px;border-radius:4px;width:${(100 * s.bytes) / max}%"></div></td><td class="dim">${(s.bytes / 1048576).toFixed(2)} MB</td><td>${s.pct}%</td></tr>`).join('')}</table></div>
+            ${o.after ? `<h2>After the upgrade</h2><div class="card">version ${o.after.version} · ${o.after.players.toLocaleString()} players<br>added: ${o.after.keysAdded.join(', ') || 'nothing'}<br>removed: ${o.after.keysRemoved.join(', ') || 'nothing'}<br><span class="${o.roundTrip.ok ? 'ok' : 'no'}">pack and unpack: ${o.roundTrip.ok ? 'the same world comes back' : 'DIFFERENT after a round trip'}</span></div>` : ''}`;
+        } catch (e) {
+          $('#sres').innerHTML = `<span class="no">${esc(e.message)}</span>`;
+        }
+      };
+      document.querySelector('[data-t="world"]').addEventListener('click', () => {
+        refreshWorld().then(() => wview(WV));
+      });
       loadJobs();
       loadHistory();
     </script>
