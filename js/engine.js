@@ -1276,7 +1276,7 @@
     const f1 = FM.Cups.findFixture(fx.first);
     if (!f1 || !f1.res) return o;
     // leg 1 was played with the sides reversed
-    return { ...o, agg: [f1.res.ag, f1.res.hg], awayGoals: !!FM.S.rules.awayGoals };
+    return { ...o, agg: [f1.res.ag, f1.res.hg], awayGoals: false }; // no competition has used away goals since 2021–22
   };
   // The forecast for a fixture, fixed once you've seen it (your pre-match screen) so the match is played in it
   Match.forecast = function (fx) {

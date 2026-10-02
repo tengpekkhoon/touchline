@@ -1554,21 +1554,29 @@
         ? 'zone-down'
         : R.promote && i < R.promote.auto
           ? 'zone-up'
-          : R.promote && i + 1 >= R.promote.playoff[0] && i + 1 <= R.promote.playoff[1]
+          : R.promote && R.promote.tie && i === R.promote.auto
             ? 'zone-po'
-            : i === 0
-              ? 'zone-up'
-              : R.qualify && i < R.qualify.n
-                ? 'zone-po'
-                : '';
+            : R.promote && R.promote.playoff && i + 1 >= R.promote.playoff[0] && i + 1 <= R.promote.playoff[1]
+              ? 'zone-po'
+              : i === 0
+                ? 'zone-up'
+                : R.qualify && i < R.qualify.n
+                  ? 'zone-po'
+                  : '';
     const legend = [
       R.promote ? `🟢 Promotion (${R.promote.auto})` : '🟢 Champion',
       R.promote
-        ? `🔵 Playoffs (${R.promote.playoff.join('–')})`
+        ? R.promote.playoff
+          ? `🔵 Playoffs (${R.promote.playoff.join('–')})`
+          : R.promote.tie
+            ? `🔵 Relegation play-off (${R.promote.auto + 1})`
+            : ''
         : R.qualify
           ? `🔵 ${s.comps[R.qualify.to].name} (top ${R.qualify.n})`
           : '',
-      R.relegate ? `🔴 Relegation (${R.relegate.n})` : '',
+      R.relegate
+        ? `🔴 Relegation (${R.relegate.n})${R.relegate.playoff ? ` · play-off (${n - R.relegate.n})` : ''}`
+        : '',
     ].filter(Boolean);
     const po = comp.playoff;
     const tier =
@@ -1803,7 +1811,10 @@
             .reverse()
             .map(
               (r) =>
-                `<div class="small b dim" style="margin:12px 0 2px">${esc(r.name.toUpperCase())}${r.byes.length ? ` · ${r.byes.length} byes` : ''}</div>${r.ties.map(fxLine).join('')}`,
+                `<div class="small b dim" style="margin:12px 0 2px">${esc(r.name.toUpperCase())}${r.byes.length ? ` · ${r.byes.length} byes` : ''}</div>${r.ties
+                  .concat(r.ties2 || [])
+                  .map(fxLine)
+                  .join('')}`,
             )
             .join('') || '<div class="small dim" style="margin-top:8px">The draw has not been made yet.</div>'
         }</div>`;

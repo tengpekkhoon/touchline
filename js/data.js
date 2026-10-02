@@ -1668,7 +1668,7 @@
       sim: 'light',
       clubs: 'CLUBS_ES2',
       repBand: [56, 45],
-      rules: { promote: { to: 'ES1', auto: 2, playoff: [3, 6] }, relegate: { to: 'ES3', n: 4 } },
+      rules: { promote: { to: 'ES1', auto: 2, playoff: [3, 6], finalLegs: 2 }, relegate: { to: 'ES3', n: 4 } },
     },
     {
       id: 'ES3',
@@ -1690,7 +1690,7 @@
       sim: 'full',
       clubs: 'CLUBS_DE1',
       repBand: [89, 58],
-      rules: { qualify: { to: 'CC', n: 3 }, relegate: { to: 'DE2', n: 3 } },
+      rules: { qualify: { to: 'CC', n: 3 }, relegate: { to: 'DE2', n: 2, playoff: true } }, // 16th plays the 3rd of the 2. Bundesliga
     },
     {
       id: 'DE2',
@@ -1701,7 +1701,7 @@
       sim: 'light',
       clubs: 'CLUBS_DE2',
       repBand: [60, 48],
-      rules: { promote: { to: 'DE1', auto: 3 }, relegate: { to: 'DE3', n: 3 } },
+      rules: { promote: { to: 'DE1', auto: 2, tie: true }, relegate: { to: 'DE3', n: 2, playoff: true } },
     },
     {
       id: 'DE3',
@@ -1712,7 +1712,7 @@
       sim: 'light',
       clubs: 'CLUBS_DE3',
       repBand: [46, 38],
-      rules: { promote: { to: 'DE2', auto: 3 } },
+      rules: { promote: { to: 'DE2', auto: 2, tie: true } },
     },
     {
       id: 'FR1',
@@ -1767,7 +1767,7 @@
       sim: 'light',
       clubs: 'CLUBS_IT2',
       repBand: [58, 45],
-      rules: { promote: { to: 'IT1', auto: 2, playoff: [3, 6] } },
+      rules: { promote: { to: 'IT1', auto: 2, playoff: [3, 6], finalLegs: 2 } },
     },
     {
       id: 'PT1',
@@ -2048,9 +2048,17 @@
   FM.D.CONTINENTALS = [
     { id: 'CC', region: 'Europe', name: 'UEFA Champions League', short: 'UCL', prize: 15e6 },
     { id: 'CL', region: 'South America', name: 'Copa Libertadores', short: 'LIB', prize: 8e6 },
-    { id: 'AC', region: 'Asia', name: 'AFC Champions League Elite', short: 'ACLE', prize: 5e6 },
-    { id: 'AF', region: 'Africa', name: 'CAF Champions League', short: 'CAF', prize: 3e6 },
-    { id: 'NC', region: 'North America', name: 'CONCACAF Champions Cup', short: 'CCC', prize: 4e6 },
+    {
+      id: 'AC',
+      region: 'Asia',
+      name: 'AFC Champions League Elite',
+      short: 'ACLE',
+      prize: 5e6,
+      legs: { qf: 1, sf: 1, f: 1 }, // the knockouts are single matches at one centralised venue
+      central: true,
+    },
+    { id: 'AF', region: 'Africa', name: 'CAF Champions League', short: 'CAF', prize: 3e6, legs: { f: 2 } }, // a two-legged final
+    { id: 'NC', region: 'North America', name: 'CONCACAF Champions Cup', short: 'CCC', prize: 4e6, legs: { f: 2 } },
     // Second-tier cups: the next places after each league's main continental spots (feeders: league → clubs)
     {
       id: 'EL',
@@ -2070,6 +2078,93 @@
       tier: 2,
       feeders: { BR1: 4, AR1: 4 },
     },
+    // Third-tier European cup: the places after the Europa League's (a league's clubs skip the places above)
+    {
+      id: 'UC',
+      region: 'Europe',
+      name: 'UEFA Conference League',
+      short: 'UECL',
+      prize: 3e6,
+      tier: 3,
+      feeders: {
+        D1: 1,
+        ES1: 1,
+        DE1: 1,
+        IT1: 1,
+        FR1: 1,
+        PT1: 1,
+        NL1: 1,
+        BE1: 2,
+        TR1: 1,
+        SC1: 2,
+        CZ1: 1,
+        GR1: 1,
+        PL1: 1,
+        DK1: 1,
+      },
+    },
+    {
+      id: 'A2',
+      region: 'Asia',
+      name: 'AFC Champions League Two',
+      short: 'ACL2',
+      prize: 2e6,
+      tier: 2,
+      feeders: { JP1: 2, KR1: 2, TH1: 2, AU1: 2 },
+    },
+    {
+      id: 'AX',
+      region: 'Africa',
+      name: 'CAF Confederation Cup',
+      short: 'CAFCC',
+      prize: 1.5e6,
+      tier: 2,
+      feeders: { NG1: 2, MA1: 2 },
+      legs: { f: 2 },
+    },
+  ];
+  // How each league splits clubs level on points, in order (the real rules): gd = goal difference, gf = goals
+  // scored, wins = number of wins, h2h = head-to-head among the clubs level (points, then goal difference, then goals).
+  // Anything after these falls to the club's name (a real league would hold a play-off or draw lots).
+  FM.D.TIEBREAK_DEFAULT = ['gd', 'gf'];
+  FM.D.TIEBREAK = {
+    ES1: ['h2h', 'gd', 'gf'], // LaLiga: head-to-head first
+    ES2: ['h2h', 'gd', 'gf'],
+    ES3: ['h2h', 'gd', 'gf'],
+    IT1: ['h2h', 'gd', 'gf'], // Serie A and B: head-to-head first
+    IT2: ['h2h', 'gd', 'gf'],
+    PT1: ['h2h', 'gd', 'gf'],
+    TR1: ['h2h', 'gd', 'gf'],
+    GR1: ['h2h', 'gd', 'gf'],
+    PL1: ['h2h', 'gd', 'gf'],
+    DE1: ['gd', 'gf', 'h2h'],
+    DE2: ['gd', 'gf', 'h2h'],
+    DE3: ['gd', 'gf', 'h2h'],
+    FR1: ['gd', 'gf', 'h2h'],
+    FR2: ['gd', 'gf', 'h2h'],
+    NL1: ['gd', 'gf', 'h2h'],
+    JP1: ['gd', 'gf', 'h2h'],
+    BR1: ['wins', 'gd', 'gf', 'h2h'], // Brasileirão: wins, then goal difference
+    US1: ['wins', 'gd', 'gf'], // MLS: wins first
+    KR1: ['gf', 'gd'], // K League: goals scored before goal difference
+  };
+  // Domestic cups: single-leg knockouts for every club of the nation that is fully or lightly simulated
+  // [id, nation, name, short, format]. Format, as in real life: legs = the rounds (by clubs left: 4 = semi-finals)
+  // played over two legs, neutral = the rounds played at a neutral ground ('all' for every round). The rest are
+  // single matches at the home of the club drawn first (the lower-division club, in the real draws), with extra
+  // time and penalties. Away goals do not count anywhere: no competition has used them since 2021–22.
+  FM.D.DOMESTIC_CUPS = [
+    ['CUPENG', 'ENG', 'FA Cup', 'FAC', { neutral: [4, 2] }], // semi-finals and final at Wembley
+    ['CUPESP', 'ESP', 'Copa del Rey', 'CDR', { neutral: [2] }], // single-leg semi-finals since 2019–20
+    ['CUPGER', 'GER', 'DFB-Pokal', 'DFB', { neutral: [2] }], // final in Berlin
+    ['CUPFRA', 'FRA', 'Coupe de France', 'CDF', { neutral: [2] }],
+    ['CUPBRA', 'BRA', 'Copa do Brasil', 'CDB', { legs: [8, 4, 2], neutral: [] }], // two legs from the later rounds, home-and-away final
+    ['CUPITA', 'ITA', 'Coppa Italia', 'CIT', { legs: [4], neutral: [2] }],
+    ['CUPPOR', 'POR', 'Taça de Portugal', 'TDP', { legs: [4], neutral: [2] }],
+    ['CUPNED', 'NED', 'KNVB Cup', 'KNVB', { neutral: [2] }],
+    ['CUPARG', 'ARG', 'Copa Argentina', 'CAR', { neutral: 'all' }], // every tie at a neutral ground
+    ['CUPUSA', 'USA', 'U.S. Open Cup', 'USOC', { neutral: [] }], // the final at the better seed's ground
+    ['CUPJPN', 'JPN', "Emperor's Cup", 'EMP', { neutral: [2] }],
   ];
   // Club World Cup: last season's continental finalists (winners only from Africa and North America)
   // [competition, 0 = winner / 1 = runner-up], in seed order

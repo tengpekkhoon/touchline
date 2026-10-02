@@ -44,8 +44,11 @@
     } else {
       const places = R.qualify ? R.qualify.n : 0,
         cc = places && s.comps[R.qualify.to],
-        second = D.CONTINENTALS.find((x) => x.feeders && x.feeders[comp.id]),
-        europe = places + (second ? second.feeders[comp.id] : 0);
+        seconds = D.CONTINENTALS.filter((x) => x.feeders && x.feeders[comp.id]).sort(
+          (a, b) => (a.tier || 1) - (b.tier || 1),
+        ),
+        second = seconds[0],
+        europe = places + seconds.reduce((t, x) => t + x.feeders[comp.id], 0);
       if (exp === 1)
         ((aim = { t: 1, text: `Win ${comp.name}` }),
           (min = places ? { t: places, text: `${cc.name} qualification` } : { t: 2, text: 'second place' }));
@@ -53,10 +56,14 @@
         ((aim = { t: places, text: `Qualify for the ${cc.name} (top ${places})` }),
           (min =
             europe > places
-              ? { t: europe, text: `a ${second.name} place (top ${europe})` }
+              ? { t: europe, text: `a ${second.region === 'Europe' ? 'European' : second.name} place (top ${europe})` }
               : { t: places + 2, text: `top ${places + 2}` }));
       else if (europe && exp <= europe + 1)
-        ((aim = { t: europe, text: `Qualify for Europe (top ${europe})` }), (min = { t: half, text: 'the top half' }));
+        ((aim = {
+          t: europe,
+          text: `Qualify for ${second.region === 'Europe' ? 'Europe' : second.name} (top ${europe})`,
+        }),
+          (min = { t: half, text: 'the top half' }));
       else if (exp <= half)
         ((aim = { t: half, text: 'Finish in the top half' }),
           (min = { t: safe, text: rel ? 'stay up' : 'stay off the bottom' }));
@@ -159,7 +166,7 @@
       wins = 0,
       out = false;
     for (const r of cup.rounds) {
-      const t = r.ties.find((f) => f.h === clubId || f.a === clubId);
+      const t = (r.ties2 || r.ties).find((f) => f.h === clubId || f.a === clubId);
       if (!t) continue;
       teams = Math.min(teams, r.ties.length * 2);
       if (t.res) {

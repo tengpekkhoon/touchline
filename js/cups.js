@@ -15,7 +15,8 @@
   Cu.roundName = (n) => (n === 2 ? 'Final' : n === 4 ? 'Semi-final' : n === 8 ? 'Quarter-final' : `Round of ${n}`);
   const mkTable = (ids) =>
     Object.fromEntries(ids.map((id) => [id, { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, form: [] }]));
-  Cu.groupTable = (g) => W.sortedTable({ table: g.table });
+  // (UEFA's group tiebreakers: head-to-head points, goal difference and goals, then overall)
+  Cu.groupTable = (g) => W.sortedTable({ table: g.table, fixtures: g.fixtures, tiebreak: ['h2h', 'gd', 'gf'] });
   // Top two go through. With the games left, who is already through (or top), and who can no longer make it?
   Cu.groupMarks = function (g) {
     const win = S().rules.win,
@@ -55,7 +56,7 @@
       // [league, how many, skipping the first k] for each feeder league
       const feeders = def.feeders
         ? Object.entries(def.feeders)
-            .map(([id, n]) => [S().comps[id], n, Cu.mainPlaces(id)])
+            .map(([id, n]) => [S().comps[id], n, Cu.skipFor(id, def)])
             .filter(([l]) => l)
         : W.leagues()
             .filter((l) => l.rules.qualify && l.rules.qualify.to === c.id)
@@ -136,8 +137,29 @@
     return (l && l.rules && l.rules.qualify && l.rules.qualify.n) || 0;
   };
   // Saves made before a competition existed get it (empty until the next season's draw)
+  Cu.addDomestic = (s, id, nat, name, short, opts) =>
+    (s.comps[id] = { id, type: 'cup', nat, name, short, clubs: [], prize: 3e6, opts: opts || {} });
   Cu.ensureContinentals = function (s) {
     for (const c of D.CONTINENTALS) if (!s.comps[c.id]) s.comps[c.id] = { ...c, type: 'continental', clubs: [] };
+    for (const [id, nat, name, short, opts] of D.DOMESTIC_CUPS)
+      if (!s.comps[id]) Cu.addDomestic(s, id, nat, name, short, opts);
+  };
+  // A cup's format (older saves made before formats existed read it from the data)
+  Cu.optsOf = (c) => c.opts || (D.DOMESTIC_CUPS.find((x) => x[0] === c.id) || [])[4] || {};
+  // Calendar days a domestic cup needs: a round a day, two days for a two-legged one
+  Cu.daysNeeded = (c) => {
+    const n = Math.max(2, Cu.entrants(c).length),
+      p = 2 ** Math.floor(Math.log2(n)),
+      legs = (Cu.optsOf(c).legs || []).filter((k) => k <= p).length;
+    return Math.log2(p) + (n === p ? 0 : 1) + legs;
+  };
+  // The places a league's clubs skip for a lower continental cup: its main cup's, and those of the cups above this
+  // one in the same region (the Conference League takes the places after the Europa League's)
+  Cu.skipFor = (compId, cc) => {
+    let skip = Cu.mainPlaces(compId);
+    for (const x of D.CONTINENTALS)
+      if (x.feeders && x.region === cc.region && (x.tier || 1) < (cc.tier || 1)) skip += x.feeders[compId] || 0;
+    return skip;
   };
   // Club World Cup: last season's continental finalists; in the first season, each continent's biggest entrants
   Cu.setupWorld = function (c) {
@@ -176,8 +198,30 @@
   function domestic(c) {
     if (c.winner) return [];
     const last = c.rounds[c.rounds.length - 1];
-    if (last && (last.day === S().day || last.ties.some((f) => !f.res))) return last.ties;
-    const alive = last ? last.byes.concat(last.ties.map(winnerOf)) : c.clubs.slice();
+    if (last) {
+      // a two-legged round: the return legs are made on the next cup day, once every first leg is in
+      if (last.legs === 2 && !last.ties2) {
+        if (last.day === S().day || last.ties.some((f) => !f.res)) return last.ties;
+        last.day2 = S().day;
+        last.ties2 = last.ties.map((f) => ({
+          id: FM.nextId('f'),
+          comp: c.id,
+          h: f.a,
+          a: f.h,
+          res: null,
+          ko: true,
+          leg: 2,
+          first: f.id,
+          po: `${last.name} · 2nd leg`,
+          final: last.n === 2,
+          neutral: false,
+        }));
+        return last.ties2;
+      }
+      const decider = last.ties2 || last.ties;
+      if ((last.ties2 ? last.day2 : last.day) === S().day || decider.some((f) => !f.res)) return decider;
+    }
+    const alive = last ? last.byes.concat((last.ties2 || last.ties).map(winnerOf)) : c.clubs.slice();
     if (alive.length < 2) return [];
     const n = alive.length,
       p = 2 ** Math.floor(Math.log2(n));
@@ -190,26 +234,36 @@
       playing = seeded.slice(n - 2 * k);
     }
     const name = n === p ? Cu.roundName(n) : c.rounds.length ? `Round ${c.rounds.length + 1}` : 'First round';
+    const o = Cu.optsOf(c),
+      twoLegs = n === p && (o.legs || []).includes(n),
+      neutral = !twoLegs && (o.neutral === 'all' || (n === p && (o.neutral || [2]).includes(n)));
     const sh = U.shuffle(playing),
       ties = [];
-    for (let i = 0; i + 1 < sh.length; i += 2)
-      ties.push({
-        id: FM.nextId('f'),
-        comp: c.id,
-        h: sh[i],
-        a: sh[i + 1],
-        res: null,
-        ko: true,
-        po: name,
-        final: n === 2,
-        neutral: n === 2,
-      });
-    c.rounds.push({ name, day: S().day, ties, byes });
+    for (let i = 0; i + 1 < sh.length; i += 2) {
+      // two legs: the better-placed club hosts the second
+      const [x, y] = twoLegs && rep(sh[i]) > rep(sh[i + 1]) ? [sh[i + 1], sh[i]] : [sh[i], sh[i + 1]];
+      ties.push(
+        twoLegs
+          ? { id: FM.nextId('f'), comp: c.id, h: x, a: y, res: null, ko: false, leg: 1, po: `${name} · 1st leg` }
+          : {
+              id: FM.nextId('f'),
+              comp: c.id,
+              h: x,
+              a: y,
+              res: null,
+              ko: true,
+              po: name,
+              final: n === 2,
+              neutral,
+            },
+      );
+    }
+    c.rounds.push({ name, day: S().day, ties, byes, n: p === n ? n : 0, legs: twoLegs ? 2 : 1 });
     return ties;
   }
 
   // Knockout round with optional legs. pairs: [[seeded, unseeded], ...] — the seeded side hosts the decider.
-  function koRound(c, key, stage, label, pairsFn) {
+  function koRound(c, key, stage, label, pairsFn, neutral) {
     const leg = stage.endsWith('1') ? 1 : stage.endsWith('2') ? 2 : 0;
     if (leg === 2) {
       if (!c.ko[key + '2']) {
@@ -234,7 +288,7 @@
       c.ko[key] = pairs.map(([h, a]) =>
         leg === 1
           ? { id: FM.nextId('f'), comp: c.id, h: a, a: h, res: null, ko: false, leg: 1, po: `${label} · 1st leg` }
-          : { id: FM.nextId('f'), comp: c.id, h, a, res: null, ko: true, po: label },
+          : { id: FM.nextId('f'), comp: c.id, h, a, res: null, ko: true, po: label, neutral: !!neutral },
       );
       FM.News.add({
         type: 'world',
@@ -252,13 +306,29 @@
     return dec.map(winnerOf);
   };
 
+  // A continental cup's knockout format, as in real life: legs per round (qf, sf, f) and whether the knockouts are
+  // played at one centralised venue (the AFC Champions League Elite)
+  Cu.formatOf = (c) => {
+    const d = D.CONTINENTALS.find((x) => x.id === c.id) || {};
+    const legs = { qf: 2, sf: 2, f: 1, ...(d.legs || {}) };
+    // a season already under way from an older save has no day for a second leg of the final
+    if (!(S().calendar || []).some((x) => x.type === 'cup' && x.stage === 'F2')) legs.f = 1;
+    return { legs, central: !!d.central };
+  };
   function continental(c, stage) {
     if (!stage || !c.groups) return [];
     if (stage[0] === 'G') return c.groups.flatMap((g) => g.fixtures[+stage.slice(1) - 1] || []);
+    const fmt = Cu.formatOf(c);
     const groupsDone = () => c.groups.every((g) => g.fixtures.flat().every((f) => f.res));
+    // a round played over one leg uses the first leg's day; its second-leg day is empty
+    const round = (key, label, pairsFn) => {
+      const one = fmt.legs[key] === 1;
+      if (one && stage.endsWith('2')) return [];
+      return koRound(c, key, one ? stage.slice(0, -1) : stage, label, pairsFn, one && fmt.central);
+    };
     if (stage.startsWith('QF')) {
       if (c.groups.length < 4) return [];
-      return koRound(c, 'qf', stage, 'Quarter-final', () => {
+      return round('qf', 'Quarter-final', () => {
         if (!groupsDone()) return null;
         const [A, B, Cc, Dd] = c.groups.map(Cu.groupTable);
         return [
@@ -270,7 +340,7 @@
       });
     }
     if (stage.startsWith('SF')) {
-      return koRound(c, 'sf', stage, 'Semi-final', () => {
+      return round('sf', 'Semi-final', () => {
         if (c.groups.length >= 4) {
           const w = Cu.roundWinners(c, 'qf');
           return (
@@ -295,21 +365,55 @@
         ];
       });
     }
+    if (stage === 'F2') {
+      // the return leg of a two-legged final
+      if (fmt.legs.f !== 2 || !c.ko.final || !c.ko.final.res) return [];
+      if (!c.ko.final2) {
+        const f1 = c.ko.final;
+        c.ko.final2 = {
+          id: FM.nextId('f'),
+          comp: c.id,
+          h: f1.a,
+          a: f1.h,
+          res: null,
+          ko: true,
+          leg: 2,
+          first: f1.id,
+          po: 'Final · 2nd leg',
+          final: true,
+        };
+      }
+      return [c.ko.final2];
+    }
     if (stage === 'F') {
       if (!c.ko.final) {
         const w = Cu.roundWinners(c, 'sf');
         if (!w) return [];
-        c.ko.final = {
-          id: FM.nextId('f'),
-          comp: c.id,
-          h: w[0],
-          a: w[1],
-          res: null,
-          ko: true,
-          po: 'Final',
-          final: true,
-          neutral: true,
-        };
+        if (fmt.legs.f === 2) {
+          // the better-placed club hosts the second leg
+          const [hi, lo] = rep(w[0]) >= rep(w[1]) ? [w[0], w[1]] : [w[1], w[0]];
+          c.ko.final = {
+            id: FM.nextId('f'),
+            comp: c.id,
+            h: lo,
+            a: hi,
+            res: null,
+            ko: false,
+            leg: 1,
+            po: 'Final · 1st leg',
+          };
+        } else
+          c.ko.final = {
+            id: FM.nextId('f'),
+            comp: c.id,
+            h: w[0],
+            a: w[1],
+            res: null,
+            ko: true,
+            po: 'Final',
+            final: true,
+            neutral: true,
+          };
       }
       return [c.ko.final];
     }
@@ -436,7 +540,14 @@
   // Knockout fixtures of a continental/world cup in order (legs included)
   Cu.koList = (c) =>
     c.ko
-      ? [...(c.ko.qf || []), ...(c.ko.qf2 || []), ...(c.ko.sf || []), ...(c.ko.sf2 || []), c.ko.final].filter(Boolean)
+      ? [
+          ...(c.ko.qf || []),
+          ...(c.ko.qf2 || []),
+          ...(c.ko.sf || []),
+          ...(c.ko.sf2 || []),
+          c.ko.final,
+          c.ko.final2,
+        ].filter(Boolean)
       : [];
 
   // Everything a club could have played this season (for match reports)
@@ -445,9 +556,9 @@
     for (const c of Object.values(S().comps)) {
       if (c.type === 'league') {
         out.push(...(c.fixtures || []).flat());
-        if (c.playoff) out.push(...c.playoff.sf, ...(c.playoff.sf2 || []), c.playoff.final);
+        if (c.playoff) out.push(...c.playoff.sf, ...(c.playoff.sf2 || []), c.playoff.final, c.playoff.final2);
       }
-      if (c.type === 'cup') (c.rounds || []).forEach((r) => out.push(...r.ties));
+      if (c.type === 'cup') (c.rounds || []).forEach((r) => out.push(...r.ties, ...(r.ties2 || [])));
       if (c.type === 'continental') (c.groups || []).forEach((g) => out.push(...g.fixtures.flat()));
       if (c.type === 'continental' || c.type === 'world') out.push(...Cu.koList(c));
     }
@@ -457,7 +568,11 @@
   Cu.findFixture = function (id) {
     for (const c of Object.values(S().comps)) {
       if (c.type === 'league' && c.playoff) {
-        const f = [...c.playoff.sf, ...(c.playoff.sf2 || [])].find((x) => x && x.id === id);
+        const f = [...c.playoff.sf, ...(c.playoff.sf2 || []), c.playoff.final].find((x) => x && x.id === id);
+        if (f) return f;
+      }
+      for (const t of Object.values(S().relTies || {})) {
+        const f = [t.leg1, t.leg2].find((x) => x && x.id === id);
         if (f) return f;
       }
       if (c.type === 'continental' || c.type === 'world') {
@@ -479,8 +594,8 @@
         continue;
       }
       const last = c.rounds[c.rounds.length - 1];
-      const tie = last && last.ties.find(mine);
-      const out1 = c.rounds.some((r) => r.ties.some((f) => f.res && mine(f) && winnerOf(f) !== clubId));
+      const tie = last && (last.ties2 || last.ties).find(mine);
+      const out1 = c.rounds.some((r) => (r.ties2 || r.ties).some((f) => f.res && mine(f) && winnerOf(f) !== clubId));
       out.push({
         c,
         text: out1 ? 'Knocked out' : tie ? last.name : last ? `Through to next round` : 'Awaiting draw',

@@ -1073,13 +1073,59 @@
     comp.playoff = null;
   };
 
+  // A table in order: points, then the competition's own tiebreakers (D.TIEBREAK: head-to-head, wins, goal
+  // difference, goals scored, in the order its real rules use), then the club's name. comp: a league, or a group
+  // ({ table, fixtures, tiebreak }) — head-to-head reads the results from its fixtures.
   W.sortedTable = function (comp) {
-    return Object.entries(comp.table)
+    const rows = Object.entries(comp.table)
       .map(([id, r]) => ({ id, ...r, gd: r.gf - r.ga }))
-      .sort(
-        (a, b) =>
-          b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || FM.clubOf(a.id).name.localeCompare(FM.clubOf(b.id).name),
-      );
+      .sort((a, b) => b.pts - a.pts || FM.clubOf(a.id).name.localeCompare(FM.clubOf(b.id).name));
+    const rule = comp.tiebreak || (comp.rules && comp.rules.tiebreak) || D.TIEBREAK[comp.id] || D.TIEBREAK_DEFAULT;
+    for (let i = 0; i < rows.length;) {
+      let j = i + 1;
+      while (j < rows.length && rows[j].pts === rows[i].pts) j++;
+      if (j - i > 1) {
+        const run = rows.slice(i, j);
+        // head-to-head among the clubs level on points (only worked out when a rule asks for it)
+        let mini = null;
+        if (rule.includes('h2h') && comp.fixtures) {
+          const ids = new Set(run.map((r) => r.id));
+          mini = Object.fromEntries(run.map((r) => [r.id, { pts: 0, gd: 0, gf: 0 }]));
+          for (const f of comp.fixtures.flat()) {
+            if (!f.res || !ids.has(f.h) || !ids.has(f.a)) continue;
+            const H = mini[f.h],
+              A = mini[f.a],
+              win = FM.S.rules.win;
+            H.gf += f.res.hg;
+            A.gf += f.res.ag;
+            H.gd += f.res.hg - f.res.ag;
+            A.gd += f.res.ag - f.res.hg;
+            if (f.res.hg > f.res.ag) H.pts += win;
+            else if (f.res.hg < f.res.ag) A.pts += win;
+            else {
+              H.pts++;
+              A.pts++;
+            }
+          }
+        }
+        const by = {
+          gd: (a, b) => b.gd - a.gd,
+          gf: (a, b) => b.gf - a.gf,
+          wins: (a, b) => b.w - a.w,
+          h2h: (a, b) =>
+            mini
+              ? mini[b.id].pts - mini[a.id].pts || mini[b.id].gd - mini[a.id].gd || mini[b.id].gf - mini[a.id].gf
+              : 0,
+        };
+        run.sort(
+          (a, b) =>
+            rule.reduce((v, k) => v || by[k](a, b), 0) || FM.clubOf(a.id).name.localeCompare(FM.clubOf(b.id).name),
+        );
+        rows.splice(i, run.length, ...run);
+      }
+      i = j;
+    }
+    return rows;
   };
   W.position = (clubId) => {
     const c = FM.S.clubs[clubId];
@@ -1136,8 +1182,7 @@
       CWC = at(D.CWC_AFTER),
       INTL = at(D.INTL_AFTER);
     // Domestic cup days: enough rounds for the biggest cup (byes even out the first round), spread through the season
-    const biggest = Math.max(2, ...W.cups().map((c) => FM.Cups.entrants(c).length));
-    const cupDays = Math.max(Object.keys(D.CUP_AFTER).length, Math.ceil(Math.log2(biggest)));
+    const cupDays = Math.max(Object.keys(D.CUP_AFTER).length, ...W.cups().map((c) => FM.Cups.daysNeeded(c)));
     const CUP = {},
       c0 = W.scaleRound(1),
       c1 = W.scaleRound(19);
@@ -1154,13 +1199,21 @@
       let st = CC[r];
       if (st && !legs) st = /2$/.test(st) && st !== 'G2' ? null : st.replace(/^(QF|SF)1$/, '$1');
       if (st && W.continentals().length) cal.push({ type: 'cup', comps: W.continentals().map((c) => c.id), stage: st });
+      // a final played over two legs (the CAF and CONCACAF cups) has its return on the next day
+      if (st === 'F' && legs && W.continentals().length)
+        cal.push({ type: 'cup', comps: W.continentals().map((c) => c.id), stage: 'F2' });
       if (CWC[r] && W.worldCups().length)
         cal.push({ type: 'cup', comps: W.worldCups().map((c) => c.id), stage: CWC[r], world: true });
       if (CUP[r] && W.cups().length) cal.push({ type: 'cup', comps: W.cups().map((c) => c.id) });
       if (INTL[r] && S.nteams) INTL[r].forEach((tag) => cal.push({ type: 'intl', tag }));
     }
     if (legs)
-      cal.push({ type: 'playoff', stage: 'SF1' }, { type: 'playoff', stage: 'SF2' }, { type: 'playoff', stage: 'F' });
+      cal.push(
+        { type: 'playoff', stage: 'SF1' },
+        { type: 'playoff', stage: 'SF2' },
+        { type: 'playoff', stage: 'F' },
+        { type: 'playoff', stage: 'F2' },
+      );
     else cal.push({ type: 'playoff', stage: 'SF' }, { type: 'playoff', stage: 'F' });
     // International tournament finals in the summer at the end of this season
     if (S.nteams && FM.Intl.tournamentFor(S.year))
@@ -1184,6 +1237,7 @@
       retired: [],
       wbPos: 2, // wing-backs are a position from the start (older saves convert theirs on load)
       wmPos: 1, // so are wide midfielders (LM/RM)
+      compRules: 2, // and each league's real promotion, relegation and play-off rules
       rules: {
         win: opts.win || 3,
         subs: opts.subs || 5,
@@ -1213,12 +1267,7 @@
           rules: JSON.parse(JSON.stringify(l.rules)),
         }),
     );
-    const CUP = (id, nat, name, short) => (S.comps[id] = { id, type: 'cup', nat, name, short, clubs: [], prize: 3e6 });
-    CUP('CUPENG', 'ENG', 'FA Cup', 'FAC');
-    CUP('CUPESP', 'ESP', 'Copa del Rey', 'CDR');
-    CUP('CUPGER', 'GER', 'DFB-Pokal', 'DFB');
-    CUP('CUPFRA', 'FRA', 'Coupe de France', 'CDF');
-    CUP('CUPBRA', 'BRA', 'Copa do Brasil', 'CDB');
+    D.DOMESTIC_CUPS.forEach(([id, nat, name, short, opts]) => FM.Cups.addDomestic(S, id, nat, name, short, opts));
     S.comps.FR = { id: 'FR', type: 'friendly', name: 'Pre-season friendly', short: 'FR', clubs: [] };
     D.CONTINENTALS.forEach((c) => (S.comps[c.id] = { ...c, type: 'continental', clubs: [] }));
     S.comps.CWC = { id: 'CWC', type: 'world', name: 'FIFA Club World Cup', short: 'CWC', clubs: [], prize: 1e7 };

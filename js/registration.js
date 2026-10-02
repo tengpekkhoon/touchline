@@ -40,6 +40,7 @@
     ES1: { nonEU: 3 },
     ES2: { nonEU: 3 },
     FR1: { nonEU: 4 },
+    AU1: { foreign: 5 }, // five visa players
     US1: { foreign: 8 },
     BR1: { matchday: 9 },
     JP1: { matchday: 5, exempt: ['THA'] },

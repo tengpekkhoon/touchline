@@ -136,6 +136,13 @@
         }
       }
     }
+    // each league's real promotion, relegation and play-off rules (Germany's relegation play-offs, two-legged
+    // play-off finals): older saves take the current ones, once
+    if (s.compRules !== 2 && s.comps && FM.D.LEAGUES) {
+      s.compRules = 2;
+      for (const l of FM.D.LEAGUES)
+        if (s.comps[l.id] && s.comps[l.id].type === 'league') s.comps[l.id].rules = JSON.parse(JSON.stringify(l.rules));
+    }
     // the world ranking is a coefficient now (it was an Elo rating, 1500 for an average side)
     for (const t of Object.values(s.nteams || {}))
       if (t.coef == null && t.elo != null) {

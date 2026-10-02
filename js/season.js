@@ -101,13 +101,95 @@
         }));
       if (cal.stage === 'SF' || cal.stage === 'SF1') out.push(...P.sf);
       if (cal.stage === 'SF2') out.push(...P.sf2);
+      // the final: one match at a neutral ground (the EFL play-offs at Wembley), or two legs where the league's real
+      // play-offs have them (Spain's Segunda, Italy's Serie B), the better seed hosting the return
+      const twoLegFinal =
+        c.rules.promote.finalLegs === 2 &&
+        S.rules.twoLegs &&
+        S.calendar.some((x) => x.type === 'playoff' && x.stage === 'F2');
       if (cal.stage === 'F') {
         if (!P.final) {
           const w = (P.sf2 || P.sf).map(winnerOf);
-          const [h, a] = P.seeds.indexOf(w[0]) < P.seeds.indexOf(w[1]) ? w : [w[1], w[0]];
-          P.final = { id: FM.nextId('f'), comp: c.id, po: 'Playoff Final', h, a, res: null, ko: true, neutral: true };
+          const [hi, lo] = P.seeds.indexOf(w[0]) < P.seeds.indexOf(w[1]) ? w : [w[1], w[0]];
+          P.final = twoLegFinal
+            ? {
+                id: FM.nextId('f'),
+                comp: c.id,
+                po: 'Playoff Final · 1st leg',
+                h: lo,
+                a: hi,
+                res: null,
+                ko: false,
+                leg: 1,
+              }
+            : { id: FM.nextId('f'), comp: c.id, po: 'Playoff Final', h: hi, a: lo, res: null, ko: true, neutral: true };
         }
         out.push(P.final);
+      }
+      if (cal.stage === 'F2' && twoLegFinal && P.final && !P.final2)
+        P.final2 = {
+          id: FM.nextId('f'),
+          comp: c.id,
+          po: 'Playoff Final · 2nd leg',
+          h: P.final.a,
+          a: P.final.h,
+          res: null,
+          ko: true,
+          leg: 2,
+          first: P.final.id,
+        };
+      if (cal.stage === 'F2' && P.final2) out.push(P.final2);
+    }
+    // Relegation play-offs (Germany): the club that finished just above the automatic relegation places plays the best
+    // club of the division below that missed out on automatic promotion, over two legs, the lower club hosting the
+    // first. Whoever wins takes the place in the upper division.
+    for (const u of W.leagues()) {
+      const R = u.rules.relegate;
+      if (!R || !R.playoff || !S.comps[R.to]) continue;
+      const lower = S.comps[R.to];
+      S.relTies = S.relTies || {};
+      let t = S.relTies[u.id];
+      if (!t && (cal.stage === 'SF' || cal.stage === 'SF1')) {
+        const ut = W.sortedTable(u),
+          down = ut[ut.length - R.n - 1],
+          up = FM.Youth.promotable(lower, W.sortedTable(lower))[lower.rules.promote.auto]; // (a B team can't go up)
+        if (!down || !up) continue;
+        const two = cal.stage === 'SF1',
+          po = 'Relegation play-off';
+        t = S.relTies[u.id] = {
+          u: u.id,
+          lower: lower.id,
+          down: down.id,
+          up: up.id,
+          leg1: two
+            ? {
+                id: FM.nextId('f'),
+                comp: u.id,
+                po: po + ' · 1st leg',
+                h: up.id,
+                a: down.id,
+                res: null,
+                ko: false,
+                leg: 1,
+              }
+            : { id: FM.nextId('f'), comp: u.id, po, h: down.id, a: up.id, res: null, ko: true },
+        };
+      }
+      if (!t) continue;
+      if (cal.stage === 'SF' || cal.stage === 'SF1') out.push(t.leg1);
+      if (cal.stage === 'SF2' && t.leg1.leg === 1) {
+        t.leg2 = t.leg2 || {
+          id: FM.nextId('f'),
+          comp: u.id,
+          po: 'Relegation play-off · 2nd leg',
+          h: t.down,
+          a: t.up,
+          res: null,
+          ko: true,
+          leg: 2,
+          first: t.leg1.id,
+        };
+        out.push(t.leg2);
       }
     }
     return out;
@@ -1214,7 +1296,7 @@
       for (const cc of D.CONTINENTALS) {
         const k = cc.feeders && cc.feeders[comp.id];
         if (!k) continue;
-        const from = (R.qualify && R.qualify.n) || 0;
+        const from = FM.Cups.skipFor(comp.id, cc);
         qualified[cc.id] = (qualified[cc.id] || []).concat(t.slice(from, from + k).map((r) => r.id));
       }
       if (R.relegate) t.slice(-R.relegate.n).forEach((r) => moves.push([r.id, comp.id, R.relegate.to]));
@@ -1222,13 +1304,30 @@
         FM.Youth.promotable(comp, t)
           .slice(0, R.promote.auto)
           .forEach((r) => moves.push([r.id, comp.id, R.promote.to]));
-        if (comp.playoff && comp.playoff.final && comp.playoff.final.res) {
-          const w = winnerOf(comp.playoff.final);
+        const fin = comp.playoff && (comp.playoff.final2 || comp.playoff.final);
+        if (fin && fin.res) {
+          const w = winnerOf(fin);
           entry.comps[comp.id].playoffWinner = w;
           moves.push([w, comp.id, R.promote.to]);
         }
       }
     }
+    // relegation play-offs: the winner of the tie plays in the upper division next season
+    for (const t of Object.values(S.relTies || {})) {
+      const fin = t.leg2 || t.leg1;
+      if (!fin || !fin.res) continue;
+      const w = winnerOf(fin),
+        up = S.clubs[t.up],
+        down = S.clubs[t.down];
+      if (w === t.up) moves.push([t.up, t.lower, t.u], [t.down, t.u, t.lower]);
+      FM.News.add({
+        type: 'world',
+        title: `${(w === t.up ? up : down).name} win the relegation play-off`,
+        body: w === t.up ? `${up.name} go up and ${down.name} go down.` : `${down.name} stay up; ${up.name} stay down.`,
+        clubId: w,
+      });
+    }
+    S.relTies = null;
     S.qualified = qualified;
     entry.qualified = qualified;
     entry.cups = {};
