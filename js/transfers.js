@@ -559,6 +559,7 @@
         !p.retired &&
         !p.loan &&
         !W.ownPlayer(p) &&
+        !p.pre && // (a pre-contract is a promise to another club)
         !T.isSettled(p) &&
         W.age(p) >= 19 &&
         (W.age(p) <= (p.pos === 'GK' ? 31 : 29) || (!p.clubId && W.age(p) <= (p.pos === 'GK' ? 34 : 32))), // a free agent, a little older
@@ -629,6 +630,7 @@
           p.clubId &&
           !p.loan &&
           !W.ownPlayer(p) &&
+          !p.pre &&
           !T.isSettled(p) &&
           p.ca >= W.levelFor(g.rep) - 6 &&
           S.clubs[p.clubId].rep < g.rep - 5 &&
@@ -660,7 +662,8 @@
     // club, now and then simply because the money is there. A few a season, as in the real summer window.
     for (let i = quota(T.BLOCKBUSTER * k); i > 0; i--) {
       const stars = Object.values(S.players).filter((p) => {
-        if (!p.clubId || p.loan || p.ca < 80 || W.age(p) > 31 || W.ownPlayer(p) || T.isSettled(p)) return false;
+        if (!p.clubId || p.loan || p.ca < 80 || W.age(p) > 31 || W.ownPlayer(p) || p.pre || T.isSettled(p))
+          return false;
         const sc = S.clubs[p.clubId];
         if (sc.sim === 'minimal' || W.isUserSide(sc.id)) return false;
         return p.contract <= S.year + 1 || p.wantsOut || D.IDENTITY[sc.identity].sell < 1 || Math.random() < 0.15;

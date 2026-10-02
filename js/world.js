@@ -958,12 +958,19 @@
       // greedy fill can give a good all-rounder a place a specialist should have had). Each player-and-place pair is
       // worked out once, so it costs little.
       const memo = new Map();
+      // (a national side you manage keeps the players you placed)
+      const locked = new Set(
+        (tactic.lineup || []).map((pid, i) => (xi[i] && xi[i].id === pid ? i : -1)).filter((i) => i >= 0),
+      );
       const val = (p, i) => {
         if (!p || (slots[i].t === 'GK') !== (p.pos === 'GK')) return 0;
         const key = p.id + ':' + i;
         let v = memo.get(key);
         if (v === undefined) {
-          v = W.effAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]) * W.fitnessPick(p);
+          v =
+            W.effAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]) *
+            W.fitnessPick(p) *
+            (p.loan && p.loan.promised ? 1.1 : 1);
           memo.set(key, v);
         }
         return v;
@@ -972,7 +979,13 @@
         better = false;
         for (let i = 1; i < slots.length; i++)
           for (let j = i + 1; j < slots.length; j++)
-            if (xi[i] && xi[j] && val(xi[j], i) + val(xi[i], j) > val(xi[i], i) + val(xi[j], j) + 1e-9) {
+            if (
+              !locked.has(i) &&
+              !locked.has(j) &&
+              xi[i] &&
+              xi[j] &&
+              val(xi[j], i) + val(xi[i], j) > val(xi[i], i) + val(xi[j], j) + 1e-9
+            ) {
               [xi[i], xi[j]] = [xi[j], xi[i]];
               better = true;
             }

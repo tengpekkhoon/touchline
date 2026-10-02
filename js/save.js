@@ -182,6 +182,11 @@
       }
     }
     for (const p of Object.values(s.players || {})) {
+      // a second position equal to his own (a conversion to wing-back or wide midfielder can leave one)
+      if (p.alt && p.alt[p.pos] != null) {
+        delete p.alt[p.pos];
+        if (!Object.keys(p.alt).length) delete p.alt;
+      }
       if (p.pos !== 'GK' || !p.attrs) continue;
       const h = (parseInt(String(p.id).replace(/\D/g, ''), 10) || 0) % 4;
       for (const [k, [lo, hi]] of Object.entries(FM.D.GK_OUTFIELD))

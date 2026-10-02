@@ -1337,6 +1337,7 @@
       FM.Intl.seasonEnd(entry);
     }
     Sea.newSeason(entry);
+    Sea.ensureKeepers(); // a keeper who left or retired must not leave a squad without one before the first match
     if (summary.sacked) S.user.sacked = true;
     return summary;
   };

@@ -81,7 +81,7 @@
     const st = { r, n: sq.length };
     if (r.squad) st.nonHG = sq.filter((p) => senior(p) && !R.homegrown(p, c.nat)).length;
     if (r.nonEU) st.nonEU = sq.filter((p) => !R.isEU(p)).length;
-    if (r.foreign) st.foreign = sq.filter((p) => R.isForeign(p, c, r)).length;
+    if (r.foreign || r.matchday) st.foreign = sq.filter((p) => R.isForeign(p, c, r)).length;
     if (r.nonEUSign) st.nonEUSigned = R.nonEUSigned(c);
     return st;
   };
@@ -107,6 +107,9 @@
         ok: false,
         why: `All ${r.foreign} ${c.comp === 'US1' ? 'international slots' : 'foreign-player places'} are taken.`,
       };
+    // a matchday cap needs a squad to match: at most five more foreigners than the matchday allows
+    if (r.matchday && !r.foreign && R.isForeign(p, c, r) && st.foreign >= r.matchday + 5)
+      return { ok: false, why: `Too many foreign players for the ${r.matchday}-a-matchday rule.` };
     if (r.nonEUSign && !R.isEU(p) && p.clubId && FM.S.clubs[p.clubId].nat !== c.nat && st.nonEUSigned >= r.nonEUSign)
       return { ok: false, why: `The ${r.nonEUSign} non-EU signings from abroad allowed this season have been made.` };
     return { ok: true };

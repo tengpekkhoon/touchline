@@ -844,7 +844,10 @@
         pid: p.id,
         clubId: to.id,
       });
-    } else FM.Transfers.execute(p, to.id, 0, pre.wage || FM.Transfers.wageDemand(p, to), { pre: true });
+    } else {
+      if (!FM.Transfers.canRegister(to, p)) return false; // the squad has filled up since the approach
+      FM.Transfers.execute(p, to.id, 0, pre.wage || FM.Transfers.wageDemand(p, to), { pre: true });
+    }
     return true;
   };
   // AI clubs approach good players in the last year of their contracts; yours get a warning first (a desk
@@ -898,6 +901,12 @@
       Math.floor(M.PRE_AI * W.dayScale() * (clubs.length / 110)) +
       (Math.random() < (M.PRE_AI * W.dayScale() * (clubs.length / 110)) % 1 ? 1 : 0);
     if (!n) return;
+    // a club under squad rules takes one pre-contract at a time (each is checked against today's squad)
+    const incoming = new Set(
+      Object.values(s.players)
+        .filter((p) => p.pre)
+        .map((p) => p.pre.c),
+    );
     const cands = Object.values(s.players).filter(
       (p) =>
         p.clubId &&
@@ -916,6 +925,7 @@
         (x) =>
           x.id !== p.clubId &&
           Math.abs(W.levelFor(x.rep) - p.ca) <= 7 &&
+          !(incoming.has(x.id) && FM.Reg.rulesFor(x)) &&
           W.squad(x.id).length < W.squadTarget(x) + 3 &&
           T.canRegister(x, p),
       );
@@ -929,6 +939,7 @@
           (1 + Math.abs(W.levelFor(x.rep) - p.ca)),
       );
       p.pre = { c: c.id, wage: T.wageDemand(p, c) };
+      incoming.add(c.id);
       i++;
     }
   };
