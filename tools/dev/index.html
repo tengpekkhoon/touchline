@@ -233,6 +233,10 @@
       <h1>TOUCHLINE <b>DEV</b></h1>
       <nav id="nav">
         <button data-t="run" class="on">Run</button>
+        <button data-t="gate">Gate</button>
+        <button data-t="trends">Trends</button>
+        <button data-t="matrix">Seeds</button>
+        <button data-t="sweep">Sweep</button>
         <button data-t="conv">Converter</button>
         <button data-t="imp">Importer</button>
         <button data-t="game">Game</button>
@@ -350,6 +354,114 @@
           </div>
           <pre class="out" id="vout" hidden></pre>
         </div>
+      </section>
+
+      <!-- GATE -->
+      <section id="gate">
+        <p class="dim">
+          Run a set of jobs and compare each with its pinned baseline. A gate fails if a job fails, a measure that was
+          in range is out of range, or fewer measures are in range than in the baseline. Pin baselines from a passing
+          gate, or from any run's detail on the Run tab.
+        </p>
+        <div class="row">
+          <button class="b" data-gate="quick">Quick gate</button
+          ><span class="tiny dim">docs, lint, format, converter, world definition, importer, 1-season suite</span>
+          <button class="b" data-gate="full" style="margin-left: 16px">Full gate</button
+          ><span class="tiny dim"
+            >adds regression test, 3-season suite, calibration, wonderkids, transfers (about 30–40 minutes)</span
+          >
+        </div>
+        <div class="two" style="margin-top: 14px">
+          <div class="card">
+            <h3>Recent gates</h3>
+            <div id="glist"></div>
+          </div>
+          <div class="card">
+            <h3>Baselines</h3>
+            <div id="blist"></div>
+          </div>
+        </div>
+        <div class="card" id="gview" style="margin-top: 14px" hidden></div>
+      </section>
+
+      <!-- TRENDS -->
+      <section id="trends">
+        <p class="dim">
+          One measure across every run of a job: the real range as a band, the runs as points. Slow drift shows here
+          when no single run looks wrong.
+        </p>
+        <div class="row">
+          <label class="p"
+            >Job
+            <select id="tjob"></select
+          ></label>
+          <label class="p">Seasons <input id="tseasons" type="number" placeholder="any" /></label>
+          <button class="b" id="tgo">Show</button>
+          <label class="p" style="margin-left: 12px"><input type="checkbox" id="tdrift" /> sort by drift</label>
+        </div>
+        <div class="card" style="margin-top: 12px" id="tres"></div>
+      </section>
+
+      <!-- MATRIX -->
+      <section id="matrix">
+        <p class="dim">
+          The same job on several seeds at once, as one table: the mean, the spread and how many seeds put each measure
+          in range. Use it to tell a real change from seed noise.
+        </p>
+        <div class="row">
+          <label class="p"
+            >Job
+            <select id="mjob"></select
+          ></label>
+          <label class="p">Seeds <input id="mcount" type="number" value="4" min="2" max="10" /></label>
+          <label class="p">Seasons <input id="mseasons" type="number" value="3" min="1" max="12" /></label>
+          <button class="b" id="mgo">Run on seeds</button>
+        </div>
+        <div class="two" style="margin-top: 14px">
+          <div class="card">
+            <h3>Recent matrices</h3>
+            <div id="mlist"></div>
+          </div>
+          <div></div>
+        </div>
+        <div class="card" id="mview" style="margin-top: 14px" hidden></div>
+      </section>
+
+      <!-- SWEEP -->
+      <section id="sweep">
+        <p class="dim">
+          Try values of one tuning constant: the job runs with the game's own value first, then with each value you
+          give, on the same seeds, and the table shows which measures each value moves and how many stay in range.
+          Constants are the capitalised numbers the game exposes (<code>Season.LEARN.step</code>,
+          <code>Transfers.HOME_SCALE</code> …); a run reads them at the start and the source is not touched.
+        </p>
+        <div class="row">
+          <label class="p"
+            >Job
+            <select id="sjob"></select
+          ></label>
+          <label class="p"
+            >Constant
+            <input id="spath" list="stunables" style="width: 260px" placeholder="start typing: Transfers.OFFLOAD"
+          /></label>
+          <datalist id="stunables"></datalist>
+          <span class="tiny dim" id="scur"></span>
+        </div>
+        <div class="row" style="margin-top: 8px">
+          <label class="p">Values <input id="svalues" style="width: 260px" placeholder="0.2, 0.4, 0.6" /></label>
+          <button class="b ghost" id="sfill">Fill ×0.5 ×1.5 ×2</button>
+          <label class="p">Seeds each <input id="sseeds" type="number" value="2" min="1" max="5" /></label>
+          <label class="p">Seasons <input id="sseasons" type="number" value="3" min="1" max="12" /></label>
+          <button class="b" id="sgo">Run the sweep</button>
+        </div>
+        <div class="two" style="margin-top: 14px">
+          <div class="card">
+            <h3>Recent sweeps</h3>
+            <div id="slist"></div>
+          </div>
+          <div></div>
+        </div>
+        <div class="card" id="sview" style="margin-top: 14px" hidden></div>
       </section>
 
       <!-- GAME -->
@@ -488,6 +600,7 @@
         $('#detail').innerHTML =
           `<div class="row"><h3 style="margin:0">#${rec.id} · ${esc(rec.label)}</h3><span class="tiny dim">${esc(rec.summary || '')}</span></div>${diff}<details open style="margin-top:10px"><summary>Output (last part)</summary><pre class="out">${esc(rec.tail || '')}</pre></details>`;
         $('#detail').scrollIntoView({ behavior: 'smooth' });
+        decorateDetail(rec);
       };
 
       // ---------- Converter ----------
@@ -604,6 +717,283 @@
         $('#vout').textContent = r.output;
       };
 
+      // ---------- Closing the loop: gate, trends, matrix, sweep ----------
+      const fmtN = (v) =>
+        Number.isNaN(v) || v == null
+          ? '—'
+          : Math.abs(v) >= 100
+            ? v.toFixed(0)
+            : Math.abs(v) >= 10
+              ? v.toFixed(1)
+              : v.toFixed(2);
+      const paramText = (p) =>
+        Object.entries(p || {})
+          .map(([k, v]) => k + ' ' + v)
+          .join(' · ');
+      const VIEWS = { gate: ['#glist', '#gview'], matrix: ['#mlist', '#mview'], sweep: ['#slist', '#sview'] };
+      let openGroup = null;
+
+      async function groupList(kind) {
+        const [listSel, viewSel] = VIEWS[kind];
+        const all = await api('groups');
+        const mine = all.filter((g) => g.kind === kind);
+        $(listSel).innerHTML =
+          mine
+            .slice(0, 8)
+            .map(
+              (g) =>
+                `<div class="row tiny" style="padding:4px 0;border-bottom:1px solid var(--line);cursor:pointer" data-group="${g.id}" data-kind="${kind}"><b>#${g.id}</b><span>${esc(g.label)}</span><span class="dim">${fmtTime(g.created)}</span><span style="flex:1"></span><span class="${g.verdict === 'pass' ? 'ok' : g.verdict === 'fail' ? 'no' : 'dim'}">${g.status === 'running' ? g.done + '/' + g.n : esc(g.verdict || g.status)}</span></div>`,
+            )
+            .join('') || '<span class="dim tiny">Nothing yet.</span>';
+        $(listSel).onclick = (e) => {
+          const r = e.target.closest('[data-group]');
+          if (r) showGroup(+r.dataset.group, r.dataset.kind);
+        };
+      }
+      async function showGroup(id, kind) {
+        openGroup = id;
+        const el = $(VIEWS[kind][1]);
+        const poll = async () => {
+          if (openGroup !== id) return;
+          const g = await api('group/' + id);
+          el.hidden = false;
+          el.innerHTML = renderGroup(g);
+          bindGroup(g, el, kind);
+          if (g.status === 'running') setTimeout(poll, 3000);
+          else groupList(kind);
+        };
+        poll();
+      }
+      const statusDot = (s) =>
+        ({
+          done: '<span class="ok">●</span>',
+          failed: '<span class="no">●</span>',
+          running: '<span class="warn" style="color:var(--warn)">◐</span>',
+          queued: '<span class="dim">○</span>',
+          skipped: '<span class="dim">–</span>',
+        })[s] || s;
+      function renderGroup(g) {
+        const done = g.items.filter((i) => ['done', 'failed'].includes(i.status)).length;
+        let h = `<div class="row"><h3 style="margin:0">#${g.id} · ${esc(g.label)}</h3><span class="tiny dim">${esc(g.status)} · ${done}/${g.items.length}</span><span style="flex:1"></span>${g.status === 'running' ? '<button class="b ghost" data-gstop>Stop</button>' : ''}</div>`;
+        h += `<table style="margin-top:8px"><tbody>${g.items
+          .map(
+            (i) =>
+              `<tr><td style="width:24px">${statusDot(i.status)}</td><td>${esc(JOBSL[i.job] || i.job)}</td><td class="dim">${esc(paramText(i.params))}${
+                i.tune
+                  ? ' · ' +
+                    esc(
+                      Object.entries(i.tune)
+                        .map(([k, v]) => k + ' = ' + v)
+                        .join(', '),
+                    )
+                  : ''
+              }</td><td class="dim">${i.runId ? '#' + i.runId : ''}</td></tr>`,
+          )
+          .join('')}</tbody></table>`;
+        const r = g.result;
+        if (!r) return h;
+        if (g.kind === 'gate') {
+          h += `<h3 style="margin-top:14px" class="${r.verdict === 'pass' ? 'ok' : 'no'}">${r.verdict === 'pass' ? 'Gate passed' : r.verdict === 'stopped' ? 'Stopped' : 'Gate failed: ' + r.bad + ' job' + (r.bad === 1 ? '' : 's')}</h3><table><thead><tr><th>Job</th><th>Result</th><th>Against the baseline</th></tr></thead><tbody>${r.items
+            .map(
+              (it) =>
+                `<tr><td>${esc(it.label)}</td><td class="${['ok', 'no baseline'].includes(it.verdict) ? 'ok' : it.verdict === 'skipped' ? 'dim' : 'no'}">${esc(it.verdict)}${it.summary ? ' · ' + esc(it.summary) : ''}</td><td>${(it.regressions || []).map((x) => `<div class="no">✗ ${esc(x.name)}: ${esc(x.text)}</div>`).join('')}${(it.improved || []).map((x) => `<div class="ok">✓ ${esc(x.name)}: ${esc(x.text)}</div>`).join('')}${(it.moved || []).map((x) => `<div class="dim">· ${esc(x.name)} moved ${esc(x.text)}</div>`).join('')}${it.note ? `<div class="tiny dim">${esc(it.note)}</div>` : ''}${it.baselineId ? '' : '<span class="dim tiny">no baseline pinned</span>'}</td></tr>`,
+            )
+            .join(
+              '',
+            )}</tbody></table>${r.verdict === 'pass' ? '<div class="row" style="margin-top:10px"><button class="b" data-promote>Pin this gate\'s runs as the baselines</button></div>' : ''}`;
+        } else if (g.kind === 'matrix') {
+          h += `<h3 style="margin-top:14px">${r.passed}/${r.runs} runs passed</h3>${measureTable(r.measures, ['Measure', 'Real', 'Mean', 'Spread', 'Seeds in range'], (m) => `<td class="${m.meanOk === false ? 'no' : ''}">${fmtN(m.mean)}</td><td class="dim">${fmtN(m.min)} – ${fmtN(m.max)}</td><td class="${m.inRange < m.runs ? 'down' : 'ok'}">${m.inRange}/${m.runs}</td>`)}<div class="tiny dim" style="margin-top:6px">${r.summaries.map((s) => `seed ${s.seed}: ${esc(s.summary || (s.code === 0 ? 'passed' : 'failed'))}`).join(' · ')}</div>`;
+        } else if (g.kind === 'sweep') {
+          const vals = r.values;
+          const names = vals[0].measures.map((m) => m.name);
+          h += `<h3 style="margin-top:14px">${esc(r.path)}</h3><div class="tiny dim">The game's own value is ${esc(String(g.defaultValue))}. Cells are the mean over ${g.items.length / vals.length} seeds; red is out of the real range.</div><table style="margin-top:8px"><thead><tr><th>Measure</th><th>Real</th>${vals.map((v) => `<th>${v.value === null ? 'default ' + esc(String(g.defaultValue)) : esc(String(v.value))}</th>`).join('')}</tr></thead><tbody>${names
+            .map((n) => {
+              const first = vals[0].measures.find((m) => m.name === n);
+              return `<tr><td>${esc(n)}</td><td class="dim">${esc(first.range)}</td>${vals
+                .map((v, k) => {
+                  const m = v.measures.find((x) => x.name === n);
+                  if (!m) return '<td class="dim">—</td>';
+                  const moved = k > 0 && !Number.isNaN(m.mean) && Math.abs(m.mean - first.mean) > 0;
+                  return `<td class="${m.meanOk === false ? 'no' : ''}">${fmtN(m.mean)}${moved ? ` <span class="${m.mean > first.mean ? 'up' : 'down'} tiny">${m.mean > first.mean ? '▲' : '▼'}</span>` : ''}</td>`;
+                })
+                .join('')}</tr>`;
+            })
+            .join(
+              '',
+            )}<tr style="font-weight:700"><td>Measures in range</td><td></td>${vals.map((v) => `<td class="${v.inRange < vals[0].inRange ? 'no' : v.inRange > vals[0].inRange ? 'ok' : ''}">${v.inRange}/${v.total}</td>`).join('')}</tr></tbody></table>`;
+        }
+        return h;
+      }
+      const JOBSL = {};
+      function measureTable(measures, head, cells) {
+        return `<table style="margin-top:8px"><thead><tr>${head.map((x) => `<th>${x}</th>`).join('')}</tr></thead><tbody>${measures.map((m) => `<tr><td>${esc(m.name)}</td><td class="dim">${esc(m.range)}</td>${cells(m)}</tr>`).join('')}</tbody></table>`;
+      }
+      function bindGroup(g, el, kind) {
+        const stop = el.querySelector('[data-gstop]');
+        if (stop) stop.onclick = () => api('group/stop', { id: g.id });
+        const pr = el.querySelector('[data-promote]');
+        if (pr)
+          pr.onclick = async () => {
+            await api('gate/promote', { id: g.id });
+            loadBaselines();
+            pr.textContent = 'Pinned';
+            pr.disabled = true;
+          };
+      }
+      async function loadBaselines() {
+        const b = await api('baselines');
+        $('#blist').innerHTML =
+          Object.entries(b)
+            .filter(([, v]) => v)
+            .map(
+              ([j, v]) =>
+                `<div class="row tiny" style="padding:4px 0;border-bottom:1px solid var(--line)"><b>${esc(JOBSL[j] || j)}</b><span class="dim">#${v.id} · ${esc(v.summary || 'passed')} · ${esc(paramText(v.params))}</span><span style="flex:1"></span><a href="#" data-clear="${j}" class="dim">clear</a></div>`,
+            )
+            .join('') ||
+          '<span class="dim tiny">No baselines pinned yet. Pass a gate and pin it, or pin a run from the Run tab.</span>';
+        $('#blist').onclick = async (e) => {
+          const j = e.target.dataset && e.target.dataset.clear;
+          if (j) {
+            e.preventDefault();
+            await api('baseline', { clear: true, job: j });
+            loadBaselines();
+          }
+        };
+      }
+      document.querySelectorAll('[data-gate]').forEach(
+        (b) =>
+          (b.onclick = async () => {
+            const r = await api('gate', { preset: b.dataset.gate });
+            groupList('gate');
+            showGroup(r.id, 'gate');
+          }),
+      );
+
+      // trends
+      const spark = (s) => {
+        const W = 170,
+          H = 36,
+          P = 3;
+        const vs = s.pts.map((p) => p.v).filter((v) => !Number.isNaN(v));
+        if (!vs.length) return '';
+        let lo = Math.min(...vs),
+          hi = Math.max(...vs);
+        if (s.range) {
+          lo = Math.min(lo, s.range[0]);
+          if (Number.isFinite(s.range[1])) hi = Math.max(hi, s.range[1]);
+        }
+        if (hi === lo) hi = lo + 1;
+        const y = (v) => H - P - ((v - lo) / (hi - lo)) * (H - 2 * P);
+        const x = (i) => P + (s.pts.length === 1 ? (W - 2 * P) / 2 : (i * (W - 2 * P)) / (s.pts.length - 1));
+        const band = s.range
+          ? `<rect x="0" y="${y(Number.isFinite(s.range[1]) ? s.range[1] : hi)}" width="${W}" height="${Math.max(2, y(s.range[0]) - y(Number.isFinite(s.range[1]) ? s.range[1] : hi))}" fill="rgba(61,220,132,.13)"/>`
+          : '';
+        const line = s.pts.map((p, i) => `${x(i)},${y(p.v)}`).join(' ');
+        const dots = s.pts
+          .map(
+            (p, i) =>
+              `<circle cx="${x(i)}" cy="${y(p.v)}" r="2.4" fill="${p.ok === false ? '#ff5d5d' : '#c8ff3d'}"><title>#${p.id}: ${p.v}</title></circle>`,
+          )
+          .join('');
+        return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${band}<polyline points="${line}" fill="none" stroke="#6f86a3" stroke-width="1.3"/>${dots}</svg>`;
+      };
+      $('#tgo').onclick = async () => {
+        const job = $('#tjob').value,
+          se = $('#tseasons').value;
+        const r = await api(`trends?job=${job}${se ? '&seasons=' + se : ''}`);
+        if (!r.series.length)
+          return ($('#tres').innerHTML =
+            '<span class="dim">No runs of that job with measures yet. Run it from the Run tab.</span>');
+        const norm = (s) => {
+          const w = s.range && Number.isFinite(s.range[1]) ? s.range[1] - s.range[0] : 1;
+          return Math.abs(s.drift) / (w || 1);
+        };
+        const rows = r.series.slice().sort((a, b) => ($('#tdrift').checked ? norm(b) - norm(a) : 0));
+        $('#tres').innerHTML =
+          `<div class="tiny dim" style="margin-bottom:6px">${r.runs.length} runs, #${r.runs[0].id} to #${r.runs[r.runs.length - 1].id}</div><table><thead><tr><th>Measure</th><th>Real</th><th>Trend</th><th>Latest</th><th>Change</th></tr></thead><tbody>${rows
+            .map((s) => {
+              const last = s.pts[s.pts.length - 1];
+              return `<tr><td>${esc(s.name)}</td><td class="dim">${s.range ? s.range[0] + '–' + (Number.isFinite(s.range[1]) ? s.range[1] : '') : ''}</td><td>${spark(s)}</td><td class="${last.ok === false ? 'no' : ''}">${fmtN(last.v)}</td><td class="${norm(s) > 0.25 ? 'down' : 'dim'}">${s.pts.length > 2 ? (s.drift > 0 ? '▲ ' : s.drift < 0 ? '▼ ' : '') + fmtN(Math.abs(s.drift)) : ''}</td></tr>`;
+            })
+            .join('')}</tbody></table>`;
+      };
+
+      // matrix and sweep
+      $('#mgo').onclick = async () => {
+        const r = await api('matrix', {
+          job: $('#mjob').value,
+          count: +$('#mcount').value,
+          params: { seasons: +$('#mseasons').value },
+        });
+        groupList('matrix');
+        showGroup(r.id, 'matrix');
+      };
+      let TUN = [];
+      $('#spath').oninput = () => {
+        const t = TUN.find((x) => x.path === $('#spath').value);
+        $('#scur').textContent = t ? `the game's value: ${t.value}` : '';
+      };
+      $('#sfill').onclick = () => {
+        const t = TUN.find((x) => x.path === $('#spath').value);
+        if (!t) return alert('Pick a constant first');
+        $('#svalues').value = [0.5, 1.5, 2].map((k) => +(t.value * k).toPrecision(3)).join(', ');
+      };
+      $('#sgo').onclick = async () => {
+        const r = await api('sweep', {
+          job: $('#sjob').value,
+          path: $('#spath').value,
+          values: $('#svalues')
+            .value.split(/[,\s]+/)
+            .filter(Boolean),
+          seeds: +$('#sseeds').value,
+          params: { seasons: +$('#sseasons').value },
+        });
+        if (r.error) return alert(r.error);
+        groupList('sweep');
+        showGroup(r.id, 'sweep');
+      };
+
+      // the Run tab's run detail: pin as the baseline, and how it compares with the pinned one
+      async function decorateDetail(rec) {
+        const c = await api('compare?id=' + rec.id);
+        const box = document.createElement('div');
+        const isBase = c.baseline === rec.id;
+        box.innerHTML = `<div class="row" style="margin-top:12px"><button class="b ghost" id="pin" ${isBase ? 'disabled' : ''}>${isBase ? 'This is the baseline' : 'Pin as the baseline for ' + esc(rec.label)}</button></div>${
+          !isBase && c.baseline
+            ? `<h3 style="margin-top:12px">Against the baseline #${c.baseline}</h3>${c.note ? `<div class="tiny dim">${esc(c.note)}</div>` : ''}${[...c.regressions.map((x) => `<div class="no">✗ ${esc(x.name)}: ${esc(x.text)}</div>`), ...c.improved.map((x) => `<div class="ok">✓ ${esc(x.name)}: ${esc(x.text)}</div>`), ...c.moved.map((x) => `<div class="dim">· ${esc(x.name)} moved ${esc(x.text)}</div>`)].join('') || '<div class="dim">Nothing moved.</div>'}`
+            : ''
+        }`;
+        $('#detail').appendChild(box);
+        const pin = box.querySelector('#pin');
+        if (pin)
+          pin.onclick = async () => {
+            await api('baseline', { id: rec.id });
+            loadBaselines();
+            decorateDetail(rec);
+            box.remove();
+          };
+      }
+
+      async function initLoop() {
+        const r = await api('jobs');
+        for (const [k, j] of Object.entries(r.jobs)) JOBSL[k] = j.label;
+        const seeded = Object.entries(r.jobs).filter(([, j]) => j.params.seed);
+        const opts = (list) => list.map(([k, j]) => `<option value="${k}">${esc(j.label)}</option>`).join('');
+        $('#tjob').innerHTML = opts(
+          ['calibrate', 'wonderkids', 'transfers', 'suite', 'test'].map((k) => [k, r.jobs[k]]),
+        );
+        $('#mjob').innerHTML = opts(seeded);
+        $('#sjob').innerHTML = opts(
+          seeded.filter(([k]) => ['calibrate', 'transfers', 'wonderkids', 'suite'].includes(k)),
+        );
+        TUN = await api('tunables');
+        $('#stunables').innerHTML = TUN.map((t) => `<option value="${esc(t.path)}">${t.value}</option>`).join('');
+        loadBaselines();
+        groupList('gate');
+        groupList('matrix');
+        groupList('sweep');
+      }
+      initLoop();
       loadJobs();
       loadHistory();
     </script>

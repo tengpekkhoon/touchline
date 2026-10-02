@@ -40,5 +40,40 @@ export function loadSim(seed, localStorage = { getItem: () => null, setItem() {}
   vm.createContext(ctx);
   for (const f of SIM_SCRIPTS)
     vm.runInContext(fs.readFileSync(path.join(ROOT, 'js', f + '.js'), 'utf8'), ctx, { filename: f + '.js' });
-  return { ctx, FM: ctx.FM };
+  const FM = ctx.FM;
+  applyTune(FM, process.env.TOUCHLINE_TUNE);
+  return { ctx, FM };
+}
+
+// Tuning constants can be overridden for one run without editing the source, to try a value (the developer dashboard's
+// parameter sweeps do this): TOUCHLINE_TUNE='{"Transfers.HOME_SCALE":1.2,"Season.LEARN.step":0.02}'. A path names a
+// number that already exists under FM; anything else is refused, so a typo cannot silently do nothing.
+export function applyTune(FM, text) {
+  if (!text) return;
+  const tune = typeof text === 'string' ? JSON.parse(text) : text;
+  for (const [p, v] of Object.entries(tune)) {
+    const parts = p.split('.');
+    const key = parts.pop();
+    const target = parts.reduce((o, k) => (o == null ? o : o[k]), FM);
+    if (!target || typeof target[key] !== 'number' || typeof v !== 'number')
+      throw new Error(`Cannot tune "${p}": not a number in the game`);
+    target[key] = v;
+  }
+}
+
+// Every number the game exposes as a tuning constant: capitalised numbers on a module (FM.Transfers.OFFLOAD) and the
+// numbers inside capitalised objects (FM.Season.LEARN.step), with their current values.
+export function listTunables(FM) {
+  const out = [];
+  for (const [mod, obj] of Object.entries(FM)) {
+    if (!obj || typeof obj !== 'object' || ['D', 'S', 'U', 'Dev'].includes(mod)) continue;
+    for (const [k, v] of Object.entries(obj)) {
+      if (!/^[A-Z][A-Z0-9_]*$/.test(k)) continue;
+      if (typeof v === 'number') out.push({ path: `${mod}.${k}`, value: v });
+      else if (v && typeof v === 'object' && !Array.isArray(v))
+        for (const [k2, v2] of Object.entries(v))
+          if (typeof v2 === 'number') out.push({ path: `${mod}.${k}.${k2}`, value: v2 });
+    }
+  }
+  return out.sort((a, b) => a.path.localeCompare(b.path));
 }

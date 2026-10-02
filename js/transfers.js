@@ -408,7 +408,8 @@
   T.FREE_PULL = 4; // how much likelier a free agent is than a signing with a fee, all else equal
   // and a player from the club's own country: small clubs know and can afford their own market and almost never
   // look abroad, the biggest ones scout the world
-  T.homePull = (c) => (c.rep >= 75 ? 16 : c.rep >= 62 ? 34 : 70);
+  T.HOME_SCALE = 1; // a multiplier on the home pull below (a tuning knob for the developer sweeps)
+  T.homePull = (c) => (c.rep >= 75 ? 16 : c.rep >= 62 ? 34 : 70) * T.HOME_SCALE;
   T.fillGap = function (c, sq, mkt) {
     if (sq.length >= W.squadTarget(c)) return false;
     const want = W.squadWant(c);
