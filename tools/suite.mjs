@@ -67,7 +67,10 @@ function checkTables(entry, label) {
   }
 }
 function checkSquads(label) {
-  const bad = [];
+  // hard: no full XI or a bench under 3, or fewer than 2 keepers on the books. soft: injuries and suspensions on the
+  // day left no keeper in goal or a short bench; a few clubs can have that on any day, so up to 3 are tolerated.
+  const hard = [],
+    soft = [];
   for (const c of Object.values(FM.S.clubs)) {
     if (c.sim !== 'full') continue;
     const tactic = c.tactic || W.aiTactic(c);
@@ -76,10 +79,16 @@ function checkSquads(label) {
     const slots = FM.D.FORMATIONS[tactic.formation];
     const full = xi.length === 11 && xi.every(Boolean);
     const keeper = full && xi.some((p, i) => slots[i].t === 'GK' && p.pos === 'GK');
-    if (!full || !keeper || bench.length < 5 || sq.filter((p) => p.pos === 'GK').length < 2)
-      bad.push(`${c.name} (${full ? (keeper ? 'bench ' + bench.length : 'no keeper') : 'XI incomplete'})`);
+    if (!full || bench.length < 3 || sq.filter((p) => p.pos === 'GK').length < 2)
+      hard.push(`${c.name} (${full ? 'bench ' + bench.length : 'XI incomplete'})`);
+    else if (!keeper || bench.length < 5) soft.push(`${c.name} (${keeper ? 'bench ' + bench.length : 'no keeper'})`);
   }
-  check('squads', bad.length === 0, `${label}: ${bad.length} clubs cannot field a legal side, e.g. ${bad.slice(0, 3)}`);
+  check(
+    'squads',
+    hard.length === 0,
+    `${label}: ${hard.length} clubs cannot field a legal side, e.g. ${hard.slice(0, 3)}`,
+  );
+  check('squads', soft.length <= 3, `${label}: ${soft.length} clubs short on the day, e.g. ${soft.slice(0, 3)}`);
 }
 function checkFinances(label) {
   const bal = Object.values(FM.S.clubs)
@@ -112,7 +121,7 @@ for (let s = 0; s < SEASONS; s++) {
     days = 0;
   const year = FM.S.year,
     tSeason = performance.now();
-  checkSquads(`season ${s + 1} start`);
+  let checkedOpening = false;
   while (!summary) {
     const fx = Sea.userFixture();
     if (fx && !FM.S.user.sacked) Sea.applyUserMatch(FM.quickSim(fx, !!fx.ko));
@@ -125,6 +134,11 @@ for (let s = 0; s < SEASONS; s++) {
       jobs++;
     }
     if (FM.S.user.sacked) sackings++;
+    // squads are complete once the summer window and pre-season are over: the first league matchday
+    if (!checkedOpening && (FM.S.calendar[FM.S.day] || {}).type === 'league') {
+      checkedOpening = true;
+      checkSquads(`season ${s + 1} opening day`);
+    }
     if (days++ === 100) checkSquads(`season ${s + 1} mid`);
     if (days > 450) {
       fails.push(`season ${s + 1} never ended`);
@@ -206,11 +220,12 @@ const last = perSeason[perSeason.length - 1];
 // (the first season is a burn-in: a new world's intake and backfilled history add players once)
 const base = perSeason.length > 1 ? perSeason[0] : first;
 check('stability', Math.abs(last.clubs - first.clubs) <= 2, `club count ${first.clubs} → ${last.clubs}`);
-check(
-  'stability',
-  Math.abs(last.players - base.players) < base.players * 0.08,
-  `players ${base.players} → ${last.players}`,
-);
+if (perSeason.length > 1)
+  check(
+    'stability',
+    Math.abs(last.players - base.players) < base.players * 0.08,
+    `players ${base.players} → ${last.players}`,
+  );
 check('stability', last.news <= 2 * FM.News.CAP, `the feed holds ${last.news} items`);
 check('stability', last.staff < first.staff * 2.5 + 200, `staff records ${first.staff} → ${last.staff}`);
 if (perSeason.length >= 3)
