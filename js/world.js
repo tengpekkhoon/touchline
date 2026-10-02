@@ -71,16 +71,33 @@
   W.fitAt = (p, slotType, slot, role) => {
     let f = (D.FIT[p.pos] && D.FIT[p.pos][slotType]) || (p.pos === slotType ? 1 : 0.4);
     if (p.alt && p.alt[slotType] > f) f = p.alt[slotType];
-    if (slot && p.foot !== 'Both' && (slotType === 'FB' || slotType === 'WB' || slotType === 'W')) {
+    if (slot && (slotType === 'FB' || slotType === 'WB' || slotType === 'W')) {
       const side = D.slotSide(slot);
       if (side) {
-        const strong = p.foot === 'Left' ? 'L' : 'R';
+        // a full-back or winger has a natural side (LB/RB, LW/RW); the other flank costs him, unless he is
+        // two-footed. A winger on an inverted role likes the side of his weaker foot instead.
+        const nat = W.side(p);
         const inv = slotType === 'W' && role && (D.ROLES.W[role] || {}).inv;
-        if ((side === strong) === !!inv) f *= slotType === 'W' ? W.SIDE_FIT_W : W.SIDE_FIT;
+        const want = inv && p.foot !== 'Both' ? (p.foot === 'Left' ? 'R' : 'L') : nat;
+        if (nat && p.foot !== 'Both' && side !== want) f *= slotType === 'W' ? W.SIDE_FIT_W : W.SIDE_FIT;
       }
     }
     return f;
   };
+  // A full-back's or winger's natural side: chosen when he is made (mostly his stronger foot; wingers are often
+  // inverted), or worked out once from his foot for older saves
+  W.side = function (p) {
+    if (p.pos !== 'FB' && p.pos !== 'W') return '';
+    if (!p.side) {
+      const h = (parseInt(String(p.id).replace(/\D/g, ''), 10) || 0) % 100;
+      const strong = p.foot === 'Left' ? 'L' : p.foot === 'Right' ? 'R' : h % 2 ? 'L' : 'R';
+      const keep = p.pos === 'FB' ? 85 : 60; // share on their stronger foot's side
+      p.side = h < keep ? strong : strong === 'L' ? 'R' : 'L';
+    }
+    return p.side;
+  };
+  // What his position is called: LB/RB and LW/RW for full-backs and wingers, the rest as they are
+  W.posLabel = (p) => (p.pos === 'FB' ? W.side(p) + 'B' : p.pos === 'W' ? W.side(p) + 'W' : p.pos);
   // Second positions: a third of outfield players start with one (a few with two) from the positions next to
   // theirs; playing there teaches it (Sea.learnPositions)
   W.genAlt = function (p) {
@@ -133,8 +150,10 @@
       const wt = w[k] || 0;
       let mean = wt >= 1.5 ? b + 1.2 : wt > 0 ? b : b - 2.5;
       if ((k === 'reflexes' || k === 'handling') && pos !== 'GK') mean = U.rand(1, 4);
-      if (pos === 'GK' && ['dribbling', 'finishing', 'tackling', 'vision', 'technique'].includes(k)) mean = b - 4;
+      if (pos === 'GK' && k === 'vision') mean = b - 4;
       a[k] = U.clamp(U.gauss(mean, 1.8) + (bias[k] || 0) * (pos === 'GK' && !wt ? 0.3 : 1), 1, 20);
+      const lim = pos === 'GK' && D.GK_OUTFIELD[k];
+      if (lim) a[k] = U.rand(lim[0], lim[1]); // a keeper's finishing, tackling, dribbling: a keeper's
     }
     const tmp = { attrs: a };
     for (let i = 0; i < 4; i++) {
@@ -450,6 +469,8 @@
     p.clubId = clubId;
     if (p.team) p.team = undefined; // a new club (or a loan): he joins its first-team squad, not a youth side
     delete p.teamSet;
+    delete p.unreg; // registration is the new club's to sort out
+    delete p.leaveOut;
     const fresh = sqIdx.S === FM.S && sqIdx.ver === W.rosterVer;
     W.rosterVer++;
     if (fresh) {
@@ -550,6 +571,7 @@
       made.push({ nat: n, age });
       return n;
     };
+    const sidesMade = {};
     positions.forEach((pos, i) => {
       // a B team is a young side: mostly 18 to 23, with a few older heads
       const age = club.parent ? (Math.random() < 0.85 ? U.randi(18, 23) : U.randi(24, 27)) : pickAge(pos);
@@ -569,6 +591,13 @@
         pa: W.potentialFor(ca, age),
         clubId: club.id,
       });
+      if (pos === 'FB' || pos === 'W') {
+        // left and right in turn, the foot to match (most full-backs; wingers are often inverted)
+        const n = (sidesMade[pos] = (sidesMade[pos] || 0) + 1);
+        p.side = n % 2 ? 'L' : 'R';
+        if (p.foot !== 'Both' && Math.random() < (pos === 'FB' ? 0.85 : 0.55))
+          p.foot = p.side === 'L' ? 'Left' : 'Right';
+      }
       FM.S.players[p.id] = p;
     });
     // Academy prospects
@@ -767,7 +796,9 @@
   W.pickXI = function (clubId, tactic, squad) {
     const slots = D.FORMATIONS[tactic.formation];
     const club = FM.clubOf(clubId);
-    let pool = (squad || (club.sim === 'nation' ? FM.Intl.squad(club.code) : W.squad(clubId))).filter(W.available);
+    let pool = (squad || (club.sim === 'nation' ? FM.Intl.squad(club.code) : W.squad(clubId))).filter(
+      (p) => W.available(p) && (club.sim === 'nation' || !p.unreg), // left off the registered squad: can't play
+    );
     // Youth-side players (U21, U18) only step up when the first-team squad is short
     // (a loanee is never one of them: he came to play for the first team)
     const youth = (p) => p.team && !p.loan;
@@ -835,16 +866,25 @@
       const locked = new Set(
         (tactic.lineup || []).map((pid, i) => (xi[i] && xi[i].id === pid ? i : -1)).filter((i) => i >= 0),
       );
-      // a natural (or accomplished) player is preferred: an improvised one must be clearly better to start
+      // a natural (or accomplished) player is preferred: an improvised one starts only when nobody fits the slot
       // (the assistant flags anyone out of position with a natural within 4% of him)
       const natural = (p, i) => {
         const f = W.fitAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]);
-        return f >= 0.95 ? 1 : f < 0.8 ? 0.95 : 0.98;
+        return f >= 0.95 ? 1 : f < 0.8 ? 0.5 : 0.97;
       };
       const val = (p, i) =>
         !p || (slots[i].t === 'GK') !== (p.pos === 'GK')
           ? 0
           : W.effAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]) * W.fitnessPick(p) * natural(p, i);
+      // a slot nobody in the first-team squad fits: a natural from the U21 or U18 side may step up for it
+      if (club.sim !== 'nation' && !squad) {
+        const youth = W.squad(clubId).filter((p) => p.team && !p.loan && W.available(p) && !pool.includes(p));
+        slots.forEach((sl, i) => {
+          if (sl.t === 'GK' || !xi[i] || W.fitAt(xi[i], sl.t, sl) >= 0.8) return;
+          if (pool.some((p) => !xi.includes(p) && W.fitAt(p, sl.t, sl) >= 0.95)) return;
+          for (const p of youth) if (W.fitAt(p, sl.t, sl) >= 0.95 && !pool.includes(p)) pool.push(p);
+        });
+      }
       for (let pass = 0, better = true; better && pass < 4; pass++) {
         better = false;
         for (let i = 0; i < slots.length; i++) {

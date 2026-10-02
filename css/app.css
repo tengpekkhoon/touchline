@@ -222,8 +222,21 @@ main::-webkit-scrollbar {
   padding: 0 4px;
 }
 
-.screen {
-  animation: fadeIn 0.28s ease;
+/* Screens animate only when you go somewhere: a tab slides in from the side you tapped, a sub-tab crossfades,
+   and an ordinary refresh (a toggle, a sort) stays still */
+.screen.fadeIn {
+  animation: fadeIn 0.24s ease;
+}
+.screen.subIn {
+  animation: subIn 0.18s ease;
+}
+@keyframes subIn {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes fadeIn {
   from {
@@ -256,10 +269,46 @@ main::-webkit-scrollbar {
   }
 }
 .screen.fromR {
-  animation: slideL 0.28s ease;
+  animation: slideL 0.26s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 .screen.fromL {
-  animation: slideR 0.28s ease;
+  animation: slideR 0.26s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+/* A sheet slides away when closed rather than vanishing */
+.sheet-closing {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+  animation: fadeBgOut 0.2s ease forwards;
+}
+.sheet-closing .sheet {
+  animation: sheetDown 0.2s ease-in forwards;
+}
+@keyframes fadeBgOut {
+  from {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  to {
+    background: rgba(0, 0, 0, 0);
+  }
+}
+@keyframes sheetDown {
+  to {
+    transform: translateY(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .sheet,
+  .sheet-wrap,
+  .sheet-closing,
+  .sheet-closing .sheet {
+    animation: none !important;
+  }
 }
 
 /* ---------- Generic ---------- */
@@ -492,6 +541,12 @@ main::-webkit-scrollbar {
 }
 .list > * + * {
   border-top: 1px solid var(--line);
+}
+.pname {
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 3px;
 }
 .tap {
   transition:

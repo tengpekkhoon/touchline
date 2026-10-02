@@ -254,7 +254,7 @@
         x.why === 'addon'
           ? `after ${x.apps} appearances`
           : `${Math.floor(x.due / 1000)}/${String((Math.floor(x.due / 1000) + 1) % 100).padStart(2, '0')}`;
-      return `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)"><span class="grow ellip">${out ? '➡️' : '⬅️'} ${p ? esc(W.short(p)) : '—'} <span class="tiny dim">${x.why === 'addon' ? 'add-on' : 'instalment'} · ${other ? esc(other.short) : ''} · ${when}</span></span><b style="color:${out ? 'var(--bad)' : 'var(--good)'}">${out ? '−' : '+'}${U.money(x.amt)}</b></div>`;
+      return `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)"><span class="grow ellip">${out ? '➡️' : '⬅️'} ${C.pname(p)} <span class="tiny dim">${x.why === 'addon' ? 'add-on' : 'instalment'} · ${other ? esc(other.short) : ''} · ${when}</span></span><b style="color:${out ? 'var(--bad)' : 'var(--good)'}">${out ? '−' : '+'}${U.money(x.amt)}</b></div>`;
     };
     const clauses = Object.values(s.players).filter(
       (p) => !p.retired && p.sellOn && p.sellOn.some((x) => x.c === c.id),
@@ -307,16 +307,53 @@
   // ---------- Squad registration ----------
   UI.regLine = function (c) {
     const sum = FM.Reg.summary(c);
-    return sum
-      ? `<div class="tiny dim tap" style="margin:-4px 2px 8px" data-act="regInfo">📋 Registration: ${esc(sum)} ›</div>`
+    if (!sum) return '';
+    const over = FM.Reg.over(c),
+      dl = FM.Reg.deadlineIn(),
+      un = W.squad(c.id).filter((p) => p.unreg).length;
+    const warn = over.length
+      ? `<div class="warnline tap" style="margin:-4px 0 8px" data-act="regInfo">⚠️ Over the registration limits (${over.map((g) => `${g.label} ${g.n}/${g.cap}`).join(', ')}). ${dl != null ? `Deadline in ${dl} day${dl === 1 ? '' : 's'}: sell, loan out or choose who to leave out ›` : 'Fixed at the next window ›'}</div>`
       : '';
+    return `${warn}<div class="tiny dim tap" style="margin:-4px 2px 8px" data-act="regInfo">📋 Registration: ${esc(sum)}${un ? ` · ${un} unregistered` : ''} ›</div>`;
   };
   UI.acts.regInfo = () => {
     const c = W.userClub(),
       comp = S().comps[c.comp];
     UI.sheet(
-      `<div class="small muted" style="line-height:1.6">${esc(comp ? comp.name : '')}: ${esc(FM.Reg.describe(c.comp))}</div><div class="card flat small" style="margin-top:12px;line-height:1.6">${esc(FM.Reg.summary(c) || 'No limit')}</div><div class="tiny dim" style="margin-top:10px">Simplified from the real rules. You can't sign a player you couldn't register, and the matchday squad stays within the caps.</div>`,
+      `<div class="small muted" style="line-height:1.6">${esc(comp ? comp.name : '')}: ${esc(FM.Reg.describe(c.comp))}</div><div class="card flat small" style="margin-top:12px;line-height:1.6">${esc(FM.Reg.summary(c) || 'No limit')}</div>${UI.regChoices(c)}<div class="tiny dim" style="margin-top:10px">Simplified from the real rules. You can sign anyone: the squad is registered at the deadline (the window's last day), and anyone over the limits then sits out until the next window closes.</div>`,
       { title: 'Squad registration' },
     );
+  };
+  // Over a limit: tick who to leave out at the deadline (otherwise the weakest in the group)
+  UI.regChoices = function (c) {
+    const over = FM.Reg.over(c),
+      dl = FM.Reg.deadlineIn(),
+      un = W.squad(c.id).filter((p) => p.unreg);
+    const unl = un.length
+      ? `<div class="card flat small" style="margin-top:10px"><b>Unregistered</b> (can't play until the next deadline): ${un.map((p) => C.pname(p, W.name(p))).join(', ')}</div>`
+      : '';
+    if (!over.length) return unl;
+    return (
+      unl +
+      over
+        .map(
+          (g) =>
+            `<div class="card flat small" style="margin-top:10px"><div class="b">${esc(g.label)}: ${g.n} for ${g.cap} places</div><div class="tiny dim" style="margin-bottom:6px">${dl != null ? `Leave ${g.n - g.cap} out by the deadline (${dl} day${dl === 1 ? '' : 's'}), or sell or loan someone out. Unticked, the weakest are left out.` : 'Too many: the weakest sit out until the next window closes.'}</div>${g.players
+              .map(
+                (p) =>
+                  `<div class="row small" style="padding:4px 0">${C.pos(p)}<span class="grow">${C.pname(p, W.name(p))} <span class="dim">${Math.round(p.ca)}</span></span>${dl != null ? `<button class="chip ${p.leaveOut ? 'on' : ''}" data-act="regLeaveOut" data-id="${p.id}">${p.leaveOut ? 'Leaving out' : 'Leave out'}</button>` : ''}</div>`,
+              )
+              .join('')}</div>`,
+        )
+        .join('')
+    );
+  };
+  UI.acts.regLeaveOut = (d) => {
+    const p = S().players[d.id];
+    if (!p) return;
+    p.leaveOut = !p.leaveOut;
+    UI.save();
+    UI.closeSheet();
+    UI.acts.regInfo();
   };
 })();

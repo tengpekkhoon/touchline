@@ -62,11 +62,11 @@
           .filter(Boolean)
           .map(
             (p) =>
-              `${esc(p.ln)}${p.fitness < 75 ? ' <span style="color:var(--warn)">(' + Math.round(p.fitness) + '%)</span>' : ''}`,
+              `${C.pname(p, p.ln)}${p.fitness < 75 ? ' <span style="color:var(--warn)">(' + Math.round(p.fitness) + '%)</span>' : ''}`,
           )
           .join(' · ')}</div>
-        ${unavailable.length ? `<div class="small" style="margin-top:8px;color:var(--bad)">Unavailable: ${unavailable.map((p) => esc(p.ln) + (p.inj ? ' 🚑' : ' 🟥')).join(', ')}</div>` : ''}</div>
-      ${outOfPos.length ? `<div class="warnline" style="color:#ff6b6b;background:rgba(255,80,80,.12)">⚠️ ${outOfPos.length} out of position: ${outOfPos.map((x) => `${esc(x.p.ln)} (${x.p.pos} at ${x.t})`).join(', ')}.${s.rules.foreignLimit < W.NO_LIMIT && xi.filter((p) => p && p.nat !== me.nat).length >= s.rules.foreignLimit ? ` The ${s.rules.foreignLimit}-foreign-player limit is filled.` : ''} Check your XI in Tactics.</div>` : ''}
+        ${unavailable.length ? `<div class="small" style="margin-top:8px;color:var(--bad)">Unavailable: ${unavailable.map((p) => C.pname(p, p.ln) + (p.inj ? ' 🚑' : ' 🟥')).join(', ')}</div>` : ''}</div>
+      ${outOfPos.length ? `<div class="warnline" style="color:#ff6b6b;background:rgba(255,80,80,.12)">⚠️ ${outOfPos.length} out of position: ${outOfPos.map((x) => `${esc(x.p.ln)} (${W.posLabel(x.p)} at ${slots[xi.indexOf(x.p)] ? D.slotLabel(slots[xi.indexOf(x.p)]) : x.t})`).join(', ')}.${s.rules.foreignLimit < W.NO_LIMIT && xi.filter((p) => p && p.nat !== me.nat).length >= s.rules.foreignLimit ? ` The ${s.rules.foreignLimit}-foreign-player limit is filled.` : ''} Check your XI in Tactics.</div>` : ''}
       ${MV.reminders(fx, xi.filter(Boolean), nt)}
       ${MV.talkCard(fx)}
       <button class="btn pri block" data-act="kickoff" style="margin-top:4px">▶ Watch live</button>
@@ -925,10 +925,10 @@
         ${m.agg ? `<div class="center small b">Aggregate ${m.agg[0] + H.goals}–${m.agg[1] + A.goals} · ${esc(m.sides[m.tieWinner() ?? 0].club.name)} go through</div>` : ''}
         <div class="row small" style="align-items:flex-start;opacity:.92"><div class="grow">${res.goals
           .filter((g) => g.side === 0)
-          .map((g) => `⚽ ${esc(W.short(P(g.pid)))} ${g.min}`)
+          .map((g) => `⚽ ${C.pname(P(g.pid))} ${g.min}`)
           .join('<br>')}</div><div class="grow" style="text-align:right">${res.goals
           .filter((g) => g.side === 1)
-          .map((g) => `${esc(W.short(P(g.pid)))} ${g.min} ⚽`)
+          .map((g) => `${C.pname(P(g.pid))} ${g.min} ⚽`)
           .join('<br>')}</div></div></div>
       <div style="padding:12px 16px 0"><div class="chips" id="postChips">${[
         ['summary', 'Summary'],
@@ -985,7 +985,7 @@
               .filter(Boolean)
               .join(' · ')}</div>`
           : '';
-      body.innerHTML = `${motm ? `<div class="card row">${C.pos(motm)}<div class="grow"><div class="tiny dim b">PLAYER OF THE MATCH</div><div class="b">${esc(W.name(motm))}</div></div>${C.rating(m.sides.find((s) => s.rating[motm.id] != null).rating[motm.id])}</div>` : ''}
+      body.innerHTML = `${motm ? `<div class="card row">${C.pos(motm)}<div class="grow"><div class="tiny dim b">PLAYER OF THE MATCH</div><div class="b">${C.pname(motm, W.name(motm))}</div></div>${C.rating(m.sides.find((s) => s.rating[motm.id] != null).rating[motm.id])}</div>` : ''}
         <div class="card">${sbar('Possession', res.poss[0], res.poss[1], (v) => v + '%')}${sbar('Expected goals (xG)', res.xg[0], res.xg[1], (v) => v.toFixed(2))}${sbar('Shots', res.shots[0], res.shots[1])}${sbar('On target', res.sot[0], res.sot[1])}${spg[0].length + spg[1].length ? sbar('Set-piece goals', spg[0].length, spg[1].length) + spNote : ''}${sbar('Passes', m.passStats(0).total, m.passStats(1).total)}${sbar('Pass accuracy', m.passStats(0).acc, m.passStats(1).acc, (v) => v + '%')}${sbar('Yellow cards', Object.keys(H.yc).length, Object.keys(A.yc).length)}</div>
         <div class="card"><div class="h3" style="margin-bottom:6px">Key moments</div>${m.events
           .filter((e) => ['goal', 'red', 'injury', 'sub', 'pens'].includes(e.k) || (e.k === 'chance' && e.big))
@@ -1002,7 +1002,7 @@
           .sort((a, b) => b[1] - a[1])
           .map(
             ([pid, r]) =>
-              `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)"><span class="grow ellip">${esc(W.short(P(pid)))}${pid === m.motm ? ' ⭐' : ''}${res.goals
+              `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)"><span class="grow ellip">${C.pname(P(pid))}${pid === m.motm ? ' ⭐' : ''}${res.goals
                 .filter((g) => g.pid === pid)
                 .map(() => ' ⚽')
                 .join('')}${res.goals

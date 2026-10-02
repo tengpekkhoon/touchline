@@ -155,6 +155,55 @@
     if (r.matchday) bits.push(`max ${r.matchday} foreigners in a matchday squad`);
     return bits.join(' · ');
   };
+  // Your squad against the rules: each limit you are over, with the players in that group (weakest first)
+  R.over = function (c) {
+    const st = R.status(c);
+    if (!st) return [];
+    const r = st.r,
+      sq = W.squad(c.id),
+      out = [];
+    const add = (label, cap, f) => {
+      const ps = sq.filter(f).sort((a, b) => a.ca - b.ca);
+      if (ps.length > cap) out.push({ label, cap, n: ps.length, players: ps });
+    };
+    if (r.squad) add('non-homegrown over-21s', r.squad - r.hg, (p) => senior(p) && !R.homegrown(p, c.nat));
+    if (r.nonEU) add('non-EU players', r.nonEU, (p) => !R.isEU(p));
+    if (r.foreign)
+      add(c.comp === 'US1' ? 'international players' : 'foreign players', r.foreign, (p) => R.isForeign(p, c, r));
+    return out;
+  };
+  // Days to the registration deadline: the last day of the transfer window (null while it is shut)
+  R.deadlineIn = () => (FM.Season.windowOpen() ? FM.Market.daysLeft() : null);
+  // At the deadline your squad is registered within the rules: players you chose to leave out go first, then the
+  // weakest in each group over its limit. Anyone left out can't play until the next window's deadline.
+  R.registerSquad = function (c) {
+    for (const p of W.squad(c.id)) delete p.unreg;
+    const out = [];
+    for (const g of R.over(c)) {
+      let excess = g.n - g.cap;
+      const order = g.players.slice().sort((a, b) => (b.leaveOut ? 1 : 0) - (a.leaveOut ? 1 : 0) || a.ca - b.ca);
+      for (const p of order) {
+        if (excess <= 0) break;
+        if (p.unreg) {
+          excess--;
+          continue;
+        }
+        p.unreg = true;
+        out.push(p);
+        excess--;
+      }
+    }
+    for (const p of W.squad(c.id)) delete p.leaveOut;
+    if (out.length)
+      FM.News.add({
+        type: 'club',
+        title: `Squad registered: ${out.length} left out`,
+        body: `Over the league's limits at the deadline, so these players can't play until the next window closes: ${out.map((p) => W.name(p)).join(', ')}.`,
+        clubId: c.id,
+        big: true,
+      });
+    return out;
+  };
   R.describe = function (compId) {
     const r = R.RULES[compId];
     if (!r) return 'No limit on foreign players.';

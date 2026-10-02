@@ -71,7 +71,7 @@
         offers
           .map((o, i) => {
             const c = CL(o.club);
-            return `<div class="card row">${C.crest(c, 34)}<div class="grow"><div class="b">${C.flag(c.nat)} ${esc(c.name)}</div><div class="small dim">${esc(S().comps[c.comp].name)} · ${o.minutes} · pays ${Math.round(o.share * 100)}% of wages</div></div><button class="btn sm pri" data-act="acceptLoanOut" data-i="${i}" data-id="${p.id}">Accept</button></div>`;
+            return `<div class="card row">${C.crest(c, 34)}<div class="grow"><div class="b">${C.flag(c.nat)} ${esc(c.name)}</div><div class="small dim">${esc(S().comps[c.comp].name)} · pays ${Math.round(o.share * 100)}% of wages</div><div class="tiny dim">${esc(o.why || o.minutes)}</div></div><button class="btn sm pri" data-act="acceptLoanOut" data-i="${i}" data-id="${p.id}">Accept</button></div>`;
           })
           .join('') || '<div class="empty">No interest right now. Try again later in the window.</div>'
       }`,
@@ -1132,7 +1132,7 @@
     const rows = Object.keys(sd.mins)
       .map((pid) => ({ p: P(pid), s: sd.ps[pid] || {}, r: sd.rating[pid], min: sd.mins[pid], st: sd.st[pid] }))
       .sort((a, b) => b.r - a.r);
-    return `<div class="card"><div class="row b small" style="margin-bottom:6px">${C.crest(sd.club, 18)} ${esc(sd.club.name)}</div><table class="t"><tr><th class="l">Player</th><th>Min</th><th>Pas</th><th>KP</th><th>Sh</th><th>Tk</th><th>Int</th><th>En</th><th>Rt</th></tr>${rows.map((x) => `<tr><td class="l ellip" style="max-width:96px">${esc(x.p ? x.p.ln : '?')}${x.p && x.p.id === MV.m.motm ? ' ⭐' : ''}</td><td class="dim">${x.min}</td><td>${Math.round((x.s.pass || 0) * scale)}</td><td>${x.s.kp || 0}</td><td>${x.s.sh || 0}${x.s.sot ? `<span class="dim">/${x.s.sot}</span>` : ''}</td><td>${x.s.tk || 0}</td><td>${x.s.ic || 0}</td><td style="color:${x.st < 45 ? 'var(--bad)' : x.st < 65 ? 'var(--warn)' : 'var(--ink2)'}">${Math.round(x.st)}</td><td>${C.rating(x.r)}</td></tr>`).join('')}</table>${compact ? '' : '<div class="tiny dim" style="margin-top:6px">Pas passes · KP key passes · Sh shots/on target · Tk tackles · Int interceptions · En energy at the end</div>'}</div>`;
+    return `<div class="card"><div class="row b small" style="margin-bottom:6px">${C.crest(sd.club, 18)} ${esc(sd.club.name)}</div><table class="t"><tr><th class="l">Player</th><th>Min</th><th>Pas</th><th>KP</th><th>Sh</th><th>Tk</th><th>Int</th><th>En</th><th>Rt</th></tr>${rows.map((x) => `<tr><td class="l ellip" style="max-width:96px">${x.p ? C.pname(x.p, x.p.ln) : '?'}${x.p && x.p.id === MV.m.motm ? ' ⭐' : ''}</td><td class="dim">${x.min}</td><td>${Math.round((x.s.pass || 0) * scale)}</td><td>${x.s.kp || 0}</td><td>${x.s.sh || 0}${x.s.sot ? `<span class="dim">/${x.s.sot}</span>` : ''}</td><td>${x.s.tk || 0}</td><td>${x.s.ic || 0}</td><td style="color:${x.st < 45 ? 'var(--bad)' : x.st < 65 ? 'var(--warn)' : 'var(--ink2)'}">${Math.round(x.st)}</td><td>${C.rating(x.r)}</td></tr>`).join('')}</table>${compact ? '' : '<div class="tiny dim" style="margin-top:6px">Pas passes · KP key passes · Sh shots/on target · Tk tackles · Int interceptions · En energy at the end</div>'}</div>`;
   };
   // Analyst insights — a better analyst says more (and more precisely)
   MV.insights = function (m) {

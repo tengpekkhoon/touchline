@@ -46,20 +46,40 @@
     [(c) => `<path d="M0 4 L20 20 L40 4 V13 L20 29 L0 13Z" fill="${c}"/>`, true], // chevron
     [(c) => `<rect y="35" width="40" height="11" fill="${c}"/>`, false], // bottom band
   ];
+  // Emblems in the middle of a crest (no lettering): drawn around (20, 25), inside every shape
+  const CREST_EMBLEMS = [
+    (f, bg) =>
+      `<circle cx="20" cy="25" r="6.2" fill="${f}"/><path d="M20 21.3 L23.4 23.8 L22.1 27.8 H17.9 L16.6 23.8 Z" fill="${bg}"/>`, // ball
+    (f) =>
+      `<path d="M20 17.5 L22.3 22.6 L27.8 23.1 L23.6 26.7 L24.9 32.1 L20 29.2 L15.1 32.1 L16.4 26.7 L12.2 23.1 L17.7 22.6 Z" fill="${f}"/>`, // star
+    (f) => `<path d="M13 30.5 L13.8 21 L17.3 24.6 L20 19 L22.7 24.6 L26.2 21 L27 30.5 Z" fill="${f}"/>`, // crown
+    (f) => `<path d="M14 31 V21.5 H16.4 V23.6 H18.6 V21.5 H21.4 V23.6 H23.6 V21.5 H26 V31 Z" fill="${f}"/>`, // tower
+    (f) => `<path d="M20 18 L26.5 25 L20 32 L13.5 25 Z" fill="${f}"/>`, // diamond
+    (f, bg) => `<circle cx="20" cy="25" r="6.5" fill="${f}"/><circle cx="20" cy="25" r="3.2" fill="${bg}"/>`, // ring
+  ];
+  const lum = (hex) => {
+    const c = String(hex).replace('#', '');
+    return (
+      (parseInt(c.substr(0, 2), 16) * 299 + parseInt(c.substr(2, 2), 16) * 587 + parseInt(c.substr(4, 2), 16) * 114) /
+      1000
+    );
+  };
+  let crestN = 0;
   C.crest = function (club, size = 36) {
     if (!club) return '';
     const [c1, c2] = club.colors,
       h = U.hash(club.id),
       shape = CREST_SHAPES.at(h % CREST_SHAPES.length),
-      [pattern, busy] = CREST_PATTERNS.at(Math.floor(h / CREST_SHAPES.length) % CREST_PATTERNS.length);
-    const id = 'cl' + club.id;
-    // The letters: on busy patterns they sit on a solid band of the main colour so stripes never cross them; too
-    // small to read (under 20 px), the badge goes without them
-    const label =
-      size < 20
-        ? ''
-        : `${busy ? `<rect x="5" y="21.5" width="30" height="13" rx="2.5" fill="${c1}"/>` : ''}<text x="20" y="31.5" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="11.5" fill="${U.ink(c1)}">${esc(club.short)}</text>`;
-    return `<svg class="crest" data-club="${esc(club.id)}" width="${size}" height="${Math.round(size * 1.15)}" viewBox="0 0 40 46"><defs><clipPath id="${id}"><path d="${shape}"/></clipPath></defs><g clip-path="url(#${id})"><rect width="40" height="46" fill="${c1}"/>${pattern(c2)}</g><path d="${shape}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/>${label}</svg>`;
+      [pattern, busy] = CREST_PATTERNS.at(Math.floor(h / CREST_SHAPES.length) % CREST_PATTERNS.length),
+      emblem = CREST_EMBLEMS.at(Math.floor(h / 97) % CREST_EMBLEMS.length);
+    // every crest its own clip: a shared id breaks the clipping when the first copy sits in a hidden part of the page
+    const id = `cl${++crestN}`;
+    // the emblem in the second colour (or the colour that reads on the first), on a disc of the main colour over a
+    // busy pattern so stripes never cross it; too small to see under 20 px
+    const ink = Math.abs(lum(c1) - lum(c2)) > 60 ? c2 : U.ink(c1);
+    const mark = size < 20 ? '' : `${busy ? `<circle cx="20" cy="25" r="9" fill="${c1}"/>` : ''}${emblem(ink, c1)}`;
+    // drawn a touch inside the frame so the border is never cut off at the edge
+    return `<svg class="crest" data-club="${esc(club.id)}" width="${size}" height="${Math.round(size * 1.15)}" viewBox="0 0 40 46"><defs><clipPath id="${id}"><path d="${shape}"/></clipPath></defs><g transform="translate(1 1.15) scale(0.95)"><g clip-path="url(#${id})"><rect width="40" height="46" fill="${c1}"/>${pattern(c2)}${mark}</g><path d="${shape}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/></g></svg>`;
   };
   C.stars = function (lo, hi = lo, pot = null) {
     const a = (Math.round(lo * 2) / 2 / 5) * 100,
@@ -73,7 +93,12 @@
     if (!v.ca) return `<span class="dim small b">? ? ?</span>`;
     return C.stars(W.stars(v.ca[0]), W.stars(v.ca[1]), v.pa ? W.stars(v.pa[1]) : null);
   };
-  C.pos = (p) => `<span class="pos ${D.POS_GROUP[p.pos]}">${p.pos}</span>`;
+  // A player's name that opens his profile when tapped (text: what to show, his short name by default)
+  C.pname = (p, text) =>
+    p
+      ? `<span class="tap pname" data-act="player" data-id="${p.id}">${esc(text != null ? text : W.short(p))}</span>`
+      : '—';
+  C.pos = (p) => `<span class="pos ${D.POS_GROUP[p.pos]}">${W.posLabel(p)}</span>`;
   C.flag = (nat) => (D.NATIONS[nat] ? D.NATIONS[nat].flag : '🏳️');
   // The manager's avatar (older careers without one get a neutral face)
   C.avatar = (user, size = 40) => {
@@ -138,6 +163,10 @@
       tags.push('<span class="pill warn" title="Just back from injury: higher risk of a setback">🩹</span>');
     if (p.susp) tags.push(`<span class="pill warn">🟥 ${p.susp}</span>`);
     if (p.listed) tags.push(`<span class="pill">Listed</span>`);
+    if (own && p.unreg)
+      tags.push(
+        '<span class="pill bad" title="Left off the registered squad: out until the next window closes">Unregistered</span>',
+      );
     if (p.loan && W.ownPlayer(p)) tags.push(`<span class="pill acc">Loan</span>`);
     const club = p.clubId ? FM.S.clubs[p.clubId] : null;
     return `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${C.flag(p.nat)} ${esc(W.name(p))} ${tags.join(' ')}</div><div class="small dim ellip">${W.age(p)} yrs · ${own ? `${me} ${ml}` : club ? esc(club.name) : 'Free agent'}${extra}</div></div><div class="col" style="align-items:flex-end;gap:4px"><div class="row" style="gap:6px">${C.playerStars(p)}${own ? `<b class="carate" title="Current ability">${Math.round(p.ca)}</b>${Math.round(p.lastGrowth || 0) ? `<span class="tiny b" title="Change this season" style="color:${p.lastGrowth > 0 ? 'var(--good)' : 'var(--bad)'}">${p.lastGrowth > 0 ? '▲' : '▼'}${Math.abs(Math.round(p.lastGrowth))}</span>` : ''}` : ''}</div>${own ? C.fitTag(p.fitness) : ''}${right}</div></div>`;
@@ -225,7 +254,9 @@
     const last = all[all.length - 1];
     if (last) {
       if (last._opts && last._opts.onClose) last._opts.onClose();
-      last.remove();
+      // it slides away; meanwhile it no longer counts as an open sheet
+      last.classList.replace('sheet-wrap', 'sheet-closing');
+      setTimeout(() => last.remove(), 220);
     }
   };
   UI.closeAllSheets = () => document.querySelectorAll('.sheet-wrap').forEach((s) => s.remove());
@@ -354,7 +385,14 @@
   };
   UI.noClubView = (tab) =>
     `<div class="empty" style="margin-top:12vh;line-height:1.6">${tab === 'squad' ? '👕' : '🔭'}<br><b>No club, no ${tab === 'squad' ? 'squad' : 'scouting network'}.</b><br>Job offers are on the Home tab — take one and this fills up.<br><button class="btn sm pri" style="margin-top:12px" data-act="tab" data-tab="home">See job offers</button></div>`;
-  UI.go = function (tab, anim = 'fadeIn') {
+  // Going to a tab slides it in from the side of the tab you tapped; the same tab again just fades
+  UI.go = function (tab, anim) {
+    if (!anim) {
+      const order = TABS.map(([k]) => k),
+        a = order.indexOf(UI.tab),
+        b = order.indexOf(tab);
+      anim = a < 0 || b < 0 || a === b ? 'fadeIn' : b > a ? 'fromR' : 'fromL';
+    }
     UI.tab = tab;
     UI.render(anim);
     $('#main').scrollTop = 0;
@@ -454,7 +492,7 @@
   UI.acts.closeSheet = () => UI.closeSheet();
   UI.acts.sub = (d) => {
     UI.sub[d.k] = d.v;
-    UI.render();
+    UI.render('subIn');
   };
 
   // ---------------- Title / new career ----------------

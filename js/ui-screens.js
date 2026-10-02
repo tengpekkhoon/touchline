@@ -308,14 +308,31 @@
         .filter(P)
         .map(
           (id) =>
-            `<button class="chip" data-act="player" data-id="${id}">${C.flag(P(id).nat)} ${esc(W.short(P(id)))} · ${P(id).pos}</button>`,
+            `<button class="chip" data-act="player" data-id="${id}">${C.flag(P(id).nat)} ${esc(W.short(P(id)))} · ${W.posLabel(P(id))}</button>`,
         )
         .join('')}</div>`;
     if (['report', 'transfer', 'rumour', 'award', 'dressing'].includes(n.type) && n.pid && P(n.pid))
       extra += `<div style="margin-top:8px"><button class="btn sm" data-act="player" data-id="${n.pid}">View ${esc(W.short(P(n.pid)))} ›</button></div>`;
     if (n.type === 'headline' && n.fxId)
       extra += `<div style="margin-top:8px"><button class="btn sm" data-act="matchReport" data-id="${n.fxId}">Match report ›</button></div>`;
-    return `<div class="news ${n.type}" data-nid="${n.id}">${head}<div class="nb"><div class="nt">${esc(n.title)}</div>${n.body ? `<div class="nx">${esc(n.body)}</div>` : ''}${extra}</div></div>`;
+    return `<div class="news ${n.type}" data-nid="${n.id}">${head}<div class="nb"><div class="nt">${UI.linkNames(n.title, n)}</div>${n.body ? `<div class="nx">${UI.linkNames(n.body, n)}</div>` : ''}${extra}</div></div>`;
+  };
+  // The players a story is about, their names in its text tappable (full name first, then "F. Surname")
+  UI.linkNames = function (text, n) {
+    let html = esc(text);
+    const ids = [n.pid, ...(n.pids || []), ...((n.deals || []).map((d) => d.pid) || [])].filter(
+      (id, i, a) => id && a.indexOf(id) === i && P(id),
+    );
+    for (const id of ids) {
+      const p = P(id);
+      for (const nm of [W.name(p), W.short(p)]) {
+        const e = esc(nm);
+        if (!html.includes(e)) continue;
+        html = html.split(e).join(`<span class="tap pname" data-act="player" data-id="${id}">${e}</span>`);
+        break;
+      }
+    }
+    return html;
   };
 
   // Weekly round-up of a league matchday: our result, table movement, the rest of the round
@@ -597,6 +614,7 @@
         ['academy', 'Academy'],
         ['training', 'Training'],
         ['analytics', 'Analytics'],
+        ['promises', 'Promises'],
       ]) +
       (tab === 'tactics'
         ? tacticsView()
@@ -606,7 +624,9 @@
             ? UI.trainingView()
             : tab === 'analytics'
               ? UI.analyticsView()
-              : squadView())
+              : tab === 'promises'
+                ? UI.promisesView()
+                : squadView())
     );
   };
   UI._sq = { sort: 'pos', filter: 'all' };
@@ -1004,7 +1024,7 @@
       if (!(own || v.k >= 40))
         return `<div class="lock">🔒 Attributes unknown — assign a scout to learn more (${Math.round(v.k)}% known)</div>`;
       const unc = own ? 0 : Math.round((1 - v.k / 100) * 6);
-      return Object.entries(D.ATTR_GROUPS)
+      return Object.entries(p.pos === 'GK' ? D.ATTR_GROUPS_GK : D.ATTR_GROUPS)
         .filter(([g]) => g !== 'Goalkeeping' || p.pos === 'GK')
         .map(
           ([g, ks]) =>
@@ -1046,7 +1066,7 @@
         <div class="row" style="align-items:flex-end;gap:5px;height:70px;margin-top:10px">${p.form.length ? p.form.map((r) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px"><div class="tiny b">${r.toFixed(1)}</div><div style="width:100%;border-radius:4px;height:${(r - 4) * 8}px;background:${r >= 7.5 ? 'var(--good)' : r >= 6.5 ? 'var(--acc2)' : 'var(--bad)'}"></div></div>`).join('') : '<div class="dim small">No appearances yet.</div>'}</div>
 </div>
       ${UI.statsCard(p, avg)}
-      <div class="card"><div class="h3">Career</div><div class="row small" style="margin:8px 0"><span class="grow muted">Total</span><b>${p.career.apps} games · ${p.career.goals} goals</b></div>
+      <div class="card"><div class="h3">Career</div><div class="row small" style="margin:8px 0"><span class="grow muted">Total</span><b>${p.career.apps} games · ${p.pos === 'GK' ? `${(p.history || []).reduce((t, h) => t + (h.cs || 0), 0) + (p.season.cs || 0)} clean sheets` : `${p.career.goals} goals`}</b></div>
         ${p.career.spells
           .slice()
           .reverse()
@@ -1816,7 +1836,7 @@
       ${r.pens ? `<div class="center small dim">Penalties ${r.pens[0]}–${r.pens[1]}</div>` : ''}
       ${r.agg ? `<div class="center small b">Aggregate ${r.agg[0]}–${r.agg[1]}</div>` : ''}
       <div class="center small dim" style="margin:6px 0">${r.xg ? `xG ${r.xg[0]} – ${r.xg[1]}` : ''}${r.poss ? ` · Possession ${r.poss[0]}% – ${r.poss[1]}%` : ''}${r.weather ? ` · ${r.weather}` : ''}${r.att ? ` · ${r.att.toLocaleString()} crowd` : ''}${r.sim ? ` · ${FM.Tiers.LABEL[r.sim].toLowerCase()}` : ''}</div>
-      <div class="card flat">${r.goals.map((g) => `<div class="row small" style="padding:4px 0;${g.side ? 'flex-direction:row-reverse;text-align:right' : ''}">${tag(g.side)}⚽ <b>${esc(P(g.pid) ? W.short(P(g.pid)) : '—')}</b> <span class="dim">${g.min || ''}${g.pen ? ' (pen)' : ''}</span></div>`).join('') || `<div class="dim small center">${r.hg + r.ag ? 'Scorers not recorded' : 'No goals'}</div>`}</div>
+      <div class="card flat">${r.goals.map((g) => `<div class="row small" style="padding:4px 0;${g.side ? 'flex-direction:row-reverse;text-align:right' : ''}">${tag(g.side)}⚽ <b>${C.pname(P(g.pid))}</b> <span class="dim">${g.min || ''}${g.pen ? ' (pen)' : ''}</span></div>`).join('') || `<div class="dim small center">${r.hg + r.ag ? 'Scorers not recorded' : 'No goals'}</div>`}</div>
       <div class="row" style="align-items:flex-start;gap:12px">${[0, 1]
         .map(
           (k) =>

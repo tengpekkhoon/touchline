@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-229 features are playable in the web prototype today. Build = the build that added it.
+241 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -236,6 +236,18 @@ Every feature from the game design document, with what is playable in the protot
 | Club | Four board meetings a season: the board's view and its own demands, then one request from ten, answered on confidence, money, form, reputation and what you asked before | Playtest round 5 |
 | Match | Instant results play the same simulation as live matches, with your assistant taking the decisions (tactical moments, substitutions, the half-time talk); match ratings count passing in every match | Playtest round 5 |
 | UI | Club banners and the light theme readable: light kit colours shaded for white text, deeper status colours on white | Playtest round 5 |
+| UI | Smoother screen transitions: tabs slide from the side tapped, sub-tabs crossfade, sheets slide away | Playtest round 6 |
+| Tactics | Auto pick never starts a player out of position while a natural can fill the slot (U21/U18 call-ups included) | Playtest round 6 |
+| Clubs | Crests without lettering: an emblem in the club's colours, always inside the frame | Playtest round 6 |
+| UI | Player names tappable everywhere: match stats and ratings, scorers, the XI, reports, transfer lists, feed stories | Playtest round 6 |
+| Match | Match ratings by role: conceding, clean sheets, big chances missed, margin of victory, cameos | Playtest round 6 |
+| Squad | Registration deadlines: deals stand, the squad is registered at the window's last day, unregistered players sit out | Playtest round 6 |
+| Squad | Promises tab: open promises with progress and time left, and the ones kept or broken | Playtest round 6 |
+| Transfers | Loan offers from clubs where he would play, at a level that suits him, each saying why | Playtest round 6 |
+| Transfers | Home-first transfers, prospect signings, step-up moves and star raids by the biggest clubs | Playtest round 6 |
+| Squad | Left and right positions: LB/RB and LW/RW with a natural side | Playtest round 6 |
+| Tools | Transfer realism test, with a mode for testing a player you describe | Playtest round 6 |
+| Players | Keeper profiles: keeper attribute groups and realistic outfield skills; clean sheets on the career line | Playtest round 6 |
 | Season | A half-played matchday (left on the full-time screen) is finished as the save loads | Playtest round 4 |
 | Tactics | Auto pick prefers natural and accomplished players over improvised ones | Playtest round 4 |
 | UI | "Next match" says why it stopped and opens the Needs reply list | Playtest round 4 |

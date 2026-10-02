@@ -1517,7 +1517,8 @@
             });
           }
         }
-        c.budget = Math.max(5e5, Math.round((c.balance * 0.35) / 1e5) * 1e5);
+        // the biggest clubs put more of their wealth into the squad (stars only move when someone can pay)
+        c.budget = Math.max(5e5, Math.round((c.balance * (c.rep >= 82 ? 0.5 : 0.35)) / 1e5) * 1e5);
         c.finLast = c.fin;
         c.fin = null;
         if (c.balance < FM.Finance.adminThreshold(c) && !c.admin) {

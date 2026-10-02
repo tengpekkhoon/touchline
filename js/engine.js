@@ -13,7 +13,7 @@
   const CAL = (FM.CAL = {
     aiFam: 1, // AI clubs' tactical familiarity counts like yours (0 = off)
     defActs: 0.7, // chance per minute that the side without the ball makes a tackle or interception (~25 a match, as real)
-    defRating: 0.07, // what each tackle or interception adds to the player's match rating
+    defRating: 0.05, // what each tackle or interception adds to the player's match rating
     mgr: 0.006, // an AI manager's ability (8–17, 12 neutral) scales his side's strength by this per point (about −2.5% to +3%)
     chanceRate: 0.14, // shot opportunities per minute per side, before strengths and tactics
     xgScale: 0.82, // scales open-play chance quality
@@ -101,6 +101,9 @@
     return out;
   };
 
+  // Match ratings by role: what a goal conceded costs, and what a clean sheet (60+ minutes) earns
+  const CONCEDE = { CB: 0.18, FB: 0.12, WB: 0.12, DM: 0.06 };
+  const CLEAN = { GK: 0.6, CB: 0.45, FB: 0.35, WB: 0.35, DM: 0.15 };
   // How much of the passing goes through each slot (relative), for the on-the-ball part of match ratings
   const PASS_SHARE = { GK: 0.3, CB: 1.1, FB: 1, WB: 1, DM: 1.4, CM: 1.4, AM: 1.1, W: 0.9, ST: 0.6 };
   // Who wins the ball back, by slot (relative): centre-backs and holding midfielders most, keepers never
@@ -823,18 +826,20 @@
       }
       if (outcome === 'goal') {
         sd.goals++;
-        sd.rating[p.id] += type === 'penalty' ? 0.7 : 1.0;
+        sd.rating[p.id] += type === 'penalty' ? 0.75 : 1.1;
         if (assister) sd.rating[assister.p.id] += 0.6;
+        // conceding: the keeper by how saveable it was, the defence by role
         this.onPitch(od).forEach(({ p: q, i }) => {
-          if (['GK', 'CB', 'FB', 'WB'].includes(od.slots[i].t)) od.rating[q.id] -= 0.22;
+          const t = od.slots[i].t;
+          od.rating[q.id] -= t === 'GK' ? 0.32 * (1 - Math.min(0.8, xg)) : CONCEDE[t] || 0;
         });
         ev.k = 'goal';
         ev.score = [this.sides[0].goals, this.sides[1].goals];
       } else if (outcome === 'saved' && gk) {
-        od.rating[gk.p.id] += 0.15 + xg * 0.8;
-        sd.rating[p.id] += 0.08;
-      } else sd.rating[p.id] -= xg * 0.4;
-      if (assister && outcome !== 'goal') sd.rating[assister.p.id] += 0.08;
+        od.rating[gk.p.id] += 0.08 + xg * 0.7;
+        sd.rating[p.id] += 0.12;
+      } else sd.rating[p.id] -= xg * 0.4 + (xg >= 0.35 ? 0.15 : 0); // a big chance missed costs more
+      if (assister && outcome !== 'goal') sd.rating[assister.p.id] += 0.1;
       ev.text = howler
         ? `Howler! ${W.short(gk.p)} lets ${W.short(p)}'s shot slip through his hands.`
         : FM.Commentary.chance(ev, p, assister && assister.p, gk && gk.p, this);
@@ -1155,7 +1160,9 @@
           const p = FM.S.players[pid];
           const mins = (sd.off[pid] ?? endM) - sd.on[pid];
           sd.mins[pid] = Math.max(1, mins);
-          let r = sd.rating[pid] + (won ? 0.3 : lost ? -0.2 : 0);
+          const margin = Math.abs(sd.goals - this.sides[1 - k].goals);
+          let r =
+            sd.rating[pid] + (won ? 0.25 + 0.05 * Math.min(3, margin) : lost ? -0.15 - 0.05 * Math.min(3, margin) : 0);
           // on the ball: passes he would have played, from the team's possession, his position and minutes
           const si = sd.xi.findIndex((q) => q && q.id === pid),
             slotT = si >= 0 ? sd.slots[si].t : p.pos;
@@ -1168,8 +1175,10 @@
             0.012;
           const slotI = sd.xi.findIndex((q) => q && q.id === pid);
           const t = slotI >= 0 ? sd.slots[slotI].t : p.pos;
-          if (conceded === 0 && ['GK', 'CB', 'FB', 'WB'].includes(t) && mins > 60) r += 0.5;
-          r += U.gauss(0, 0.35 * (1.3 - p.hid.cons / 20) * (W.hasTrait(p, 'Consistent') ? 0.5 : 1));
+          if (conceded === 0 && mins > 60) r += CLEAN[t] || 0;
+          r += U.gauss(0, 0.25 * (1.3 - p.hid.cons / 20) * (W.hasTrait(p, 'Consistent') ? 0.5 : 1));
+          // a short cameo says little: it stays near an average mark
+          if (mins < 25) r = 6.5 + (r - 6.5) * (mins / 25);
           sd.rating[pid] = Math.round(U.clamp(r, 3, 10) * 10) / 10;
         }
       });

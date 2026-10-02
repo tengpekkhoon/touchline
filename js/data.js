@@ -44,6 +44,16 @@
     Mental: ['vision', 'positioning', 'composure'],
     Goalkeeping: ['reflexes', 'handling'],
   };
+  // A keeper's profile: shot-stopping, command of the box, distribution, then the rest
+  FM.D.ATTR_GROUPS_GK = {
+    Goalkeeping: ['reflexes', 'handling', 'positioning'],
+    Distribution: ['passing', 'vision'],
+    Mental: ['composure', 'workRate'],
+    Physical: ['pace', 'strength', 'stamina'],
+  };
+  // Outfield skills a keeper barely uses: generated low (a top keeper finishes like a keeper, not a forward) and
+  // not grown in development
+  FM.D.GK_OUTFIELD = { finishing: [1, 5], tackling: [2, 6], dribbling: [3, 8], technique: [4, 9] };
   // Radar axes: label -> attrs averaged
   FM.D.RADAR = {
     Pace: ['pace'],

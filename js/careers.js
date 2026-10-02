@@ -157,6 +157,7 @@
       if (dCA >= 0) d = (dCA / 5) * (w[k] ? U.rand(0.5, 1.5) : 0.9 * U.rand(0.5, 1.5)) * (tw ? tw(k) : 1);
       else d = (dCA / 5) * (AGEING[k] || 0.8) * (w[k] ? 1 : 0.5) * U.rand(0.5, 1.5);
       if ((k === 'reflexes' || k === 'handling') && p.pos !== 'GK') continue;
+      if (p.pos === 'GK' && D.GK_OUTFIELD[k] && d > 0) continue; // keepers don't grow outfield skills
       p.attrs[k] = U.clamp(p.attrs[k] + d, 1, 20);
     }
     W.refresh(p);
