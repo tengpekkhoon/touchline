@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Touchline · Developer dashboard</title>
+    <style>
+      :root {
+        --bg: #0b0f15;
+        --panel: #121923;
+        --line: #223044;
+        --ink: #e8eef7;
+        --dim: #8fa1b8;
+        --acc: #c8ff3d;
+        --good: #3ddc84;
+        --bad: #ff5d5d;
+        --warn: #ffb020;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          14px/1.45 system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 10px 20px;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        background: var(--bg);
+        z-index: 5;
+      }
+      h1 {
+        font-size: 15px;
+        margin: 0;
+        letter-spacing: 0.6px;
+      }
+      h1 b {
+        color: var(--acc);
+      }
+      nav {
+        display: flex;
+        gap: 4px;
+      }
+      nav button {
+        background: none;
+        border: 0;
+        color: var(--dim);
+        padding: 8px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font: inherit;
+      }
+      nav button.on {
+        background: var(--panel);
+        color: var(--ink);
+        box-shadow: inset 0 -2px 0 var(--acc);
+      }
+      main {
+        padding: 20px;
+        max-width: 1280px;
+        margin: auto;
+      }
+      section {
+        display: none;
+      }
+      section.on {
+        display: block;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 12px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+      }
+      .card h3 {
+        margin: 0 0 2px;
+        font-size: 14px;
+      }
+      .dim {
+        color: var(--dim);
+      }
+      .tiny {
+        font-size: 12px;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      label.p {
+        font-size: 12px;
+        color: var(--dim);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      input,
+      select,
+      textarea {
+        background: #0b121b;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 6px 8px;
+        font: inherit;
+      }
+      input[type='number'] {
+        width: 64px;
+      }
+      textarea {
+        width: 100%;
+        font:
+          12px/1.4 ui-monospace,
+          Consolas,
+          monospace;
+        min-height: 130px;
+      }
+      button.b {
+        background: var(--acc);
+        color: #0b0f15;
+        border: 0;
+        border-radius: 8px;
+        padding: 7px 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button.b.ghost {
+        background: none;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        font-weight: 500;
+      }
+      button.b:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      pre.out {
+        background: #070b10;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px;
+        margin: 10px 0 0;
+        max-height: 420px;
+        overflow: auto;
+        font:
+          12px/1.45 ui-monospace,
+          Consolas,
+          monospace;
+        white-space: pre-wrap;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+        vertical-align: top;
+      }
+      th {
+        color: var(--dim);
+        font-weight: 600;
+        font-size: 12px;
+      }
+      tr.click {
+        cursor: pointer;
+      }
+      tr.click:hover {
+        background: #16202c;
+      }
+      .ok {
+        color: var(--good);
+      }
+      .no {
+        color: var(--bad);
+      }
+      .up {
+        color: var(--good);
+      }
+      .down {
+        color: var(--warn);
+      }
+      h2 {
+        font-size: 15px;
+        margin: 22px 0 8px;
+      }
+      iframe {
+        width: 100%;
+        height: calc(100vh - 150px);
+        min-height: 560px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #000;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .two {
+          grid-template-columns: 1fr;
+        }
+      }
+      details summary {
+        cursor: pointer;
+        color: var(--dim);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>TOUCHLINE <b>DEV</b></h1>
+      <nav id="nav">
+        <button data-t="run" class="on">Run</button>
+        <button data-t="conv">Converter</button>
+        <button data-t="imp">Importer</button>
+        <button data-t="game">Game</button>
+      </nav>
+      <span class="tiny dim" style="margin-left: auto">local only · 127.0.0.1</span>
+    </header>
+    <main>
+      <!-- RUN -->
+      <section id="run" class="on">
+        <div class="grid" id="jobs"></div>
+        <div class="card" style="margin-top: 14px" id="livecard" hidden>
+          <div class="row">
+            <h3 id="livetitle" style="margin: 0"></h3>
+            <span class="tiny dim" id="livestat"></span>
+            <span style="flex: 1"></span>
+            <button class="b ghost" id="stop">Stop</button>
+          </div>
+          <pre class="out" id="liveout"></pre>
+        </div>
+        <h2>History</h2>
+        <div class="card" style="padding: 4px 8px">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Job</th>
+                <th>Settings</th>
+                <th>Started</th>
+                <th>Took</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody id="hist"></tbody>
+          </table>
+        </div>
+        <div class="card" id="detail" style="margin-top: 14px" hidden></div>
+      </section>
+
+      <!-- CONVERTER -->
+      <section id="conv">
+        <p class="dim">
+          Real players' numbers in, game attributes and ability out (<code>js/realstats.js</code>). Paste CSV or JSON,
+          or add a player with the form. Counts are season totals.
+        </p>
+        <div class="two">
+          <div>
+            <div class="card">
+              <h3>Add a player</h3>
+              <div class="row" id="pform" style="margin-top: 8px"></div>
+              <div class="row" style="margin-top: 10px">
+                <button class="b ghost" id="padd">Add to the table below</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <h3>Input</h3>
+              <textarea
+                id="cin"
+                placeholder="name,nat,age,pos,minutes,goals,assists,xg,shots,passes,passPct,league&#10;Jane Doe,ENG,24,ST,2700,18,4,15.2,95,480,76,D1"
+              ></textarea>
+              <div class="row" style="margin-top: 8px">
+                <label class="p"
+                  >Default league
+                  <input id="cleague" value="D1" style="width: 90px" title="A league id (D1) or a strength 0–100"
+                /></label>
+                <input type="file" id="cfile" accept=".csv,.json,.txt" />
+                <span style="flex: 1"></span>
+                <button class="b" id="cgo">Convert</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top: 14px" id="cres" hidden></div>
+      </section>
+
+      <!-- IMPORTER -->
+      <section id="imp">
+        <p class="dim">
+          Historical datasets into a world definition (<code>tools/import-history.mjs</code>): season tables, player
+          statistics (through the converter) and club details. Clubs match by id, name or short name. Format notes are
+          in the tool's header.
+        </p>
+        <div class="row" style="margin-bottom: 10px">
+          <label class="p">Name <input id="iname" value="Imported_world" style="width: 160px" /></label>
+          <button class="b ghost" id="isample">Load the sample</button>
+          <span style="flex: 1"></span>
+          <button class="b" id="igo">Import</button>
+        </div>
+        <div class="two">
+          <div class="card">
+            <h3>tables.csv</h3>
+            <div class="tiny dim">season, league, pos, club, p, w, d, l, gf, ga, pts</div>
+            <textarea id="itables"></textarea><input type="file" data-for="itables" accept=".csv,.json" />
+          </div>
+          <div class="card">
+            <h3>players.csv</h3>
+            <div class="tiny dim">name, nat, born|age, pos, club, minutes, goals, assists, xg …</div>
+            <textarea id="iplayers"></textarea><input type="file" data-for="iplayers" accept=".csv,.json" />
+          </div>
+        </div>
+        <div class="card" style="margin-top: 12px">
+          <h3>clubs.csv</h3>
+          <div class="tiny dim">club, name, short, nick, city, colour1, colour2, rep, stadium, capacity</div>
+          <textarea id="iclubs" style="min-height: 70px"></textarea
+          ><input type="file" data-for="iclubs" accept=".csv,.json" />
+        </div>
+        <div class="card" style="margin-top: 14px" id="ires" hidden></div>
+        <h2>Check a world definition</h2>
+        <div class="card">
+          <div class="row">
+            <input type="file" id="vfile" accept=".json" /><button class="b ghost" id="vgo">
+              Validate against the base world
+            </button>
+          </div>
+          <pre class="out" id="vout" hidden></pre>
+        </div>
+      </section>
+
+      <!-- GAME -->
+      <section id="game">
+        <p class="dim">
+          The game, with the developer panel switched on: Settings → Help → Developer tools (world check, market,
+          wonderkids, speed, a season on a copy, the UI smoke test). It keeps its own saves on this port.
+        </p>
+        <iframe id="frame" data-src="/game/" title="Game"></iframe>
+      </section>
+    </main>
+
+    <script>
+      const $ = (s) => document.querySelector(s);
+      const esc = (s) =>
+        String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+      const api = (p, body) =>
+        fetch(
+          '/api/' + p,
+          body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {},
+        ).then((r) => r.json());
+      const fmtDur = (ms) =>
+        ms < 1000
+          ? ms + ' ms'
+          : ms < 60000
+            ? (ms / 1000).toFixed(0) + ' s'
+            : Math.floor(ms / 60000) + ' min ' + Math.round((ms % 60000) / 1000) + ' s';
+      const fmtTime = (t) =>
+        new Date(t).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      const download = (name, text) => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+        a.download = name;
+        a.click();
+      };
+
+      // tabs
+      $('#nav').onclick = (e) => {
+        const t = e.target.dataset && e.target.dataset.t;
+        if (!t) return;
+        document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
+        document.querySelectorAll('main section').forEach((s) => s.classList.toggle('on', s.id === t));
+        if (t === 'game' && !$('#frame').src) $('#frame').src = $('#frame').dataset.src;
+      };
+
+      // ---------- Run ----------
+      let JOBS = {};
+      let live = null;
+      async function loadJobs() {
+        const r = await api('jobs');
+        JOBS = r.jobs;
+        $('#jobs').innerHTML = Object.entries(JOBS)
+          .map(
+            ([id, j]) =>
+              `<div class="card"><h3>${esc(j.label)}</h3><div class="tiny dim" style="margin-bottom:8px">${esc(j.note)}</div><div class="row">${Object.entries(
+                j.params,
+              )
+                .map(
+                  ([k, p]) =>
+                    `<label class="p">${k}<input type="number" data-job="${id}" data-k="${k}" value="${p.default}" min="${p.min}" max="${p.max}" /></label>`,
+                )
+                .join('')}<span style="flex:1"></span><button class="b" data-run="${id}">Run</button></div></div>`,
+          )
+          .join('');
+        if (r.running.length && !live) watch(r.running[0].id, r.running[0].label);
+      }
+      $('#jobs').onclick = async (e) => {
+        const id = e.target.dataset && e.target.dataset.run;
+        if (!id) return;
+        const params = {};
+        document.querySelectorAll(`input[data-job="${id}"]`).forEach((i) => (params[i.dataset.k] = +i.value));
+        const rec = await api('run', { job: id, params });
+        watch(rec.id, rec.label);
+      };
+      function watch(id, label) {
+        live = id;
+        $('#livecard').hidden = false;
+        $('#livetitle').textContent = `#${id} · ${label}`;
+        $('#livestat').textContent = 'running…';
+        const out = $('#liveout');
+        out.textContent = '';
+        const es = new EventSource('/api/stream/' + id);
+        es.onmessage = (m) => {
+          out.textContent += JSON.parse(m.data);
+          out.scrollTop = out.scrollHeight;
+        };
+        es.addEventListener('done', async () => {
+          es.close();
+          live = null;
+          const rec = await api('job/' + id);
+          $('#livestat').innerHTML =
+            `${rec.code === 0 ? '<span class="ok">finished</span>' : '<span class="no">failed (exit ' + rec.code + ')</span>'} · ${esc(rec.summary || '')} · ${fmtDur(rec.ended - rec.started)}`;
+          loadHistory();
+        });
+        $('#stop').onclick = () => api('stop', { id });
+      }
+      let HIST = [];
+      async function loadHistory() {
+        HIST = await api('history');
+        $('#hist').innerHTML =
+          HIST.map(
+            (r) =>
+              `<tr class="click" data-id="${r.id}"><td>${r.id}</td><td>${esc(r.label)}</td><td class="dim">${Object.entries(
+                r.params || {},
+              )
+                .map(([k, v]) => k + ' ' + v)
+                .join(
+                  ' · ',
+                )}</td><td class="dim">${fmtTime(r.started)}</td><td>${r.ended ? fmtDur(r.ended - r.started) : '…'}</td><td class="${r.code === 0 ? 'ok' : 'no'}">${esc(r.summary || (r.code === 0 ? 'done' : 'failed'))}</td></tr>`,
+          ).join('') || '<tr><td colspan="6" class="dim">Nothing run yet.</td></tr>';
+      }
+      $('#hist').onclick = async (e) => {
+        const tr = e.target.closest('tr[data-id]');
+        if (!tr) return;
+        const rec = await api('job/' + tr.dataset.id);
+        const prev = HIST.find((r) => r.job === rec.job && r.id < rec.id && r.metrics && r.metrics.length);
+        let diff = '';
+        if (prev && rec.metrics && rec.metrics.length) {
+          const before = Object.fromEntries(prev.metrics.map((m) => [m.name, m]));
+          const rows = rec.metrics
+            .map((m) => {
+              const b = before[m.name];
+              if (!b) return '';
+              const x = parseFloat(m.value),
+                y = parseFloat(b.value);
+              const moved = !Number.isNaN(x) && !Number.isNaN(y) && x !== y;
+              const flip = m.ok !== b.ok;
+              return moved || flip
+                ? `<tr><td>${esc(m.name)}</td><td>${esc(b.value)}</td><td class="${x > y ? 'up' : 'down'}">${esc(m.value)}</td><td class="${m.ok ? 'ok' : 'no'}">${m.ok ? '✓' : '✗'}${flip ? ' (was ' + (b.ok ? '✓' : '✗') + ')' : ''}</td><td class="dim">${esc(m.range)}</td></tr>`
+                : '';
+            })
+            .join('');
+          diff = `<h3 style="margin-top:14px">Against run #${prev.id}</h3>${rows ? `<table><thead><tr><th>Measure</th><th>#${prev.id}</th><th>#${rec.id}</th><th></th><th>Real</th></tr></thead><tbody>${rows}</tbody></table>` : '<div class="dim">No measure moved.</div>'}`;
+        }
+        $('#detail').hidden = false;
+        $('#detail').innerHTML =
+          `<div class="row"><h3 style="margin:0">#${rec.id} · ${esc(rec.label)}</h3><span class="tiny dim">${esc(rec.summary || '')}</span></div>${diff}<details open style="margin-top:10px"><summary>Output (last part)</summary><pre class="out">${esc(rec.tail || '')}</pre></details>`;
+        $('#detail').scrollIntoView({ behavior: 'smooth' });
+      };
+
+      // ---------- Converter ----------
+      const FIELDS = [
+        ['name', 'Name', 'text'],
+        ['nat', 'Nat', 'text'],
+        ['age', 'Age', 'number'],
+        ['pos', 'Pos', 'text'],
+        ['minutes', 'Minutes', 'number'],
+        ['goals', 'Goals', 'number'],
+        ['assists', 'Assists', 'number'],
+        ['xg', 'xG', 'number'],
+        ['shots', 'Shots', 'number'],
+        ['passes', 'Passes', 'number'],
+        ['passPct', 'Pass %', 'number'],
+        ['keyPasses', 'Key passes', 'number'],
+        ['tackles', 'Tackles', 'number'],
+        ['interceptions', 'Intercept.', 'number'],
+        ['clearances', 'Clearances', 'number'],
+        ['dribbles', 'Dribbles', 'number'],
+        ['aerials', 'Aerials', 'number'],
+        ['saves', 'Saves', 'number'],
+        ['savePct', 'Save %', 'number'],
+        ['goalsConceded', 'Conceded', 'number'],
+        ['league', 'League', 'text'],
+      ];
+      $('#pform').innerHTML = FIELDS.map(
+        ([k, l, t]) =>
+          `<label class="p">${l}<input data-f="${k}" type="${t}" step="any" style="width:${t === 'number' ? 70 : 90}px" /></label>`,
+      ).join('');
+      $('#padd').onclick = () => {
+        const vals = Object.fromEntries(FIELDS.map(([k]) => [k, document.querySelector(`[data-f="${k}"]`).value]));
+        if (!vals.pos) return alert('A position is needed (ST, CM, LB, GK …)');
+        const filled = FIELDS.filter(([k]) => vals[k] !== '');
+        const head = filled.map(([k]) => k).join(',');
+        const row = filled.map(([k]) => '"' + vals[k].replace(/"/g, '""') + '"').join(',');
+        const cur = $('#cin').value.trim();
+        const has = cur.split('\n')[0];
+        $('#cin').value = has === head ? cur + '\n' + row : head + '\n' + row;
+      };
+      $('#cfile').onchange = async (e) => {
+        const f = e.target.files[0];
+        if (f) $('#cin').value = await f.text();
+      };
+      $('#cgo').onclick = async () => {
+        const text = $('#cin').value.trim();
+        if (!text) return;
+        $('#cgo').disabled = true;
+        $('#cres').hidden = false;
+        $('#cres').innerHTML = '<span class="dim">Converting…</span>';
+        const r = await api('convert', {
+          text,
+          format: text.startsWith('[') ? 'json' : 'csv',
+          league: $('#cleague').value,
+        });
+        $('#cgo').disabled = false;
+        const top = (a) =>
+          Object.entries(a)
+            .sort((x, y) => y[1] - x[1])
+            .slice(0, 4)
+            .map(([k, v]) => `${k} ${v}`)
+            .join(', ');
+        $('#cres').innerHTML = r.players.length
+          ? `<div class="row"><h3 style="margin:0">${r.players.length} players</h3><span style="flex:1"></span><button class="b ghost" id="cdl">Download JSON</button></div><table style="margin-top:8px"><thead><tr><th>Name</th><th>Pos</th><th>Ability</th><th>Potential</th><th>Evidence</th><th>Strongest</th></tr></thead><tbody>${r.players
+              .map((p) =>
+                p.error
+                  ? `<tr><td>${esc(p.name || '?')}</td><td colspan="5" class="no">${esc(p.error)}</td></tr>`
+                  : `<tr><td>${esc(p.name || '')}</td><td>${p.pos}</td><td><b>${p.ca}</b></td><td>${p.pa}</td><td>${Math.round(p.confidence * 100)}%</td><td class="dim">${esc(top(p.attrs))}</td></tr>`,
+              )
+              .join('')}</tbody></table>`
+          : `<pre class="out">${esc(r.output)}</pre>`;
+        if (r.players.length) $('#cdl').onclick = () => download('converted.json', JSON.stringify(r.players, null, 2));
+      };
+
+      // ---------- Importer ----------
+      document.querySelectorAll('input[data-for]').forEach(
+        (i) =>
+          (i.onchange = async (e) => {
+            const f = e.target.files[0];
+            if (f) document.getElementById(i.dataset.for).value = await f.text();
+          }),
+      );
+      $('#isample').onclick = async () => {
+        for (const [id, f] of [
+          ['itables', 'tables'],
+          ['iplayers', 'players'],
+          ['iclubs', 'clubs'],
+        ])
+          $('#' + id).value = await (await fetch(`/game/data/samples/history/${f}.csv`)).text();
+      };
+      let WORLD = null;
+      $('#igo').onclick = async () => {
+        $('#igo').disabled = true;
+        $('#ires').hidden = false;
+        $('#ires').innerHTML = '<span class="dim">Importing (the base world is built first, about 20 seconds)…</span>';
+        const r = await api('import', {
+          tables: $('#itables').value,
+          players: $('#iplayers').value,
+          clubs: $('#iclubs').value,
+          name: $('#iname').value.replace(/\s+/g, '_'),
+        });
+        $('#igo').disabled = false;
+        WORLD = r.world;
+        $('#ires').innerHTML =
+          `<div class="row"><h3 style="margin:0" class="${r.code === 0 ? 'ok' : 'no'}">${r.code === 0 ? 'Imported' : 'Not written: there are errors'}</h3><span style="flex:1"></span>${r.world ? '<button class="b ghost" id="idl">Download world.json</button>' : ''}</div><pre class="out">${esc(r.output)}</pre>`;
+        if (r.world) $('#idl').onclick = () => download('world.json', WORLD);
+      };
+      $('#vgo').onclick = async () => {
+        const f = $('#vfile').files[0];
+        if (!f) return;
+        $('#vout').hidden = false;
+        $('#vout').textContent = 'Checking…';
+        const r = await api('validate', { world: await f.text() });
+        $('#vout').textContent = r.output;
+      };
+
+      loadJobs();
+      loadHistory();
+    </script>
+  </body>
+</html>

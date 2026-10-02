@@ -10,3 +10,4 @@ package-lock.json
 .claude/
 package.json
 js/changelog.js
+.devtools/
