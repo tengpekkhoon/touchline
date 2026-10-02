@@ -1,6 +1,6 @@
 # Touchline — Feature List
 
-Oct 2, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/dcc1d812-21cc-47af-86dd-67235bca8506)
+Oct 3, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/dcc1d812-21cc-47af-86dd-67235bca8506)
 
 Every feature from the game design document, with what is playable in the prototype today and what is still to come. Status and phase match [ROADMAP.md](ROADMAP.md).
 
@@ -261,8 +261,8 @@ Every feature from the game design document, with what is playable in the protot
 | Scouting | A card on a known player's profile: his best and worst three stats against other players in his position in his league (top 4%, bottom 39%), widening to his country or the world when the league is small; approximate when you only partly know him | Playtest round 8 |
 | Contracts | Contract talks show the cost: one line (wages a year, share of your wage bill, total over the deal) and a season-by-season table of wages, bonuses and fees, with the wage bill against revenue and the board's limit | Playtest round 8 |
 | World | A new world starts with a past: up to three seasons of stats behind each player (appearances, goals, assists, ratings), earlier clubs for recent arrivals, and career totals and spells that match | Playtest round 8 |
-| Training | A training ground that caps development: a player who has outgrown it (set by its level and the club's standing) develops slowly until it is upgraded, with a notice saying so | Playtest round 9 |
-| Settings | What's new: the newest builds and what each added, read from the roadmap, in Settings | Playtest round 9 |
+| Training | A training ground that caps development: a player who has outgrown it (set by its level and the club's standing) develops slowly until it is upgraded, with a notice saying so | Playtest round 8 |
+| Settings | What's new: the newest builds and what each added, read from the roadmap, in Settings | Playtest round 8 |
 | UI | Bottom bar: six equal columns, icons and labels on one line (International is Nations) | Playtest round 7 |
 | Players | Keeper profiles: keeper attribute groups and realistic outfield skills; clean sheets on the career line | Playtest round 6 |
 | Season | A half-played matchday (left on the full-time screen) is finished as the save loads | Playtest round 4 |

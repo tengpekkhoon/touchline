@@ -2,6 +2,10 @@
 window.FM = window.FM || {};
 window.FM.CHANGELOG = [
   {
+    "build": "Playtest feedback, round 8",
+    "text": "Comparative-review feedback. A training ground that caps development (a player who has outgrown it develops slowly until it is upgraded). Position percentiles on scouting cards, a contract cost table in talks, and a backfilled player history for new worlds. Real-life club abbreviations and nicknames, and overall shown at the slot and per position. A \"What's new\" list in Settings, built from this table. Developer tools (left out of public builds) and a wonderkid test: over 10 seasons 8/8 measures in range. Calibration 49/50."
+  },
+  {
     "build": "Playtest feedback, round 7",
     "text": "Four more leagues (A-League Men, Hungarian NB I, League of Ireland Premier Division, Cymru Premier; two new nations; the Serbian SuperLiga was already in). Wide midfielders (LM/RM) with their own roles and the flat-four flanks. Position versatility (second positions from neighbouring positions, utility players, faster learning for the young, natural positions that change with age) and better selection (swap-improved XIs for every club, bench cover by who can play where). Transfers closer to real life (free transfers about a fifth of the market, home-first buying for small clubs, selling leagues and clubs, blockbusters between giants, veterans to MLS). A coefficient ranking instead of Elo. An evenly spaced bottom bar. Six more domestic cups (Coppa Italia, Taça de Portugal, KNVB Cup, Copa Argentina, U.S. Open Cup, Emperor's Cup) and three more continental cups (Conference League, AFC Champions League Two, CAF Confederation Cup). Real rules per competition (COMPETITION_RULES.md): each league's tiebreakers, two-legged and neutral-ground cup rounds, centralised AFC knockouts, two-legged CAF and CONCACAF finals, two-legged play-off finals in Spain and Italy, German relegation play-offs, no away goals. A bug sweep (pre-contracts against squad limits, keepers after rollover, double sales, a league table crash). Real-life club abbreviations and nicknames. Player overall shown at the slot and at each position he can play. Profile card comparing a player's stats with his position in his league, a cost-by-season table in contract talks, and three seasons of backfilled history for every player of a new world."
   },
@@ -36,9 +40,5 @@ window.FM.CHANGELOG = [
   {
     "build": "Manager profile and lighter lower leagues",
     "text": "New careers start with a full manager profile: first and last name, country (your own national team is more likely to offer you a job and will take a chance on a lower reputation), favourite club (managing them is a homecoming with warmer fans and a more patient board; managing their rival starts frostier; their job offers come more often and their trophies, promotions and relegations reach your feed) and an avatar (24 faces, 8 colours) shown on the manager card and out-of-work header. League One and the Segunda División now use the light simulation: clubs take their league's tier on promotion and relegation, the club you manage is always fully simulated, and both still play in the FA Cup and Copa del Rey"
-  },
-  {
-    "build": "Real leagues",
-    "text": "Real league and competition names (Premier League, LaLiga, Bundesliga, UEFA Champions League, Copa Libertadores, FA Cup, FIFA World Cup, ...) and real league sizes: 401 clubs in 20 leagues (Premier League 20, Championship 24, League One 24, LaLiga 20, Segunda 22, Bundesliga 18, MLS 30 playing 34 games, Argentina 28 playing a single round-robin, ...) with real kit colours and 106 derbies. The season has 46 league days: every league spreads its own rounds across them so all finish together; cups, European nights and international breaks are placed by share of the season, and the FA Cup has enough rounds for 68 clubs. Rates retuned for real-length seasons and a world twice the size (injuries per match, AI market quotas). Cost: saves ~6 MB and simulation ~1.8× slower per day"
   }
 ];

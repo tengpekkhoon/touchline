@@ -1,6 +1,6 @@
 # Touchline — Game Design Document
 
-Oct 1, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/db0a1349-77d1-4363-b0df-55ef94250bd5)
+Oct 3, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/db0a1349-77d1-4363-b0df-55ef94250bd5)
 
 ## Vision and positioning
 
@@ -406,4 +406,4 @@ Four prototype builds, Alpha 1, the polish and small-features backlogs, mobile r
 | Platform | Installable offline web app, save upgrades, compressed backups, background simulation, native-app projects (Android, iOS) | Device builds, cloud saves |
 | Editor | Every career plays by each competition's real rules | Full database and rules editor; database export/import and community sharing |
 
-**Open question:** real club names and likenesses need a licensing decision; the prototype now uses real club, league and competition names (with its own ratings) and fictional players.
+**Decision:** the game ships with fictional leagues, clubs and competitions, keeping the real structure, sizes, formats and rules; real names become optional packs. The prototype still uses real club, league and competition names (with its own ratings) and fictional players.
