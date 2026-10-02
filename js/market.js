@@ -833,6 +833,7 @@
     delete p.pre;
     const to = pre && s.clubs[pre.c];
     if (!to || p.retired) return false;
+    if (W.isUserSide(to.id) && !pre.terms) return false; // an AI club's approach, and you have since taken over that club
     if (W.isUser(to.id)) {
       FM.Transfers.execute(p, to.id, 0, pre.terms.wage, { pre: true });
       FM.Contracts.applyTerms(p, to, pre.terms, 'transfer', 0);
@@ -851,7 +852,9 @@
   M.PRE_DAILY = 0.15;
   M.aiPreContracts = function () {
     const s = S();
-    if (!M.preOpen() || Math.random() > M.PRE_DAILY * W.dayScale()) return;
+    if (!M.preOpen()) return;
+    M.aiToAiPre();
+    if (Math.random() > M.PRE_DAILY * W.dayScale()) return;
     const uc = W.userClub();
     // your own players first: the best one running down his contract
     if (uc) {
@@ -881,7 +884,20 @@
         break;
       }
     }
-    // AI to AI: a club signs a good player from elsewhere for the summer
+  };
+  // AI to AI: clubs line up players whose contracts run out this summer, for nothing: the free transfer is a third
+  // of real football's market. A player his club would not renew (a first-teamer at his level is usually kept)
+  // is courted by clubs at his level, mostly the nearer ones, and the ones short in his position more so.
+  M.PRE_AI = 20;
+  M.aiToAiPre = function () {
+    const s = S(),
+      T = FM.Transfers,
+      Sea = FM.Season;
+    const clubs = Object.values(s.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUserSide(c.id));
+    const n =
+      Math.floor(M.PRE_AI * W.dayScale() * (clubs.length / 110)) +
+      (Math.random() < (M.PRE_AI * W.dayScale() * (clubs.length / 110)) % 1 ? 1 : 0);
+    if (!n) return;
     const cands = Object.values(s.players).filter(
       (p) =>
         p.clubId &&
@@ -889,22 +905,31 @@
         !p.pre &&
         !p.loan &&
         p.contract <= s.year &&
-        p.ca >= 62 &&
-        !FM.Season.aiRenews(p, s.clubs[p.clubId]),
+        W.age(p) <= 34 &&
+        s.clubs[p.clubId].sim !== 'minimal',
     );
-    const p = cands.length && U.pick(cands);
-    if (p) {
-      const c = Object.values(s.clubs)
-        .filter(
-          (x) =>
-            x.sim === 'full' &&
-            !W.isUser(x.id) &&
-            x.id !== p.clubId &&
-            Math.abs(W.levelFor(x.rep) - p.ca) <= 6 &&
-            FM.Transfers.canRegister(x, p),
-        )
-        .sort((a, b) => b.rep - a.rep)[0];
-      if (c) p.pre = { c: c.id, wage: FM.Transfers.wageDemand(p, c) };
+    for (let i = 0, tries = 0; i < n && cands.length && tries < n * 4; tries++) {
+      const p = cands.splice(Math.floor(Math.random() * cands.length), 1)[0],
+        from = s.clubs[p.clubId];
+      if (Sea.aiRenews(p, from)) continue; // his club will keep him
+      const fits = clubs.filter(
+        (x) =>
+          x.id !== p.clubId &&
+          Math.abs(W.levelFor(x.rep) - p.ca) <= 7 &&
+          W.squad(x.id).length < W.squadTarget(x) + 3 &&
+          T.canRegister(x, p),
+      );
+      if (!fits.length) continue;
+      const need = (x) =>
+        W.squad(x.id).filter((q) => q.pos === p.pos && !q.loan).length < (W.squadWant(x)[p.pos] || 2) ? 2 : 1;
+      const c = U.wpick(
+        fits,
+        (x) =>
+          (need(x) * (x.nat === from.nat ? 4 : 1) * (x.rep >= from.rep - 2 ? 1.3 : 1)) /
+          (1 + Math.abs(W.levelFor(x.rep) - p.ca)),
+      );
+      p.pre = { c: c.id, wage: T.wageDemand(p, c) };
+      i++;
     }
   };
   // Your warned players: if not renewed in time, the suitor gets him

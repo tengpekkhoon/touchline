@@ -349,6 +349,12 @@
   // Playing out of position teaches it: a little each game in a slot that isn't his natural one, up to
   // "accomplished" (p.alt, read by W.fitAt). Whoever finished the match in each slot learns it.
   Sea.LEARN = { step: 0.012, max: 0.95 };
+  // The young pick a position up faster than the old, and a utility player (already comfortable in several) fastest
+  Sea.learnRate = (p) => {
+    const a = W.age(p),
+      known = Object.values(p.alt || {}).filter((v) => v >= 0.85).length;
+    return (a <= 23 ? 1.35 : a <= 28 ? 1 : a <= 31 ? 0.75 : 0.55) * (known >= 2 ? 1.25 : 1);
+  };
   Sea.learnPositions = function (m) {
     for (const sd of m.sides) {
       if (sd.club.sim === 'nation') continue;
@@ -358,7 +364,8 @@
         if (t === p.pos || t === 'GK' || p.pos === 'GK') return;
         const now = W.fitAt(p, t);
         if (now >= Sea.LEARN.max) return;
-        const step = Sea.LEARN.step * (sd.user && W.isUser(sd.club.id) ? FM.Staff.impact('coach').learn : 1);
+        const step =
+          Sea.LEARN.step * Sea.learnRate(p) * (sd.user && W.isUser(sd.club.id) ? FM.Staff.impact('coach').learn : 1);
         (p.alt = p.alt || {})[t] = Math.round(Math.min(Sea.LEARN.max, now + step) * 1000) / 1000;
       });
     }
@@ -982,7 +989,10 @@
           if (sp) sp.apps++;
           p.form.push(r);
           p.form = p.form.slice(-10);
-          if (Math.random() < ({ ST: 0.4, W: 0.22, AM: 0.2, CM: 0.08 }[p.pos] || 0.03) * (p.attrs.finishing / 12)) {
+          if (
+            Math.random() <
+            ({ ST: 0.4, W: 0.22, WM: 0.14, AM: 0.2, CM: 0.08 }[p.pos] || 0.03) * (p.attrs.finishing / 12)
+          ) {
             p.season.goals++;
             p.career.goals++;
             if (sp) sp.goals++;

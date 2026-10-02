@@ -61,7 +61,8 @@
     return rank < 4 ? 'key' : rank < 11 ? 'regular' : rank < 16 ? 'rotation' : 'backup';
   };
   const goalRate = (p) =>
-    (({ ST: 0.45, W: 0.25, AM: 0.22, CM: 0.08, DM: 0.04, FB: 0.03, CB: 0.04, GK: 0 })[p.pos] || 0.05) *
+    (({ ST: 0.45, W: 0.25, WM: 0.15, AM: 0.22, CM: 0.08, DM: 0.04, WB: 0.04, FB: 0.03, CB: 0.04, GK: 0 })[p.pos] ||
+      0.05) *
     (0.6 + p.attrs.finishing / 25);
 
   // Weekly wage the player's side asks for before clauses

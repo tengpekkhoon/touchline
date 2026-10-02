@@ -1,4 +1,4 @@
-// International football: national teams picked from the best players of each nationality, Elo rankings,
+// International football: national teams picked from the best players of each nationality, a coefficient ranking,
 // two international breaks a season (two matchdays each), qualifying groups in the season before a
 // tournament, and the summer finals played as calendar days at the end of the season —
 // a World Championship every 4 years, continental championships in the years between.
@@ -66,7 +66,7 @@
         colors: D.NT_COLORS[code] || ['#FFFFFF', '#000000'],
         sim: 'nation',
         rep: 60,
-        elo: 1500,
+        coef: 50,
         tactic: W.newTactic('4-3-3', 'Short', 'Mid Block'),
         titles: {},
         facilities: { medical: 3 },
@@ -76,12 +76,14 @@
       };
     }
     Object.values(s.nteams).forEach((t) => {
-      t.elo = Math.round(1500 + (I.rating(t.code) - 62) * 22);
-      t.rep = I.repFromElo(t.elo);
+      t.coef = Math.round(50 + (I.rating(t.code) - 62) * 2.2 * 10) / 10;
+      t.rep = I.repFromCoef(t.coef);
     });
     I.newSeason();
   };
-  I.repFromElo = (e) => U.clamp(Math.round(60 + (e - 1500) / 12), 30, 97);
+  // The ranking is a coefficient: points (about 50 for an average nation, 90 and over for the best) that every
+  // match moves, by how much it was worth and how surprising the result was (the Elo method, on a smaller scale)
+  I.repFromCoef = (c) => U.clamp(Math.round(60 + ((c - 50) * 10) / 12), 30, 97);
   I.pool = (code) =>
     Object.values(S().players)
       .filter((p) => p.nat === code && !p.retired && W.age(p) >= 17)
@@ -103,7 +105,7 @@
     }
     return I.pool(code).filter(W.available).slice(0, 23);
   };
-  I.ranked = () => Object.values(S().nteams).sort((a, b) => b.elo - a.elo);
+  I.ranked = () => Object.values(S().nteams).sort((a, b) => b.coef - a.coef);
 
   // ---------- Calendar ----------
   I.tournamentFor = (year) => (year % 4 === 2 ? 'world' : year % 4 === 0 ? 'continental' : null);
@@ -185,7 +187,9 @@
         gfg: r.p ? r.gf / r.p : 0,
       })),
     );
-    rows.sort((a, b) => a.pos - b.pos || b.ppg - a.ppg || b.gdg - a.gdg || b.gfg - a.gfg || T(b.id).elo - T(a.id).elo);
+    rows.sort(
+      (a, b) => a.pos - b.pos || b.ppg - a.ppg || b.gdg - a.gdg || b.gfg - a.gfg || T(b.id).coef - T(a.id).coef,
+    );
     return rows.slice(0, slots).map((r) => r.id);
   };
   I.qualifiedFor = (tnId) => {
@@ -255,7 +259,7 @@
         teams = teams
           .concat(I.ranked().filter((t) => !teams.includes(t) && tn.pools.some(([r]) => r.includes(I.region(t.code)))))
           .slice(0, tn.size);
-      teams = teams.sort((a, b) => b.elo - a.elo).slice(0, tn.size);
+      teams = teams.sort((a, b) => b.coef - a.coef).slice(0, tn.size);
       const G = Math.max(1, teams.length / 4);
       const groups = [...Array(G)].map(() => []);
       teams.forEach((t, i) => {
@@ -397,16 +401,16 @@
       const p = s.players[g.pid];
       if (p && p.intl) p.intl.goals++;
     });
-    // Elo ranking update (qualifiers and finals count for more than friendlies)
-    const exp = 1 / (1 + Math.pow(10, (A.club.elo - H.club.elo - (fx.neutral ? 0 : 60)) / 400));
+    // Coefficient update (qualifiers and finals count for more than friendlies)
+    const exp = 1 / (1 + Math.pow(10, ((A.club.coef - H.club.coef) * 10 - (fx.neutral ? 0 : 60)) / 400));
     const score = r.hg > r.ag ? 1 : r.hg < r.ag ? 0 : r.pens ? (r.pens[0] > r.pens[1] ? 0.6 : 0.4) : 0.5;
     const gd = Math.abs(r.hg - r.ag),
       K = (tourn ? 45 : fx.kind === 'qual' ? 35 : 22) * (gd <= 1 ? 1 : gd === 2 ? 1.5 : 1.75);
-    const delta = K * (score - exp);
-    H.club.elo = Math.round(H.club.elo + delta);
-    A.club.elo = Math.round(A.club.elo - delta);
-    H.club.rep = I.repFromElo(H.club.elo);
-    A.club.rep = I.repFromElo(A.club.elo);
+    const delta = (K * (score - exp)) / 10;
+    H.club.coef = Math.round((H.club.coef + delta) * 10) / 10;
+    A.club.coef = Math.round((A.club.coef - delta) * 10) / 10;
+    H.club.rep = I.repFromCoef(H.club.coef);
+    A.club.rep = I.repFromCoef(A.club.coef);
     [H, A].forEach((sd, k) => {
       const won = k ? r.ag > r.hg : r.hg > r.ag,
         lost = k ? r.hg > r.ag : r.ag > r.hg;
@@ -518,7 +522,7 @@
     const low = U.shuffle(
       pool
         .slice()
-        .sort((a, b) => a.elo - b.elo)
+        .sort((a, b) => a.coef - b.coef)
         .slice(0, Math.ceil(pool.length / 2)),
     ).slice(0, 2);
     const rest = U.shuffle(pool.filter((t) => !low.includes(t))).slice(0, 2);
@@ -526,7 +530,7 @@
     const home = s.user && s.user.nat && s.nteams['n_' + s.user.nat];
     if (home && s.user.nation !== home.id && !jobs.includes(home) && Math.random() < 0.35)
       jobs = jobs.slice(0, 3).concat(home); // your own country comes calling now and then
-    s.ntJobs = jobs.map((t) => t.id).sort((a, b) => T(b).elo - T(a).elo);
+    s.ntJobs = jobs.map((t) => t.id).sort((a, b) => T(b).coef - T(a).coef);
   };
   I.takeJob = function (id) {
     const s = S(),
@@ -590,7 +594,7 @@
       big: true,
     });
   };
-  // Expectation: seeds (top quarter by Elo) should reach the semi-finals, the rest get out of the group
+  // Expectation: seeds (top quarter by coefficient) should reach the semi-finals, the rest get out of the group
   I.judgeTournament = function (t) {
     const u = S().user,
       id = u.nation;
@@ -598,7 +602,7 @@
     const seed =
       t.teams
         .slice()
-        .sort((a, b) => T(b).elo - T(a).elo)
+        .sort((a, b) => T(b).coef - T(a).coef)
         .indexOf(id) < Math.max(1, t.teams.length / 4);
     const st = I.stageReached(t, id),
       rank = ['Group stage', 'Quarter-finals', 'Semi-finals', 'Final', 'Winners'].indexOf(st);

@@ -204,7 +204,7 @@
         )}
         <div class="h3" style="margin-top:12px">Signing-on fee</div>${chipRow('ngSet', 'bonus', t.bonus, withCur([[0, 'None'], ...[4, 10, 26].map((k) => [U.roundMoney((w || t.wage) * k), U.money(U.roundMoney((w || t.wage) * k))])], t.bonus, U.money))}
         <div class="h3" style="margin-top:12px">Appearance fee</div>${chipRow('ngSet', 'app', t.app, [[0, 'None'], ...[0.1, 0.25, 0.5].map((f) => [Math.round((t.wage * f) / 50) * 50, U.money(Math.round((t.wage * f) / 50) * 50)])])}
-        ${['ST', 'W', 'AM', 'CM'].includes(p.pos) ? `<div class="h3" style="margin-top:12px">Goal bonus</div>${chipRow('ngSet', 'goal', t.goal, [[0, 'None'], ...[0.25, 0.5, 1].map((f) => [Math.round((t.wage * f) / 50) * 50, U.money(Math.round((t.wage * f) / 50) * 50)])])}` : ''}
+        ${['ST', 'W', 'WM', 'AM', 'CM'].includes(p.pos) ? `<div class="h3" style="margin-top:12px">Goal bonus</div>${chipRow('ngSet', 'goal', t.goal, [[0, 'None'], ...[0.25, 0.5, 1].map((f) => [Math.round((t.wage * f) / 50) * 50, U.money(Math.round((t.wage * f) / 50) * 50)])])}` : ''}
         <div class="h3" style="margin-top:12px">Release clause</div>${chipRow('ngSet', 'release', t.release, [[0, 'None'], ...[1.5, 2.5, 4].map((f) => [U.roundMoney(p.value * f), `${U.money(p.value * f)}`])])}
         <div class="h3" style="margin-top:12px">Yearly wage rise</div>${chipRow('ngSet', 'rise', t.rise, [
           [0, 'None'],
@@ -833,7 +833,7 @@
     if (t) {
       const rank = FM.Intl.ranked().indexOf(t) + 1;
       const next = s.calendar.slice(s.day).findIndex((d) => d.type === 'intl' || d.type === 'tourn');
-      top += `<div class="hero" style="--c1:${U.heroShade(t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0])};--c2:#111"><div class="row"><div style="font-size:44px">${C.flag(t.code)}</div><div class="grow"><div class="tag">Your national team</div><div class="h2" style="margin-top:4px">${esc(t.name)}</div><div class="small" style="opacity:.9">World #${rank} · Elo ${t.elo} · ${u.ntStats ? `${u.ntStats.w}W ${u.ntStats.d}D ${u.ntStats.l}L` : ''}</div></div></div>
+      top += `<div class="hero" style="--c1:${U.heroShade(t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0])};--c2:#111"><div class="row"><div style="font-size:44px">${C.flag(t.code)}</div><div class="grow"><div class="tag">Your national team</div><div class="h2" style="margin-top:4px">${esc(t.name)}</div><div class="small" style="opacity:.9">World #${rank} · Coefficient ${t.coef.toFixed(1)} · ${u.ntStats ? `${u.ntStats.w}W ${u.ntStats.d}D ${u.ntStats.l}L` : ''}</div></div></div>
         <div class="small" style="margin-top:8px;opacity:.9">${next >= 0 ? `Next international match in ${next} day${next === 1 ? '' : 's'}.` : 'No more internationals this season.'} ${t.picks ? `${t.picks.length} players hand-picked.` : 'Squad auto-picked (best available).'}</div>
         <div class="row" style="gap:8px;margin-top:12px"><button class="btn sm grow" data-act="ntSquad">👕 Squad & tactics</button><button class="btn sm grow danger" data-act="ntResign">Resign</button></div></div>`;
     } else {

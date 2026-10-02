@@ -1,12 +1,14 @@
 // Transfer realism test: plays seasons and measures the market against real football (ages, fees, who moves
 // where, whether signings fill a need and play), then — with --player — tests how the market treats a player you
 // describe (a real one's age, ability, position and club): how often he moves, where, and for how much.
-//   node tools/transfer-realism.mjs [--seasons 2] [--seed 5]
+//   node tools/transfer-realism.mjs [--seasons 3] [--seed 5]
+//   (the first season is a burn-in: a new world's contracts all have a year or more to run, so nobody is out of
+//   contract yet; the rest are measured)
 //   node tools/transfer-realism.mjs --player "age=24,ca=82,pos=ST,club=c_BRE" [--runs 6]
 import { parseArgs, loadSim } from './harness.mjs';
 
 const args = parseArgs();
-const SEASONS = +(args.seasons || 2),
+const SEASONS = +(args.seasons || 3),
   SEED = +(args.seed || 5);
 
 const fmtPct = (x) => `${(100 * x).toFixed(0)}%`;
@@ -101,15 +103,18 @@ function market() {
   let topValue = 0;
   for (let s = 0; s < SEASONS; s++) {
     playSeason(env);
-    topValue = Math.max(topValue, ...Object.values(FM.S.players).map((p) => p.value || 0));
+    if (SEASONS > 1 && s === 0)
+      deals.length = 0; // burn-in
+    else topValue = Math.max(topValue, ...Object.values(FM.S.players).map((p) => p.value || 0));
   }
+  const MEASURED = Math.max(1, SEASONS - 1);
   W.startSpell = spell;
   T.execute = exec;
   const ai = deals.filter((d) => !d.user);
   const paid = ai.filter((d) => !d.free && d.value > 0);
   const top = ai.filter((d) => d.toTier === 1);
   const rows = [
-    ['AI signings per season (full and light leagues)', ai.length / SEASONS, 1500, 6000, 0],
+    ['AI signings per season (full and light leagues)', ai.length / MEASURED, 1500, 6000, 0],
     ['Median age of a signing', median(ai.map((d) => d.age)), 24, 27, 1],
     ['Signings aged 30+ %', (100 * ai.filter((d) => d.age >= 30).length) / ai.length, 10, 25, 1],
     ['Signings aged 21 or under %', (100 * ai.filter((d) => d.age <= 21).length) / ai.length, 10, 30, 1],
@@ -126,10 +131,10 @@ function market() {
     ['Top-flight signings who would start %', (100 * top.filter((d) => d.wouldStart).length) / top.length, 35, 70, 1],
     ['Top-flight signings into the weakest area %', (100 * top.filter((d) => d.need).length) / top.length, 30, 70, 1],
     ['Signing ability vs buyer level (median gap)', median(top.map((d) => d.ca - d.buyerLevel)), -6, 6, 1],
-    ['Elite players (ability 82+) moving per season', ai.filter((d) => d.elite).length / SEASONS, 3, 25, 1],
+    ['Elite players (ability 82+) moving per season', ai.filter((d) => d.elite).length / MEASURED, 3, 25, 1],
     ["Record fee vs the most valuable player's value", Math.max(...ai.map((d) => d.fee)) / topValue, 0.6, 2.5, 2],
   ];
-  console.log(`Transfer realism · ${SEASONS} season(s), seed ${SEED} · ${deals.length} deals recorded\n`);
+  console.log(`Transfer realism · ${MEASURED} season(s) measured, seed ${SEED} · ${deals.length} deals recorded\n`);
   let ok = 0;
   for (const [label, v, lo, hi, dp] of rows) {
     const good = v >= lo && v <= hi;

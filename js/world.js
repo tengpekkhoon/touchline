@@ -72,43 +72,70 @@
   W.fitAt = (p, slotType, slot, role) => {
     let f = (D.FIT[p.pos] && D.FIT[p.pos][slotType]) || (p.pos === slotType ? 1 : 0.4);
     if (p.alt && p.alt[slotType] > f) f = p.alt[slotType];
-    if (slot && (slotType === 'FB' || slotType === 'WB' || slotType === 'W')) {
+    if (slot && (slotType === 'FB' || slotType === 'WB' || slotType === 'W' || slotType === 'WM')) {
       const side = D.slotSide(slot);
       if (side) {
-        // a full-back or winger has a natural side (LB/RB, LW/RW); the other flank costs him, unless he is
-        // two-footed. A winger on an inverted role likes the side of his weaker foot instead.
-        const nat = W.side(p);
-        const inv = slotType === 'W' && role && (D.ROLES.W[role] || {}).inv;
+        // a full-back, winger or wide midfielder has a natural side (LB/RB, LW/RW, LM/RM); the other flank costs
+        // him, unless he is two-footed. A winger on an inverted role likes the side of his weaker foot instead.
+        const nat = W.side(p),
+          wide = slotType === 'W' || slotType === 'WM';
+        const inv = wide && role && (D.ROLES[slotType][role] || {}).inv;
         const want = inv && p.foot !== 'Both' ? (p.foot === 'Left' ? 'R' : 'L') : nat;
-        if (nat && p.foot !== 'Both' && side !== want) f *= slotType === 'W' ? W.SIDE_FIT_W : W.SIDE_FIT;
+        if (nat && p.foot !== 'Both' && side !== want) f *= wide ? W.SIDE_FIT_W : W.SIDE_FIT;
       }
     }
     return f;
   };
-  // A full-back's or winger's natural side: chosen when he is made (mostly his stronger foot; wingers are often
-  // inverted), or worked out once from his foot for older saves
+  // A full-back's, winger's or wide midfielder's natural side: chosen when he is made (mostly his stronger foot;
+  // wingers are often inverted), or worked out once from his foot for older saves
+  W.FLANK = ['FB', 'WB', 'WM', 'W'];
   W.side = function (p) {
-    if (p.pos !== 'FB' && p.pos !== 'WB' && p.pos !== 'W') return '';
+    if (!W.FLANK.includes(p.pos)) return '';
     if (!p.side) {
       const h = (parseInt(String(p.id).replace(/\D/g, ''), 10) || 0) % 100;
       const strong = p.foot === 'Left' ? 'L' : p.foot === 'Right' ? 'R' : h % 2 ? 'L' : 'R';
-      const keep = p.pos === 'W' ? 60 : 85; // share on their stronger foot's side
+      const keep = p.pos === 'W' ? 60 : p.pos === 'WM' ? 72 : 85; // share on their stronger foot's side
       p.side = h < keep ? strong : strong === 'L' ? 'R' : 'L';
     }
     return p.side;
   };
-  // What his position is called: LB/RB and LW/RW for full-backs and wingers, the rest as they are
-  W.posLabel = (p) =>
-    p.pos === 'FB' ? W.side(p) + 'B' : p.pos === 'WB' ? W.side(p) + 'WB' : p.pos === 'W' ? W.side(p) + 'W' : p.pos;
-  // Second positions: a third of outfield players start with one (a few with two) from the positions next to
-  // theirs; playing there teaches it (Sea.learnPositions)
+  // What his position is called: LB/RB, LWB/RWB, LM/RM and LW/RW on the flanks, the rest as they are
+  const FLANK_LABEL = { FB: 'B', WB: 'WB', WM: 'M', W: 'W' };
+  W.posLabel = (p) => (FLANK_LABEL[p.pos] ? W.side(p) + FLANK_LABEL[p.pos] : p.pos);
+  // Everywhere else he can play: a position he has learned to 0.8 or better, or one his own position fits at 0.9 or
+  // better (a full-back at wing-back, a winger at wide midfield), best first. Under 0.9 he is still learning it.
+  W.canPlay = function (p) {
+    if (p.pos === 'GK') return [];
+    return D.POS.filter((t) => t !== p.pos && t !== 'GK')
+      .map((t) => [t, W.fitAt(p, t)])
+      .filter(([t, f]) => f >= ((p.alt && p.alt[t]) >= 0.8 ? 0.8 : 0.9))
+      .sort((a, b) => b[1] - a[1]);
+  };
+  // A second position as he'd be listed there: LWB for a left-back, LM for a left winger
+  W.altLabel = (p, t) => (FLANK_LABEL[t] && FLANK_LABEL[p.pos] ? W.side(p) + FLANK_LABEL[t] : t);
+  // Second positions (p.alt, how well he plays there, 0–1). A third of outfield players start with one, a few
+  // with two, and about one in eight is a utility player with up to three. They come from the positions next to
+  // his own (the FIT table: a centre-back covers at holding midfield, a winger at wide midfield or up front, a
+  // full-back at wing-back), a little better than a stranger's fit; playing there teaches more (Sea.learnPositions).
+  W.UTILITY = 0.12;
   W.genAlt = function (p) {
-    if (p.pos === 'GK' || Math.random() > 0.35) return;
-    const near = Object.keys(D.FIT[p.pos] || {}).filter((t) => t !== p.pos);
-    const n = Math.random() < 0.25 ? 2 : 1;
-    U.shuffle(near)
-      .slice(0, n)
-      .forEach((t) => ((p.alt = p.alt || {})[t] = Math.round(U.rand(0.86, 0.97) * 100) / 100));
+    if (p.pos === 'GK') return;
+    const utility = Math.random() < W.UTILITY,
+      has = Math.random() < 0.35;
+    if (!utility && !has) return;
+    const near = Object.entries(D.FIT[p.pos] || {}).filter(([t, f]) => t !== p.pos && f >= 0.7);
+    const n = utility ? U.randi(2, 3) : Math.random() < 0.25 ? 2 : 1;
+    // the closer positions are the likelier second ones
+    const picked = [];
+    while (picked.length < n && near.length > picked.length) {
+      const rest = near.filter(([t]) => !picked.includes(t));
+      picked.push(U.wpick(rest, ([, f]) => f * f * f)[0]);
+    }
+    for (const t of picked) {
+      const base = D.FIT[p.pos][t];
+      (p.alt = p.alt || {})[t] =
+        Math.round(Math.min(utility ? 0.98 : 0.96, base + U.rand(0.05, utility ? 0.18 : 0.13)) * 100) / 100;
+    }
   };
   W.effAt = function (p, slotType, slot, role) {
     const fit = W.fitAt(p, slotType, slot, role);
@@ -396,7 +423,7 @@
     const yrs = Math.max(0, age - 18);
     p.career.apps = Math.round(yrs * U.rand(18, 34));
     p.career.goals = Math.round(
-      p.career.apps * ({ ST: 0.35, W: 0.2, AM: 0.18, CM: 0.07, DM: 0.03 }[pos] || 0.02) * U.rand(0.5, 1.4),
+      p.career.apps * ({ ST: 0.35, W: 0.2, WM: 0.13, AM: 0.18, CM: 0.07, DM: 0.03 }[pos] || 0.02) * U.rand(0.5, 1.4),
     );
     W.refresh(p);
     p.wage = W.wageFor(p);
@@ -514,6 +541,17 @@
       back5 = !!(c && c.tactic && (D.FORMATIONS[c.tactic.formation] || []).some((s) => s.t === 'WB'));
     base.WB = Math.min(flank, back5 ? 2 : flank >= 3 ? 1 : 0);
     base.FB = flank - base.WB;
+    // the wide places in midfield and attack split by formation: a flat midfield four wants wide midfielders, a
+    // front three wingers
+    const slots = (c && c.tactic && D.FORMATIONS[c.tactic.formation]) || [],
+      wm = slots.filter((s) => s.t === 'WM').length,
+      wf = slots.filter((s) => s.t === 'W').length,
+      wide = (base.W || 0) + (base.WM || 0);
+    if (wide >= 2) {
+      const share = wm && !wf ? 0.65 : wf && !wm ? 0.25 : 0.5;
+      base.WM = U.clamp(Math.round(wide * share), 1, wide - 1);
+      base.W = wide - base.WM;
+    }
     return base;
   };
   W.squadTarget = (c) => U.sum(Object.values(D.SQUAD_TIER[c.sim] || SQUAD)) + 2;
@@ -603,11 +641,11 @@
         pa: W.potentialFor(ca, age),
         clubId: club.id,
       });
-      if (pos === 'FB' || pos === 'WB' || pos === 'W') {
+      if (W.FLANK.includes(pos)) {
         // left and right in turn, the foot to match (most full-backs; wingers are often inverted)
         const n = (sidesMade[pos] = (sidesMade[pos] || 0) + 1);
         p.side = n % 2 ? 'L' : 'R';
-        if (p.foot !== 'Both' && Math.random() < (pos === 'W' ? 0.55 : 0.85))
+        if (p.foot !== 'Both' && Math.random() < (pos === 'W' ? 0.55 : pos === 'WM' ? 0.7 : 0.85))
           p.foot = p.side === 'L' ? 'Left' : 'Right';
       }
       FM.S.players[p.id] = p;
@@ -615,7 +653,7 @@
     // Academy prospects
     for (let i = 0; i < (D.ACADEMY_TIER[club.sim] ?? 2); i++) {
       const age = U.randi(17, 19),
-        pos = U.pick(['CB', 'CM', 'W', 'ST', 'FB', 'AM', 'WB']);
+        pos = U.pick(['CB', 'CM', 'W', 'ST', 'FB', 'AM', 'WB', 'WM']);
       const ca = Math.round(lvl - U.randi(12, 20));
       const p = W.genPlayer({
         nat: nat(age, () => W.youthNat(club)),
@@ -805,6 +843,8 @@
       : FM.S.rules.foreignLimit >= W.NO_LIMIT
         ? 'no limit'
         : `max ${FM.S.rules.foreignLimit}`;
+  // The order a quick pick fills the places in: the thinnest positions first
+  const PICK_ORDER = ['GK', 'ST', 'CB', 'DM', 'CM', 'FB', 'WB', 'WM', 'W', 'AM'];
   W.pickXI = function (clubId, tactic, squad) {
     const slots = D.FORMATIONS[tactic.formation];
     const club = FM.clubOf(clubId);
@@ -843,11 +883,7 @@
     }
     const order = slots
       .map((s, i) => i)
-      .sort(
-        (a, b) =>
-          ['GK', 'ST', 'CB', 'DM', 'CM', 'FB', 'WB', 'W', 'AM'].indexOf(slots[a].t) -
-          ['GK', 'ST', 'CB', 'DM', 'CM', 'FB', 'WB', 'W', 'AM'].indexOf(slots[b].t),
-      );
+      .sort((a, b) => PICK_ORDER.indexOf(slots[a].t) - PICK_ORDER.indexOf(slots[b].t));
     for (const i of order) {
       if (xi[i]) continue;
       let best = null,
@@ -917,6 +953,30 @@
           }
         }
       }
+    } else {
+      // Every other club: the quick pick, then swaps between the places it filled while the team's total rises (the
+      // greedy fill can give a good all-rounder a place a specialist should have had). Each player-and-place pair is
+      // worked out once, so it costs little.
+      const memo = new Map();
+      const val = (p, i) => {
+        if (!p || (slots[i].t === 'GK') !== (p.pos === 'GK')) return 0;
+        const key = p.id + ':' + i;
+        let v = memo.get(key);
+        if (v === undefined) {
+          v = W.effAt(p, slots[i].t, slots[i], tactic.roles && tactic.roles[i]) * W.fitnessPick(p);
+          memo.set(key, v);
+        }
+        return v;
+      };
+      for (let pass = 0, better = true; better && pass < 3; pass++) {
+        better = false;
+        for (let i = 1; i < slots.length; i++)
+          for (let j = i + 1; j < slots.length; j++)
+            if (xi[i] && xi[j] && val(xi[j], i) + val(xi[i], j) > val(xi[i], i) + val(xi[j], j) + 1e-9) {
+              [xi[i], xi[j]] = [xi[j], xi[i]];
+              better = true;
+            }
+      }
     }
     // Over a limit: take out the limited starter whose best unlimited replacement costs the least at his position,
     // until the XI is within every limit (so the cap costs a little quality, not a keeper at wing-back)
@@ -947,7 +1007,10 @@
       lims.forEach((l, k) => l.f(p) && left[k]--);
     };
     add(rest.find((p) => p.pos === 'GK'));
-    for (const g of ['DEF', 'MID', 'ATT']) add(rest.find((p) => D.POS_GROUP[p.pos] === g));
+    // cover for each area: the best of the rest who can play there, by his own position or one he has learned
+    for (const t of ['CB', 'FB', 'CM', 'W', 'ST'])
+      add(rest.find((p) => p.pos !== 'GK' && !bench.includes(p) && W.fitAt(p, t) >= 0.85));
+    for (const g of ['DEF', 'MID', 'ATT']) add(rest.find((p) => !bench.includes(p) && D.POS_GROUP[p.pos] === g));
     for (const p of rest) if (p.pos !== 'GK') add(p);
     for (const p of rest) add(p); // a second keeper only if places are left
     return { xi, bench };
@@ -1107,6 +1170,7 @@
       archive: [],
       retired: [],
       wbPos: 2, // wing-backs are a position from the start (older saves convert theirs on load)
+      wmPos: 1, // so are wide midfielders (LM/RM)
       rules: {
         win: opts.win || 3,
         subs: opts.subs || 5,

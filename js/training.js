@@ -156,7 +156,7 @@
         });
         continue;
       }
-      const k = FM.Staff.impact('coach').learn * (p.hid.prof >= 14 ? 1.2 : 1);
+      const k = FM.Staff.impact('coach').learn * (p.hid.prof >= 14 ? 1.2 : 1) * FM.Season.learnRate(p);
       (p.alt = p.alt || {})[pos] = Math.round(Math.min(max, now + Tr.LEARN_STEP * k) * 1000) / 1000;
     }
   };

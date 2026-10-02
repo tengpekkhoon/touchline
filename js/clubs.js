@@ -1040,6 +1040,61 @@
     ['Falkirk', 'FAL', 'Falkirk', '#0B1F4B', '#FFFFFF', 'fan', 47],
   ];
 
+  FM.D.CLUBS_AU1 = [
+    ['Melbourne City', 'MCY', 'Melbourne', '#6CABDD', '#FFFFFF', 'oil', 57],
+    ['Sydney FC', 'SYD', 'Sydney', '#6CACE4', '#0B1F4B', 'giant', 57],
+    ['Melbourne Victory', 'MVC', 'Melbourne', '#0B1F4B', '#FFFFFF', 'giant', 55],
+    ['Western Sydney Wanderers', 'WSW', 'Sydney', '#E30613', '#000000', 'fan', 53],
+    ['Central Coast Mariners', 'CCM', 'Gosford', '#FFDD00', '#0B1F4B', 'youth', 52],
+    ['Brisbane Roar', 'BRQ', 'Brisbane', '#F47920', '#000000', 'historic', 51],
+    ['Auckland FC', 'AUC', 'Auckland', '#0B1F4B', '#00A3E0', 'oil', 51],
+    ['Adelaide United', 'ADU', 'Adelaide', '#E30613', '#FFFFFF', 'fan', 50],
+    ['Wellington Phoenix', 'WPX', 'Wellington', '#FFDD00', '#000000', 'fan', 49],
+    ['Macarthur FC', 'MAF', 'Campbelltown', '#000000', '#FFFFFF', 'selling', 48],
+    ['Newcastle Jets', 'NJE', 'Newcastle', '#003DA5', '#E30613', 'fan', 48],
+    ['Perth Glory', 'PGL', 'Perth', '#6A1B9A', '#FFFFFF', 'fallen', 47],
+  ];
+  FM.D.CLUBS_HU1 = [
+    ['Ferencváros', 'FTC', 'Budapest', '#00843D', '#FFFFFF', 'giant', 62],
+    ['Paksi FC', 'PAK', 'Paks', '#00843D', '#FFFFFF', 'selling', 53],
+    ['Győri ETO', 'ETO', 'Győr', '#00843D', '#FFFFFF', 'historic', 52],
+    ['Debreceni VSC', 'DVS', 'Debrecen', '#E30613', '#FFFFFF', 'historic', 53],
+    ['Puskás Akadémia', 'PUS', 'Felcsút', '#003DA5', '#FFFFFF', 'youth', 53],
+    ['Zalaegerszegi TE', 'ZTE', 'Zalaegerszeg', '#003DA5', '#FFFFFF', 'fan', 51],
+    ['Újpest FC', 'UJP', 'Budapest', '#6A1B9A', '#FFFFFF', 'historic', 52],
+    ['Diósgyőri VTK', 'DIO', 'Miskolc', '#E30613', '#FFFFFF', 'fan', 49],
+    ['Kisvárda FC', 'KIS', 'Kisvárda', '#E30613', '#003DA5', 'fan', 48],
+    ['MTK Budapest', 'MTK', 'Budapest', '#003DA5', '#FFFFFF', 'historic', 49],
+    ['Nyíregyháza Spartacus', 'NYI', 'Nyíregyháza', '#E30613', '#FFFFFF', 'fan', 46],
+    ['Kecskeméti TE', 'KTE', 'Kecskemét', '#E30613', '#FFFFFF', 'fan', 46],
+  ];
+  FM.D.CLUBS_IE1 = [
+    ['Shelbourne', 'SHL', 'Dublin', '#E30613', '#FFFFFF', 'historic', 51],
+    ['Shamrock Rovers', 'SRO', 'Dublin', '#00843D', '#FFFFFF', 'giant', 51],
+    ['Derry City', 'DRY', 'Derry', '#E30613', '#FFFFFF', 'fan', 48],
+    ['Bohemians', 'BHI', 'Dublin', '#E30613', '#000000', 'fan', 47],
+    ["St Patrick's Athletic", 'SPAT', 'Dublin', '#E30613', '#FFFFFF', 'fan', 47],
+    ['Drogheda United', 'DRO', 'Drogheda', '#003DA5', '#FFFFFF', 'fan', 44],
+    ['Galway United', 'GAU', 'Galway', '#8A1538', '#FFFFFF', 'fan', 43],
+    ['Sligo Rovers', 'SLR', 'Sligo', '#E30613', '#FFFFFF', 'fan', 43],
+    ['Waterford FC', 'WFI', 'Waterford', '#003DA5', '#FFFFFF', 'fan', 42],
+    ['Dundalk', 'DDK', 'Dundalk', '#FFFFFF', '#000000', 'fallen', 44],
+  ];
+  FM.D.CLUBS_WA1 = [
+    ['The New Saints', 'TNS', 'Oswestry', '#00843D', '#FFFFFF', 'oil', 49],
+    ['Bala Town', 'BAL', 'Bala', '#FFFFFF', '#000000', 'fan', 42],
+    ["Connah's Quay Nomads", 'CQN', "Connah's Quay", '#FFFFFF', '#003DA5', 'fan', 41],
+    ['Penybont', 'PEN', 'Bridgend', '#E30613', '#FFFFFF', 'fan', 41],
+    ['Haverfordwest County', 'HAV', 'Haverfordwest', '#003DA5', '#FFFFFF', 'fan', 40],
+    ['Barry Town United', 'BTU', 'Barry', '#FFDD00', '#000000', 'fan', 40],
+    ['Cardiff Met', 'CMU', 'Cardiff', '#FFDD00', '#000000', 'youth', 40],
+    ['Llanelli Town', 'LLA', 'Llanelli', '#E30613', '#FFFFFF', 'fan', 38],
+    ['Caernarfon Town', 'CAE', 'Caernarfon', '#E30613', '#FFFFFF', 'fan', 38],
+    ['Newtown AFC', 'NEW2', 'Newtown', '#E30613', '#FFFFFF', 'fan', 38],
+    ['Colwyn Bay', 'COL2', 'Colwyn Bay', '#FFDD00', '#003DA5', 'fan', 38],
+    ['Flint Town United', 'FLI', 'Flint', '#FFFFFF', '#E30613', 'fan', 37],
+  ];
+
   FM.D.RIVALS.push(
     ['CLB2', 'CER2', 'Brugse derby'],
     ['AND2', 'STL2', 'Classique'],
@@ -1060,5 +1115,15 @@
     ['CEL2', 'RAN2', 'Old Firm'],
     ['HEA', 'HIB', 'Edinburgh derby'],
     ['DUN2', 'DND', 'Dundee derby'],
+    ['MCY', 'MVC', 'Melbourne derby'],
+    ['SYD', 'WSW', 'Sydney derby'],
+    ['SYD', 'MVC', 'The Big Blue'],
+    ['FTC', 'UJP', 'Örök derbi'],
+    ['FTC', 'MTK', 'Budapest derby'],
+    ['SHL', 'BHI', 'Dublin derby'],
+    ['SRO', 'SPAT', 'Dublin rivals'],
+    ['DRY', 'SRO', 'Derry–Rovers'],
+    ['TNS', 'BAL', 'Welsh rivals'],
+    ['CQN', 'FLI', 'Deeside derby'],
   );
 })();

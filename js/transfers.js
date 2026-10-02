@@ -381,7 +381,7 @@
   // Clubs don't sell to a direct domestic rival (same league, similar standing)
   const rivalSale = (p, c) => {
     const s = p.clubId && FM.S.clubs[p.clubId];
-    return !!s && s.comp === c.comp && s.rep >= c.rep - 10;
+    return !!s && s.comp === c.comp && s.rep >= c.rep - 6;
   };
   // A club short of players (under its squad size, with a position below the tier's numbers) buys one for the
   // thinnest position while the window is open. Returns true if it signed someone. Free agents fill whatever is
@@ -404,6 +404,11 @@
     };
     return { byPos, byGroup, price };
   };
+  T.OFFLOAD = 0.4; // how often a signing's displaced player is sold on to a smaller club straight away
+  T.FREE_PULL = 4; // how much likelier a free agent is than a signing with a fee, all else equal
+  // and a player from the club's own country: small clubs know and can afford their own market and almost never
+  // look abroad, the biggest ones scout the world
+  T.homePull = (c) => (c.rep >= 75 ? 16 : c.rep >= 62 ? 34 : 70);
   T.fillGap = function (c, sq, mkt) {
     if (sq.length >= W.squadTarget(c)) return false;
     const want = W.squadWant(c);
@@ -419,8 +424,10 @@
     for (const p of mkt.byPos[short.pos] || []) {
       if (p.ca > lvl + 4) continue;
       if (p.ca < lvl - 12) break; // strongest first: nobody further down is good enough
-      if (
-        p.clubId &&
+      if (!p.clubId) {
+        // out of contract: no fee to pay, so a gap is often filled this way
+        if (regOK(p) && !T.isSettled(p)) pool.push(p);
+      } else if (
         p.clubId !== c.id &&
         !T.isSettled(p) &&
         FM.S.clubs[p.clubId].rep < c.rep + 3 &&
@@ -431,10 +438,13 @@
         pool.push(p);
     }
     if (!pool.length) return false;
-    // a quick fix is usually found close to home
+    // a quick fix is usually found close to home, and a free agent is a bargain
     const p = U.wpick(
       pool,
-      (x) => Math.pow(x.ca, 3) * (W.age(x) <= 25 ? 1.25 : 1) * (nationOf(x.clubId) === c.nat ? 6 : 1),
+      (x) =>
+        Math.pow(x.ca, 3) *
+        (W.age(x) <= 25 ? 1.25 : W.age(x) >= 31 ? 0.6 : 1) *
+        (!x.clubId ? T.FREE_PULL : nationOf(x.clubId) === c.nat ? T.homePull(c) : 1),
     );
     T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c) * urg), T.wageDemand(p, c));
     return true;
@@ -483,7 +493,7 @@
       if (!pool.length) continue;
       const p = U.wpick(
         pool,
-        (x) => Math.pow(x.ca, 3) * (W.age(x) <= 24 ? 1.25 : 1) * (nationOf(x.clubId) === c.nat ? 4 : 1),
+        (x) => Math.pow(x.ca, 3) * (W.age(x) <= 24 ? 1.25 : 1) * (nationOf(x.clubId) === c.nat ? T.homePull(c) / 2 : 1),
       );
       T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c)), T.wageDemand(p, c));
       T.offload(c, g, full);
@@ -502,7 +512,7 @@
     Object.values(FM.S.players)
       .filter((p) => !p.clubId && !p.retired && W.age(p) <= 33)
       .sort((a, b) => b.ca - a.ca)
-      .slice(0, Math.max(1, Math.round((2 * full.length) / 110)))
+      .slice(0, Math.max(1, Math.round((4 * full.length) / 110)))
       .forEach((p) => {
         const suitors = full
           .filter((c) => W.levelFor(c.rep) >= p.ca - 8 && W.levelFor(c.rep) <= p.ca + 4 && W.squad(c.id).length < 26)
@@ -530,11 +540,17 @@
     if (!cands.length) return false;
     const p = U.wpick(
       cands,
-      (x) => Math.pow(x.pa - lvl + 2, 2) * (nationOf(x.clubId) === c.nat || !x.clubId ? 2.5 : 1),
+      (x) => Math.pow(x.pa - lvl + 2, 2) * (nationOf(x.clubId) === c.nat || !x.clubId ? T.homePull(c) / 3 : 1),
     );
     T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c) * (dd ? 1.1 : 1)), T.wageDemand(p, c));
     return true;
   };
+  // Real transfer flows. Selling leagues (their best players leave for bigger leagues): a bonus on the score a giant
+  // gives a player from there. Veteran leagues: where ageing stars go for a last big contract.
+  T.SELLER_LEAGUES = { PT1: 4, NL1: 4, BE1: 4, AR1: 3, BR1: 3, FR1: 2, AT1: 2, CH1: 2, DK1: 2, RS1: 2, TR1: 1, SC1: 2 };
+  T.VETERAN_LEAGUES = { US1: 4, JP1: 2, MX1: 2, AU1: 1.5, KR1: 1.5, TR1: 2, TH1: 1, GR1: 1.2 };
+  T.BLOCKBUSTER = 0.3; // star moves between giants, per league-day tuned on 110 clubs
+  T.MARQUEE = 1.8; // marquee raids per league-day tuned on 110 clubs (was 0.6, and always the single best player)
   T.aiWindow = function (share = 1) {
     const S = FM.S;
     const full = Object.values(S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUserSide(c.id));
@@ -545,7 +561,7 @@
         !W.ownPlayer(p) &&
         !T.isSettled(p) &&
         W.age(p) >= 19 &&
-        W.age(p) <= (p.pos === 'GK' ? 31 : 29),
+        (W.age(p) <= (p.pos === 'GK' ? 31 : 29) || (!p.clubId && W.age(p) <= (p.pos === 'GK' ? 34 : 32))), // a free agent, a little older
     );
     const k = W.dayScale() * (full.length / 110) * share; // per-day quotas tuned on 110 clubs and 22 league days
     const dd = FM.Market.isDeadline(); // deadline day: more clubs in the market, paying a premium
@@ -588,42 +604,88 @@
           pool,
           (x) =>
             Math.pow(x.ca, 3) *
-            (W.age(x) <= 25 ? 1.25 : 1) *
-            (!nationOf(x.clubId) || nationOf(x.clubId) === c.nat ? (c.rep >= 75 ? 3 : 6) : c.rep >= 70 ? 1.3 : 1),
+            (W.age(x) <= 25 ? 1.25 : W.age(x) >= 31 ? 0.6 : 1) *
+            (!x.clubId ? T.FREE_PULL / 2 : nationOf(x.clubId) === c.nat ? T.homePull(c) : c.rep >= 70 ? 1.3 : 1),
         );
         if (Math.random() < 0.15) {
           FM.Stories.rumour(p, c);
           return;
         }
         T.execute(p, c.id, U.roundMoney(T.askPrice(p) * premium(p, c) * (dd ? 1.1 : 1)), T.wageDemand(p, c));
-        T.offload(c, D.POS_GROUP[p.pos], full);
+        if (Math.random() < T.OFFLOAD) T.offload(c, D.POS_GROUP[p.pos], full); // (the rest of the surplus is trimmed in the summer)
       });
     T.aiTopFreeAgents(share);
 
-    // Marquee raid: a giant prises a star (27 or under) out of a smaller club, at home or abroad — never from a
-    // direct rival
-    if (Math.random() < 0.6 * k) {
-      const giants = full.filter((c) => c.rep >= 80 && c.budget > 1e7);
+    // Marquee raids: a giant prises a star (28 or under) out of a smaller club, at home or abroad — never from a
+    // direct rival. The best players are not simply the ones who move: the selling leagues (Portugal, the
+    // Netherlands, Belgium, South America, France) and selling clubs lose theirs most often, and the young and
+    // improving are the ones the giants want.
+    for (let i = quota(T.MARQUEE * k); i > 0; i--) {
+      const giants = full.filter((c) => c.rep >= 78 && c.budget > 1e7);
       const g = giants.length && U.pick(giants);
-      if (g) {
-        const cands = Object.values(S.players).filter(
-          (p) =>
-            p.clubId &&
-            !p.loan &&
-            !W.ownPlayer(p) &&
-            !T.isSettled(p) &&
-            S.clubs[p.clubId].rep < g.rep - 5 &&
-            !rivalSale(p, g) &&
-            W.age(p) <= 27 &&
-            T.askPrice(p) * 1.15 <= g.budget + Math.max(0, g.balance) * 0.4, // a star is worth dipping into reserves
+      if (!g) break;
+      const cands = Object.values(S.players).filter(
+        (p) =>
+          p.clubId &&
+          !p.loan &&
+          !W.ownPlayer(p) &&
+          !T.isSettled(p) &&
+          p.ca >= W.levelFor(g.rep) - 6 &&
+          S.clubs[p.clubId].rep < g.rep - 5 &&
+          !rivalSale(p, g) &&
+          W.age(p) <= 28 &&
+          T.askPrice(p) * 1.15 <= g.budget + Math.max(0, g.balance) * 0.4, // a star is worth dipping into reserves
+      );
+      if (!cands.length) continue;
+      const score = (p) => {
+        const sc = S.clubs[p.clubId];
+        return (
+          p.ca +
+          (p.pa - p.ca) * 0.5 +
+          (T.SELLER_LEAGUES[sc.comp] || 0) +
+          (D.IDENTITY[sc.identity].sell < 1 ? 3 : 0) +
+          (W.age(p) <= 24 ? 2 : 0) +
+          (p.contract <= S.year + 1 ? 2 : 0)
         );
-        const star = cands.sort((a, b) => b.ca + (b.pa - b.ca) * 0.5 - (a.ca + (a.pa - a.ca) * 0.5))[0];
-        if (star && star.ca >= W.levelFor(g.rep) - 6 && T.canRegister(g, star))
-          T.execute(star, g.id, U.roundMoney(T.askPrice(star) * 1.15), T.wageDemand(star, g), { marquee: true });
-      }
+      };
+      const top = cands.sort((a, b) => score(b) - score(a)).slice(0, 20);
+      const best = score(top[0]);
+      const star = U.wpick(top, (p) => Math.exp((score(p) - best) / 3));
+      if (T.canRegister(g, star))
+        T.execute(star, g.id, U.roundMoney(T.askPrice(star) * 1.15), T.wageDemand(star, g), { marquee: true });
     }
 
-    // Veterans head abroad for one last adventure (or a big pay day)
+    // Blockbusters: one of the very best (ability 80+, 31 or under) moves on, between giants or from one giant to
+    // another that can pay for him: usually when his deal is running down, he wants out or the seller is a selling
+    // club, now and then simply because the money is there. A few a season, as in the real summer window.
+    for (let i = quota(T.BLOCKBUSTER * k); i > 0; i--) {
+      const stars = Object.values(S.players).filter((p) => {
+        if (!p.clubId || p.loan || p.ca < 80 || W.age(p) > 31 || W.ownPlayer(p) || T.isSettled(p)) return false;
+        const sc = S.clubs[p.clubId];
+        if (sc.sim === 'minimal' || W.isUserSide(sc.id)) return false;
+        return p.contract <= S.year + 1 || p.wantsOut || D.IDENTITY[sc.identity].sell < 1 || Math.random() < 0.15;
+      });
+      if (!stars.length) break;
+      const star = U.pick(stars),
+        from = S.clubs[star.clubId],
+        price = U.roundMoney(T.askPrice(star) * 1.1);
+      const buyers = full.filter(
+        (c) =>
+          c.id !== from.id &&
+          c.rep >= 75 &&
+          c.rep >= from.rep &&
+          W.levelFor(c.rep) <= star.ca + 4 && // he would start for them
+          !rivalSale(star, c) &&
+          price <= c.budget + Math.max(0, c.balance) * 0.6 &&
+          T.canRegister(c, star),
+      );
+      if (!buyers.length) continue;
+      const to = U.wpick(buyers, (c) => Math.pow(c.rep, 3));
+      T.execute(star, to.id, price, T.wageDemand(star, to), { marquee: true });
+    }
+
+    // Veterans head abroad for one last adventure or a big pay day: to the leagues that pay the most for a famous
+    // name late in his career (MLS above all), or to a smaller club that wants the experience
     if (Math.random() < 0.5 * k) {
       const vets = Object.values(S.players).filter(
         (p) =>
@@ -643,7 +705,7 @@
             (c.sim === 'minimal' || c.rep < S.clubs[v.clubId].rep - 5) &&
             !W.isUserSide(c.id),
         );
-        const d = dests.length && U.pick(dests);
+        const d = dests.length && U.wpick(dests, (c) => (T.VETERAN_LEAGUES[c.comp] || 0.5) * (1 + c.rep / 50));
         if (d && T.canRegister(d, v))
           T.execute(v, d.id, U.roundMoney(v.value * 0.6), Math.round(v.wage * (d.sim === 'minimal' ? 1.4 : 1)), {
             veteran: true,

@@ -38,9 +38,9 @@
     heat: 1.3, // fatigue in the heat
     targetGoals: 2.72, // tactical equilibrium: the league scoring rate the game settles back toward over long saves
   });
-  const AW = { GK: 0, CB: 0.1, FB: 0.25, WB: 0.35, DM: 0.2, CM: 0.4, AM: 0.8, W: 0.85, ST: 1 };
-  const MW = { GK: 0.1, CB: 0.3, FB: 0.5, WB: 0.5, DM: 0.9, CM: 1, AM: 0.8, W: 0.5, ST: 0.3 };
-  const DW = { GK: 0.5, CB: 1, FB: 0.8, WB: 0.6, DM: 0.8, CM: 0.45, AM: 0.15, W: 0.15, ST: 0.1 };
+  const AW = { GK: 0, CB: 0.1, FB: 0.25, WB: 0.35, DM: 0.2, CM: 0.4, WM: 0.6, AM: 0.8, W: 0.85, ST: 1 };
+  const MW = { GK: 0.1, CB: 0.3, FB: 0.5, WB: 0.5, DM: 0.9, CM: 1, WM: 0.7, AM: 0.8, W: 0.5, ST: 0.3 };
+  const DW = { GK: 0.5, CB: 1, FB: 0.8, WB: 0.6, DM: 0.8, CM: 0.45, WM: 0.25, AM: 0.15, W: 0.15, ST: 0.1 };
   const attackVal = (a) =>
     (a.finishing * 1.2 + a.dribbling + a.pace * 0.8 + a.technique * 0.8 + a.composure * 0.7) / 4.5;
   const midVal = (a) => (a.passing * 1.2 + a.vision + a.technique * 0.8 + a.composure * 0.5 + a.workRate * 0.5) / 4;
@@ -105,9 +105,9 @@
   const CONCEDE = { CB: 0.18, FB: 0.12, WB: 0.12, DM: 0.06 };
   const CLEAN = { GK: 0.6, CB: 0.45, FB: 0.35, WB: 0.35, DM: 0.15 };
   // How much of the passing goes through each slot (relative), for the on-the-ball part of match ratings
-  const PASS_SHARE = { GK: 0.3, CB: 1.1, FB: 1, WB: 1, DM: 1.4, CM: 1.4, AM: 1.1, W: 0.9, ST: 0.6 };
+  const PASS_SHARE = { GK: 0.3, CB: 1.1, FB: 1, WB: 1, DM: 1.4, CM: 1.4, WM: 1.1, AM: 1.1, W: 0.9, ST: 0.6 };
   // Who wins the ball back, by slot (relative): centre-backs and holding midfielders most, keepers never
-  const DEF_SHARE = { GK: 0, CB: 3, FB: 2.2, WB: 2, DM: 3.2, CM: 2, AM: 0.9, W: 1, ST: 0.5 };
+  const DEF_SHARE = { GK: 0, CB: 3, FB: 2.2, WB: 2, DM: 3.2, CM: 2, WM: 1.4, AM: 0.9, W: 1, ST: 0.5 };
 
   // Position of a slot's player in that side's frame (x → attacking goal)
   FM.Pos = function (side, i, inPoss, ball) {
@@ -700,7 +700,7 @@
           r = roleOf(o);
         if (type === 'longshot')
           return (
-            ({ CM: 1, AM: 1.2, DM: 0.6, W: 0.8, ST: 0.6 }[t] || 0.15) *
+            ({ CM: 1, AM: 1.2, DM: 0.6, WM: 0.8, W: 0.8, ST: 0.6 }[t] || 0.15) *
             (A.finishing + A.technique) *
             (1 + Math.max(-0.5, r.shoot || 0) * 0.5)
           );
@@ -711,7 +711,7 @@
         if (type === 'penalty') return (AW[t] + 0.05) * (A.finishing + A.composure) ** 2;
         if (sp === 'cor')
           return (
-            ({ CB: 1, ST: 1, DM: 0.5, AM: 0.35, CM: 0.35, W: 0.25, FB: 0.3, WB: 0.3 }[t] || 0.2) *
+            ({ CB: 1, ST: 1, DM: 0.5, AM: 0.35, CM: 0.35, WM: 0.25, W: 0.25, FB: 0.3, WB: 0.3 }[t] || 0.2) *
             (A.strength + A.positioning * 0.6 + A.finishing * 0.6) ** 1.5 *
             (1 + (r.head || 0) * 0.5)
           );
@@ -732,7 +732,7 @@
             r = roleOf(o);
           if (type === 'cross')
             return (
-              ({ W: 1.2, FB: 0.9, WB: 1.1, AM: 0.4 }[t] || 0.1) *
+              ({ W: 1.2, WM: 1.1, FB: 0.9, WB: 1.1, AM: 0.4 }[t] || 0.1) *
               A.passing *
               (1 + (r.assist || 0) * 0.5 + (r.cross || 0) * 3)
             );
@@ -1002,7 +1002,7 @@
           const rf =
             rfs[i] ??
             (rfs[i] =
-              (t === 'GK' ? 0.25 : t === 'WB' || t === 'FB' || t === 'CM' ? 1.1 : 1) *
+              (t === 'GK' ? 0.25 : t === 'WB' || t === 'FB' || t === 'CM' || t === 'WM' ? 1.1 : 1) *
               (1 + (this.roleAt(sd, i).press || 0) * 2));
           sd.st[p.id] = Math.max(0, sd.st[p.id] - 0.42 * (1.35 - (p.attrs.stamina / 20) * 0.7) * pf * rf);
           if (!sd.injured[p.id] && Math.random() < FM.Injury.matchChance(p, sd.st[p.id])) {
@@ -1458,7 +1458,7 @@
           .sort((a, b) => a.p.attrs.pace - b.p.attrs.pace)[0];
         const ourFast = m
           .onPitch(sd)
-          .filter(({ i }) => ['W', 'ST', 'AM', 'WB'].includes(sd.slots[i].t))
+          .filter(({ i }) => ['W', 'WM', 'ST', 'AM', 'WB'].includes(sd.slots[i].t))
           .sort((a, b) => b.p.attrs.pace - a.p.attrs.pace)[0];
         if (opDef && ourFast && ourFast.p.attrs.pace - opDef.p.attrs.pace >= 3) {
           return mk('analyst', {

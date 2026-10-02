@@ -222,6 +222,8 @@
       DM: [0.4, 0.5],
       CM: [0.52, 0.5],
       AM: [0.65, 0.5],
+      WB: [0.4, p.foot === 'Left' ? 0.1 : 0.9],
+      WM: [0.55, p.foot === 'Left' ? 0.15 : 0.85],
       W: [0.72, p.foot === 'Left' ? 0.85 : 0.15],
       ST: [0.8, 0.5],
     }[p.pos];
@@ -347,12 +349,12 @@
     ['squad', '👕', 'Squad'],
     ['scout', '🔭', 'Scouting'],
     ['league', '🏆', 'League'],
-    ['intl', '🌍', 'International'],
+    ['intl', '🌍', 'Nations'],
     ['club', '🏟️', 'Club'],
   ];
   UI.mount = function () {
     const app = $('#app');
-    app.innerHTML = `<header class="topbar" id="topbar"></header><main id="main"></main><nav class="nav" id="nav">${TABS.map(([k, i, l]) => `<button data-act="tab" data-tab="${k}" id="nav-${k}"><span class="ni">${i}</span>${l}</button>`).join('')}</nav>`;
+    app.innerHTML = `<header class="topbar" id="topbar"></header><main id="main"></main><nav class="nav" id="nav">${TABS.map(([k, i, l]) => `<button data-act="tab" data-tab="${k}" id="nav-${k}"><span class="ni">${i}</span><span class="nl">${l}</span></button>`).join('')}</nav>`;
     UI.render();
     // swipe between tabs
     const main = $('#main');
@@ -648,7 +650,7 @@
       // Your world: what's in it and the rules it plays by (each competition's real ones; not chosen here)
       body = `<div class="h1" style="margin-top:4vh">Your world</div><div class="tag">Real football, played by its real rules.</div>
         <div class="small" style="color:#c9d4e3;margin-top:16px;line-height:1.6">Three points for a win and five substitutions, as everywhere today. Each league's own foreign-player rules: homegrown quotas in England and Italy, non-EU limits in Spain, Italy and France, international slots in MLS, foreign-player caps in Brazil, Japan, Mexico and more. Continental knockouts and promotion play-off semi-finals over two legs, finals as one match, and no away-goals rule. Domestic cups are one-off ties, with extra time and penalties.</div>
-        <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">664 clubs in 36 leagues across 27 nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One and League Two, the Segunda División and Primera Federación, 2. and 3. Liga, Serie A and Serie B, Ligue 2, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. Seven continental cups, the Europa League and Copa Sudamericana among them, feed a Club World Cup. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
+        <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">710 clubs in 40 leagues across 29 nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One and League Two, the Segunda División and Primera Federación, 2. and 3. Liga, Serie A and Serie B, Ligue 2, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Hungary, Ireland, Wales, Australia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. Seven continental cups, the Europa League and Copa Sudamericana among them, feed a Club World Cup. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
         ${NG.club === 'none' ? '<div class="small" style="color:#c8ff3d;margin-top:14px;line-height:1.5">🧳 You start out of work, with a modest reputation. Clubs in your range will make offers over the first weeks — the struggling ones first.</div>' : ''}
         <div class="actions"><button class="btn pri block" data-act="ngStart">${NG.club === 'none' ? 'Start career — no club yet 🧳' : 'Start career ⚽'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     }

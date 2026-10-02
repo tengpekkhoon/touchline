@@ -951,7 +951,7 @@
       .sort((a, b) => W.effAt(b, s.t, s, T.roles[i]) - W.effAt(a, s.t, s, T.roles[i]));
     UI.sheet(
       `<div class="h3">Role</div><div class="chips" style="margin-top:8px;flex-wrap:wrap">${roles.map((r) => `<button class="chip ${T.roles[i] === r ? 'on' : ''}" data-act="role" data-i="${i}" data-v="${r}">${r}</button>`).join('')}</div>
-      <div class="tiny dim" style="margin:-2px 2px 8px">${esc((D.ROLES[s.t][T.roles[i]] || {}).desc || '')}${['FB', 'WB', 'W'].includes(s.t) && D.slotSide(s) ? ` · ${D.slotSide(s) === 'L' ? 'Left' : 'Right'} flank: ${s.t === 'W' && (D.ROLES.W[T.roles[i]] || {}).inv ? 'best with a ' + (D.slotSide(s) === 'L' ? 'right' : 'left') + '-footer cutting inside' : 'best with a ' + (D.slotSide(s) === 'L' ? 'left' : 'right') + '-footer'}` : ''}</div>
+      <div class="tiny dim" style="margin:-2px 2px 8px">${esc((D.ROLES[s.t][T.roles[i]] || {}).desc || '')}${['FB', 'WB', 'WM', 'W'].includes(s.t) && D.slotSide(s) ? ` · ${D.slotSide(s) === 'L' ? 'Left' : 'Right'} flank: ${(s.t === 'W' || s.t === 'WM') && (D.ROLES[s.t][T.roles[i]] || {}).inv ? 'best with a ' + (D.slotSide(s) === 'L' ? 'right' : 'left') + '-footer cutting inside' : 'best with a ' + (D.slotSide(s) === 'L' ? 'left' : 'right') + '-footer'}` : ''}</div>
       <div class="h3" style="margin-top:6px">Player</div><div class="list">${cands
         .map((p) => {
           const inXI = xi.findIndex((q) => q && q.id === p.id);
@@ -1006,10 +1006,7 @@
   UI.playerHTML = (p) => playerHTML(p);
   // Second positions he can play (learned, or from the start): "also DM, FB (learning)"
   const altLine = (p) => {
-    const alt = Object.entries(p.alt || {})
-      .filter(([, v]) => v >= 0.8)
-      .sort((a, b) => b[1] - a[1])
-      .map(([t, v]) => `${t}${v < 0.9 ? ' (learning)' : ''}`);
+    const alt = W.canPlay(p).map(([t, v]) => `${W.altLabel(p, t)}${v < 0.9 ? ' (learning)' : ''}`);
     return alt.length ? ` · also ${alt.join(', ')}` : '';
   };
   function playerHTML(p) {

@@ -112,8 +112,8 @@
     return { hg, ag, goals, sim: 'minimal' };
   };
 
-  const GOAL_W = { ST: 1, W: 0.55, AM: 0.5, CM: 0.2, DM: 0.08, FB: 0.07, CB: 0.07, GK: 0 };
-  const AST_W = { AM: 1, W: 0.9, CM: 0.6, ST: 0.5, FB: 0.45, DM: 0.25, CB: 0.08, GK: 0.02 };
+  const GOAL_W = { ST: 1, W: 0.55, WM: 0.4, AM: 0.5, CM: 0.2, DM: 0.08, WB: 0.09, FB: 0.07, CB: 0.07, GK: 0 };
+  const AST_W = { AM: 1, W: 0.9, WM: 0.85, CM: 0.6, ST: 0.5, WB: 0.55, FB: 0.45, DM: 0.25, CB: 0.08, GK: 0.02 };
   Ti.light = function (fx) {
     const H = Ti.strength(fx.h),
       A = Ti.strength(fx.a);

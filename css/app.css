@@ -163,29 +163,44 @@ main::-webkit-scrollbar {
   bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: stretch;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(14px);
   border-top: 1px solid var(--line);
-  padding: 6px 6px calc(8px + env(safe-area-inset-bottom));
+  padding: 6px 4px calc(8px + env(safe-area-inset-bottom));
   z-index: 10;
 }
 .nav button {
-  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: 3px;
-  padding: 6px 0;
+  padding: 6px 0 4px;
   color: var(--ink3);
   font-size: 11px;
+  line-height: 14px;
   font-weight: 600;
   border-radius: 12px;
   transition: color 0.2s;
   position: relative;
 }
+.nav button .nl {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .nav button .ni {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 24px;
   font-size: 20px;
+  line-height: 1;
   filter: grayscale(1) opacity(0.7);
   transition:
     transform 0.25s,
@@ -202,6 +217,8 @@ main::-webkit-scrollbar {
   content: '';
   position: absolute;
   top: -7px;
+  left: 50%;
+  margin-left: -13px;
   width: 26px;
   height: 3px;
   border-radius: 3px;
@@ -210,7 +227,8 @@ main::-webkit-scrollbar {
 .nav .badge {
   position: absolute;
   top: 2px;
-  right: calc(50% - 20px);
+  left: 50%;
+  margin-left: 5px;
   background: var(--bad);
   color: #fff;
   font-size: 10px;

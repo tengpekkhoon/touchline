@@ -1370,7 +1370,7 @@
               .join('')
           : '<div class="empty">None of your players have been capped yet.</div>'
       }</div>
-      <div class="sec"><div class="h3">World ranking</div><span class="dim small">Elo</span></div>
+      <div class="sec"><div class="h3">World ranking</div><span class="dim small">Coefficient</span></div>
       <div class="card flat" style="padding:6px 10px"><table class="t">${ranked
         .map(
           (t, i) =>
@@ -1383,7 +1383,7 @@
                     ),
                   )}</span>`
                 : ''
-            }</div></td><td class="b">${t.elo}</td><td class="l">${C.form((t.form || []).slice(-4))}</td></tr>`,
+            }</div></td><td class="b">${t.coef.toFixed(1)}</td><td class="l">${C.form((t.form || []).slice(-4))}</td></tr>`,
         )
         .join('')}</table></div>
       <div class="sec"><div class="h3">Recent results</div></div>
@@ -1403,7 +1403,7 @@
     const games = s.intlLog.filter((g) => g.h === t.id || g.a === t.id).slice(0, 8);
     const rank = FM.Intl.ranked().indexOf(t) + 1;
     UI.sheet(
-      `<div class="hero" style="--c1:${U.heroShade(t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0])};--c2:#111"><div class="row"><div style="font-size:46px">${C.flag(t.code)}</div><div class="grow"><div class="h1">${esc(t.name)}</div><div class="small" style="opacity:.9">World ranking #${rank} · Elo ${t.elo} · ${esc(D.NATIONS[t.code].style)}</div></div>${UI.followBtn('nation', t.id, true)}</div>
+      `<div class="hero" style="--c1:${U.heroShade(t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0])};--c2:#111"><div class="row"><div style="font-size:46px">${C.flag(t.code)}</div><div class="grow"><div class="h1">${esc(t.name)}</div><div class="small" style="opacity:.9">World ranking #${rank} · Coefficient ${t.coef.toFixed(1)} · ${esc(D.NATIONS[t.code].style)}</div></div>${UI.followBtn('nation', t.id, true)}</div>
         ${
           Object.keys(t.titles).length
             ? `<div class="small" style="margin-top:8px">${Object.entries(t.titles)

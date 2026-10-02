@@ -257,12 +257,12 @@
           y += 0.012 * Math.sin(t * 0.53 + i * 1.37 + k * 2.2);
           if (inPoss) {
             // timed forward runs by attacking players when the ball is in a good area
-            if (['ST', 'W', 'AM', 'WB'].includes(s.t) || (s.t === 'FB' && Math.abs(y - bf.y) < 0.35)) {
+            if (['ST', 'W', 'WM', 'AM', 'WB'].includes(s.t) || (s.t === 'FB' && Math.abs(y - bf.y) < 0.35)) {
               const phase = Math.sin(t * 0.45 + i * 1.9 + k);
               if (phase > 0.5 && bf.x > 0.32) {
                 const run = (phase - 0.5) / 0.5;
                 x += (s.t === 'ST' ? 0.08 : 0.06) * run;
-                if (s.t === 'W' || s.t === 'WB' || s.t === 'FB') y += (y < 0.5 ? -1 : 1) * 0.025 * run;
+                if (s.t === 'W' || s.t === 'WM' || s.t === 'WB' || s.t === 'FB') y += (y < 0.5 ? -1 : 1) * 0.025 * run;
                 else y += (0.5 - y) * 0.15 * run;
               }
             }

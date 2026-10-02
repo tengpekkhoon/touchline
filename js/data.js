@@ -91,7 +91,7 @@
   };
 
   // ---------- Positions ----------
-  FM.D.POS = ['GK', 'CB', 'FB', 'WB', 'DM', 'CM', 'AM', 'W', 'ST'];
+  FM.D.POS = ['GK', 'CB', 'FB', 'WB', 'DM', 'CM', 'WM', 'AM', 'W', 'ST'];
   FM.D.POS_NAME = {
     GK: 'Goalkeeper',
     CB: 'Centre-Back',
@@ -102,8 +102,20 @@
     W: 'Winger',
     ST: 'Striker',
     WB: 'Wing-Back',
+    WM: 'Wide Midfielder',
   };
-  FM.D.POS_GROUP = { GK: 'GK', CB: 'DEF', FB: 'DEF', WB: 'DEF', DM: 'MID', CM: 'MID', AM: 'MID', W: 'ATT', ST: 'ATT' };
+  FM.D.POS_GROUP = {
+    GK: 'GK',
+    CB: 'DEF',
+    FB: 'DEF',
+    WB: 'DEF',
+    DM: 'MID',
+    CM: 'MID',
+    WM: 'MID',
+    AM: 'MID',
+    W: 'ATT',
+    ST: 'ATT',
+  };
   // Weights used to compute current ability (CA) per position
   FM.D.POS_W = {
     GK: { reflexes: 3, handling: 3, positioning: 1.5, composure: 1, passing: 0.5 },
@@ -113,6 +125,8 @@
     WB: { pace: 2, tackling: 2.3, positioning: 1.8, stamina: 2, workRate: 1.5, passing: 1.2, dribbling: 1 },
     DM: { tackling: 2.5, positioning: 2, passing: 2, workRate: 1.5, stamina: 1, strength: 1, vision: 0.5 },
     CM: { passing: 2.5, vision: 2, technique: 1.5, stamina: 1.5, workRate: 1, tackling: 0.7, composure: 1 },
+    // a wide midfielder: the legs and delivery to run the flank both ways, with a winger's touch and a midfielder's passing
+    WM: { pace: 1.5, stamina: 2, workRate: 1.5, passing: 2, dribbling: 1.5, technique: 1.5, vision: 1, tackling: 0.5 },
     AM: { vision: 2.5, technique: 2.5, passing: 2, dribbling: 2, finishing: 1, composure: 1 },
     W: { pace: 2.5, dribbling: 2.5, technique: 1.5, passing: 1, finishing: 1, stamina: 1 },
     ST: { finishing: 3, composure: 2, pace: 1.5, strength: 1, technique: 1, dribbling: 1, positioning: 0.5 },
@@ -121,12 +135,13 @@
   FM.D.FIT = {
     GK: { GK: 1 },
     CB: { CB: 1, DM: 0.75, FB: 0.7 },
-    FB: { FB: 1, WB: 0.95, CB: 0.7, W: 0.65, DM: 0.6 },
-    WB: { WB: 1, FB: 0.92, W: 0.8, CM: 0.55, DM: 0.55 },
-    DM: { DM: 1, CM: 0.9, CB: 0.75 },
-    CM: { CM: 1, DM: 0.85, AM: 0.85, WB: 0.55 },
-    AM: { AM: 1, CM: 0.85, W: 0.8, ST: 0.75 },
-    W: { W: 1, AM: 0.8, WB: 0.75, ST: 0.7, FB: 0.55 },
+    FB: { FB: 1, WB: 0.95, CB: 0.7, W: 0.65, WM: 0.72, DM: 0.6 },
+    WB: { WB: 1, FB: 0.92, WM: 0.88, W: 0.8, CM: 0.55, DM: 0.55 },
+    DM: { DM: 1, CM: 0.9, CB: 0.75, WM: 0.6 },
+    CM: { CM: 1, DM: 0.85, AM: 0.85, WM: 0.84, WB: 0.55 },
+    WM: { WM: 1, W: 0.92, CM: 0.85, AM: 0.82, WB: 0.85, FB: 0.72, DM: 0.6, ST: 0.6 },
+    AM: { AM: 1, CM: 0.85, W: 0.8, WM: 0.82, ST: 0.75 },
+    W: { W: 1, WM: 0.9, AM: 0.8, WB: 0.75, ST: 0.7, FB: 0.55 },
     ST: { ST: 1, AM: 0.75, W: 0.7 },
   };
 
@@ -165,10 +180,10 @@
       { t: 'CB', x: 0.2, y: 0.38 },
       { t: 'CB', x: 0.2, y: 0.62 },
       { t: 'FB', x: 0.24, y: 0.86 },
-      { t: 'W', x: 0.5, y: 0.13 },
+      { t: 'WM', x: 0.5, y: 0.13 },
       { t: 'CM', x: 0.45, y: 0.38 },
       { t: 'CM', x: 0.45, y: 0.62 },
-      { t: 'W', x: 0.5, y: 0.87 },
+      { t: 'WM', x: 0.5, y: 0.87 },
       { t: 'ST', x: 0.74, y: 0.4 },
       { t: 'ST', x: 0.74, y: 0.6 },
     ],
@@ -218,10 +233,10 @@
       { t: 'CB', x: 0.2, y: 0.62 },
       { t: 'FB', x: 0.24, y: 0.86 },
       { t: 'DM', x: 0.36, y: 0.5 },
-      { t: 'W', x: 0.56, y: 0.13 },
+      { t: 'WM', x: 0.56, y: 0.13 },
       { t: 'CM', x: 0.5, y: 0.36 },
       { t: 'CM', x: 0.5, y: 0.64 },
-      { t: 'W', x: 0.56, y: 0.87 },
+      { t: 'WM', x: 0.56, y: 0.87 },
       { t: 'ST', x: 0.76, y: 0.5 },
     ],
     '4-4-1-1': [
@@ -230,10 +245,10 @@
       { t: 'CB', x: 0.2, y: 0.38 },
       { t: 'CB', x: 0.2, y: 0.62 },
       { t: 'FB', x: 0.24, y: 0.86 },
-      { t: 'W', x: 0.5, y: 0.13 },
+      { t: 'WM', x: 0.5, y: 0.13 },
       { t: 'CM', x: 0.45, y: 0.38 },
       { t: 'CM', x: 0.45, y: 0.62 },
-      { t: 'W', x: 0.5, y: 0.87 },
+      { t: 'WM', x: 0.5, y: 0.87 },
       { t: 'AM', x: 0.64, y: 0.5 },
       { t: 'ST', x: 0.78, y: 0.5 },
     ],
@@ -283,10 +298,10 @@
       { t: 'CB', x: 0.16, y: 0.5 },
       { t: 'CB', x: 0.19, y: 0.7 },
       { t: 'WB', x: 0.3, y: 0.92 },
-      { t: 'W', x: 0.5, y: 0.15 },
+      { t: 'WM', x: 0.5, y: 0.15 },
       { t: 'CM', x: 0.44, y: 0.38 },
       { t: 'CM', x: 0.44, y: 0.62 },
-      { t: 'W', x: 0.5, y: 0.85 },
+      { t: 'WM', x: 0.5, y: 0.85 },
       { t: 'ST', x: 0.72, y: 0.5 },
     ],
   };
@@ -296,7 +311,8 @@
     const side = FM.D.slotSide(s);
     if (s.t === 'FB') return side + 'B';
     if (s.t === 'WB') return side + 'WB';
-    if (s.t === 'W') return side + (s.x < 0.55 ? 'M' : 'W');
+    if (s.t === 'WM') return side + 'M';
+    if (s.t === 'W') return side + 'W';
     if (s.t === 'GK' || !side) return s.t;
     return side + s.t;
   };
@@ -375,6 +391,25 @@
       'Inside Forward': { att: 0.03, in: 0.25, dx: 0.06, inv: 1, shoot: 0.3, desc: 'Cuts inside to shoot.' },
       'Wide Playmaker': { mid: 0.03, in: 0.18, assist: 0.35, desc: 'Starts wide, comes inside to create.' },
       Raumdeuter: { att: 0.03, def: -0.02, dx: 0.08, shoot: 0.5, desc: 'Finds space in the box and finishes.' },
+    },
+    WM: {
+      'Wide Mid': {
+        att: 0.01,
+        mid: 0.01,
+        cross: 0.1,
+        assist: 0.15,
+        desc: 'Works the whole flank: tracks back, then supplies the box.',
+      },
+      'Defensive Winger': { def: 0.02, win: 0.015, press: 0.02, desc: 'Tracks back and shields his full-back.' },
+      'Wide Playmaker': { mid: 0.03, in: 0.18, assist: 0.35, desc: 'Starts wide, drifts inside to create.' },
+      'Inverted Wide Mid': {
+        att: 0.01,
+        mid: 0.01,
+        in: 0.22,
+        inv: 1,
+        shoot: 0.12,
+        desc: 'Drifts inside onto his stronger foot.',
+      },
     },
     ST: {
       Poacher: { att: 0.03, dx: 0.04, shoot: 0.4, desc: 'Lives on the last defender and finishes.' },
@@ -1306,8 +1341,8 @@
   // season), tropical (often hot, never snow)
   FM.D.CLIMATE = {
     wet: ['ENG', 'SCO', 'WAL', 'IRL', 'NED', 'BEL', 'NOR', 'DEN', 'GER'],
-    cold: ['NOR', 'DEN', 'POL', 'CZE', 'AUT', 'SUI', 'SRB', 'GER', 'KOR', 'SCO', 'USA'],
-    warm: ['ESP', 'POR', 'ITA', 'GRE', 'TUR', 'MAR', 'ARG', 'URU', 'USA', 'JPN', 'KOR', 'FRA'],
+    cold: ['NOR', 'DEN', 'POL', 'CZE', 'AUT', 'SUI', 'SRB', 'GER', 'KOR', 'SCO', 'USA', 'HUN'],
+    warm: ['ESP', 'POR', 'ITA', 'GRE', 'TUR', 'MAR', 'ARG', 'URU', 'USA', 'JPN', 'KOR', 'FRA', 'AUS'],
     tropical: ['BRA', 'THA', 'NGA', 'MEX', 'COL', 'GHA', 'CIV', 'SEN'],
   };
 
@@ -1411,6 +1446,30 @@
     'Luca Noah Leon Nico Jan Fabian Kevin Yannick Cédric Florian Joël Silvan Remo Dario Marco Loris Nils Andrin Gian Ramon Mauro Samuel Timo Reto Beat Michel Simon Jonas Elias Lars Levin Aurèle Matteo Bastien Gaël Théo Kilian Ruben Dominik Pascal',
     'Müller, Meier, Schmid, Keller, Weber, Huber, Schneider, Meyer, Steiner, Fischer, Gerber, Brunner, Baumann, Frei, Zimmermann, Moser, Widmer, Wyss, Graf, Roth, Suter, Baumgartner, Kälin, Bühler, Aebischer, Zbinden, Marti, Lüthi, Gisler, Egli, Imhof, Studer, Ammann, Hofmann, Kunz, Blaser, Bachmann, Hess, Rossier, Favre, Perrin, Bonvin, Morand, Rochat, Chappuis, Bernasconi, Rossi, Bianchi',
   );
+  addN(
+    'AUS',
+    'Australia',
+    '🇦🇺',
+    'ASIA',
+    'Athletic and direct',
+    { stamina: 1.5, strength: 1.5, workRate: 1 },
+    'Jack Riley Harrison Mitchell Connor Cooper Lachlan Tom Nathan Jordan Ryan Callum Josh Mathew Aiden Kye Brandon Daniel Ben Bailey Liam Lucas Cameron Noah Kai Jayden Dylan Trent Corey Tyrese Marco Ajdin Keanu Kusini Alessandro Garang Nestory Awer Apostolos',
+    'Smith, Jones, Williams, Brown, Wilson, Taylor, Anderson, Thompson, Walker, White, Harris, Martin, Robinson, Clarke, Scott, Young, Mitchell, Ryan, Kelly, Evans, Murray, Hughes, Russo, Rossi, Santos, Nikolic, Ivanovic, Kovac, Petrovic, Papadopoulos, Tran, Nguyen, Wang, Singh, Cummings, McGree, Irvine, Boyle, Souttar, Hrustic, Duke, Metcalfe, Degenek, Burgess, Atkinson, Circati, Deng, Yengi',
+  );
+  addN(
+    'HUN',
+    'Hungary',
+    '🇭🇺',
+    'EUR',
+    'Technical and disciplined',
+    { technique: 1.5, passing: 1, positioning: 1 },
+    'Bence Dominik Ádám Péter Máté Zsolt Gergő Dávid Balázs Levente Kristóf Márk Attila Roland Norbert Tamás Richárd Martin Csaba Zoltán László Krisztián Milán Botond Barnabás Olivér Patrik Szabolcs Gábor Bálint Zalán Áron Benedek Kornél Ákos András István Viktor Dénes Soma',
+    'Nagy, Kovács, Tóth, Szabó, Horváth, Varga, Kiss, Molnár, Németh, Farkas, Balogh, Papp, Takács, Juhász, Lakatos, Mészáros, Oláh, Simon, Rácz, Fekete, Szilágyi, Török, Fehér, Balázs, Gál, Kis, Szűcs, Kocsis, Pintér, Fodor, Orsós, Szalai, Sipos, Magyar, Lukács, Gulyás, Biró, Király, László, Katona, Jakab, Bogdán, Vass, Hegedűs, Bognár, Sándor, Kerekes, Lengyel',
+  );
+  Object.assign(FM.D.NT_COLORS, {
+    AUS: ['#FFCD00', '#00843D'],
+    HUN: ['#CD2A3E', '#FFFFFF'],
+  });
   Object.assign(FM.D.NT_COLORS, {
     TUR: ['#E30A17', '#FFFFFF'],
     CZE: ['#D7141A', '#11457E'],
@@ -1941,6 +2000,50 @@
       repBand: [70, 46],
       rules: {},
     },
+    {
+      id: 'AU1',
+      nat: 'AUS',
+      name: 'A-League Men',
+      short: 'ALM',
+      tier: 1,
+      sim: 'minimal',
+      clubs: 'CLUBS_AU1',
+      repBand: [58, 46],
+      rules: { qualify: { to: 'AC', n: 2 } },
+    },
+    {
+      id: 'HU1',
+      nat: 'HUN',
+      name: 'Nemzeti Bajnokság I',
+      short: 'NB1',
+      tier: 1,
+      sim: 'minimal',
+      clubs: 'CLUBS_HU1',
+      repBand: [62, 45],
+      rules: {},
+    },
+    {
+      id: 'IE1',
+      nat: 'IRL',
+      name: 'League of Ireland Premier Division',
+      short: 'LOI',
+      tier: 1,
+      sim: 'minimal',
+      clubs: 'CLUBS_IE1',
+      repBand: [52, 41],
+      rules: {},
+    },
+    {
+      id: 'WA1',
+      nat: 'WAL',
+      name: 'Cymru Premier',
+      short: 'CP',
+      tier: 1,
+      sim: 'minimal',
+      clubs: 'CLUBS_WA1',
+      repBand: [49, 37],
+      rules: {},
+    },
   ];
   FM.D.CONTINENTALS = [
     { id: 'CC', region: 'Europe', name: 'UEFA Champions League', short: 'UCL', prize: 15e6 },
@@ -1983,9 +2086,9 @@
   // Squad sizes per tier (+ academy prospects)
   FM.D.SQUAD_TIER = {
     // deep enough to cover injuries, suspensions and rotation (full: 26 senior players, three of them keepers)
-    full: { GK: 3, CB: 5, FB: 3, WB: 1, DM: 2, CM: 4, AM: 2, W: 4, ST: 2 },
-    light: { GK: 2, CB: 3, FB: 2, WB: 1, DM: 2, CM: 3, AM: 2, W: 3, ST: 2 },
-    minimal: { GK: 2, CB: 3, FB: 2, DM: 1, CM: 2, AM: 1, W: 2, ST: 2 },
+    full: { GK: 3, CB: 5, FB: 3, WB: 1, DM: 2, CM: 4, WM: 2, AM: 2, W: 2, ST: 2 },
+    light: { GK: 2, CB: 3, FB: 2, WB: 1, DM: 2, CM: 3, WM: 1, AM: 2, W: 2, ST: 2 },
+    minimal: { GK: 2, CB: 3, FB: 2, DM: 1, CM: 2, WM: 1, AM: 1, W: 1, ST: 2 },
   };
   FM.D.ACADEMY_TIER = { full: 2, light: 2, minimal: 1 };
 
@@ -2226,6 +2329,63 @@
       CRO: 1,
       POL: 1,
     },
+  });
+
+  Object.assign(FM.D.NAT_MIX, {
+    AU1: {
+      AUS: 62,
+      ENG: 5,
+      SCO: 2,
+      BRA: 4,
+      JPN: 3,
+      KOR: 3,
+      ESP: 3,
+      ARG: 2,
+      USA: 2,
+      NED: 2,
+      ITA: 2,
+      CRO: 2,
+      SRB: 2,
+      NGA: 1,
+      GHA: 1,
+      MAR: 1,
+      FRA: 1,
+    },
+    HU1: {
+      HUN: 72,
+      SRB: 4,
+      CRO: 3,
+      POL: 2,
+      CZE: 2,
+      AUT: 2,
+      GER: 2,
+      BRA: 2,
+      NGA: 2,
+      GHA: 2,
+      SEN: 1,
+      CIV: 1,
+      POR: 1,
+      ESP: 1,
+      NED: 1,
+      TUR: 1,
+    },
+    IE1: {
+      IRL: 78,
+      ENG: 6,
+      SCO: 2,
+      WAL: 1,
+      NGA: 2,
+      GHA: 2,
+      FRA: 1,
+      ESP: 1,
+      POR: 1,
+      BRA: 1,
+      USA: 2,
+      JPN: 1,
+      NED: 1,
+      CIV: 1,
+    },
+    WA1: { WAL: 70, ENG: 20, IRL: 3, SCO: 2, NGA: 1, GHA: 1, ESP: 1, POR: 1, FRA: 1 },
   });
 
   // ---------- Alpha 1: contracts, agents, promises, badges ----------

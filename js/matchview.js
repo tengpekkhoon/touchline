@@ -640,7 +640,7 @@
     // pressing shapes: connect each team's back line & midfield line
     m.sides.forEach((sd, k) => {
       const col = MV.kit(m, k);
-      const lines = [['GK'], ['CB', 'FB', 'WB'], ['DM', 'CM']];
+      const lines = [['GK'], ['CB', 'FB', 'WB'], ['DM', 'CM', 'WM']];
       [lines[1], lines[2]].forEach((types) => {
         const pts = sd.slots
           .map((s, i) => ({ s, i }))

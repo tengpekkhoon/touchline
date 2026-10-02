@@ -248,6 +248,13 @@ Every feature from the game design document, with what is playable in the protot
 | Squad | Left and right positions: LB/RB and LW/RW with a natural side | Playtest round 6 |
 | Squad | Wing-backs as a position (LWB/RWB), with their own attribute weights | Playtest round 6 |
 | Tools | Transfer realism test, with a mode for testing a player you describe | Playtest round 6 |
+| Competitions | Four more leagues: the A-League Men (Australia, with Auckland and Wellington), the Hungarian NB I, the League of Ireland Premier Division and the Cymru Premier, two new nations (Australia, Hungary), derbies and nationality mixes (710 clubs in 40 leagues; the Serbian SuperLiga was already in) | Playtest round 7 |
+| Squad | Wide midfielders as a position (LM/RM): own attribute weights, roles (Wide Mid, Defensive Winger, Wide Playmaker, Inverted Wide Mid), the flat-four flanks of 4-4-2, 4-4-1-1, 4-1-4-1 and 5-4-1; squads split their wide places between wingers and wide midfielders by formation; older saves convert | Playtest round 7 |
+| Squad | Position versatility: second positions come from the neighbouring positions' table fits (a third of players, one in eight a utility player with up to three), players say everywhere they can play (LWB, LM, ...), the young and utility players learn new positions faster, and a player's natural position changes as his game does (a winger who loses pace becomes a wide midfielder) | Playtest round 7 |
+| Tactics | Selection: every club's XI is improved by swapping places while the team's total rises, and the bench covers centre-back, full-back, central midfield, the flanks and striker by who can play there, not just by group | Playtest round 7 |
+| Transfers | Real flows: free transfers about a fifth of the market (AI clubs line up players whose deals run out, free agents fill gaps and can be any age), small clubs buy at home, selling leagues (Portugal, the Netherlands, Belgium, South America, France) and selling clubs lose their stars to giants, blockbuster moves between giants, veterans go to MLS and the other veteran leagues | Playtest round 7 |
+| International | A coefficient ranking (about 50 for an average nation, 90 and over for the best) replaces the Elo rating; older saves convert | Playtest round 7 |
+| UI | Bottom bar: six equal columns, icons and labels on one line (International is Nations) | Playtest round 7 |
 | Players | Keeper profiles: keeper attribute groups and realistic outfield skills; clean sheets on the career line | Playtest round 6 |
 | Season | A half-played matchday (left on the full-time screen) is finished as the save loads | Playtest round 4 |
 | Tactics | Auto pick prefers natural and accomplished players over improvised ones | Playtest round 4 |

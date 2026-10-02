@@ -116,6 +116,8 @@
     POL: 'Polish',
     AUT: 'Austrian',
     SUI: 'Swiss',
+    AUS: 'Australian',
+    HUN: 'Hungarian',
   };
   const NOUN = {
     GK: 'goalkeeper',
@@ -125,6 +127,8 @@
     CM: 'midfielder',
     AM: 'playmaker',
     W: 'winger',
+    WM: 'wide midfielder',
+    WB: 'wing-back',
     ST: 'striker',
   };
   const PAPERS = ['The Daily Touchline', 'Football Weekly', 'The Terrace Times', 'Evening Sports Post'];
@@ -912,7 +916,7 @@
     const shock = games
       .filter(
         (g) =>
-          g.winner && Math.abs(T(g.h).elo - T(g.a).elo) > 150 && T(g.winner).elo < Math.max(T(g.h).elo, T(g.a).elo),
+          g.winner && Math.abs(T(g.h).coef - T(g.a).coef) > 15 && T(g.winner).coef < Math.max(T(g.h).coef, T(g.a).coef),
       )
       .slice(0, 1)[0];
     FM.News.add({

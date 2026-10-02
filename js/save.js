@@ -84,6 +84,20 @@
   // Consistency fixes on every load: references to players who have since left or retired
   Sv.repair = function (s) {
     Sv.relink(s);
+    // a role that doesn't exist for its slot (a 4-4-2 flank was a winger's slot before wide midfielders): the slot's
+    // first role instead
+    const D = FM.D,
+      fixRoles = (t) => {
+        const slots = t && D.FORMATIONS[t.formation];
+        if (!slots || !t.roles) return;
+        t.roles = slots.map((sl, i) => (D.ROLES[sl.t][t.roles[i]] ? t.roles[i] : Object.keys(D.ROLES[sl.t])[0]));
+      };
+    for (const c of Object.values(s.clubs || {})) fixRoles(c.tactic);
+    for (const c of Object.values(s.nteams || {})) fixRoles(c.tactic);
+    if (s.user) {
+      fixRoles(s.user.tactic);
+      fixRoles(s.user.tactic2);
+    }
     // wing-backs arrived as a position: each club's most attacking full-backs become wing-backs, as many as its
     // squad now carries (two at full-tier clubs, one at light), and free agents clearly better there (once)
     if ((s.wbPos || 0) < 2 && s.players && FM.W) {
@@ -118,6 +132,51 @@
         for (const p of order) {
           if (have >= want) break;
           toWB(p);
+          have++;
+        }
+      }
+    }
+    // the world ranking is a coefficient now (it was an Elo rating, 1500 for an average side)
+    for (const t of Object.values(s.nteams || {}))
+      if (t.coef == null && t.elo != null) {
+        t.coef = Math.round(t.elo - 1000) / 10;
+        delete t.elo;
+      }
+    // wide midfielders arrived as a position: at each club the wingers who are better suited to wide midfield
+    // (less of a finisher, more stamina and passing) become LM/RM, as many as its squad now carries, one per flank first
+    if (!s.wmPos && s.players && FM.W) {
+      s.wmPos = 1;
+      const gain = (p) => FM.W.calcCA(p, 'WM') - FM.W.calcCA(p, 'W');
+      const byClub = {};
+      for (const p of Object.values(s.players)) {
+        if (p.retired || (p.pos !== 'W' && p.pos !== 'WM')) continue;
+        if (!p.clubId) {
+          if (p.pos === 'W' && gain(p) >= 1) {
+            p.pos = 'WM';
+            (p.alt = p.alt || {}).W = Math.max(p.alt.W || 0, 0.9);
+            p.ca = FM.W.calcCA(p);
+            if (p.pa < p.ca) p.pa = p.ca;
+          }
+          continue;
+        }
+        (byClub[p.clubId] = byClub[p.clubId] || []).push(p);
+      }
+      for (const [id, list] of Object.entries(byClub)) {
+        const c = s.clubs[id],
+          want = c ? FM.W.squadWant(c).WM || 0 : 0;
+        let have = list.filter((p) => p.pos === 'WM').length;
+        const cands = list.filter((x) => x.pos === 'W' && gain(x) >= -2).sort((a, b) => gain(b) - gain(a));
+        const sides = new Set(list.filter((p) => p.pos === 'WM').map((p) => FM.W.side(p)));
+        const order = [
+          ...cands.filter((p) => !sides.has(FM.W.side(p)) && (sides.add(FM.W.side(p)), true)),
+          ...cands,
+        ].filter((p, i, arr) => arr.indexOf(p) === i);
+        for (const p of order) {
+          if (have >= want) break;
+          p.pos = 'WM';
+          (p.alt = p.alt || {}).W = Math.max(p.alt.W || 0, 0.9);
+          p.ca = FM.W.calcCA(p);
+          if (p.pa < p.ca) p.pa = p.ca;
           have++;
         }
       }

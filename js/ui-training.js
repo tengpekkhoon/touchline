@@ -11,7 +11,7 @@
   const S = () => FM.S;
   const esc = U.esc;
   const pct = (k) => `${k >= 1 ? '+' : '−'}${Math.abs(Math.round((k - 1) * 100))}%`;
-  const LEARNABLE = ['CB', 'FB', 'WB', 'DM', 'CM', 'AM', 'W', 'ST'];
+  const LEARNABLE = ['CB', 'FB', 'WB', 'DM', 'CM', 'WM', 'AM', 'W', 'ST'];
 
   // ---------- Training ----------
   const indLabel = (v) =>

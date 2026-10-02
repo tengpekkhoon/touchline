@@ -121,12 +121,49 @@
       g += 9 * frac * U.rand(0.8, 1.2);
     } else if (boom === 1 || boom === 2) g -= 4.5 * frac * U.rand(0.8, 1.2);
     Sea.applyGrowth(p, g);
+    if (Math.random() < frac * 0.3) Sea.reposition(p);
     if ((boom === 1 || boom === 2) && p.arc.pa != null) p.pa = Math.max(p.arc.pa, p.ca); // the big year never becomes his new ceiling
     // Experience: in their late twenties and thirties players keep reading the game better
     const e = Sea.careerAge(p);
     if (e >= 26 && e <= 31)
       for (const k of ['positioning', 'composure', 'vision'])
         p.attrs[k] = Math.min(20, p.attrs[k] + 0.12 * frac * Math.random() * 2);
+  };
+  // A player's game changes with his body, so his natural position can change: a winger who loses his pace becomes
+  // a wide midfielder, a full-back moves inside, a striker drops into the playmaker's role. It happens when another
+  // position he can already play (a neighbouring one) suits his attributes clearly better — more readily after 29,
+  // when the legs go. The old position stays on as a second one.
+  Sea.reposition = function (p) {
+    if (p.pos === 'GK' || p.retired || W.age(p) < 18) return;
+    const here = W.calcCA(p, p.pos),
+      old = W.age(p) >= 29;
+    let best = null,
+      bv = 0;
+    for (const t of D.POS) {
+      if (t === p.pos || t === 'GK' || t === 'WB') continue; // (a wing-back slot is judged as a full-back's for anyone else)
+      if (W.fitAt(p, t) < 0.82) continue;
+      const gain = W.calcCA(p, t) - here;
+      if (gain > bv) {
+        bv = gain;
+        best = t;
+      }
+    }
+    if (!best || bv < (old ? 2.5 : 4)) return;
+    const was = p.pos;
+    (p.alt = p.alt || {})[was] =
+      Math.round(Math.min(0.97, Math.max(0.88, ((D.FIT[best] || {})[was] || 0) + 0.06)) * 100) / 100;
+    delete p.alt[best];
+    if (p.alt && !Object.keys(p.alt).length) delete p.alt;
+    if (!(W.FLANK.includes(was) && W.FLANK.includes(best))) delete p.side; // off the flank or onto it: his side is worked out afresh
+    p.pos = best;
+    W.refresh(p);
+    if (W.ownPlayer(p))
+      FM.News.add({
+        type: 'club',
+        title: `${W.name(p)} is now a ${D.POS_NAME[best].toLowerCase()}`,
+        body: `His game has changed: he suits the ${D.POS_NAME[best].toLowerCase()} role better now, and can still cover at ${D.POS_NAME[was].toLowerCase()}.`,
+        clubId: W.userClub().id,
+      });
   };
   // How fast each attribute fades with age (relative): legs first, then touch, and reading the game last
   const AGEING = {
@@ -178,7 +215,7 @@
       const made = [];
       for (let i = 0; i < n; i++) {
         const nat = W.youthNat(c);
-        const pos = U.pick(['GK', 'CB', 'CB', 'FB', 'WB', 'DM', 'CM', 'CM', 'AM', 'W', 'W', 'ST', 'ST']);
+        const pos = U.pick(['GK', 'CB', 'CB', 'FB', 'WB', 'DM', 'CM', 'CM', 'WM', 'AM', 'W', 'W', 'ST', 'ST']);
         const ca = Math.round(U.clamp(U.gauss(26 + acad * 3, 4), 18, 48));
         let pa = Math.round(
           U.clamp(U.gauss(Y.base + acad * Y.perAcad + (c.identity === 'youth' ? Y.youthClub : 0), Y.sd), ca + 8, 94),
@@ -313,7 +350,7 @@
   Sea.aiRenews = function (p, c) {
     const a = W.age(p),
       gap = p.ca - Sea.squadMedian(c.id);
-    if (a < 31) return c.sim === 'minimal' || gap >= -2 || Math.random() < 0.6;
+    if (a < 31) return c.sim === 'minimal' || (gap >= -2 ? Math.random() < 0.92 : Math.random() < 0.45);
     if (Sea.isIcon(p) && Math.random() < Sea.VET.icon) return true;
     return gap >= a - Sea.VET.gapAge || Math.random() < (c.sim === 'minimal' ? 0.4 : Sea.VET.chance);
   };

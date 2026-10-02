@@ -361,9 +361,7 @@
   Sc.deeper = function (p, v, k) {
     if (k >= 20) {
       v.foot = p.foot;
-      v.alt = Object.entries(p.alt || {})
-        .filter(([, x]) => x >= 0.8)
-        .map(([t]) => t);
+      v.alt = W.canPlay(p).map(([t]) => W.altLabel(p, t));
     }
     if (k >= 35 && D.ROLES[p.pos]) v.role = FM.bestRole(p, p.pos);
     if (k >= 65) {

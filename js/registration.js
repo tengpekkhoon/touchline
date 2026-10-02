@@ -10,7 +10,23 @@
     W = FM.W;
   const R = (FM.Reg = {});
 
-  R.EU = new Set(['FRA', 'ESP', 'POR', 'NED', 'GER', 'BEL', 'IRL', 'DEN', 'CRO', 'ITA', 'CZE', 'GRE', 'POL', 'AUT']);
+  R.EU = new Set([
+    'FRA',
+    'ESP',
+    'POR',
+    'NED',
+    'GER',
+    'BEL',
+    'IRL',
+    'DEN',
+    'CRO',
+    'ITA',
+    'CZE',
+    'GRE',
+    'POL',
+    'AUT',
+    'HUN',
+  ]);
   const HG = { squad: 25, hg: 8 };
   // By league id. domestic: nations that count as local; exempt: partner nations that don't use a foreign place
   R.RULES = {
