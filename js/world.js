@@ -1059,6 +1059,7 @@
         reg: opts.reg === undefined ? 'real' : opts.reg, // 'real': each league's own registration rules (FM.Reg)
         twoLegs: opts.twoLegs ?? true,
         awayGoals: !!opts.awayGoals,
+        v: 2, // rules version: older saves move to the real rules on load (Sv.repair)
       },
       user: null,
       settings: FM.S?.settings || { theme: 'dark', speed: 1 },
@@ -1306,6 +1307,8 @@
   // full the moment it matters to you: relegated from the Premier League, League One is suddenly next door). Every
   // other league runs at its base tier from the data. Re-applied when you take a job, lose one, and after promotion
   // and relegation.
+  // The rules every career plays by: each competition's real ones (no world-rules choice at a new game)
+  W.REAL_RULES = { win: 3, subs: 5, reg: 'real', foreignLimit: 99, twoLegs: true, awayGoals: false };
   W.applySimFocus = function () {
     const S = FM.S,
       uc = W.employed() && W.userClub(),

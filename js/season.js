@@ -435,12 +435,12 @@
   Sea.bookCamp = function (idx, key) {
     FM.S.user.preseason[idx] = { type: 'camp', key };
   };
-  Sea.runCamp = function (key) {
+  Sea.runCamp = function (key, paid) {
     const S = FM.S,
       c = W.userClub(),
       camp = D.CAMPS[key],
       sq = W.squad(c.id);
-    c.balance -= camp.cost;
+    if (!paid) c.balance -= camp.cost; // (the board pay for one they agreed to)
     if (key === 'fitness')
       sq.forEach((p) => {
         p.fitness = 100;
@@ -528,92 +528,19 @@
     );
   };
 
+  // The board's demands for the season (FM.Board), with progress. Until three league games are played nothing
+  // counts as achieved yet (⏳).
   Sea.objectives = function (club = W.userClub()) {
-    const comp = FM.S.comps[club.comp],
-      exp = Sea.expectedPos(club),
-      n = comp.clubs.length;
-    const out = [],
-      R = comp.rules,
-      rel = R.relegate ? R.relegate.n : 0;
-    if (!R.promote) {
-      if (exp <= 1) out.push({ id: 'pos', text: `Win ${comp.name}`, target: 1 });
-      else if (exp <= 3) out.push({ id: 'pos', text: 'Finish in the top 3', target: 3 });
-      else if (exp <= Math.ceil(n / 2))
-        out.push({ id: 'pos', text: 'Finish in the top half', target: Math.ceil(n / 2) });
-      else if (rel) out.push({ id: 'pos', text: 'Avoid relegation', target: n - rel });
-      else out.push({ id: 'pos', text: 'Avoid finishing bottom', target: n - 1 });
-    } else {
-      if (exp <= 2) out.push({ id: 'pos', text: 'Win promotion', target: 2, promo: true });
-      else if (exp <= R.promote.playoff[1])
-        out.push({ id: 'pos', text: 'Reach the playoffs', target: R.promote.playoff[1] });
-      else if (rel && exp > n - rel) out.push({ id: 'pos', text: 'Avoid relegation', target: n - rel });
-      else out.push({ id: 'pos', text: 'Finish in the top half', target: Math.ceil(n / 2) + 1 });
-    }
-    const idObj = {
-      youth: { id: 'youth', text: 'Give 3 academy graduates 5+ appearances' },
-      fan: { id: 'goals', text: 'Play attacking football — 1.6+ goals per game' },
-      selling: { id: 'profit', text: 'Make a net transfer profit' },
-      oil: { id: 'goals', text: 'Dominate — 2+ goals per game' },
-      giant: { id: 'derby', text: "Don't lose the derby" },
-      fallen: { id: 'pos2', text: 'Show the club is rising again' },
-      historic: { id: 'derby', text: "Don't lose the derby" },
-    }[club.identity];
-    if (idObj) out.push(idObj);
-    const cc = W.continentals().find((c) => c.clubs.includes(club.id));
-    if (cc) out.push({ id: 'cc', text: `Reach the ${cc.name} semi-finals`, cc: cc.id });
-    return out.map((o) => ({ ...o, ...Sea.objProgress(o, club) }));
+    return FM.Board.list(club).map((o) => ({ ...o, ...Sea.objProgress(o, club) }));
   };
-  // Progress on a board objective. Until three league games are played nothing counts as achieved yet (⏳).
   Sea.objProgress = function (o, club) {
-    const r = objProgressRaw(o, club);
+    const r = FM.Board.progress(o, club);
     const played = club.comp ? Sea.gamesPlayed(club.id) : 1;
     if (played < 3 && r.ok) r.ok = false;
+    if (played < 3 && r.minOk) r.minOk = false;
     if (!played && (o.id === 'pos' || o.id === 'pos2'))
       r.status = o.id === 'pos2' ? `— (board expects ${U.ordinal(Sea.expectedPos(club))})` : '—';
     return r;
-  };
-  const objProgressRaw = function (o, club) {
-    const S = FM.S,
-      row = S.comps[club.comp].table[club.id],
-      pos = W.position(club.id);
-    if (o.id === 'pos') return { ok: pos <= o.target, status: `Currently ${U.ordinal(pos)}` };
-    if (o.id === 'youth') {
-      const n = W.squad(club.id).filter((p) => p.youth === club.id && p.season.apps >= 5).length;
-      return { ok: n >= 3, status: `${n}/3 so far` };
-    }
-    if (o.id === 'goals') {
-      const t = club.identity === 'oil' ? 2 : 1.6,
-        gpg = row.p ? row.gf / row.p : 0;
-      return { ok: gpg >= t, status: `${gpg.toFixed(2)} per game` };
-    }
-    if (o.id === 'profit') {
-      const n = S.seasonLog.net[club.id] || 0;
-      return { ok: n >= 0, status: `Net ${U.money(n)}` };
-    }
-    if (o.id === 'derby') {
-      const lost = FM.Cups.allFixtures().filter(
-        (f) =>
-          f.res &&
-          ((f.h === club.id && f.a === club.rival && f.res.hg < f.res.ag) ||
-            (f.a === club.id && f.h === club.rival && f.res.ag < f.res.hg)),
-      ).length;
-      return { ok: lost === 0, status: lost ? `Lost ${lost}` : 'Unbeaten' };
-    }
-    if (o.id === 'cc') {
-      const st = FM.Cups.status(club.id).find((x) => x.c.id === o.cc);
-      return {
-        ok:
-          !!st &&
-          (['Semi-finals', 'Final', 'Winners'].includes(st.text) ||
-            (st.text === 'Knocked out' && S.comps[o.cc].ko.sf.some((f) => f.h === club.id || f.a === club.id))),
-        status: st ? st.text : '',
-      };
-    }
-    if (o.id === 'pos2') {
-      const exp = Sea.expectedPos(club);
-      return { ok: pos <= exp, status: `${U.ordinal(pos)} (board expects ${U.ordinal(exp)})` };
-    }
-    return { ok: false, status: '' };
   };
 
   // Apply the user's finished match on its own, so the rest of the day can be simulated elsewhere
@@ -761,7 +688,7 @@
     const today = Sea.today();
     if (today && today.type === 'pre') {
       const plan = S.user.preseason[today.idx];
-      if (plan && plan.type === 'camp') Sea.runCamp(plan.key);
+      if (plan && plan.type === 'camp') Sea.runCamp(plan.key, plan.paid);
     }
     const fxs = Sea.dayFixtures();
     // Table before the round (taken earlier if our own result was applied ahead of the rest)
@@ -1348,15 +1275,12 @@
       if (x.winner === club.id) trophies.push(x.name);
     });
     const met = objs.filter((o) => o.ok || (o.promo && promoted)).length;
+    // places short of the board's minimum league finish (a sacking needs a big miss and a board out of patience)
     const primary = objs.find((o) => o.id === 'pos');
-    const primaryOk = primary && (primary.ok || (primary.promo && promoted));
-    const missBy = primary && !primaryOk ? userPos - primary.target : 0;
+    const missBy = primary && !(primary.ok || (primary.promo && promoted)) ? Math.max(0, userPos - primary.min) : 0;
+    // the board's verdict: each demand by its weight (the league aim and minimum count most), trophies, relegation
     club.boardConf = U.clamp(
-      club.boardConf +
-        (primaryOk ? 12 : -8 - missBy * 4) +
-        (met - 1) * 4 +
-        (trophies.length ? 20 : 0) -
-        (relegated ? 35 : 0),
+      club.boardConf + FM.Board.verdict(objs, promoted) + (trophies.length ? 20 : 0) - (relegated ? 35 : 0),
       0,
       100,
     );
@@ -1392,7 +1316,7 @@
       promoted,
       relegated,
       objs,
-      sacked: club.boardConf < 20 && (relegated || (!firstSeason && missBy >= 2)),
+      sacked: club.boardConf < 20 && (relegated || (!firstSeason && missBy >= 1)),
     };
 
     FM.People.seasonEnd(summary);
@@ -1475,6 +1399,7 @@
           });
           W.spell(p).to = S.year - 1;
           p.clubId = null;
+          p.team = undefined; // a free agent is in no youth side
           p.listed = false;
           if (S.user.tactic.lineup) S.user.tactic.lineup = S.user.tactic.lineup.map((x) => (x === p.id ? null : x));
         } else if (Sea.aiRenews(p, c)) {
@@ -1488,6 +1413,7 @@
         } else {
           W.spell(p).to = S.year - 1;
           p.clubId = null;
+          p.team = undefined; // a free agent is in no youth side
         }
       }
       W.refresh(p);
@@ -1507,6 +1433,7 @@
         const [p] = sq.splice(i, 1);
         W.spell(p).to = S.year - 1;
         p.clubId = null;
+        p.team = undefined; // a free agent is in no youth side
       }
     });
     // Unattached veterans: a decent one released at 31–33 looks for a club lower down rather than retiring on
@@ -1633,16 +1560,7 @@
     for (const c of Object.values(S.clubs))
       if (c.tactic && c.tactic.fam != null && !W.isUser(c.id)) c.tactic.fam = Math.round(c.tactic.fam * 0.75);
     W.refreshStaffPool();
-    // expectations for the new season
-    if (uc)
-      FM.News.add({
-        type: 'board',
-        title: `${Sea.seasonLabel()} — the board's expectations`,
-        body: Sea.objectives(uc)
-          .map((o) => '• ' + o.text)
-          .join('\n'),
-        clubId: uc.id,
-      });
+    // (the board's expectations come at the pre-season board meeting: FM.Board)
   };
 
   // Staff get older every summer; old AI managers retire, and long-forgotten staff records are cleared out

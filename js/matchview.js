@@ -918,7 +918,7 @@
     const won = me.goals > m.sides[1 - us].goals || (m.pens && m.pens[us] > m.pens[1 - us]);
     const lost = me.goals < m.sides[1 - us].goals || (m.pens && m.pens[us] < m.pens[1 - us]);
     MV.postTab = 'summary';
-    ov.innerHTML = `<div class="hero" style="--c1:${me.club.colors[0]};--c2:${won ? '#0b3d20' : lost ? '#3d0b10' : '#1b2533'};border-radius:0;margin:0;padding-top:18px">
+    ov.innerHTML = `<div class="hero" style="--c1:${U.heroShade(me.club.colors[0])};--c2:${U.heroShade(won ? '#0b3d20' : lost ? '#3d0b10' : '#1b2533')};border-radius:0;margin:0;padding-top:18px">
         <div class="tag center" style="display:block">${won ? 'VICTORY' : lost ? 'DEFEAT' : 'DRAW'} · FULL-TIME${m.derby ? ' · DERBY' : ''}</div>
         <div class="vs" style="margin:10px 0 6px"><div class="side">${C.crest(H.club, 48)}<span>${esc(H.club.name)}</span></div><div class="mid" style="font-size:46px">${H.goals}–${A.goals}</div><div class="side">${C.crest(A.club, 48)}<span>${esc(A.club.name)}</span></div></div>
         ${m.pens ? `<div class="center small b">Penalties ${m.pens[0]}–${m.pens[1]}</div>` : ''}

@@ -1128,7 +1128,7 @@
     FM.News.add({
       type: 'club',
       title: `Know your club: ${I.icon} ${I.label}`,
-      body: `${I.fans}\n\nThe fans sing ${c.chant}\nTradition: ${c.tradition}.${c.rival ? `\nThe big one: the ${c.derby} against ${S.clubs[c.rival].name}.` : ''}`,
+      body: `${I.fans}${c.rival ? `\n\nThe big one: the ${c.derby} against ${S.clubs[c.rival].name}.` : ''}`,
       clubId: c.id,
     });
     FM.News.add({
@@ -1197,24 +1197,8 @@
     }
     // Rule changes
     if (Math.random() < 0.45) {
+      // (the laws of the game themselves are each competition's real ones and don't change at random)
       const options = [
-        () => {
-          S.rules.subs = S.rules.subs === 5 ? 3 : 5;
-          return [
-            `Federation sets substitutions at ${S.rules.subs} per match`,
-            S.rules.subs === 3
-              ? 'A return to tradition. Squad depth matters less; stamina matters more.'
-              : 'Five subs are back. Deep squads benefit.',
-          ];
-        },
-        () => {
-          if (S.rules.reg === 'real' || S.rules.foreignLimit >= W.NO_LIMIT) return null; // real league rules, or you chose no limit: the federation leaves it be
-          S.rules.foreignLimit = U.pick([4, 5, 6, 8]);
-          return [
-            `New homegrown rule: max ${S.rules.foreignLimit} foreign players in a matchday squad`,
-            'Clubs scramble to promote academy talent.',
-          ];
-        },
         () => {
           const lg = U.pick(W.leagues().filter((l) => l.tier === 1));
           lg.tvBoost = (lg.tvBoost || 1) * 1.2;

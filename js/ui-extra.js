@@ -104,6 +104,7 @@
     c.balance -= pay;
     W.spell(p).to = S().year;
     p.clubId = null;
+    p.team = undefined; // a free agent is in no youth side
     p.contract = S().year;
     p.listed = false;
     if (S().user.tactic.lineup) S().user.tactic.lineup = S().user.tactic.lineup.map((x) => (x === p.id ? null : x));
@@ -491,8 +492,8 @@
       .join('');
     const objs = FM.Season.objectives(c);
     UI.sheet(
-      `<div class="hero" style="--c1:${c.colors[0]};--c2:${c.colors[1]}"><div class="tag">${FM.Season.seasonLabel()} preview · ${esc(pv.comp.name)}</div><div class="row" style="margin-top:10px"><div class="grow"><div class="small" style="opacity:.85">Predicted finish</div><div class="h1" style="font-size:54px">${U.ordinal(pv.pos)}</div></div>${C.crest(c, 60)}</div><div class="small" style="opacity:.92;margin-top:6px">“${esc(pv.verdict)}” — ${esc(pv.who)}</div><div class="tiny" style="opacity:.8;margin-top:4px">Your assistant's prediction. The board expects ${U.ordinal(FM.Season.expectedPos(c))}.</div></div>
-      <div class="card"><div class="h3">Board expects</div>${objs.map((o) => `<div class="small" style="margin-top:6px">• ${esc(o.text)}</div>`).join('')}</div>
+      `<div class="hero" style="--c1:${U.heroShade(c.colors[0])};--c2:${U.heroShade(c.colors[1])}"><div class="tag">${FM.Season.seasonLabel()} preview · ${esc(pv.comp.name)}</div><div class="row" style="margin-top:10px"><div class="grow"><div class="small" style="opacity:.85">Predicted finish</div><div class="h1" style="font-size:54px">${U.ordinal(pv.pos)}</div></div>${C.crest(c, 60)}</div><div class="small" style="opacity:.92;margin-top:6px">“${esc(pv.verdict)}” — ${esc(pv.who)}</div><div class="tiny" style="opacity:.8;margin-top:4px">Your assistant's prediction. The board expects ${U.ordinal(FM.Season.expectedPos(c))}.</div></div>
+      <div class="card"><div class="h3">Board expects</div>${objs.map((o) => `<div class="small" style="margin-top:6px">• ${esc(o.text)}${o.minText ? ` <span class="dim">(at least ${esc(o.minText)})</span>` : ''} <span class="tiny dim">· ${FM.Board.WEIGHT[o.weight || 'important'].label.toLowerCase()}</span></div>`).join('')}</div>
       <div class="card"><div class="h3">Title odds</div>${pv.odds.map((o) => `<div class="row small" style="padding:5px 0">${C.crest(CL(o.id), 18)}<span class="grow ${W.isUser(o.id) ? 'b' : ''}">${esc(CL(o.id).name)}</span><b>${o.odds}</b></div>`).join('')}</div>
       <div class="card"><div class="h3">Predicted table</div><table class="t" style="margin-top:6px">${pv.rows.map((r, i) => `<tr class="${W.isUser(r.id) ? 'me' : ''}"><td>${i + 1}</td><td class="l"><div class="row" style="gap:6px">${C.crest(CL(r.id), 16)}<span class="ellip">${esc(CL(r.id).name)}</span></div></td><td class="dim">${r.pts}</td></tr>`).join('')}</table><div class="tiny dim" style="margin-top:6px">Number = predicted points. Your assistant's read — a better assistant predicts more accurately.</div></div>
       <div class="card"><div class="h3" style="margin-bottom:8px">Pre-season best XI · ${pv.formation}</div><div class="tpitch">${dots}</div></div>
@@ -1402,7 +1403,7 @@
     const games = s.intlLog.filter((g) => g.h === t.id || g.a === t.id).slice(0, 8);
     const rank = FM.Intl.ranked().indexOf(t) + 1;
     UI.sheet(
-      `<div class="hero" style="--c1:${t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0]};--c2:#111"><div class="row"><div style="font-size:46px">${C.flag(t.code)}</div><div class="grow"><div class="h1">${esc(t.name)}</div><div class="small" style="opacity:.9">World ranking #${rank} · Elo ${t.elo} · ${esc(D.NATIONS[t.code].style)}</div></div>${UI.followBtn('nation', t.id, true)}</div>
+      `<div class="hero" style="--c1:${U.heroShade(t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0])};--c2:#111"><div class="row"><div style="font-size:46px">${C.flag(t.code)}</div><div class="grow"><div class="h1">${esc(t.name)}</div><div class="small" style="opacity:.9">World ranking #${rank} · Elo ${t.elo} · ${esc(D.NATIONS[t.code].style)}</div></div>${UI.followBtn('nation', t.id, true)}</div>
         ${
           Object.keys(t.titles).length
             ? `<div class="small" style="margin-top:8px">${Object.entries(t.titles)

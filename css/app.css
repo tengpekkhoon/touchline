@@ -37,7 +37,16 @@
   --acc: #1e7b34;
   --acc-ink: #ffffff;
   --acc2: #0077b6;
+  /* status colours deep enough to read on white (the dark theme's are tuned for a dark page) */
+  --good: #15803d;
+  --warn: #b45309;
+  --bad: #dc2626;
+  --gold: #b7791f;
   --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+:root[data-theme='light'] .fW,
+:root[data-theme='light'] .fL {
+  color: #fff;
 }
 * {
   box-sizing: border-box;

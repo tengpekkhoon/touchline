@@ -516,7 +516,6 @@
     club: null,
     q: '', // club picker search
     lg: 'all', // club picker league filter
-    rules: { win: 3, subs: 5, reg: 1, foreignLimit: W.NO_LIMIT, twoLegs: 1, awayGoals: 0 },
     slot: 1,
   };
   // A career needs a manager's name: flag the empty fields and say which (updates as you type once shown)
@@ -606,25 +605,12 @@
       body = `<div class="h1" style="margin-top:2vh">Pick your club</div><div class="tag">Every club has an identity. The board and fans will judge you by it.</div><div class="sp"></div>
         <div class="ng-find"><input type="search" id="ng-q" placeholder="Search club or city" value="${esc(NG.q)}" autocomplete="off"><select id="ng-lg"><option value="all">All leagues</option>${D.LEAGUE_CLUBS.map(([cid, , nat]) => `<option value="${cid}" ${NG.lg === cid ? 'selected' : ''}>${D.NATIONS[nat].flag} ${esc(D.LEAGUES.find((l) => l.id === cid).name)}</option>`).join('')}</select></div>
         <div id="ng-list">${UI._ngList()}</div>
-        <div class="actions ng-foot"><button class="btn sm" data-act="ngBack" aria-label="Back">←</button><button class="btn sm" data-act="ngRandom">🎲 Random</button><button class="btn sm" data-act="ngUnemployed">🧳 No club</button><button class="btn sm pri grow" data-act="ngNext" ${NG.club && NG.club !== 'none' ? '' : 'disabled'}>${NG.club && NG.club !== 'none' ? `${esc(D.allClubRows().find((r) => 'c_' + r[1] === NG.club)[0])} →` : 'World rules →'}</button></div>`;
+        <div class="actions ng-foot"><button class="btn sm" data-act="ngBack" aria-label="Back">←</button><button class="btn sm" data-act="ngRandom">🎲 Random</button><button class="btn sm" data-act="ngUnemployed">🧳 No club</button><button class="btn sm pri grow" data-act="ngNext" ${NG.club && NG.club !== 'none' ? '' : 'disabled'}>${NG.club && NG.club !== 'none' ? `${esc(D.allClubRows().find((r) => 'c_' + r[1] === NG.club)[0])} →` : 'Next →'}</button></div>`;
     } else {
-      const label = (k, v) => (k === 'foreignLimit' && v >= W.NO_LIMIT ? 'No limit' : v);
-      const seg = (k, vals, lbl) =>
-        `<div class="small" style="color:#9fb0c5;margin:16px 0 6px">${lbl}</div><div class="seg">${vals.map((v) => `<button class="${NG.rules[k] === v ? 'on' : ''}" data-act="ngRule" data-k="${k}" data-v="${v}">${label(k, v)}</button>`).join('')}</div>`;
-      const tog = (k, lbl, on, off) =>
-        `<div class="small" style="color:#9fb0c5;margin:16px 0 6px">${lbl}</div><div class="seg">${[
-          [1, on],
-          [0, off],
-        ]
-          .map(
-            ([v, l]) =>
-              `<button class="${NG.rules[k] === v ? 'on' : ''}" data-act="ngRule" data-k="${k}" data-v="${v}">${l}</button>`,
-          )
-          .join('')}</div>`;
-      body = `<div class="h1" style="margin-top:4vh">World rules</div><div class="tag">A taste of the World Editor. Change football before it begins.</div>
-        ${seg('win', [3, 2], 'Points for a win')}${seg('subs', [3, 5], 'Substitutions per match')}${tog('reg', 'Foreign players', "Each league's real rules", 'One rule for all')}${NG.rules.reg ? '<div class="tiny" style="color:#6f7f96;margin-top:6px;line-height:1.5">Homegrown quotas in England and Italy, non-EU limits in Spain, Italy and France, international slots in MLS, foreign-player caps in Brazil, Japan, Mexico and more.</div>' : seg('foreignLimit', [4, 6, 9, W.NO_LIMIT], 'Max foreign players in a matchday squad')}
-        ${tog('twoLegs', 'Continental knockouts and playoff semi-finals', 'Two legs', 'Single match')}${tog('awayGoals', 'Away goals rule (two-legged ties)', 'On', 'Off')}
-        <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">30 leagues in 27 nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One, the Segunda División, Serie A, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. Five continental cups feed a Club World Cup. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
+      // Your world: what's in it and the rules it plays by (each competition's real ones; not chosen here)
+      body = `<div class="h1" style="margin-top:4vh">Your world</div><div class="tag">Real football, played by its real rules.</div>
+        <div class="small" style="color:#c9d4e3;margin-top:16px;line-height:1.6">Three points for a win and five substitutions, as everywhere today. Each league's own foreign-player rules: homegrown quotas in England and Italy, non-EU limits in Spain, Italy and France, international slots in MLS, foreign-player caps in Brazil, Japan, Mexico and more. Continental knockouts and promotion play-off semi-finals over two legs, finals as one match, and no away-goals rule. Domestic cups are one-off ties, with extra time and penalties.</div>
+        <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">664 clubs in 36 leagues across 27 nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One and League Two, the Segunda División and Primera Federación, 2. and 3. Liga, Serie A and Serie B, Ligue 2, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. Seven continental cups, the Europa League and Copa Sudamericana among them, feed a Club World Cup. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
         ${NG.club === 'none' ? '<div class="small" style="color:#c8ff3d;margin-top:14px;line-height:1.5">🧳 You start out of work, with a modest reputation. Clubs in your range will make offers over the first weeks — the struggling ones first.</div>' : ''}
         <div class="actions"><button class="btn pri block" data-act="ngStart">${NG.club === 'none' ? 'Start career — no club yet 🧳' : 'Start career ⚽'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     }
@@ -727,22 +713,13 @@
     if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
     UI.toast('🎲 Fate has chosen…');
   };
-  UI.acts.ngRule = (d) => {
-    NG.rules[d.k] = +d.v;
-    UI.newCareer();
-  };
   UI.acts.ngStart = () => {
     $('#app').innerHTML =
       `<div class="title"><div class="logo" style="font-size:40px">Building<br>your world<span>…</span></div><div class="tag">Generating clubs, players, personalities and scouting networks.</div></div>`;
     setTimeout(() => {
       const theme = (FM.S && FM.S.settings) || { theme: document.documentElement.dataset.theme || 'dark', speed: 1 };
       FM.S = null;
-      W.newWorld({
-        ...NG.rules,
-        reg: NG.rules.reg === 0 ? null : 'real',
-        twoLegs: !!NG.rules.twoLegs,
-        awayGoals: !!NG.rules.awayGoals,
-      });
+      W.newWorld(W.REAL_RULES);
       FM.S.settings = theme;
       FM.Season.init();
       if (NG.club === 'none') {

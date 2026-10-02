@@ -586,7 +586,7 @@
             : '';
         })
         .join('')}`;
-    const html = `<div class="hero" style="--c1:${c.colors[0]};--c2:${c.colors[1]}"><div class="row">${C.crest(c, 58)}<div class="grow"><div class="h2">${esc(c.name)}</div><div class="small" style="opacity:.9;margin-top:4px">${C.flag(c.nat)} ${comp ? `${esc(comp.name)} · ${U.ordinal(W.position(id))}` : 'No league'}</div><div style="margin-top:8px"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0">${I.icon} ${I.label}</span> <span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0">Rep ${Math.round(c.rep)}</span> <span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0" title="Confidence from recent results">Form: ${FM.Season.confLabel(c)}</span></div></div></div></div>
+    const html = `<div class="hero" style="--c1:${U.heroShade(c.colors[0])};--c2:${U.heroShade(c.colors[1])}"><div class="row">${C.crest(c, 58)}<div class="grow"><div class="h2">${esc(c.name)}</div><div class="small" style="opacity:.9;margin-top:4px">${C.flag(c.nat)} ${comp ? `${esc(comp.name)} · ${U.ordinal(W.position(id))}` : 'No league'}</div><div style="margin-top:8px"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0">${I.icon} ${I.label}</span> <span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0">Rep ${Math.round(c.rep)}</span> <span class="pill" style="background:rgba(0,0,0,.3);color:#fff;border:0" title="Confidence from recent results">Form: ${FM.Season.confLabel(c)}</span></div></div></div></div>
       ${W.isUser(id) ? `<button class="btn block" style="margin-bottom:10px" data-act="clubGoMine">This is your club → Club tab</button>` : `<div class="row" style="margin-bottom:10px"><span class="grow"></span>${UI.followBtn('club', id)}</div>`}
       <div class="kpis"><div class="kpi"><div class="v">${row ? row.pts : '—'}</div><div class="l">Points</div></div><div class="kpi"><div class="v">${row ? `${row.w}-${row.d}-${row.l}` : '—'}</div><div class="l">W-D-L</div></div><div class="kpi"><div class="v">${avg || '—'}</div><div class="l">XI rating</div></div></div>
       <div class="card"><div class="row small"><span class="grow muted">Manager</span><b>${W.isUser(id) ? `${s.user.nat ? C.flag(s.user.nat) + ' ' : ''}${esc(s.user.name)}` : mgr ? `${C.flag(mgr.nat)} ${esc(mgr.fn + ' ' + mgr.ln)}` : '—'}</b></div>
@@ -769,42 +769,24 @@
   };
 
   // ======================= Boardroom =======================
+  // The boardroom: confidence, the four meetings of the season (when the next one is) and the board's own demand
   UI.boardroomCard = function () {
     const c = club(),
-      left = Pe.boardMeetingsLeft(),
-      ult = Pe.ultimatum();
+      B = FM.Board,
+      held = B.held(),
+      next = B.next(),
+      ult = Pe.ultimatum(),
+      b = S().user.board || {};
     const row = S().comps[c.comp].table[c.id];
-    return `<div class="card"><div class="row"><div class="h3 grow">🏛️ Boardroom</div><span class="tiny dim">${left} meeting${left === 1 ? '' : 's'} left this season</span></div>
+    const days = next && S().calendar ? Math.max(0, Math.floor(S().calendar.length * next.at) - S().day) : 0;
+    const open = S().news.find((n) => n.type === 'desk' && n.kind === 'board' && !n.resolved);
+    return `<div class="card"><div class="row"><div class="h3 grow">🏛️ Boardroom</div><span class="tiny dim">${held.length} of ${B.MEETINGS.length} meetings held</span></div>
       <div class="row small" style="margin-top:8px"><span style="width:90px" class="dim">Confidence</span><div class="grow">${C.bar(c.boardConf, C.moodColor(c.boardConf))}</div><b style="margin-left:8px">${Math.round(c.boardConf)}%</b></div>
       ${ult ? `<div class="warnline" style="margin-top:10px">⚠️ Ultimatum: ${ult.need} points from 5 league games. So far ${row.pts - ult.pts} from ${row.p - ult.from}.</div>` : ''}
-      <div class="col" style="gap:6px;margin-top:10px">${Object.entries(Pe.BOARD)
-        .map(
-          ([k, b]) =>
-            `<button class="btn sm block" style="text-align:left" data-act="${k === 'facility' ? 'boardFac' : 'board'}" data-k="${k}" ${left ? '' : 'disabled'}>${b.icon} ${esc(b.label)}</button>`,
-        )
-        .join('')}</div>
-      <div class="tiny dim" style="margin-top:8px">The board judge requests on confidence, finances and the club's identity. Asking for too much when things are going badly costs confidence.</div></div>`;
-  };
-  UI.acts.board = (d) => {
-    const r = Pe.boardRequest(d.k);
-    UI.toast(r.msg, 4200);
-    UI.save();
-    UI.render();
-  };
-  UI.acts.boardFac = () => {
-    const c = club(),
-      F = FM.Season.FAC;
-    UI.sheet(
-      `<div class="small muted" style="margin-bottom:10px">Which project should the owners pay for?</div>${['training', 'academy', 'medical', 'analytics', 'fanzone', 'stadium'].map((k) => `<button class="card row tap" style="width:100%;text-align:left" data-act="boardFacGo" data-k="${k}" ${c.facilities[k] >= 5 ? 'disabled' : ''}><span style="font-size:22px">${F[k].icon}</span><div class="grow"><div class="b small">${F[k].name} · level ${c.facilities[k]}</div><div class="tiny dim">${F[k].effect} · ${U.money(FM.Season.facCost(k, c.facilities[k]))}</div></div></button>`).join('')}`,
-      { title: 'Facility funding' },
-    );
-  };
-  UI.acts.boardFacGo = (d) => {
-    const r = Pe.boardRequest('facility', d.k);
-    UI.closeAllSheets();
-    UI.toast(r.msg, 4200);
-    UI.save();
-    UI.render();
+      ${b.agenda ? `<div class="warnline" style="margin-top:10px">📌 The board's demand: ${esc(b.agenda.text)}. They will check at the next meeting.</div>` : ''}
+      <div class="row" style="gap:6px;margin-top:10px">${B.MEETINGS.map((m) => `<span class="pill ${held.includes(m.k) ? 'good' : next && next.k === m.k ? 'acc' : ''}" title="${esc(m.label)}">${held.includes(m.k) ? '✓ ' : ''}${esc(m.label.replace(/ board (meeting|review)/, '').replace('Pre-season', 'Pre-season'))}</span>`).join('')}</div>
+      <div class="small muted" style="margin-top:8px">${open ? '🔔 A board meeting is waiting for you in the feed.' : next ? `Next: ${esc(next.label)}${days ? `, in about ${days} day${days === 1 ? '' : 's'}` : ', today'}.` : 'No more meetings this season.'}</div>
+      <div class="tiny dim" style="margin-top:8px">Four meetings a season. At each the board say how they see things, may make a demand of their own, and hear one request: they answer on confidence, money, recent form, your reputation and what you have asked before.</div></div>`;
   };
 
   // ======================= Manager: badges + national team =======================
@@ -851,7 +833,7 @@
     if (t) {
       const rank = FM.Intl.ranked().indexOf(t) + 1;
       const next = s.calendar.slice(s.day).findIndex((d) => d.type === 'intl' || d.type === 'tourn');
-      top += `<div class="hero" style="--c1:${t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0]};--c2:#111"><div class="row"><div style="font-size:44px">${C.flag(t.code)}</div><div class="grow"><div class="tag">Your national team</div><div class="h2" style="margin-top:4px">${esc(t.name)}</div><div class="small" style="opacity:.9">World #${rank} · Elo ${t.elo} · ${u.ntStats ? `${u.ntStats.w}W ${u.ntStats.d}D ${u.ntStats.l}L` : ''}</div></div></div>
+      top += `<div class="hero" style="--c1:${U.heroShade(t.colors[0] === '#FFFFFF' ? t.colors[1] : t.colors[0])};--c2:#111"><div class="row"><div style="font-size:44px">${C.flag(t.code)}</div><div class="grow"><div class="tag">Your national team</div><div class="h2" style="margin-top:4px">${esc(t.name)}</div><div class="small" style="opacity:.9">World #${rank} · Elo ${t.elo} · ${u.ntStats ? `${u.ntStats.w}W ${u.ntStats.d}D ${u.ntStats.l}L` : ''}</div></div></div>
         <div class="small" style="margin-top:8px;opacity:.9">${next >= 0 ? `Next international match in ${next} day${next === 1 ? '' : 's'}.` : 'No more internationals this season.'} ${t.picks ? `${t.picks.length} players hand-picked.` : 'Squad auto-picked (best available).'}</div>
         <div class="row" style="gap:8px;margin-top:12px"><button class="btn sm grow" data-act="ntSquad">👕 Squad & tactics</button><button class="btn sm grow danger" data-act="ntResign">Resign</button></div></div>`;
     } else {

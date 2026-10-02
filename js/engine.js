@@ -101,6 +101,8 @@
     return out;
   };
 
+  // How much of the passing goes through each slot (relative), for the on-the-ball part of match ratings
+  const PASS_SHARE = { GK: 0.3, CB: 1.1, FB: 1, WB: 1, DM: 1.4, CM: 1.4, AM: 1.1, W: 0.9, ST: 0.6 };
   // Who wins the ball back, by slot (relative): centre-backs and holding midfielders most, keepers never
   const DEF_SHARE = { GK: 0, CB: 3, FB: 2.2, WB: 2, DM: 3.2, CM: 2, AM: 0.9, W: 1, ST: 0.5 };
 
@@ -156,6 +158,9 @@
       this.agg = o.agg || null;
       this.awayGoals = !!o.awayGoals;
       this.live = !!o.live;
+      // Your match played without you (instant result, or a match you left): the same simulation, with your
+      // assistant taking the decisions you would take live — the tactical moments, substitutions, the half-time talk
+      this.assist = !o.live && !o.noAssist;
       const hc = FM.clubOf(o.h),
         ac = FM.clubOf(o.a);
       this.weather = o.weather || W.weatherFor(hc);
@@ -423,7 +428,12 @@
         this.finish();
         return { ev: 'FT', events: [] };
       }
-      if (tl.ev) return this.periodEvent(tl.ev);
+      if (tl.ev) {
+        const pe = this.periodEvent(tl.ev);
+        if (tl.ev === 'HT' && this.assist) this.assistantTalk();
+        return pe;
+      }
+      if (this.assist && tl.m > 1) this.assistantDecides(tl);
       const out = { tl, events: [], script: [] };
       const [H, A] = this.sides;
       const sH = this.strength(H),
@@ -598,10 +608,7 @@
         this.touch(sd, tp);
         const pf = sd.xi[from],
           pt = sd.xi[to];
-        if (pf) {
-          sd.rating[pf.id] += 0.012;
-          if (sd.ps[pf.id]) sd.ps[pf.id].pass++;
-        }
+        if (pf && sd.ps[pf.id]) sd.ps[pf.id].pass++; // (passing counts in ratings at full time, in every match)
         if (pt && sd.ps[pt.id]) sd.ps[pt.id].tch++;
       }
     }
@@ -1009,6 +1016,29 @@
       });
     }
 
+    // The assistant's call on a tactical moment (FM.Prompts): the staff's recommended option, which comes first;
+    // a substitution it calls for is made with the best fit on the bench
+    assistantDecides(tl) {
+      const sd = this.sides.find((s) => s.user);
+      if (!sd) return;
+      const pr = FM.Prompts.check(this);
+      const o = pr && pr.options && pr.options[0];
+      if (!o) return;
+      if (o.sub != null) {
+        if (o.sub >= 0 && sd.subsLeft) this.makeSub(sd, o.sub, null, tl);
+      } else if (o.apply) o.apply();
+    }
+    // Half-time: the assistant reads the score — praise when winning, demand more when losing, tweaks when level
+    assistantTalk() {
+      const sd = this.sides.find((s) => s.user);
+      if (!sd) return;
+      const pr = FM.Prompts.halftime(this),
+        diff = sd.goals - this.sides[1 - sd.idx].goals;
+      const pick = (label) => pr.options.find((x) => x.label === label);
+      const o =
+        (diff > 0 ? pick('Praise them') : diff < 0 ? pick('Demand more') : pick('Tactical tweaks')) || pr.options[0];
+      if (o && o.apply) o.apply();
+    }
     aiSubs(sd, tl) {
       if (!sd.subsLeft || !sd.subWindows) return;
       if (![60, 68, 76, 84].includes(tl.m)) return;
@@ -1119,12 +1149,23 @@
       this.sides.forEach((sd, k) => {
         const won = k ? aw : hw,
           lost = k ? hw : aw;
-        const conceded = this.sides[1 - k].goals;
+        const conceded = this.sides[1 - k].goals,
+          poss = this.result().poss;
         for (const pid in sd.on) {
           const p = FM.S.players[pid];
           const mins = (sd.off[pid] ?? endM) - sd.on[pid];
           sd.mins[pid] = Math.max(1, mins);
           let r = sd.rating[pid] + (won ? 0.3 : lost ? -0.2 : 0);
+          // on the ball: passes he would have played, from the team's possession, his position and minutes
+          const si = sd.xi.findIndex((q) => q && q.id === pid),
+            slotT = si >= 0 ? sd.slots[si].t : p.pos;
+          r +=
+            poss[k] *
+            0.28 *
+            (PASS_SHARE[slotT] ?? 1) *
+            (Math.min(90, mins) / 90) *
+            (0.7 + p.attrs.passing / 40) *
+            0.012;
           const slotI = sd.xi.findIndex((q) => q && q.id === pid);
           const t = slotI >= 0 ? sd.slots[slotI].t : p.pos;
           if (conceded === 0 && ['GK', 'CB', 'FB', 'WB'].includes(t) && mins > 60) r += 0.5;

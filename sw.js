@@ -29,6 +29,7 @@ const FILES = [
   './js/youth.js',
   './js/training.js',
   './js/analytics.js',
+  './js/board.js',
   './js/stories.js',
   './js/advice.js',
   './js/matchday.js',

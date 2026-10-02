@@ -668,6 +668,7 @@
       if (!p || Math.random() < 0.5) continue;
       W.spell(p).to = S.year;
       p.clubId = null;
+      p.team = undefined; // a free agent is in no youth side
       p.listed = false;
       p.freeSince = FM.Season.dayIndex();
     }

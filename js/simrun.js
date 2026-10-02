@@ -26,6 +26,7 @@
     'youth',
     'training',
     'analytics',
+    'board',
     'stories',
     'advice',
     'matchday',

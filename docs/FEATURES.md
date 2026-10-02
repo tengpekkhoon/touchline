@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-225 features are playable in the web prototype today. Build = the build that added it.
+229 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -38,7 +38,7 @@ Every feature from the game design document, with what is playable in the protot
 | Transfers | Free agents signable any time with a signing-on bonus | Prototype 3 |
 | Youth | Academy intakes shaped by nation and facility | Prototype 1 |
 | Youth | Development by age, training, coaching, minutes, personality | Prototype 1 |
-| Club | Club identities, fan culture, chants, derbies, board objectives | Prototype 1 |
+| Club | Club identities, fan culture, derbies, board objectives | Prototype 1 |
 | Club | Facility upgrades that take weeks and cost money | Prototype 1 |
 | Club | Finances: gate, TV, sponsorship, wages, prize money | Prototype 1 |
 | Club | Staff hire and fire with ability effects; vacant roles | Prototype 3 |
@@ -55,7 +55,7 @@ Every feature from the game design document, with what is playable in the protot
 | Stories | Shareable Instagram-style story cards (PNG export) | Prototype 1 |
 | Legacy | Hall of Fame, Football Archive, legends returning as managers | Prototype 1 |
 | Career | Manager reputation, identity tags, sacking and job offers | Prototype 1 |
-| Setup | New career with world rules and a random-club option | Prototype 3 |
+| Setup | New career with a random-club option; every career plays by each competition's real rules | Prototype 3 |
 | UX | Mobile-first swipe UI, dark and light themes, 3 save slots | Prototype 1 |
 | Match | Fluid motion: pace-limited movement, off-the-ball runs, dribbles, lofted passes, keeper dives, celebrations | Prototype 4 |
 | Club | Board confidence tied to expectations; objectives scale with each club | Prototype 4 |
@@ -232,6 +232,10 @@ Every feature from the game design document, with what is playable in the protot
 | Feed | Followed news in the Following feed, never My Club; your boyhood club counts as followed | Playtest round 3 |
 | Match | Tackles and interceptions in every match, about 25 a team, each adding to the player's match rating | Playtest round 3 |
 | Match | Passing and shape that follow your tactics: playing out from the back, recycling possession, going long, breaking fast, wing play; width, compact blocks, high presses | Playtest round 3 |
+| Club | Board demands each season: a league aim and a minimum, cup targets that fit the club, finances and identity, each critical, important or a bonus, judged by weight at the season's end | Playtest round 5 |
+| Club | Four board meetings a season: the board's view and its own demands, then one request from ten, answered on confidence, money, form, reputation and what you asked before | Playtest round 5 |
+| Match | Instant results play the same simulation as live matches, with your assistant taking the decisions (tactical moments, substitutions, the half-time talk); match ratings count passing in every match | Playtest round 5 |
+| UI | Club banners and the light theme readable: light kit colours shaded for white text, deeper status colours on white | Playtest round 5 |
 | Season | A half-played matchday (left on the full-time screen) is finished as the save loads | Playtest round 4 |
 | Tactics | Auto pick prefers natural and accomplished players over improvised ones | Playtest round 4 |
 | UI | "Next match" says why it stopped and opens the Needs reply list | Playtest round 4 |

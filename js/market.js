@@ -145,7 +145,9 @@
           ? loanChoice
           : n.kind === 'pre'
             ? preChoice
-            : () => ({ msg: '' })
+            : n.kind === 'board'
+              ? (nn, k) => FM.Board.answer(nn, k)
+              : () => ({ msg: '' })
     )(n, ch.k, p);
     n.reply = r.msg;
     return r;

@@ -84,7 +84,11 @@
   Y.hasYouth = (c) => c && (c.sim === 'full' || c.sim === 'light') && !c.parent;
   // AI clubs (and yours, until you choose) put young players outside the first-team squad in the youth sides
   Y.assign = function (c, force) {
-    if (!Y.hasYouth(c)) return;
+    if (!Y.hasYouth(c)) {
+      // no youth sides here (a club that was fully simulated while you managed it keeps no youth tags)
+      for (const p of W.squad(c.id)) if (p.team) p.team = undefined;
+      return;
+    }
     const mine = W.isUser(c.id) && !force; // your club: only players you haven't placed yourself
     const sq = W.squad(c.id).filter((p) => !p.loan),
       top = new Set(
@@ -95,7 +99,7 @@
           .map((p) => p.id),
       );
     for (const p of sq) {
-      if (mine && p.teamSet) continue;
+      if (mine && p.teamSet && W.age(p) <= 21) continue; // (too old for the U21s: back to the first team)
       const a = W.age(p);
       p.team = top.has(p.id) || a > 21 ? undefined : a <= 18 ? 'u18' : 'u21';
     }

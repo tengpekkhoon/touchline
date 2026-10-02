@@ -84,6 +84,8 @@
   // Consistency fixes on every load: references to players who have since left or retired
   Sv.repair = function (s) {
     Sv.relink(s);
+    // every career plays by the real rules now (older saves could choose their own at the start)
+    if (s.rules && !s.rules.v && FM.W.REAL_RULES) Object.assign(s.rules, FM.W.REAL_RULES, { v: 2 });
     if (s.comps && FM.Cups) FM.Cups.ensureContinentals(s);
     const u = s.user,
       has = (id) => id && s.players[id] && !s.players[id].retired;

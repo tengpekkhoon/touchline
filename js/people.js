@@ -299,82 +299,7 @@
   };
 
   // ---------- Board ----------
-  Pe.boardMeetingsLeft = () => {
-    const b = u().board;
-    if (!b || b.year !== S().year) u().board = { year: S().year, meetings: 0 };
-    return Math.max(0, 2 - u().board.meetings);
-  };
-  Pe.BOARD = {
-    funds: { label: 'Ask for more transfer funds', icon: '💰' },
-    facility: { label: 'Ask the owners to fund a facility', icon: '🏗️' },
-    patience: { label: 'Ask for patience', icon: '⏳' },
-    youth: { label: 'Pitch a youth-first project', icon: '🌱' },
-  };
-  Pe.boardRequest = function (topic, facKey) {
-    const c = W.userClub(),
-      s = S();
-    if (!Pe.boardMeetingsLeft()) return { ok: false, msg: 'The chairman has no more time for you this season.' };
-    u().board.meetings++;
-    const conf = c.boardConf,
-      rich = c.identity === 'oil' ? 1.8 : c.identity === 'giant' ? 1.3 : c.identity === 'fan' ? 0.7 : 1;
-    let msg;
-    if (topic === 'funds') {
-      const R = Sea().revenuePotential(c);
-      if (conf >= 55 && c.balance > c.budget * 1.2) {
-        const add = U.roundMoney(Math.min(c.balance * 0.2, R * 0.12 * rich) * (conf >= 75 ? 1.3 : 1));
-        c.budget += add;
-        msg = `✅ Approved. The board release an extra ${U.money(add)} for transfers.`;
-      } else if (conf >= 45 && c.identity === 'oil') {
-        const add = U.roundMoney(R * 0.1);
-        c.budget += add;
-        c.balance += add;
-        msg = `✅ The owners inject ${U.money(add)} of fresh money.`;
-      } else {
-        if (conf < 45) c.boardConf = Math.max(0, conf - 3);
-        msg = `❌ Refused. "${c.balance < c.budget ? "The money simply isn't there." : 'Earn our trust first.'}"`;
-      }
-    } else if (topic === 'facility') {
-      const k = facKey || 'training',
-        lvl = c.facilities[k];
-      if (c.building) msg = '❌ "One project at a time — finish the current build first."';
-      else if (lvl >= 5) msg = '❌ That facility is already world-class.';
-      else if (conf >= 65 && (rich >= 1 || conf >= 80)) {
-        c.building = { k, weeks: Sea().facWeeks(k, lvl) };
-        msg = `✅ The owners will fund the ${Sea().FAC[k].name} upgrade (${U.money(Sea().facCost(k, lvl))}). Work starts now.`;
-      } else msg = `❌ "We can't justify that spending ${conf < 65 ? 'with results as they are' : 'right now'}."`;
-    } else if (topic === 'patience') {
-      if (conf < 45 && s.user.rep >= 55 && !u().board.patience) {
-        c.boardConf = Math.min(100, conf + 10);
-        u().board.patience = true;
-        msg = '✅ "We believe in the project. You have our backing — for now."';
-      } else if (conf >= 45) {
-        c.boardConf = Math.max(0, conf - 2);
-        msg = '🤨 "Patience? Nobody is questioning you. Yet."';
-      } else {
-        c.boardConf = Math.max(0, conf - 4);
-        msg = '❌ "Results will decide your future, not speeches."';
-      }
-    } else if (topic === 'youth') {
-      const grads = W.squad(c.id).filter((p) => p.youth === c.id && p.season.apps >= 3).length;
-      if (['youth', 'fan', 'selling'].includes(c.identity) || grads >= 3) {
-        c.boardConf = Math.min(100, conf + 4);
-        c.fanMood = Math.min(100, c.fanMood + 3);
-        if (c.facilities.academy < 5 && !c.building && conf >= 55) {
-          c.building = { k: 'academy', weeks: Sea().facWeeks('academy', c.facilities.academy) };
-          msg = '✅ The board love it — and will fund an academy upgrade.';
-        } else msg = '✅ The board love the vision. Confidence up.';
-      } else {
-        msg = '🤨 "Nice idea. But this club needs results now."';
-      }
-    }
-    FM.News.add({
-      type: 'board',
-      title: `Board meeting: ${Pe.BOARD[topic].label.toLowerCase()}`,
-      body: msg,
-      clubId: c.id,
-    });
-    return { ok: true, msg };
-  };
+  // (board meetings and requests: FM.Board, js/board.js)
   // Mid-season review; a struggling manager gets a 5-game ultimatum
   Pe.midSeason = function () {
     const s = S(),
@@ -504,7 +429,7 @@
     Pe.courseTick();
     if (!W.employed()) return; // everything below is about your club
     Pe.evalPromises(false);
-    if (cal && cal.type === 'league' && Sea().baseRound() >= 10) Pe.midSeason();
+    FM.Board.tick(); // the four board meetings (the mid-season review opens the winter one)
     if (cal && cal.type === 'league') Pe.contractReminder(Sea().gamesPlayed(W.userClub().id));
     // Star performers on modest wages ask for a raise
     if (cal && cal.type === 'league' && Math.random() < 0.08) {

@@ -351,7 +351,7 @@ if (W.employed()) {
   );
   check(
     wrongYouth.length === 0,
-    `${wrongYouth.length} players in youth sides who shouldn't be (e.g. ${wrongYouth[0] && wrongYouth[0].id})`,
+    `${wrongYouth.length} players in youth sides who shouldn't be (e.g. ${wrongYouth[0] && `${wrongYouth[0].id}: ${wrongYouth[0].team}, age ${W.age(wrongYouth[0])}, loan ${!!wrongYouth[0].loan}, club ${wrongYouth[0].clubId} (${FM.S.clubs[wrongYouth[0].clubId] && FM.S.clubs[wrongYouth[0].clubId].sim})`})`,
   );
   const b = FM.Youth.bTeamOf('c_RMA');
   check(b && FM.Youth.owner(b.id) === 'c_RMA', 'Real Madrid Castilla does not belong to Real Madrid');

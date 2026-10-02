@@ -108,6 +108,27 @@
         b = parseInt(c.substr(4, 2), 16);
       return (r * 299 + g * 587 + b * 114) / 1000 > 150 ? '#0b0f14' : '#ffffff';
     },
+    // A banner colour white text can sit on: a light kit colour (white, gold, sky blue) is darkened toward navy,
+    // keeping its hue, until white text reads clearly on it; dark colours are left as they are
+    heroShade(hex) {
+      const c = String(hex || '#1b2533').replace('#', '');
+      if (c.length < 6) return hex;
+      const v = [0, 2, 4].map((i) => parseInt(c.substr(i, 2), 16));
+      const lum = (v[0] * 299 + v[1] * 587 + v[2] * 114) / 1000;
+      if (lum <= 120) return hex;
+      const f = Math.min(0.75, (lum - 110) / (lum - 14)); // share of navy mixed in
+      const n = [14, 23, 38];
+      return (
+        '#' +
+        v
+          .map((x, i) =>
+            Math.round(x * (1 - f) + n[i] * f)
+              .toString(16)
+              .padStart(2, '0'),
+          )
+          .join('')
+      );
+    },
     // Grammar helpers
     plural: (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`,
   });

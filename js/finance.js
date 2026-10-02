@@ -98,8 +98,9 @@
     if (!uc) return;
     const r = F.wageRatio(uc),
       fp = (s.user.finPressure = s.user.finPressure || { year: s.year, cut: false, freeze: false });
-    if (fp.year !== s.year) Object.assign(fp, { year: s.year, cut: false, freeze: false });
-    if (r > F.LIMIT.cut && !fp.cut) {
+    if (fp.year !== s.year) Object.assign(fp, { year: s.year, cut: false, freeze: false, boost: 0 });
+    const boost = fp.boost || 0; // the board agreed to tolerate higher wages this season (a board meeting)
+    if (r > F.LIMIT.cut + boost && !fp.cut) {
       fp.cut = true;
       const before = uc.budget;
       uc.budget = U.roundMoney(uc.budget * 0.75);
@@ -110,7 +111,7 @@
         clubId: uc.id,
       });
     }
-    if (r > F.LIMIT.freeze && !fp.freeze) {
+    if (r > F.LIMIT.freeze + boost && !fp.freeze) {
       fp.freeze = true;
       FM.News.add({
         type: 'board',
@@ -119,7 +120,7 @@
         clubId: uc.id,
       });
     }
-    if (fp.freeze && r < F.LIMIT.freeze - 0.03) {
+    if (fp.freeze && r < F.LIMIT.freeze + boost - 0.03) {
       fp.freeze = false;
       FM.News.add({
         type: 'board',

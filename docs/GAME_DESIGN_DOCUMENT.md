@@ -203,7 +203,7 @@ No club is generic: each has an identity that sets board objectives, fan expecta
 
 **Identity archetypes:** youth-focused, selling club, fallen giant, oil-backed, fan-owned, historic rival.
 
-**Fan culture.** Each club has chants, traditions, supporter expectations, board politics and historical legends. Managing Dortmund should feel culturally different from managing Boca or Brighton.
+**Fan culture.** Each club has supporter expectations, board politics and historical legends. Managing Dortmund should feel culturally different from managing Boca or Brighton.
 
 | Club (example) | Fans expect |
 | --- | --- |
@@ -404,6 +404,6 @@ Four prototype builds, Alpha 1, the polish and small-features backlogs, mobile r
 | World and stories | 35 nations, living world, story feed, shareable cards, World News filters, rivalries that emerge and cool, managers who move between clubs, record-breaking news | Podcasts and richer press; historical eras; scenarios; Football World screen |
 | Legacy and career | Hall of Fame, Archive, legends as managers, reputation, job offers, start unemployed or play on after a sacking, coaching licences, national team jobs, all-time head-to-heads, team-talk record | Retired players as owners and pundits |
 | Platform | Installable offline web app, save upgrades, compressed backups, background simulation, native-app projects (Android, iOS) | Device builds, cloud saves |
-| Editor | Points, subs and foreign-player rules at new game | Full database and rules editor; database export/import and community sharing |
+| Editor | Every career plays by each competition's real rules | Full database and rules editor; database export/import and community sharing |
 
 **Open question:** real club names and likenesses need a licensing decision; the prototype now uses real club, league and competition names (with its own ratings) and fictional players.
