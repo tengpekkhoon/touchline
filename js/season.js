@@ -723,15 +723,14 @@
     Object.values(S.players).forEach((p) => {
       if (p.retired) return;
       // older legs recover more slowly between matches (so veterans get rested more often)
-      p.fitness = Math.min(
-        100,
-        p.fitness +
-          30 +
-          (p.attrs.stamina - 10) -
-          Math.max(0, W.age(p) - 29) * Sea.AGE_RECOVERY +
-          (recUser && W.isUser(p.clubId) ? recUser : 0) +
-          FM.Training.recK(p),
-      );
+      // (everyone recovers a little each day: very old legs with little stamina must not run down for ever)
+      const rec =
+        30 +
+        (p.attrs.stamina - 10) -
+        Math.max(0, W.age(p) - 29) * Sea.AGE_RECOVERY +
+        (recUser && W.isUser(p.clubId) ? recUser : 0) +
+        FM.Training.recK(p);
+      p.fitness = U.clamp(p.fitness + Math.max(5, rec), 0, 100);
       if (p.susp && !p.suspNew) p.susp--;
       delete p.suspNew;
     });
@@ -934,7 +933,7 @@
       now = Sea.dayIndex();
     const pool = Object.values(S.players).filter((p) => !p.clubId && !p.retired);
     if (!pool.length) return;
-    const clubs = Object.values(S.clubs).filter((c) => !W.isUser(c.id));
+    const clubs = Object.values(S.clubs).filter((c) => !W.isUserSide(c.id));
     const room = new Map(clubs.map((c) => [c.id, W.squadTarget(c) - W.squad(c.id).length])); // a real gap in the squad
     // Only a real squad gap gets filled (a club under its squad size, short in that position). In the window clubs
     // use transfers (T.fillGap) or free agents; once it has shut, a free agent is the only way to fill a gap.

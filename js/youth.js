@@ -38,9 +38,17 @@
         down = comp.rules && comp.rules.relegate && comp.rules.relegate.to;
       if (!down || !s.comps[down]) continue;
       const lower = s.comps[down];
+      // the best placed club still in the lower league (its table also lists the clubs just promoted out of it)
       const up = W.sortedTable(lower)
         .map((r) => r.id)
-        .find((id) => id !== b.id && Y.canGoUp(id, comp.id) && !out.some((m) => m[0] === id));
+        .find(
+          (id) =>
+            id !== b.id &&
+            s.clubs[id] &&
+            s.clubs[id].comp === down &&
+            Y.canGoUp(id, comp.id) &&
+            !out.some((m) => m[0] === id),
+        );
       if (!up) continue;
       out.push([b.id, comp.id, down], [up, down, comp.id]);
     }

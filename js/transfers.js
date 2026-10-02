@@ -142,7 +142,7 @@
     const clubs = Object.values(S.clubs).filter(
       (c) =>
         (c.sim === 'full' || c.sim === 'light') &&
-        !W.isUser(c.id) &&
+        !W.isUserSide(c.id) &&
         c.rep < uc.rep + 5 &&
         W.levelFor(c.rep) >= p.ca - 12 &&
         T.canRegister(c, p),
@@ -470,7 +470,9 @@
   // A daily quota in whole deals: share = the part of the day being played (deadline day runs hour by hour)
   const quota = (q) => Math.floor(q) + (Math.random() < q % 1 ? 1 : 0);
   T.aiTopFreeAgents = function (share = 1) {
-    const full = Object.values(FM.S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id));
+    const full = Object.values(FM.S.clubs).filter(
+      (c) => (c.sim === 'full' || c.sim === 'light') && !W.isUserSide(c.id),
+    );
     Object.values(FM.S.players)
       .filter((p) => !p.clubId && !p.retired && W.age(p) <= 33)
       .sort((a, b) => b.ca - a.ca)
@@ -485,7 +487,7 @@
   };
   T.aiWindow = function (share = 1) {
     const S = FM.S;
-    const full = Object.values(S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id));
+    const full = Object.values(S.clubs).filter((c) => (c.sim === 'full' || c.sim === 'light') && !W.isUserSide(c.id));
     const market = Object.values(S.players).filter(
       (p) =>
         !p.retired &&
@@ -586,7 +588,7 @@
             c.id !== v.clubId &&
             c.nat !== nationOf(v.clubId) &&
             (c.sim === 'minimal' || c.rep < S.clubs[v.clubId].rep - 5) &&
-            !W.isUser(c.id),
+            !W.isUserSide(c.id),
         );
         const d = dests.length && U.pick(dests);
         if (d && T.canRegister(d, v))
@@ -637,6 +639,7 @@
         .filter(
           (c) =>
             c.id !== parent.id &&
+            FM.Youth.owner(c.id) !== parent.id && // its own B team is a move within the club, not a loan
             c.rep < parent.rep - 3 &&
             k.ca <= W.levelFor(c.rep) + 12 &&
             W.squad(c.id).length < W.squadTarget(c) + 3 &&
@@ -687,7 +690,7 @@
     const bidders = Object.values(S.clubs).filter(
       (c) =>
         (c.sim === 'full' || c.sim === 'light') &&
-        !W.isUser(c.id) &&
+        !W.isUserSide(c.id) &&
         c.rep >= uc.rep - (target.listed ? 20 : 4) &&
         c.budget >= target.value * 0.8,
     );

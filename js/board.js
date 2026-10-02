@@ -280,8 +280,18 @@
   B.tick = function () {
     if (!W.employed()) return;
     const s = S(),
-      m = B.next();
-    if (!m || !s.calendar || s.day < Math.floor(s.calendar.length * m.at)) return;
+      b = board(),
+      club = W.userClub();
+    if (!s.calendar) return;
+    const due = (m) => s.day >= Math.floor(s.calendar.length * m.at);
+    // a new job (or the first day of a season): meetings already past for this club are skipped, so a manager who
+    // arrives mid-season meets the board once, at the latest meeting due, not at every one he missed
+    if (b.club !== club.id) {
+      b.club = club.id;
+      b.held = B.MEETINGS.filter((m, i) => B.MEETINGS[i + 1] && due(B.MEETINGS[i + 1])).map((m) => m.k);
+    }
+    const m = B.next();
+    if (!m || !due(m)) return;
     B.convene(m);
   };
   const form5 = (club) => {
@@ -517,8 +527,9 @@
             .find((o) => o.id === 'pos');
           if (pos && pos.target > 1) {
             const d = b.demands.list.find((o) => o.id === 'pos');
+            d.base = d.base || d.text;
             d.target = Math.max(1, d.target - 1);
-            d.text = `${d.text} — now top ${d.target}`;
+            d.text = d.target === 1 ? 'Win the league' : `${d.base} — now top ${d.target}`;
           }
           return say(
             `✅ The board back a statement signing: ${U.money(add)} more to spend. They will expect more in return.`,
@@ -552,11 +563,15 @@
         return say('❌ "Results will decide your future, not speeches."');
       }
       case 'camp': {
-        const plan = s.user.preseason || [];
-        const i = plan.findIndex((x) => !x || x.type !== 'friendly');
+        // a pre-season day still to come with no friendly booked (the plan is keyed by pre-season day)
+        const plan = (s.user.preseason = s.user.preseason || {});
+        const i = s.calendar.findIndex(
+          (c, d) => c.type === 'pre' && d >= s.day && !(plan[c.idx] && plan[c.idx].type === 'friendly'),
+        );
         if (md >= 0.45 && i >= 0) {
-          plan[i] = { type: 'camp', key: club.facilities.training <= 2 ? 'fitness' : 'tactical', paid: true };
-          return say(`✅ The board pay for a ${plan[i].key} camp on pre-season day ${i + 1}.`);
+          const idx = s.calendar[i].idx;
+          plan[idx] = { type: 'camp', key: club.facilities.training <= 2 ? 'fitness' : 'tactical', paid: true };
+          return say(`✅ The board pay for a ${plan[idx].key} camp on pre-season day ${idx + 1}.`);
         }
         return say('❌ "Pre-season is already planned and paid for."');
       }

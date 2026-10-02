@@ -461,6 +461,8 @@
   };
   W.spell = (p) => p.career.spells[p.career.spells.length - 1];
   // Your player: at your club or at your B team (whose players belong to you)
+  // Your club or your B team (whose wages you pay): never an AI buyer, borrower or bidder
+  W.isUserSide = (clubId) => W.isUser(clubId) || (!!FM.Youth && W.isUser(FM.Youth.owner(clubId)));
   W.ownPlayer = (p) => !!(p && p.clubId) && W.isUser(FM.Youth ? FM.Youth.owner(p.clubId) : p.clubId);
   // Move a player within a club family (a parent and its B team): no transfer, no new career spell
   W.moveWithin = function (p, clubId) {

@@ -69,6 +69,20 @@
     M.aiPreContracts();
     M.payDue();
     M.expire();
+    M.expireBids();
+  };
+  // A bid you don't answer lapses after a few days, and when the window shuts (clubs don't wait for ever)
+  M.BID_DAYS = 5;
+  M.expireBids = function () {
+    const s = S(),
+      open = FM.Season.windowOpen();
+    for (const n of s.news) {
+      if (n.type !== 'bid' || !n.data || n.data.status !== 'open') continue;
+      if (s.year > n.year || s.day - n.day >= M.BID_DAYS || !open) {
+        n.data.status = 'expired';
+        n.reply = open ? 'No answer came, so they moved on.' : 'The window closed before you answered.';
+      }
+    }
   };
 
   // What you still have in hand a few days before the deadline
@@ -613,7 +627,7 @@
       const ask = p.clubId ? FM.Transfers.askPrice(p) : 0;
       ids = U.shuffle(
         Object.values(s.clubs).filter((c) => {
-          if ((c.sim !== 'full' && c.sim !== 'light') || W.isUser(c.id) || c.id === p.clubId) return false;
+          if ((c.sim !== 'full' && c.sim !== 'light') || W.isUserSide(c.id) || c.id === p.clubId) return false;
           const lvl = W.levelFor(c.rep);
           if (p.ca < lvl - 6 || p.ca > lvl + 10 || c.budget < ask) return false;
           if (W.squad(c.id).length >= W.squadTarget(c) + 4) return false;
@@ -848,7 +862,7 @@
         const suitor = Object.values(s.clubs)
           .filter(
             (c) =>
-              (c.sim === 'full' || c.sim === 'light') && !W.isUser(c.id) && Math.abs(W.levelFor(c.rep) - p.ca) <= 8,
+              (c.sim === 'full' || c.sim === 'light') && !W.isUserSide(c.id) && Math.abs(W.levelFor(c.rep) - p.ca) <= 8,
           )
           .sort((a, b) => b.rep - a.rep)[0];
         if (!suitor) continue;
@@ -961,7 +975,7 @@
       parent = s.clubs[p.clubId],
       g = D.POS_GROUP[p.pos];
     const fits = Object.values(s.clubs).filter((c) => {
-      if ((c.sim !== 'full' && c.sim !== 'light') || c.id === p.clubId || W.isUser(c.id)) return false;
+      if ((c.sim !== 'full' && c.sim !== 'light') || c.id === p.clubId || W.isUserSide(c.id)) return false;
       if (c.rep >= parent.rep - 3) return false;
       const lvl = W.levelFor(c.rep);
       if (p.ca < lvl - 6 || p.ca > lvl + 10) return false;

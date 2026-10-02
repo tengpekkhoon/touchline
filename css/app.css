@@ -402,6 +402,7 @@ main::-webkit-scrollbar {
   border-radius: 14px;
   background: var(--card2);
   border: 1px solid var(--line2);
+  color: var(--ink); /* its own text colour: never the white of a banner it sits on */
   font-weight: 700;
   transition:
     transform 0.1s,
