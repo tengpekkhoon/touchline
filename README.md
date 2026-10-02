@@ -37,6 +37,19 @@ npm run test:regens
 Regen test: five academy intakes (plus the world's generated youngsters) aged year by year through the real development code, about 20 seconds. Reports career shapes with examples: prospects who deliver, flops (stalled, plateaued, burned out), one-season wonders, early primes (at their best by 18–19) and long primes (still at their best at 33–34), and checks each against an expected range; exits non-zero on failure. The rates live in `Sea.ARCS` (`js/careers.js`).
 
 ```bash
+npm run test:suite
+npm run test:long
+```
+
+Wider suite (`tools/suite.mjs`): a manager plays every match for three seasons (`test:long`: twenty, without the speed limits), and it checks speed (a league day, a pre-season day and a season against a budget; `--budget 2` for a slower machine), that every league table adds up, leagues keep their size and as many clubs go up as down, every full-simulation club can field a legal side all season, no club drifts into impossible debt or wealth, and the world keeps its size and shape. About two minutes a season. In the app, the developer panel has the matching UI smoke test: it opens every tab, sub-tab and a sample of sheets and reports what threw or showed a broken value.
+
+```bash
+npm run test:wonderkids
+```
+
+Wonderkid test: ten seeded seasons, following every prospect of 19 or under with a potential of 85+, against what real football shows (how many reach world class, stall or flop, and when the best peak).
+
+```bash
 npm run lint
 npm run format
 ```

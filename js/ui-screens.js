@@ -629,7 +629,7 @@
                 : squadView())
     );
   };
-  UI._sq = { sort: 'pos', filter: 'all', stat: false };
+  UI._sq = { sort: 'pos', filter: 'all', stat: false, alt: false };
   const SQ_SORT = {
     pos: ['Position', (a, b) => b.ca - a.ca],
     ca: ['Rating', (a, b) => b.ca - a.ca],
@@ -663,6 +663,10 @@
     const w = FM.Scouting.wordPct(pick.pct);
     const label = D.ATTR_LABEL[pick.k] || pick.k;
     return ` · <span style="${w.cls ? `color:var(--${w.cls})` : ''}">${esc(label)}: ${w.word.toLowerCase()}</span>`;
+  };
+  UI.acts.sqAlt = () => {
+    UI._sq.alt = !UI._sq.alt;
+    UI.render();
   };
   UI.acts.sqStat = () => {
     UI._sq.stat = !UI._sq.stat;
@@ -704,7 +708,7 @@
     const foreign = sq.filter((p) => p.nat !== club().nat).length;
     const expiring = sq.filter((p) => !p.loan && p.contract <= S().year).length;
     const extra = (p) =>
-      `${q.sort === 'wage' ? ` · ${U.money(p.wage)}/wk` : ''}${starters.has(p.id) ? ' · <span style="color:var(--acc)">XI</span>' : ''}${q.stat ? UI.standout(p) : ''}${p.form.length ? ' · ' + U.avg(p.form.slice(-5)).toFixed(1) + ' avg' : ''}`;
+      `${q.sort === 'wage' ? ` · ${U.money(p.wage)}/wk` : ''}${starters.has(p.id) ? ' · <span style="color:var(--acc)">XI</span>' : ''}${q.alt ? altLine(p) : ''}${q.stat ? UI.standout(p) : ''}${p.form.length ? ' · ' + U.avg(p.form.slice(-5)).toFixed(1) + ' avg' : ''}`;
     const list = sq.filter((p) => SQ_FILTER[q.filter][1](p, starters)).sort(SQ_SORT[q.sort][1]);
     const chipsRow = (act, cur, map) =>
       `<div class="chips noswipe">${Object.entries(map)
@@ -726,7 +730,7 @@
     return `<div class="row small dim" style="margin:0 2px 8px"><span>${sq.length} players</span><span>·</span><span>Wages ${U.money(U.sum(sq, (p) => p.wage))}/wk</span><span class="grow"></span><span>Foreign ${foreign}${FM.Reg.real() ? '' : ` (${W.foreignLimitText()} in squad)`}</span></div>${UI.regLine(club())}
       ${expiring ? `<button class="warnline tap" style="width:100%;text-align:left;border:0" data-act="sqFilter" data-v="expiring">⏳ ${expiring} contract${expiring === 1 ? '' : 's'} expire this season — unsigned players leave on a free. Show them ›</button>` : ''}
       <div class="small b dim" style="margin:4px 2px 0">SORT</div>${chipsRow('sqSort', q.sort, SQ_SORT)}<div class="small b dim" style="margin:0 2px">SHOW</div>${chipsRow('sqFilter', q.filter, SQ_FILTER)}
-      <div class="chips noswipe"><button class="chip ${q.stat ? 'on' : ''}" data-act="sqStat">Standout stat in words</button></div>
+      <div class="chips noswipe"><button class="chip ${q.stat ? 'on' : ''}" data-act="sqStat">Standout stat in words</button><button class="chip ${q.alt ? 'on' : ''}" data-act="sqAlt">Other positions</button></div>
       ${list.length ? body : '<div class="empty">No players match this filter.</div>'}`;
   }
   function academyView() {
@@ -1072,6 +1076,20 @@
     const alt = W.canPlay(p).map(([t, v]) => `${W.altLabel(p, t)}${v < 0.9 ? ' (learning)' : ''}`);
     return alt.length ? ` · also ${alt.join(', ')}` : '';
   };
+  // Every position he could be put in, how at home he is there in words and his overall in it (his own position and any
+  // he has learned cost nothing; the rest cost him). Positions under "awkward" are left out.
+  const positionsCard = (p, v, own) => {
+    if (p.pos === 'GK' || !(own || v.k >= 40)) return '';
+    const rows = W.positionTable(p, 0.5).filter((x) => x.t !== 'GK');
+    if (rows.length < 2) return '';
+    const cls = { natural: 'good', accomplished: 'good', competent: '', unconvincing: 'warn', awkward: 'bad' };
+    return `<div class="card"><div class="h3">Positions</div><div class="tiny dim" style="margin-bottom:4px">How at home he is in each position and his overall there${own ? '. Playing and training in a position raises it; a position left alone fades.' : ''}</div>${rows
+      .map(
+        (x) =>
+          `<div class="row small" style="padding:3px 0"><b style="width:44px">${esc(x.t === p.pos ? W.posLabel(p) : W.altLabel(p, x.t))}</b><span class="grow" style="${cls[x.fam] ? `color:var(--${cls[x.fam]})` : ''}">${x.fam}</span><b>${x.ovr}</b></div>`,
+      )
+      .join('')}</div>`;
+  };
   // Best and worst three stats against the other players in his position (FM.Scouting.peers)
   const peerCard = (p, v, own) => {
     if (!(own || v.k >= 40)) return '';
@@ -1178,7 +1196,7 @@
       ${own && p.traits.length ? `<div class="small dim" style="margin:-2px 2px 12px">${p.traits.map((t) => D.TRAITS[t].desc).join(' ')}</div>` : ''}
       ${report}
       <div class="card"><div class="row"><div class="h3 grow">Profile</div>${!own && v.k < 70 ? '<span class="pill warn">Approximate</span>' : ''}</div>${own || v.k >= 40 ? C.radar(p, !own && v.k < 70) : '<div class="lock">🔒 Profile hidden</div>'}${attrs()}</div>
-      ${own ? moodCard() : ''}${peerCard(p, v, own)}
+      ${own ? moodCard() : ''}${positionsCard(p, v, own)}${peerCard(p, v, own)}
       ${p.totw ? `<div class="card"><div class="row small"><span class="grow">Team of the week</span><b>${p.totwY && p.totwY[0] === S().year ? p.totwY[1] : 0} this season · ${p.totw} career</b></div></div>` : ''}<div class="card"><div class="row"><div class="h3 grow">Form</div><span class="small dim">last ${p.form.length}</span></div>
         <div class="row" style="align-items:flex-end;gap:5px;height:70px;margin-top:10px">${p.form.length ? p.form.map((r) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px"><div class="tiny b">${r.toFixed(1)}</div><div style="width:100%;border-radius:4px;height:${(r - 4) * 8}px;background:${r >= 7.5 ? 'var(--good)' : r >= 6.5 ? 'var(--acc2)' : 'var(--bad)'}"></div></div>`).join('') : '<div class="dim small">No appearances yet.</div>'}</div>
 </div>

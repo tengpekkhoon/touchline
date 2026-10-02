@@ -16,6 +16,8 @@
     "calibrate": "node tools/calibrate.mjs --seasons 3",
     "check:docs": "node tools/check-docs.mjs",
     "changelog": "node tools/changelog.mjs",
+    "test:suite": "node tools/suite.mjs --seasons 3",
+    "test:long": "node tools/suite.mjs --seasons 20 --skip-speed",
     "test:wonderkids": "node tools/wonderkids.mjs --seasons 10",
     "lint": "eslint .",
     "format": "prettier --write .",

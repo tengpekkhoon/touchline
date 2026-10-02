@@ -162,6 +162,90 @@
       };
     });
 
+  // ---------- UI smoke test ----------
+  // Opens every tab, every sub-tab on it and a sample of sheets (players of each kind, clubs, settings), and reports what
+  // threw or showed a broken value ("undefined", "NaN", "[object Object]"). Runs on a copy of the save.
+  const BROKEN = /\bundefined\b|\bNaN\b|\[object |\bInfinity\b/;
+  const lastSheet = () => [...document.querySelectorAll('.sheet-wrap')].pop() || document.body;
+  Dev.smoke = () =>
+    Dev.onCopy(async (s) => {
+      const problems = [];
+      let opened = 0;
+      const look = (what, el) => {
+        opened++;
+        const t = el ? el.innerText || '' : '';
+        if (!t.trim()) return problems.push(`${what}: nothing on screen`);
+        const m = what === 'sheet whatsNew' ? null : t.match(BROKEN); // (the changelog talks about bugs)
+        if (m) {
+          const at = t.indexOf(m[0]);
+          problems.push(`${what}: shows "${m[0]}" (…${t.slice(Math.max(0, at - 30), at + 20).replace(/\s+/g, ' ')}…)`);
+        }
+      };
+      const attempt = (what, fn) => {
+        try {
+          fn();
+        } catch (e) {
+          opened++;
+          problems.push(`${what}: ${e && e.message}`);
+        }
+      };
+      const main = () => document.getElementById('main');
+      for (const tab of Object.keys(UI.screens)) {
+        attempt(`tab ${tab}`, () => {
+          UI.go(tab);
+          look(`tab ${tab}`, main());
+        });
+        const subs = [...document.querySelectorAll('#main [data-act="sub"]')].map((b) => [b.dataset.k, b.dataset.v]);
+        for (const [k, v] of subs) {
+          attempt(`${tab} › ${k}=${v}`, () => {
+            UI.acts.sub({ k, v });
+            look(`${tab} › ${k}=${v}`, main());
+          });
+          await tick();
+        }
+      }
+      // sheets: your players of each kind, someone else's, a club of each size, and the standard sheets
+      const mine = W.squad(W.userClub().id),
+        others = Object.values(s.players).filter((p) => !p.retired && p.clubId && !W.ownPlayer(p));
+      const sample = [
+        mine.find((p) => p.pos === 'GK'),
+        mine.find((p) => p.pos !== 'GK'),
+        mine.find((p) => p.team),
+        mine.find((p) => p.inj),
+        others.find((p) => p.pos === 'GK'),
+        others[0],
+        others[others.length >> 1],
+        others.find((p) => W.age(p) <= 18),
+        others.find((p) => W.age(p) >= 35),
+        Object.values(s.players).find((p) => !p.clubId && !p.retired),
+      ].filter(Boolean);
+      for (const p of sample) {
+        attempt(`player ${p.id}`, () => {
+          UI.playerSheet(p.id);
+          look(`player ${W.name(p)} (${p.pos})`, lastSheet());
+          UI.closeAllSheets();
+        });
+        await tick();
+      }
+      const clubs = Object.values(s.clubs).sort((a, b) => b.rep - a.rep);
+      for (const c of [clubs[0], clubs[clubs.length >> 1], clubs[clubs.length - 1], W.userClub()]) {
+        attempt(`club ${c.name}`, () => {
+          UI.clubSheet(c.id);
+          look(`club ${c.name}`, lastSheet());
+          UI.closeAllSheets();
+        });
+        await tick();
+      }
+      for (const act of ['whatsNew', 'reportProblem', 'sendFeedback'])
+        attempt(`sheet ${act}`, () => {
+          UI.acts[act]({});
+          look(`sheet ${act}`, lastSheet());
+          UI.closeAllSheets();
+        });
+      UI.go('home');
+      return { opened, problems };
+    });
+
   // ---------- The panel ----------
   const lines = (rows) =>
     rows
@@ -190,6 +274,7 @@
         <button class="btn sm" data-act="devKids">🌱 Wonderkids</button>
         <button class="btn sm" data-act="devSpeed">⏱ Speed (5 days)</button>
         <button class="btn sm" data-act="devSeason">🏁 Play a season</button>
+        <button class="btn sm" data-act="devSmoke">🔎 UI smoke test</button>
       </div><div id="dev-out"></div>`,
       { title: '🛠 Developer tools', full: true },
     );
@@ -225,6 +310,22 @@
       );
     } catch (e) {
       show('Speed failed', `<div class="small">${esc(String(e.stack || e))}</div>`);
+    }
+  };
+  UI.acts.devSmoke = async () => {
+    show('UI smoke test', '<div class="small dim">Opening every screen…</div>');
+    await tick();
+    try {
+      const r = await Dev.smoke();
+      UI.acts.devPanel(); // (the sheets were closed to look at the rest)
+      show(
+        `UI smoke test: ${r.opened} screens, ${r.problems.length} problems`,
+        r.problems.length
+          ? lines(r.problems.map((x) => [x, '']))
+          : '<div class="small">Everything opened cleanly.</div>',
+      );
+    } catch (e) {
+      show('Smoke test failed', `<div class="small">${esc(String(e.stack || e))}</div>`);
     }
   };
   UI.acts.devSeason = async () => {

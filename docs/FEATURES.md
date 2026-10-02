@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-259 features are playable in the web prototype today. Build = the build that added it.
+260 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -264,6 +264,7 @@ Every feature from the game design document, with what is playable in the protot
 | Training | A training ground that caps development: a player who has outgrown it (set by its level and the club's standing) develops slowly until it is upgraded, with a notice saying so | Playtest round 8 |
 | Settings | What's new: the newest builds and what each added, read from the roadmap, in Settings | Playtest round 8 |
 | Scouting | Standout stat in words on squad and shortlist rows ("Finishing: outstanding"), against his position in his league; a switch on the squad list; blank until you know the player well enough | Playtest round 8 |
+| Players | Positions card on the profile: every position he could be put in, how at home he is there in words (natural, accomplished, competent, unconvincing, awkward) and his overall in it; an Other positions switch on the squad list | Playtest round 8 |
 | UI | Bottom bar: six equal columns, icons and labels on one line (International is Nations) | Playtest round 7 |
 | Players | Keeper profiles: keeper attribute groups and realistic outfield skills; clean sheets on the career line | Playtest round 6 |
 | Season | A half-played matchday (left on the full-time screen) is finished as the save loads | Playtest round 4 |
