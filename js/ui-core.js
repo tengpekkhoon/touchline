@@ -92,14 +92,18 @@
     const v = FM.Scouting.view(p);
     if (v.own) return String(Math.round(p.ca));
     if (!v.ca) return '?';
-    return v.ca[0] === v.ca[1] ? String(v.ca[0]) : `${v.ca[0]}–${v.ca[1]}`;
+    const lo = Math.round(v.ca[0]),
+      hi = Math.round(v.ca[1]);
+    return lo === hi ? String(lo) : `${lo}–${hi}`;
   };
   // Overall at each position he can play (his own first), when his attributes are known
   C.posOveralls = function (p) {
     if (p.pos === 'GK') return '';
-    const at = (t) => Math.round(W.calcCA(p, t) * (0.62 + 0.38 * W.fitAt(p, t)));
-    return [[W.posLabel(p), Math.round(p.ca)], ...W.canPlay(p).map(([t]) => [W.altLabel(p, t), at(t)])]
-      .map(([l, n]) => `${l} ${n}`)
+    return W.positionTable(p, 0.8)
+      .map(
+        (x) =>
+          `${x.t === p.pos ? W.posLabel(p) : W.altLabel(p, x.t)} ${x.ovr}${x.fam === 'natural' ? '' : ` (${x.fam})`}`,
+      )
       .join(' · ');
   };
   C.playerStars = function (p) {
@@ -184,7 +188,11 @@
       );
     if (p.loan && W.ownPlayer(p)) tags.push(`<span class="pill acc">Loan</span>`);
     const club = p.clubId ? FM.S.clubs[p.clubId] : null;
-    return `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${C.flag(p.nat)} ${esc(W.name(p))} ${tags.join(' ')}</div><div class="small dim ellip">${W.age(p)} yrs · ${own ? `${me} ${ml}` : club ? esc(club.name) : 'Free agent'}${extra}</div></div><div class="col" style="align-items:flex-end;gap:4px"><div class="row" style="gap:6px">${C.playerStars(p)}${own ? `<b class="carate" title="Current ability">${Math.round(p.ca)}</b>${Math.round(p.lastGrowth || 0) ? `<span class="tiny b" title="Change this season" style="color:${p.lastGrowth > 0 ? 'var(--good)' : 'var(--bad)'}">${p.lastGrowth > 0 ? '▲' : '▼'}${Math.abs(Math.round(p.lastGrowth))}</span>` : ''}` : ''}</div>${own ? C.fitTag(p.fitness) : ''}${right}</div></div>`;
+    // what is moving his mood, when it is moving it (the biggest reason, with its size)
+    const f = own && FM.People ? FM.People.moodFactors(p)[0] : null;
+    const why =
+      f && (Math.abs(f.d) >= 8 || p.morale <= 50) ? ` · ${esc(f.t)} (${f.d > 0 ? '+' : '−'}${Math.abs(f.d)})` : '';
+    return `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${C.flag(p.nat)} ${esc(W.name(p))} ${tags.join(' ')}</div><div class="small dim ellip">${W.age(p)} yrs · ${own ? `${me} ${ml}${why}` : club ? esc(club.name) : 'Free agent'}${extra}</div></div><div class="col" style="align-items:flex-end;gap:4px"><div class="row" style="gap:6px">${C.playerStars(p)}${own ? `<b class="carate" title="Current ability">${Math.round(p.ca)}</b>${Math.round(p.lastGrowth || 0) ? `<span class="tiny b" title="Change this season" style="color:${p.lastGrowth > 0 ? 'var(--good)' : 'var(--bad)'}">${p.lastGrowth > 0 ? '▲' : '▼'}${Math.abs(Math.round(p.lastGrowth))}</span>` : ''}` : ''}</div>${own ? C.fitTag(p.fitness) : ''}${right}</div></div>`;
   };
   C.heat = function (canvas, grid, cols = 12, rows = 8, color = [61, 200, 255]) {
     const ctx = canvas.getContext('2d'),
@@ -344,6 +352,62 @@
     }
   };
 
+  // Your club's colours as the app's accent (header ticks, buttons, highlights): the kit colour that reads best on the
+  // page (a pale one is darkened on the light theme, a dark one lightened on the dark theme), the more colourful of the
+  // two when both read, and white or black for a black-and-white club. Out of work or at the title screen: the default.
+  const rgb = (hex) => {
+    const c = hex.replace('#', '');
+    return [0, 2, 4].map((i) => parseInt(c.substr(i, 2), 16));
+  };
+  const relLum = (hex) => {
+    const [r, g, b] = rgb(hex).map((v) => {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const contrast = (a, b) => (Math.max(relLum(a), relLum(b)) + 0.05) / (Math.min(relLum(a), relLum(b)) + 0.05);
+  const toHex = (c) =>
+    '#' +
+    c
+      .map((v) =>
+        Math.round(U.clamp(v, 0, 255))
+          .toString(16)
+          .padStart(2, '0'),
+      )
+      .join('');
+  const mixTo = (hex, to, t) => toHex(rgb(hex).map((v, i) => v + (to[i] - v) * t));
+  UI.clubAccent = function (colors, theme) {
+    const bg = theme === 'light' ? '#eef1f6' : '#0a0e14',
+      toward = theme === 'light' ? [0, 0, 0] : [255, 255, 255];
+    const sat = (h) => Math.max(...rgb(h)) - Math.min(...rgb(h));
+    const ok = (h) => contrast(h, bg) >= 3;
+    const pool = colors.filter((h) => /^#[0-9a-f]{6}$/i.test(h));
+    if (!pool.length) return null;
+    // the more colourful kit colour that reads; else the most colourful one, brought into range
+    const reading = pool.filter(ok).sort((a, b) => sat(b) - sat(a));
+    let pick = reading[0] || pool.sort((a, b) => sat(b) - sat(a))[0];
+    // a colourless kit (white, black, grey): the end of the scale that reads on this page
+    if (sat(pick) < 40) pick = theme === 'light' ? '#111827' : '#f4f6fa';
+    for (let t = 0.1; contrast(pick, bg) < 4.5 && t <= 1; t += 0.1) pick = mixTo(pick, toward, 0.1);
+    return pick;
+  };
+  UI.applyClubTheme = function () {
+    const root = document.documentElement,
+      club = FM.S && FM.S.user && W.userClub();
+    const theme = root.dataset.theme || 'dark',
+      key = club ? `${club.id}|${theme}|${club.colors.join()}` : '';
+    if (UI._themeKey === key) return;
+    UI._themeKey = key;
+    const acc = club && UI.clubAccent(club.colors, theme);
+    if (!acc) {
+      root.style.removeProperty('--acc');
+      root.style.removeProperty('--acc-ink');
+    } else {
+      root.style.setProperty('--acc', acc);
+      root.style.setProperty('--acc-ink', U.ink(acc));
+    }
+  };
   UI.applyTheme = function () {
     const t =
       (FM.S && FM.S.settings && FM.S.settings.theme) ||
@@ -356,6 +420,7 @@
       })() ||
       'dark';
     document.documentElement.dataset.theme = t;
+    UI.applyClubTheme();
   };
 
   // ---------------- Shell ----------------
@@ -417,6 +482,7 @@
   UI.render = function (anim) {
     const S = FM.S,
       club = W.userClub();
+    UI.applyClubTheme();
     TABS.forEach(([k]) => $('#nav-' + k).classList.toggle('on', k === UI.tab));
     const unread = S.news.filter(FM.News.isOpen).length;
     $('#nav-home').querySelector('.badge')?.remove();
@@ -463,7 +529,7 @@
   // Out of work, only actions that make sense without a club run (anything club-bound — offers, talks, tactics,
   // old feed decisions — would reach for a club that isn't there). A whitelist fails safe: a toast, never a crash.
   const OUT_OF_WORK_OK =
-    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|warmPick|follow|leagueGo|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|roundupAll|currency|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqFilter)$/;
+    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|warmPick|follow|leagueGo|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|dev[A-Z]w*|reportProblem|sendReport|sendFeedback|sendFeedbackGo|whatsNew|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|roundupAll|currency|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqFilter)$/;
   // A club badge anywhere opens that club's overview, except where choosing the club is the point of the button,
   // and not during a match
   const CREST_KEEP = /^(ngClub|ngRandom|clubView|clubGoMine|takeJob)$/;
@@ -529,7 +595,7 @@
     const cont = slots.find((s) => s.n === last && s.m) || slots.find((s) => s.m);
     app.innerHTML = `<div class="title"><div class="pitchlines"></div>
       <div class="logo">TOUCH<br>LINE<span>.</span></div>
-      <div class="tag">The deepest football management experience built for mobile. Your club. Your stories. Your history.</div>
+      <div class="tag">${esc(D.HOOK)}</div>
       <div class="actions">
         ${cont ? `<button class="btn pri block" data-act="continue" data-n="${cont.n}">▶ Continue — ${esc(cont.m.club.name)} · ${cont.m.year}</button>` : ''}
         <button class="btn ${cont ? '' : 'pri'} block" data-act="newCareer">＋ New Career</button>
@@ -667,7 +733,7 @@
       // Your world: what's in it and the rules it plays by (each competition's real ones; not chosen here)
       body = `<div class="h1" style="margin-top:4vh">Your world</div><div class="tag">Real football, played by its real rules.</div>
         <div class="small" style="color:#c9d4e3;margin-top:16px;line-height:1.6">Three points for a win and five substitutions, as everywhere today. Each league's own foreign-player rules: homegrown quotas in England and Italy, non-EU limits in Spain, Italy and France, international slots in MLS, foreign-player caps in Brazil, Japan, Mexico and more. Continental knockouts and promotion play-off semi-finals over two legs, finals as one match, and no away-goals rule. Domestic cups are one-off ties, with extra time and penalties.</div>
-        <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">710 clubs in 40 leagues across 29 nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One and League Two, the Segunda División and Primera Federación, 2. and 3. Liga, Serie A and Serie B, Ligue 2, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Hungary, Ireland, Wales, Australia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. Ten continental cups, the Europa and Conference Leagues and Copa Sudamericana among them, feed a Club World Cup, and eleven domestic cups run alongside them. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
+        <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">${D.facts().clubs} clubs in ${D.facts().leagues} leagues across ${D.facts().nations} nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One and League Two, the Segunda División and Primera Federación, 2. and 3. Liga, Serie A and Serie B, Ligue 2, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Hungary, Ireland, Wales, Australia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. ${D.facts().continentalCups} continental cups, the Europa and Conference Leagues and Copa Sudamericana among them, feed a Club World Cup, and ${D.facts().domesticCups} domestic cups run alongside them. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
         ${NG.club === 'none' ? '<div class="small" style="color:#c8ff3d;margin-top:14px;line-height:1.5">🧳 You start out of work, with a modest reputation. Clubs in your range will make offers over the first weeks — the struggling ones first.</div>' : ''}
         <div class="actions"><button class="btn pri block" data-act="ngStart">${NG.club === 'none' ? 'Start career — no club yet 🧳' : 'Start career ⚽'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     }

@@ -22,7 +22,10 @@ fs.mkdirSync(path.join(DIST, 'css'), { recursive: true });
 
 // Script order comes from index.html; the simulation set from FM.SimRunner.SCRIPTS
 const html = rd('index.html');
-const order = [...html.matchAll(/<script src="js\/([\w-]+)\.js[^"]*"><\/script>/g)].map((m) => m[1]);
+// (js/devtools.js is the developer's panel: it stays out of every built version)
+const order = [...html.matchAll(/<script src="js\/([\w-]+)\.js[^"]*"><\/script>/g)]
+  .map((m) => m[1])
+  .filter((f) => f !== 'devtools');
 const SIM = rd('js/simrun.js')
   .match(/R\.SCRIPTS = \[([^\]]+)\]/)[1]
   .match(/'([^']+)'/g)

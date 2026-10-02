@@ -2148,6 +2148,32 @@
     US1: ['wins', 'gd', 'gf'], // MLS: wins first
     KR1: ['gf', 'gd'], // K League: goals scored before goal difference
   };
+  // The smallest stadium (capacity) each continental competition licenses for home games; a club below it plays them
+  // at a neutral ground until it is built up
+  FM.D.GROUND_MIN = {
+    CC: 8000,
+    EL: 5000,
+    UC: 4500,
+    CL: 10000,
+    SA: 8000,
+    AC: 8000,
+    A2: 5000,
+    AF: 5000,
+    AX: 5000,
+    NC: 8000,
+  };
+  // The headline numbers, counted from the data: the title screen, the world screen and the docs check
+  // (tools/check-docs.mjs) all read these, so they can't drift apart
+  FM.D.facts = () => ({
+    clubs: FM.D.LEAGUES.reduce((n, l) => n + FM.D[l.clubs].length, 0),
+    leagues: FM.D.LEAGUES.length,
+    nations: new Set(FM.D.LEAGUES.map((l) => l.nat)).size,
+    nationalTeams: Object.keys(FM.D.NATIONS).length,
+    domesticCups: FM.D.DOMESTIC_CUPS.length,
+    continentalCups: FM.D.CONTINENTALS.length,
+  });
+  // The one line the title screen and the store page lead with
+  FM.D.HOOK = 'A living football world: every club has a story, and the world remembers yours.';
   // Domestic cups: single-leg knockouts for every club of the nation that is fully or lightly simulated
   // [id, nation, name, short, format]. Format, as in real life: legs = the rounds (by clubs left: 4 = semi-finals)
   // played over two legs, neutral = the rounds played at a neutral ground ('all' for every round). The rest are

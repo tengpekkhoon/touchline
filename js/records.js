@@ -20,6 +20,124 @@
     'May',
   ];
   R.MONTHS = MONTHS;
+
+  // ---------- Team of the Week ----------
+  // Every league round, the best XI from the match ratings: a 4-3-3 (a keeper, two centre-backs and two full-backs or
+  // wing-backs, three midfielders, a striker and two more forwards), each by his natural position, and the manager of the
+  // round (the biggest win). Ratings are noted as the matches are played (Records.noteRating, from the engine and the
+  // two simulation tiers), picked at the end of the day (Records.totwDay), and kept for the season in S.totw.
+  const DEF = new Set(['CB', 'FB', 'WB']),
+    MID = new Set(['DM', 'CM', 'WM', 'AM']),
+    ATT = new Set(['W', 'ST']);
+  R.noteRating = function (fx, p, r) {
+    const comp = S().comps[fx.comp];
+    if (!comp || comp.type !== 'league' || fx.ko || fx.leg) return;
+    const buf = (S().totwBuf = S().totwBuf || {});
+    (buf[fx.comp] = buf[fx.comp] || []).push({
+      id: p.id,
+      n: W.short(p),
+      pos: p.pos,
+      lab: W.posLabel(p),
+      c: p.clubId,
+      r,
+    });
+  };
+  // list: [{ id, n, pos, lab, c, r }] -> the XI in a 4-3-3, or null when there are too few players to make one
+  R.pickTeam = function (list) {
+    const used = new Set(),
+      xi = [];
+    const take = (pred, n) =>
+      list
+        .filter((x) => pred(x) && !used.has(x.id))
+        .sort((a, b) => b.r - a.r)
+        .slice(0, n)
+        .forEach((x) => (used.add(x.id), xi.push(x)));
+    take((x) => x.pos === 'GK', 1);
+    take((x) => x.pos === 'CB', 2);
+    // a left-back and a right-back (a full-back or wing-back each), the best on each flank
+    take((x) => (x.pos === 'FB' || x.pos === 'WB') && x.lab[0] === 'L', 1);
+    take((x) => (x.pos === 'FB' || x.pos === 'WB') && x.lab[0] === 'R', 1);
+    take((x) => DEF.has(x.pos), 4 - xi.filter((x) => DEF.has(x.pos)).length);
+    take((x) => MID.has(x.pos), 3);
+    take((x) => x.pos === 'ST', 1);
+    take((x) => ATT.has(x.pos), 3 - xi.filter((x) => ATT.has(x.pos)).length);
+    return xi.length >= 8 ? xi : null;
+  };
+  R.totwDay = function (cal, fxs) {
+    const s = S();
+    if (!s.totw || s.totw.year !== s.year) s.totw = { year: s.year, by: {} };
+    const buf = s.totwBuf || {},
+      user = W.userClub();
+    for (const compId of Object.keys(buf)) {
+      const comp = s.comps[compId],
+        xi = comp && R.pickTeam(buf[compId]);
+      if (!xi) continue;
+      // manager of the round: the biggest win (then the stronger opponent beaten)
+      let mgr = null,
+        bestKey = -1;
+      for (const fx of fxs || []) {
+        if (fx.comp !== compId || !fx.res || fx.ko || fx.leg) continue;
+        const d = fx.res.hg - fx.res.ag;
+        if (!d) continue;
+        const w = d > 0 ? fx.h : fx.a,
+          l = d > 0 ? fx.a : fx.h,
+          key = Math.abs(d) * 100 + (s.clubs[l] ? s.clubs[l].rep : 0);
+        if (key > bestKey) {
+          bestKey = key;
+          mgr = w;
+        }
+      }
+      const round = W.roundOn(comp, cal.round) + 1;
+      const entry = {
+        n: round,
+        xi: xi.map((x) => ({ id: x.id, n: x.n, pos: x.pos, lab: x.lab, c: x.c, r: Math.round(x.r * 10) / 10 })),
+        mgr,
+      };
+      (s.totw.by[compId] = s.totw.by[compId] || []).push(entry);
+      for (const x of xi) {
+        const p = s.players[x.id];
+        if (!p) continue;
+        p.totw = (p.totw || 0) + 1;
+        p.totwY = p.totwY && p.totwY[0] === s.year ? [s.year, p.totwY[1] + 1] : [s.year, 1];
+      }
+      // the feed: your league's team of the week, and a line of its own when one of your players is in it
+      if (user && user.comp === compId && !(s.settings || {}).noDigest) {
+        const mine = xi.filter((x) => s.players[x.id] && W.ownPlayer(s.players[x.id]));
+        FM.News.add({
+          type: mine.length ? 'club' : 'world',
+          title: `Team of the week · ${comp.short} matchday ${round}`,
+          body:
+            xi.map((x) => `${x.lab} ${x.n} (${(s.clubs[x.c] || {}).short || '?'}) ${x.r.toFixed(1)}`).join('\n') +
+            (mgr && s.clubs[mgr] ? `\nManager of the week: ${s.clubs[mgr].name}` : '') +
+            (mine.length ? `\n${mine.map((x) => x.n).join(', ')} ${mine.length > 1 ? 'are' : 'is'} yours.` : ''),
+          clubId: mine.length ? user.id : undefined,
+        });
+      }
+    }
+    s.totwBuf = {};
+  };
+  // Team of the season so far (or at its end): by average rating, for players with a fair share of the games
+  R.toty = function (compId) {
+    const s = S(),
+      comp = s.comps[compId];
+    if (!comp || !comp.table) return null;
+    const games = Math.max(0, ...Object.values(comp.table).map((r) => r.p)),
+      min = Math.max(4, Math.round(games * 0.45));
+    const list = [];
+    for (const id of comp.clubs)
+      for (const p of W.squad(id))
+        if (p.season.apps >= min)
+          list.push({
+            id: p.id,
+            n: W.short(p),
+            pos: p.pos,
+            lab: W.posLabel(p),
+            c: p.clubId,
+            r: Math.round((p.season.rsum / p.season.apps) * 100) / 100,
+          });
+    const xi = R.pickTeam(list);
+    return xi && xi.map((x) => ({ id: x.id, n: x.n, pos: x.pos, lab: x.lab, c: x.c, r: x.r }));
+  };
   // The world transfer record starts from history: a fee above anything the current market has paid,
   // so the first seasons' big deals don't all "break" it
   const seedWorld = () => {

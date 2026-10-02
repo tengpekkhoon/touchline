@@ -302,6 +302,7 @@
         if (sp && sp.c === sd.club.id) sp.apps++;
         p.form.push(r);
         p.form = p.form.slice(-10);
+        FM.Records.noteRating(fx, p, r);
         p.fitness = Math.round(sd.st[pid] ?? p.fitness);
         p.morale = U.clamp(
           p.morale + (won ? 4 : lost ? -4 * (pid === sd.capt ? 1 : calm) : 0) + (r >= 7.5 ? 3 : r < 5.8 ? -3 : 0),
@@ -432,6 +433,19 @@
   // "accomplished" (p.alt, read by W.fitAt). Whoever finished the match in each slot learns it.
   Sea.LEARN = { step: 0.012, max: 0.95 };
   // The young pick a position up faster than the old, and a utility player (already comfortable in several) fastest
+  // A position he learned but has not played this season fades a little (down to how well his own position covers
+  // it), and is gone if he never goes back
+  Sea.rustPositions = function (p) {
+    if (!p.alt) return;
+    for (const t of Object.keys(p.alt)) {
+      if (!p.altY || !p.altY[t] || p.altY[t] >= FM.S.year - 1) continue; // a position from the start, or played last season (this runs as the new year starts)
+      const base = (D.FIT[p.pos] || {})[t] || 0;
+      const v = Math.round((p.alt[t] - 0.03) * 1000) / 1000;
+      if (v <= base + 0.01) delete p.alt[t];
+      else p.alt[t] = v;
+    }
+    if (!Object.keys(p.alt).length) delete p.alt;
+  };
   Sea.learnRate = (p) => {
     const a = W.age(p),
       known = Object.values(p.alt || {}).filter((v) => v >= 0.85).length;
@@ -449,6 +463,7 @@
         const step =
           Sea.LEARN.step * Sea.learnRate(p) * (sd.user && W.isUser(sd.club.id) ? FM.Staff.impact('coach').learn : 1);
         (p.alt = p.alt || {})[t] = Math.round(Math.min(Sea.LEARN.max, now + step) * 1000) / 1000;
+        (p.altY = p.altY || {})[t] = FM.S.year; // he played there this season: it stays sharp
       });
     }
   };
@@ -804,6 +819,7 @@
     if (snap && !(S.settings || {}).noDigest) FM.Matchday.digest(today, snap);
     if (today && today.type === 'league') {
       FM.Records.afterLeagueDay(today);
+      FM.Records.totwDay(today, fxs);
       FM.Youth.round(); // the U21 and U18 leagues play too
       FM.Training.leagueDay();
     }
@@ -830,7 +846,10 @@
     if (employed) Sea.ensureUserSquad(14);
     Sea.ensureKeepers();
     Sea.finances();
-    if (employed) Sea.userMorale();
+    if (employed) {
+      Sea.userMorale();
+      FM.People.staffDebate();
+    }
     if (S.day % 4 === 3) {
       const frac = 1 / Math.floor(S.calendar.length / 4);
       Object.values(S.players).forEach((p) => !p.retired && Sea.develop(p, frac));
@@ -1266,6 +1285,7 @@
         runnerUp: t[1].id,
         // the whole table, every club's record: the archive behind club histories
         table: t.map((r) => ({ id: r.id, p: r.p, w: r.w, d: r.d, l: r.l, gf: r.gf, ga: r.ga, pts: r.pts, gd: r.gd })),
+        toty: FM.Records.toty(comp.id), // the team of the season
         topScorer: top && { pid: top.id, name: W.name(top), club: top.clubId, goals: top.season.goals },
         poty: poty && {
           pid: poty.id,
@@ -1488,6 +1508,7 @@
       const rows = W.seasonRows(p, S.year - 1);
       if (rows.length) p.history = (p.history || []).concat(rows);
       delete p.splits;
+      Sea.rustPositions(p);
       p.season = W.blankSeason();
       p.flagMinutes = false;
       p.lastGrowth = 0;

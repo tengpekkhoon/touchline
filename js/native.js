@@ -39,7 +39,7 @@
     for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
     return btoa(s);
   };
-  // { blob | bytes, name, type, title }. Resolves to 'shared' | 'saved' | 'cancelled'.
+  // { blob | bytes, name, type, title, text? }. Resolves to 'shared' | 'saved' | 'cancelled'.
   N.shareFile = async function (o) {
     const blob = o.blob || new Blob([o.bytes], { type: o.type || 'application/octet-stream' });
     const F = plug('Filesystem'),
@@ -49,7 +49,7 @@
       await F.writeFile({ path: o.name, data: toBase64(bytes), directory: 'CACHE' });
       const { uri } = await F.getUri({ path: o.name, directory: 'CACHE' });
       try {
-        await Sh.share({ title: o.title, files: [uri], dialogTitle: o.title });
+        await Sh.share({ title: o.title, text: o.text, files: [uri], dialogTitle: o.title });
         return 'shared';
       } catch (e) {
         return 'cancelled';
@@ -58,7 +58,7 @@
     const file = new File([blob], o.name, { type: blob.type });
     try {
       if (o.preferShare !== false && navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], title: o.title });
+        await navigator.share({ files: [file], title: o.title, text: o.text });
         return 'shared';
       }
     } catch (e) {

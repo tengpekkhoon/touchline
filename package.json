@@ -14,6 +14,9 @@
     "android": "npm run cap:sync && npx cap open android",
     "ios": "npm run cap:sync && npx cap open ios",
     "calibrate": "node tools/calibrate.mjs --seasons 3",
+    "check:docs": "node tools/check-docs.mjs",
+    "changelog": "node tools/changelog.mjs",
+    "test:wonderkids": "node tools/wonderkids.mjs --seasons 10",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

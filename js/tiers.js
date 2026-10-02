@@ -99,6 +99,7 @@
         if (sp && sp.c === p.clubId) sp.apps++;
         p.form.push(r);
         p.form = p.form.slice(-10);
+        FM.Records.noteRating(fx, p, r);
       });
       for (let i = 0; i < gf; i++) {
         const sc = U.wpick(sq, (p) => (GOAL_W[p.pos] || 0.05) * (0.5 + p.attrs.finishing / 12));
@@ -171,6 +172,7 @@
         if (sp && sp.c === p.clubId) sp.apps++;
         p.form.push(rt);
         p.form = p.form.slice(-10);
+        FM.Records.noteRating(fx, p, rt);
         p.fitness = Math.max(55, p.fitness - (mins[p.id] >= 90 ? U.randi(18, 30) : 8));
         p.morale = U.clamp(p.morale + (gf > ga ? 3 : gf < ga ? -3 : 0), 0, 100);
         // Cards and knocks

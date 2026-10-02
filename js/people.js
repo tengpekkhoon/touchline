@@ -451,8 +451,166 @@
       }
     }
   };
+  // ---------- What is driving a player's mood ----------
+  // The biggest reasons he is happy or unhappy, each with its size (a rough guide to how far it moves him), worked out
+  // from where things stand: playing time against what he expects, the team's run, his own form, promises kept or broken,
+  // his contract and pay, injuries. Largest first.
+  Pe.moodFactors = function (p) {
+    const s = S(),
+      club = s.clubs[p.clubId];
+    if (!club) return [];
+    const out = [],
+      add = (k, d, t) => d && out.push({ k, d, t });
+    const games = FM.Season.gamesPlayed(p.clubId);
+    if (games >= 4 && !p.inj && !p.loan) {
+      const share = p.season.apps / games,
+        exp = FM.D.STATUS[FM.Contracts.expectedStatus(p, club)].share;
+      if (exp - share > 0.15)
+        add('time', -Math.round(Math.min(25, (exp - share) * 50)), 'Not getting the games he expects');
+      else if (share - exp >= 0.1)
+        add('time', Math.round(Math.min(10, (share - exp) * 20)), 'Playing as much as he wants');
+    }
+    const conf = club.conf || 0;
+    if (Math.abs(conf) >= 0.25)
+      add('team', Math.round(conf * 8), conf > 0 ? 'The team is on a good run' : 'The team is struggling');
+    if (p.form.length >= 4) {
+      const avg = U.avg(p.form.slice(-5));
+      const d = Math.round((avg - 6.6) * 5);
+      if (Math.abs(d) >= 2) add('form', d, d > 0 ? 'Playing well' : 'Out of form');
+    }
+    const prom = (u().promises || []).filter((x) => x.pid === p.id && (x.year ?? s.year) >= s.year - 1);
+    if (prom.some((x) => x.state === 'broken')) add('promise', -8, 'A promise to him was broken');
+    else if (prom.some((x) => x.state === 'kept')) add('promise', 5, 'You kept your word');
+    else if (prom.some((x) => x.state === 'open')) add('promise', 2, 'Waiting on your promise');
+    if (p.contract <= s.year && !p.pre) add('contract', -4, 'His contract is running down');
+    if (p.wage < W.wageFor(p) * 0.8) add('pay', -6, 'Underpaid for his level');
+    if (p.wantsOut) add('away', -10, 'He wants to leave');
+    if (p.inj && (p.inj.out || 0) >= 6) add('injury', -5, 'A long injury');
+    if (FM.Matchday.captainOf(club.id) === p) add('captain', 3, 'Captain of the club');
+    return out.sort((a, b) => Math.abs(b.d) - Math.abs(a.d)).slice(0, 5);
+  };
+
+  // ---------- Staff who disagree ----------
+  // Now and then two of your staff see a prospect differently: one says bring him into the first team, the other says
+  // another year in the youth side. You decide; at the season's end it shows who was right, and each keeps a record.
+  // How a personality leans on young players (Outspoken, Loyal and Pragmatic follow what they see)
+  const LEAN = { Ambitious: 1, Innovative: 1, Cautious: -1, 'Old-School': -1 };
+  const ROLE = { assistant: 'Assistant manager', coach: 'First-team coach', director: 'Sporting director' };
+  Pe.callRecord = (k) => {
+    const r = (u().staffCalls || {})[k];
+    return r && r.n ? `right ${r.right} of ${r.n} call${r.n > 1 ? 's' : ''}` : '';
+  };
+  const SAY_UP = [
+    "He's ready. Another year in the youth side won't teach him anything.",
+    'He trains like a first-teamer. Give him minutes.',
+    "The lad has outgrown the youth side. Don't hold him back.",
+  ];
+  const SAY_HOLD = [
+    'He needs another year. Rush him and we could lose him.',
+    "Not yet. He isn't strong enough for the first team.",
+    "He's got the talent but not the legs. Let him play against his own age.",
+  ];
+  Pe.staffDebate = function () {
+    const s = S(),
+      c = W.userClub();
+    if (!c || s.user.sacked || Math.random() > 0.04) return;
+    if (s.news.some((n) => n.type === 'desk' && n.kind === 'staff' && !n.resolved)) return;
+    const lvl = W.levelFor(c.rep),
+      done = new Set((u().debates || []).filter((d) => d.year === s.year).map((d) => d.pid));
+    const cands = W.squad(c.id).filter(
+      (p) => p.team && !p.loan && W.age(p) <= 21 && p.ca >= lvl - 18 && p.pa >= lvl - 6 && !done.has(p.id),
+    );
+    if (!cands.length) return;
+    const p = U.pick(cands),
+      ready = p.ca >= lvl - 10;
+    const voices = Object.keys(ROLE)
+      .map((k) => {
+        const st = FM.Staff.get(k);
+        if (st.vacant) return null;
+        const lean = LEAN[st.personality] || 0,
+          sees = Math.random() < 0.5 + st.ability / 40 ? ready : !ready;
+        return { k, st, says: lean > 0 ? true : lean < 0 ? false : sees };
+      })
+      .filter(Boolean);
+    const yes = voices.filter((v) => v.says),
+      no = voices.filter((v) => !v.says);
+    if (!yes.length || !no.length) return;
+    const a = U.pick(yes),
+      b = U.pick(no),
+      name = (v) => `${v.st.fn} ${v.st.ln}`;
+    const rec = (v) => (Pe.callRecord(v.k) ? ` (${Pe.callRecord(v.k)} so far)` : '');
+    (u().debates = u().debates || []).push({
+      pid: p.id,
+      year: s.year,
+      up: a.k,
+      hold: b.k,
+      ca0: p.ca,
+      choice: null,
+      judged: false,
+    });
+    FM.Market.desk({
+      kind: 'staff',
+      title: `${ROLE[a.k]} and ${ROLE[b.k].toLowerCase()} disagree over ${W.name(p)}`,
+      body: `${W.name(p)} (${W.age(p)}, ${W.posLabel(p)}) is in your ${p.team === 'u18' ? 'U18' : 'U21'} side.\n\n${name(a)}, ${ROLE[a.k].toLowerCase()}${rec(a)}: "${U.pick(SAY_UP)}"\n\n${name(b)}, ${ROLE[b.k].toLowerCase()}${rec(b)}: "${U.pick(SAY_HOLD)}"`,
+      pid: p.id,
+      def: 1,
+      choices: [
+        { k: 'up', label: `Back ${a.st.ln}: bring him up` },
+        { k: 'hold', label: `Back ${b.st.ln}: keep him in the youth side` },
+      ],
+    });
+  };
+  // The desk decision: promote or hold him
+  Pe.staffAnswer = function (n, k, p) {
+    const d = (u().debates || []).find((x) => x.pid === n.pid && x.year === n.year && !x.choice);
+    if (d) d.choice = k;
+    if (!p) return { msg: '' };
+    if (k === 'up') p.team = undefined;
+    else p.team = W.age(p) <= 18 ? 'u18' : 'u21';
+    p.teamSet = true;
+    return {
+      msg:
+        k === 'up'
+          ? `${W.short(p)} joins the first-team squad.`
+          : `${W.short(p)} stays in the youth side another year.`,
+    };
+  };
+  // At the season's end: was he ready? Whoever called it right gets it on their record, and the feed says so
+  Pe.judgeDebates = function () {
+    const s = S(),
+      c = W.userClub();
+    for (const d of u().debates || []) {
+      if (d.judged || d.year !== s.year) continue;
+      d.judged = true;
+      const p = s.players[d.pid];
+      if (!p || !c || p.clubId !== c.id) continue;
+      const apps = p.season.apps,
+        good = apps >= 8 && p.season.rsum / apps >= 6.7;
+      const ready = p.ca >= W.levelFor(c.rep) - 10 || (d.choice === 'up' && good);
+      const right = ready ? d.up : d.hold,
+        wrong = ready ? d.hold : d.up;
+      const calls = (u().staffCalls = u().staffCalls || {});
+      for (const k of [d.up, d.hold]) {
+        calls[k] = calls[k] || { right: 0, n: 0 };
+        calls[k].n++;
+      }
+      calls[right].right++;
+      const rs = FM.Staff.get(right),
+        ws = FM.Staff.get(wrong);
+      FM.News.add({
+        type: 'club',
+        title: `${rs.fn} ${rs.ln} was right about ${W.name(p)}`,
+        body: `${ready ? 'He was ready' : 'He needed more time'}: ${W.short(p)} is ${p.ca} now (${d.ca0} then)${apps ? `, with ${apps} appearances at ${(p.season.rsum / apps).toFixed(1)}` : ''}. ${ROLE[right]} ${rs.ln} had it; ${ROLE[wrong].toLowerCase()} ${ws.ln} didn't.${d.choice ? ` You backed ${d.choice === (ready ? 'up' : 'hold') ? 'the right call' : 'the other side'}.` : ''}`,
+        pid: p.id,
+        clubId: c.id,
+      });
+    }
+  };
   Pe.seasonEnd = function () {
-    if (S().user) Pe.evalPromises(true);
+    if (S().user) {
+      Pe.evalPromises(true);
+      Pe.judgeDebates();
+    }
   };
   Pe.newSeason = function () {
     const s = S();

@@ -759,8 +759,53 @@
         <div class="h3" style="margin-top:14px">Width</div>${seg('width', D.WIDTH)}
         <div class="row" style="margin-top:14px"><div class="grow"><div class="h3">Inverted full-backs</div><div class="small dim">Full-backs step into midfield in possession</div></div><button class="btn sm ${T.invFB ? 'pri' : ''}" data-act="invfb">${T.invFB ? 'On' : 'Off'}</button></div>
         <div class="small muted" style="margin-top:12px;line-height:1.5">${tacticHint(T)}</div></div>
+      ${coverCard(T)}
       ${leadershipCard(xi, arm)}
       <div class="sec"><div class="h3">Bench</div></div><div class="card flat list" style="padding:4px 12px">${bench.map((p) => C.playerRow(p)).join('')}</div>`;
+  }
+  // Squad cover: for the formation you play, how many players in your squad are at home (accomplished or better) in each
+  // position it needs against the places to fill, and how the other formations would line up with the squad you have
+  UI._cover = false;
+  UI.acts.coverToggle = () => {
+    UI._cover = !UI._cover;
+    UI.render();
+  };
+  function coverCard(T) {
+    if (!UI._cover)
+      return `<div class="card"><div class="row"><div class="grow"><div class="h3">Squad cover</div><div class="small dim">Where you are thin in this shape, and which formations your squad suits</div></div><button class="btn sm" data-act="coverToggle">Show</button></div></div>`;
+    const c = club(),
+      sq = W.squad(c.id).filter((p) => !p.team);
+    const slots = D.FORMATIONS[T.formation],
+      need = {};
+    slots.forEach((s) => (need[s.t] = (need[s.t] || 0) + 1));
+    const rows = Object.keys(need).map((t) => {
+      const have = sq.filter((p) => (t === 'GK' ? p.pos === 'GK' : p.pos !== 'GK' && W.fitAt(p, t) >= 0.9)).length;
+      const k = have < need[t] ? 'bad' : have === need[t] ? 'warn' : 'good';
+      return `<span class="chip" style="border-color:var(--${k});color:var(--${k})" title="${have} at home there for ${need[t]} place${need[t] > 1 ? 's' : ''}">${t} ${have}/${need[t]}</span>`;
+    });
+    // each formation with the squad you have: the XI's average overall in its slots, and where it is weakest
+    const fits = Object.keys(D.FORMATIONS)
+      .map((f) => {
+        const t2 = { ...T, formation: f, roles: W.defaultRoles(f), lineup: null };
+        const xi = W.pickXI(c.id, t2).xi,
+          sl = D.FORMATIONS[f];
+        const ovr = xi.map((p, i) => (p ? W.slotOverall(p, sl[i].t, sl[i], t2.roles[i]) : 0));
+        const weak = ovr.reduce((m, v, i) => (i > 0 && v < ovr[m] ? i : m), 1);
+        return { f, avg: U.avg(ovr), weak: `${D.slotLabel(sl[weak])} ${ovr[weak]}` };
+      })
+      .sort((a, b) => b.avg - a.avg);
+    const cur = fits.find((x) => x.f === T.formation);
+    return `<div class="card"><div class="row"><div class="grow"><div class="h3">Squad cover</div><div class="small dim">Players at home (accomplished or better) against places to fill in ${esc(T.formation)}. Amber: no cover; red: short.</div></div><button class="btn sm" data-act="coverToggle">Hide</button></div>
+      <div class="chips" style="flex-wrap:wrap;margin-top:8px">${rows.join('')}</div>
+      <div class="small b dim" style="margin:12px 0 4px">YOUR SQUAD IN EACH SHAPE</div>
+      ${fits
+        .slice(0, 6)
+        .map(
+          (x) =>
+            `<div class="row small" style="padding:5px 0;border-top:1px solid var(--line)"><span class="grow">${x.f}${x.f === T.formation ? ' <span class="pill acc">now</span>' : ''}</span><span class="dim" style="margin-right:10px">weakest ${esc(x.weak)}</span><b>${x.avg.toFixed(1)}</b></div>`,
+        )
+        .join('')}
+      ${cur && fits[0].f !== T.formation ? `<div class="tiny dim" style="margin-top:6px">${esc(fits[0].f)} suits this squad better (${(fits[0].avg - cur.avg).toFixed(1)} points on the XI average).</div>` : ''}</div>`;
   }
   function tacticHint(T) {
     const b = {
@@ -1040,21 +1085,44 @@
       if (!(own || v.k >= 40))
         return `<div class="lock">🔒 Attributes unknown — assign a scout to learn more (${Math.round(v.k)}% known)</div>`;
       const unc = own ? 0 : Math.round((1 - v.k / 100) * 6);
-      return Object.entries(p.pos === 'GK' ? D.ATTR_GROUPS_GK : D.ATTR_GROUPS)
-        .filter(([g]) => g !== 'Goalkeeping' || p.pos === 'GK')
-        .map(
-          ([g, ks]) =>
-            `<div class="small b dim" style="margin:10px 0 2px;text-transform:uppercase;letter-spacing:.6px">${g}</div><div class="attr-grid">${ks
-              .map((k) => {
-                const val = Math.round(p.attrs[k]);
-                const shown = unc ? `${Math.max(1, val - unc)}–${Math.min(20, val + unc)}` : val;
-                return `<div class="attr"><span class="muted">${D.ATTR_LABEL[k]}</span><span class="v ${unc ? '' : C.vcls(val)}">${shown}</span></div>`;
-              })
-              .join('')}</div>`,
-        )
-        .join('');
+      // numbers, or words against his league's players in his position, or against your own ("your level / his level")
+      const mode = UI._attrMode || 'num';
+      const words = mode === 'league' ? FM.Scouting.peers(p).pct : null,
+        yours = mode === 'you' && !own ? FM.Scouting.yourLevel(p) : null;
+      const toggle = `<div class="seg" style="margin:6px 0 4px">${[
+        ['num', 'Numbers'],
+        ['league', 'His league'],
+        ...(own ? [] : [['you', 'Your level']]),
+      ]
+        .map(([m, l]) => `<button class="${mode === m ? 'on' : ''}" data-act="attrMode" data-v="${m}">${l}</button>`)
+        .join('')}</div>`;
+      return (
+        toggle +
+        Object.entries(p.pos === 'GK' ? D.ATTR_GROUPS_GK : D.ATTR_GROUPS)
+          .filter(([g]) => g !== 'Goalkeeping' || p.pos === 'GK')
+          .map(
+            ([g, ks]) =>
+              `<div class="small b dim" style="margin:10px 0 2px;text-transform:uppercase;letter-spacing:.6px">${g}</div><div class="attr-grid">${ks
+                .map((k) => {
+                  if (words || yours) {
+                    const w = words ? FM.Scouting.wordPct(words[k]) : yours && yours[k];
+                    if (w)
+                      return `<div class="attr"><span class="muted">${D.ATTR_LABEL[k]}</span><span class="v" style="font-size:12px;${w.cls ? `color:var(--${w.cls})` : ''}">${w.word}</span></div>`;
+                  }
+                  const val = Math.round(p.attrs[k]);
+                  const shown = unc ? `${Math.max(1, val - unc)}–${Math.min(20, val + unc)}` : val;
+                  return `<div class="attr"><span class="muted">${D.ATTR_LABEL[k]}</span><span class="v ${unc ? '' : C.vcls(val)}">${shown}</span></div>`;
+                })
+                .join('')}</div>`,
+          )
+          .join('')
+      );
     };
-    const report = own ? '' : UI.reportCard(p, v);
+    const said = own ? null : FM.Scouting.say(p, v);
+    UI._attrPid = p.id;
+    const report = own
+      ? ''
+      : `${said ? `<div class="card flat"><div class="small" style="line-height:1.5">“${esc(said.text)}”</div><div class="tiny dim" style="margin-top:4px">— ${esc(said.who)}</div><div style="margin-top:8px">${C.bar(said.conf, said.conf >= 70 ? 'var(--good)' : said.conf >= 45 ? 'var(--warn)' : 'var(--bad)')}</div><div class="tiny dim" style="margin-top:2px">Confidence ${said.conf}%</div></div>` : ''}${UI.reportCard(p, v)}`;
     const ownActions = own
       ? UI.ownActions(p)
       : p.loan
@@ -1062,6 +1130,20 @@
           ? UI.loanLine(p)
           : `<div class="warnline">On loan at ${esc(CL(p.clubId).name)} from ${esc(CL(p.loan.from).name)} until the end of the season.</div>`
         : '';
+    // what is driving his mood, each reason with its size
+    const moodCard = () => {
+      const fs = FM.People.moodFactors(p);
+      return `<div class="card"><div class="row"><div class="h3 grow">Mood</div><span class="small">${W.moraleLabel(p.morale)[1]} ${W.moraleLabel(p.morale)[0]}</span></div>${
+        fs.length
+          ? fs
+              .map(
+                (f) =>
+                  `<div class="row small" style="padding:5px 0;border-top:1px solid var(--line)"><span class="grow">${esc(f.t)}</span><b style="color:var(--${f.d > 0 ? 'good' : 'bad'})">${f.d > 0 ? '+' : '−'}${Math.abs(f.d)}</b></div>`,
+              )
+              .join('')
+          : '<div class="small dim" style="margin-top:6px">Nothing in particular: he is settled.</div>'
+      }<div class="tiny dim" style="margin-top:6px">The biggest things moving his mood, with a rough size. Promises and minutes are where you can act.</div></div>`;
+    };
     const history = (p.history || []).slice().reverse();
     // The nation opens its national-team overview (nations without a national team in the world stay plain text)
     const nt = S().nteams && S().nteams['n_' + p.nat];
@@ -1078,8 +1160,8 @@
       ${own && p.traits.length ? `<div class="small dim" style="margin:-2px 2px 12px">${p.traits.map((t) => D.TRAITS[t].desc).join(' ')}</div>` : ''}
       ${report}
       <div class="card"><div class="row"><div class="h3 grow">Profile</div>${!own && v.k < 70 ? '<span class="pill warn">Approximate</span>' : ''}</div>${own || v.k >= 40 ? C.radar(p, !own && v.k < 70) : '<div class="lock">🔒 Profile hidden</div>'}${attrs()}</div>
-      ${peerCard(p, v, own)}
-      <div class="card"><div class="row"><div class="h3 grow">Form</div><span class="small dim">last ${p.form.length}</span></div>
+      ${own ? moodCard() : ''}${peerCard(p, v, own)}
+      ${p.totw ? `<div class="card"><div class="row small"><span class="grow">Team of the week</span><b>${p.totwY && p.totwY[0] === S().year ? p.totwY[1] : 0} this season · ${p.totw} career</b></div></div>` : ''}<div class="card"><div class="row"><div class="h3 grow">Form</div><span class="small dim">last ${p.form.length}</span></div>
         <div class="row" style="align-items:flex-end;gap:5px;height:70px;margin-top:10px">${p.form.length ? p.form.map((r) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px"><div class="tiny b">${r.toFixed(1)}</div><div style="width:100%;border-radius:4px;height:${(r - 4) * 8}px;background:${r >= 7.5 ? 'var(--good)' : r >= 6.5 ? 'var(--acc2)' : 'var(--bad)'}"></div></div>`).join('') : '<div class="dim small">No appearances yet.</div>'}</div>
 </div>
       ${UI.statsCard(p, avg)}
@@ -1518,18 +1600,20 @@
     if (S().comps[t] && S().comps[t].type === 'league' && t !== mine) opts.push([t, lname(S().comps[t])]);
     opts.push(['world', '🗺️ All leagues']);
     if (W.cups().length || W.continentals().length) opts.push(['cups', 'Cups']);
-    opts.push(['fixtures', 'Fixtures'], ['stats', 'Stats']);
+    opts.push(['fixtures', 'Fixtures'], ['totw', 'Team of the week'], ['stats', 'Stats']);
     return (
       chips('league', opts) +
       (t === 'fixtures'
         ? fixturesView()
-        : t === 'stats'
-          ? statsView()
-          : t === 'cups'
-            ? cupsView()
-            : t === 'world'
-              ? worldView()
-              : tableView(t))
+        : t === 'totw'
+          ? totwView()
+          : t === 'stats'
+            ? statsView()
+            : t === 'cups'
+              ? cupsView()
+              : t === 'world'
+                ? worldView()
+                : tableView(t))
     );
   };
   // International football has its own tab: national teams, rankings, tournaments and your national job
@@ -1648,6 +1732,62 @@
       <div class="sec"><div class="h3">Your fixtures</div></div><div class="card flat" style="padding:2px 12px">${mine.map(({ i, f }) => `<div class="row tiny dim" style="padding-top:6px">MD ${i + 1}${c.rival === (f.h === c.id ? f.a : f.h) ? ' · ⚔️ Derby' : ''}</div>${fxLine(f)}`).join('')}</div>`;
   }
   UI._statsComp = null;
+  // Team of the week for any league (a round at a time, newest first) and the team of the season so far
+  UI.acts.totwComp = (d) => {
+    UI._totwComp = d.v;
+    UI._totwRound = null;
+    UI.render();
+  };
+  UI.acts.totwRound = (d) => {
+    UI._totwRound = +d.v;
+    UI.render();
+  };
+  function totwView() {
+    const s = S(),
+      cur = UI._totwComp || myComp();
+    const pick = `<div class="chips" style="flex-wrap:wrap">${W.leagues()
+      .map(
+        (c) =>
+          `<button class="chip ${c.id === cur ? 'on' : ''}" data-act="totwComp" data-v="${c.id}">${C.flag(c.nat)} ${esc(c.short)}</button>`,
+      )
+      .join('')}</div>`;
+    const rounds = (s.totw && s.totw.year === s.year && s.totw.by[cur]) || [];
+    const sel = rounds.find((r) => r.n === UI._totwRound) || rounds[rounds.length - 1];
+    const lines = (xi) =>
+      ['GK', 'DEF', 'MID', 'ATT']
+        .map((g) => {
+          const rows = xi.filter((x) => D.POS_GROUP[x.pos] === g);
+          return rows.length
+            ? `<div class="small b dim" style="margin:10px 0 2px">${{ GK: 'GOALKEEPER', DEF: 'DEFENCE', MID: 'MIDFIELD', ATT: 'ATTACK' }[g]}</div>${rows
+                .map((x) => {
+                  const pl = P(x.id),
+                    own = pl && W.ownPlayer(pl),
+                    cl = CL(x.c);
+                  return `<div class="row small tap" style="padding:6px 0;border-top:1px solid var(--line)" data-act="player" data-id="${x.id}"><span class="pos ${D.POS_GROUP[x.pos]}" style="min-width:34px;text-align:center">${x.lab}</span><span class="grow ellip" style="margin-left:8px">${own ? '⭐ ' : ''}${esc(x.n)} <span class="dim">· ${cl ? esc(cl.short) : '?'}</span></span><b>${x.r.toFixed(1)}</b></div>`;
+                })
+                .join('')}`
+            : '';
+        })
+        .join('');
+    const toty = FM.Records.toty(cur);
+    const mgr = sel && sel.mgr && CL(sel.mgr);
+    return `${pick}<div class="card" style="margin-top:10px"><div class="row"><div class="h3 grow">Team of the week</div>${sel ? `<span class="pill acc">Matchday ${sel.n}</span>` : ''}</div>
+      ${
+        rounds.length > 1
+          ? `<div class="chips" style="flex-wrap:wrap;margin-top:8px">${rounds
+              .slice()
+              .reverse()
+              .slice(0, 14)
+              .map(
+                (r) =>
+                  `<button class="chip ${sel && r.n === sel.n ? 'on' : ''}" data-act="totwRound" data-v="${r.n}">MD ${r.n}</button>`,
+              )
+              .join('')}</div>`
+          : ''
+      }
+      ${sel ? `${lines(sel.xi)}${mgr ? `<div class="row small" style="padding:8px 0;border-top:1px solid var(--line)"><span>🎙️</span><span class="grow" style="margin-left:8px">Manager of the week: <b>${esc(((m) => (m ? `${m} (${mgr.name})` : mgr.name))(W.isUser(mgr.id) ? s.user.name : s.staff[mgr.manager] ? `${s.staff[mgr.manager].fn} ${s.staff[mgr.manager].ln}` : ''))}</b></span></div>` : ''}` : '<div class="small dim" style="margin-top:8px">The first team of the week is picked after the first league matchday.</div>'}</div>
+      <div class="card"><div class="row"><div class="h3 grow">Team of the season so far</div></div>${toty ? `<div class="tiny dim">By average rating, for players with a fair share of the games.</div>${lines(toty)}` : '<div class="small dim" style="margin-top:8px">Not enough games played yet.</div>'}</div>`;
+  }
   function statsView() {
     const s = S(),
       cur = UI._statsComp || myComp();
@@ -1761,6 +1901,13 @@
         .join('')
     );
   }
+  UI.acts.attrMode = (d) => {
+    UI._attrMode = d.v;
+    const body = document.querySelector('.sheet-wrap:last-child .sh-body'),
+      y = body ? body.scrollTop : 0;
+    if (P(UI._attrPid)) UI.refreshSheet(playerHTML(P(UI._attrPid)));
+    if (body) body.scrollTop = y;
+  };
   UI.acts.statsComp = (d) => {
     UI._statsComp = d.v;
     UI.render();
@@ -2023,7 +2170,7 @@
         .map(([k, f]) => {
           const lvl = c.facilities[k],
             cost = FM.Season.facCost(k, lvl);
-          return `<div class="fac"><div class="ico">${f.icon}</div><div class="grow"><div class="b">${f.name}</div><div class="tiny dim">${f.effect}</div><div class="lvl">${[1, 2, 3, 4, 5].map((i) => `<i class="${i <= lvl ? 'on' : ''}"></i>`).join('')}</div></div>${lvl >= 5 ? '<span class="pill good">MAX</span>' : `<button class="btn sm" data-act="upgrade" data-k="${k}" ${c.building || c.balance < cost ? 'disabled' : ''}>${U.money(cost)}<br><span class="tiny dim">${FM.Season.facWeeks(k, lvl)}w</span></button>`}</div>`;
+          return `<div class="fac"><div class="ico">${f.icon}</div><div class="grow"><div class="b">${f.name}</div><div class="tiny dim">${f.effect}${k === 'training' ? ` · takes a player to about ${FM.Season.devCap(c)}` : ''}</div><div class="lvl">${[1, 2, 3, 4, 5].map((i) => `<i class="${i <= lvl ? 'on' : ''}"></i>`).join('')}</div></div>${lvl >= 5 ? '<span class="pill good">MAX</span>' : `<button class="btn sm" data-act="upgrade" data-k="${k}" ${c.building || c.balance < cost ? 'disabled' : ''}>${U.money(cost)}<br><span class="tiny dim">${FM.Season.facWeeks(k, lvl)}w</span></button>`}</div>`;
         })
         .join('') +
       '</div>'
@@ -2258,6 +2405,9 @@
       <div class="card"><div class="row"><div class="grow"><div class="h3">Save slot ${UI.slot}</div><div class="small dim">Autosaves after every matchday and whenever you leave the app · ${esc(FM.Save.backend())}</div></div><button class="btn sm" data-act="saveNow">Save now</button></div>
         <div class="row" style="gap:8px;margin-top:12px"><button class="btn sm grow" data-act="exportSave">⬆️ Export backup</button><button class="btn sm grow" data-act="importSave">⬇️ Import backup</button></div>
         <div class="tiny dim" style="margin-top:8px;line-height:1.5">${backupLine(s)} A backup is one compressed .touchline file. Keep it somewhere safe, or move your career to another device.</div></div>
+      <div class="card"><div class="h3">Help</div><div class="small dim" style="margin-top:4px">Something wrong, or an idea? Tell us — a report carries your game's version and a copy of your save, nothing else.</div>
+        <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm grow" data-act="reportProblem">🐞 Report a problem</button><button class="btn sm grow" data-act="sendFeedback">💬 Send feedback</button></div>
+        <button class="btn sm block" style="margin-top:8px" data-act="whatsNew">🆕 What's new</button>${FM.Dev ? '<button class="btn sm block" style="margin-top:8px" data-act="devPanel">🛠 Developer tools</button>' : ''}</div>
       <button class="btn block" data-act="toTitle" style="margin-bottom:10px">Main menu</button>
       <div class="tiny dim center" style="margin-top:14px;line-height:1.6">TOUCHLINE prototype · one-time purchase · no energy · no packs · no pay-to-win</div>`;
   }
@@ -2300,6 +2450,91 @@
     const b = S().settings.lastBackup;
     return !b || b.year < S().year - 1;
   };
+  // ---------- Help: report a problem, feedback, what's new ----------
+  // What a report carries: the version, the build, the platform and where the save stands: nothing personal
+  UI.diagnostics = async function () {
+    const s = S(),
+      m = FM.Save.metaOf ? FM.Save.metaOf(UI.slot) : null;
+    let kb = '';
+    try {
+      const raw = await FM.Save.read(UI.slot);
+      kb = raw ? ` · save ${Math.round(raw.length / 1024)} KB` : '';
+    } catch (e) {
+      /* no size */
+    }
+    const build = ((document.querySelector('script[src*="core.js"]') || {}).src || '').match(/v=(\d+)/);
+    const cap = window.Capacitor && window.Capacitor.getPlatform ? window.Capacitor.getPlatform() : 'web';
+    return [
+      `Touchline ${FM.VERSION} (build ${build ? build[1] : '?'}) · ${cap} · save format ${FM.SAVE_VERSION}${kb}`,
+      s && s.user
+        ? `Season ${s.year}, day ${s.day} of ${(s.calendar || []).length}${m && m.club ? ' · ' + m.club.name : ''}`
+        : 'No career open',
+      `${navigator.userAgent.slice(0, 120)}`,
+    ].join('\n');
+  };
+  const helpSheet = async (title, intro, ph, act, btn) => {
+    const diag = await UI.diagnostics();
+    UI.sheet(
+      `<div class="small dim" style="line-height:1.5">${intro}</div><textarea id="help-text" rows="5" placeholder="${ph}" style="width:100%;margin-top:10px;padding:10px;border-radius:12px;border:1px solid var(--line2);background:var(--card2);color:var(--ink);font:inherit"></textarea><div class="tiny dim" style="margin-top:8px;white-space:pre-line">${esc(diag)}</div><button class="btn pri block" style="margin-top:12px" data-act="${act}">${btn}</button>`,
+      { title },
+    );
+  };
+  UI.acts.reportProblem = () =>
+    helpSheet(
+      'Report a problem',
+      'Describe what went wrong. The report is your save as a backup file, with the version details below; it goes wherever you share it (email, messages, a file).',
+      'What happened, and what were you doing?',
+      'sendReport',
+      '⬆️ Share the report',
+    );
+  UI.acts.sendReport = async () => {
+    const note = (document.getElementById('help-text') || {}).value || '';
+    try {
+      if (FM.S && FM.S.user) await FM.Save.write(UI.slot, S());
+      const f = await FM.Save.exportFile(UI.slot);
+      const r = await FM.Native.shareFile({
+        bytes: f.bytes,
+        name: f.name.replace(/^touchline-/, 'touchline-problem-'),
+        type: f.type,
+        title: 'Touchline problem report',
+        text: `${note}\n\n${await UI.diagnostics()}`,
+        preferShare: matchMedia('(pointer: coarse)').matches,
+      });
+      UI.closeSheet();
+      if (r !== 'cancelled')
+        UI.toast(r === 'saved' ? 'Report saved: send the file to us' : 'Report ready to send', 3500);
+    } catch (e) {
+      console.warn(e);
+      UI.toast('⚠️ ' + (e.message || 'Could not make the report'), 4000);
+    }
+  };
+  UI.FEEDBACK_URL = 'https://github.com/tpkhoon/touchline/issues/new';
+  UI.acts.sendFeedback = () =>
+    helpSheet(
+      'Send feedback',
+      'An idea, something confusing, something you loved? It opens a new note on the project page with the version details attached; no save is sent.',
+      'What would make the game better?',
+      'sendFeedbackGo',
+      '💬 Open the feedback page',
+    );
+  UI.acts.sendFeedbackGo = async () => {
+    const note = (document.getElementById('help-text') || {}).value || '';
+    const url = `${UI.FEEDBACK_URL}?title=${encodeURIComponent('Feedback: ' + (note.split('\n')[0].slice(0, 60) || 'my thoughts'))}&body=${encodeURIComponent(`${note}\n\n---\n${await UI.diagnostics()}`)}`;
+    window.open(url, '_blank', 'noopener');
+    UI.closeSheet();
+  };
+  UI.acts.whatsNew = () =>
+    UI.sheet(
+      `<div class="tiny dim" style="margin-bottom:8px">The latest builds, newest first.</div>${
+        (FM.CHANGELOG || [])
+          .map(
+            (b) =>
+              `<div class="card flat" style="margin-bottom:8px"><div class="b">${esc(b.build)}</div><div class="small dim" style="margin-top:4px;line-height:1.5">${esc(b.text)}</div></div>`,
+          )
+          .join('') || '<div class="empty">Nothing recorded yet.</div>'
+      }`,
+      { title: "What's new", full: true },
+    );
   // ---------- Backups ----------
   UI.acts.exportSave = async () => {
     try {

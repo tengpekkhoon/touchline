@@ -46,15 +46,13 @@
       if (league && league.length >= 12) ((scope = 'league'), (list = league));
       else if (nation && nation.length >= 12) ((scope = 'nation'), (list = nation));
       const arrs = {};
-      for (const k of Object.keys(D.POS_W[p.pos])) arrs[k] = list.map((q) => q.attrs[k]).sort((a, b) => a - b);
+      for (const k of D.ATTRS) arrs[k] = list.map((q) => q.attrs[k]).sort((a, b) => a - b);
       peerCache.by[ck] = { scope, n: list.length, arrs };
     }
-    const g = peerCache.by[ck],
-      known = p.clubId === FM.S.user.clubId ? 100 : Sc.know(p.id),
-      unc = 1 - known / 100;
-    const rows = Object.keys(g.arrs).map((k) => {
-      // an attribute you only partly know is read a little off (the same misreading each time)
-      const v = p.attrs[k] + ((U.hash(p.id + k) % 200) / 100 - 1) * unc * 3,
+    const g = peerCache.by[ck];
+    const pct = {};
+    for (const k of D.ATTRS) {
+      const v = Sc.noisy(p, k),
         a = g.arrs[k];
       let less = 0,
         eq = 0;
@@ -63,18 +61,102 @@
         else if (x <= v + 0.25) eq++;
         else break;
       }
-      return { k, pct: Math.round(((less + eq / 2) / Math.max(1, a.length)) * 100) };
-    });
-    rows.sort((a, b) => b.pct - a.pct);
+      pct[k] = Math.round(((less + eq / 2) / Math.max(1, a.length)) * 100);
+    }
+    // best and worst among the stats his position asks for
+    const rows = Object.keys(D.POS_W[p.pos])
+      .map((k) => ({ k, pct: pct[k] }))
+      .sort((a, b) => b.pct - a.pct);
     return {
       scope: g.scope,
       n: g.n,
+      pct,
       best: rows.slice(0, 3).filter((r) => r.pct >= 55),
       worst: rows
         .slice(-3)
         .reverse()
         .filter((r) => r.pct <= 45),
     };
+  };
+  // An attribute as you read it: exact for your own players, a little off for one you only partly know (the same
+  // misreading every time, so it doesn't jump about between screens)
+  Sc.noisy = function (p, k) {
+    const known = p.clubId === FM.S.user.clubId ? 100 : Sc.know(p.id);
+    return p.attrs[k] + ((U.hash(p.id + k) % 200) / 100 - 1) * (1 - known / 100) * 3;
+  };
+  // In words: how good an attribute is against the players in his position in his league (a percentile), or against
+  // yours (the difference from your own players in that position)
+  Sc.wordPct = (pct) => {
+    const w =
+      pct >= 90
+        ? ['Outstanding', 'good']
+        : pct >= 75
+          ? ['Very good', 'good']
+          : pct >= 55
+            ? ['Good', 'good']
+            : pct >= 40
+              ? ['Average', '']
+              : pct >= 25
+                ? ['Below average', 'warn']
+                : pct >= 10
+                  ? ['Poor', 'bad']
+                  : ['Awful', 'bad'];
+    return { word: w[0], cls: w[1] };
+  };
+  // Your level: his attribute against your squad's players in the same position (the best three by ability), or your
+  // XI when you have none there
+  Sc.yourLevel = function (p) {
+    const c = FM.S.clubs[FM.S.user.clubId];
+    if (!c) return null;
+    const sq = W.squad(c.id).filter((q) => !q.team);
+    let ref = sq
+      .filter((q) => q.pos === p.pos && q.id !== p.id)
+      .sort((a, b) => b.ca - a.ca)
+      .slice(0, 3);
+    if (!ref.length)
+      ref = W.pickXI(c.id, FM.S.user.tactic)
+        .xi.filter((q) => q && q.pos !== 'GK' && q.id !== p.id)
+        .slice(0, 6);
+    if (!ref.length) return null;
+    const out = {};
+    for (const k of D.ATTRS) {
+      const d = Sc.noisy(p, k) - U.avg(ref, (q) => q.attrs[k]);
+      out[k] =
+        d >= 3
+          ? { word: 'Far better than yours', cls: 'good' }
+          : d >= 1.5
+            ? { word: 'Better than yours', cls: 'good' }
+            : d > -1.5
+              ? { word: 'Similar to yours', cls: '' }
+              : d > -3
+                ? { word: 'Worse than yours', cls: 'warn' }
+                : { word: 'Far worse than yours', cls: 'bad' };
+    }
+    return out;
+  };
+  // What the scout says, in his own voice: how good he is now, where he could get to, and how sure he is. The
+  // confidence is how much you know of him, scaled by how good your scout is at judging. Potential narrows as a
+  // player ages (a 30-year-old has no ceiling left to guess at).
+  const halves = (n) => `${Math.floor(n)}${n % 1 ? '½' : ''}★`;
+  Sc.confidenceOf = (v) =>
+    v.own ? 100 : Math.round(U.clamp(v.k * (0.82 + 0.36 * (v.scout ? v.scout.judge / 20 : 0.5)), 0, 99));
+  Sc.say = function (p, v) {
+    if (v.own || !v.ca) return null;
+    const conf = Sc.confidenceOf(v),
+      now = W.stars((v.ca[0] + v.ca[1]) / 2),
+      age = W.age(p);
+    const sure = conf >= 85 ? "I'm sure of it" : `I'm about ${conf}% sure`;
+    let line = `He's a ${halves(now)} player now`;
+    if (age <= 26 && v.pa) {
+      const lo = W.stars(v.pa[0]),
+        hi = W.stars(v.pa[1]),
+        mid = W.stars((v.pa[0] + v.pa[1]) / 2);
+      line +=
+        mid > now + 0.4
+          ? ` and could reach ${halves(mid)}${hi - lo >= 1 ? `, anywhere from ${halves(lo)} to ${halves(hi)}` : ''}`
+          : ' and I think he is close to his ceiling';
+    } else if (age >= 27) line += ' and what you see is what you get';
+    return { text: `${line}. ${sure}.`, conf, who: v.scout ? `${v.scout.fn} ${v.scout.ln}, scout` : 'your scouts' };
   };
 
   Sc.dismiss = function (pid) {
@@ -241,8 +323,10 @@
       errP = rep ? rep.errP : 0;
     const caEst = U.clamp(p.ca + errC * unc * 14 * (1.3 - exp), 20, 99);
     const paEst = U.clamp(Math.max(caEst, p.pa + errP * unc * 22 * (1.3 - exp)), 20, 99);
+    const age = W.age(p),
+      ageK = age <= 19 ? 1 : age >= 28 ? 0.3 : 1 - (age - 19) * 0.078; // the older he is, the less ceiling there is to guess
     const wC = unc * 16 + (k < 100 ? 2 : 0),
-      wP = unc * 24 + (k < 100 ? 4 : 0);
+      wP = (unc * 24 + (k < 100 ? 4 : 0)) * ageK;
     const v = {
       k,
       own,

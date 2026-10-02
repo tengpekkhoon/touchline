@@ -89,6 +89,9 @@
     if (age <= 30 && y < A.meteor + (p.hid.prof >= 14 ? A.ageless : A.agelessPlain)) return (p.arc = { k: 'ageless' });
     return null;
   };
+  // How far a club's training ground can take a player: its level and the club's standing (a big club's coaching and
+  // players pull a young player along beyond what the pitches alone would)
+  Sea.devCap = (c) => Math.round(50 + ((c.facilities && c.facilities.training) || 2) * 7 + (c.rep - 60) * 0.35);
   Sea.develop = function (p, frac) {
     const S = FM.S;
     const club = p.clubId && S.clubs[p.clubId];
@@ -111,6 +114,23 @@
       if (p.ca >= Sea.ELITE.from) g *= Sea.ELITE.growth; // the very best grow more slowly: keeps the elite from inflating
       if (p.inj && (p.inj.out || 0) >= 8) g *= 0.4; // months on the treatment table cost development
       g *= FM.Training.devK(p); // your training focus and intensity
+      // the training ground has a ceiling: a player who has outgrown it develops slowly until it is upgraded
+      if (club) {
+        const cap = Sea.devCap(club);
+        if (p.ca >= cap) {
+          g *= 0.45;
+          if (W.ownPlayer(p) && !p.capNote && p.pa > p.ca + 3 && a <= 24) {
+            p.capNote = S.year;
+            FM.News.add({
+              type: 'club',
+              title: `${W.name(p)} has outgrown the training ground`,
+              body: `At level ${club.facilities.training} it can take a player to about ${cap}; he is ${Math.round(p.ca)} with room to grow. A better training ground would let him keep developing.`,
+              pid: p.id,
+              clubId: club.id,
+            });
+          }
+        } else if (p.ca >= cap - 5) g *= 0.85;
+      }
     } else {
       g = g * frac * (1.25 - p.hid.prof / 40) * U.rand(0.7, 1.3);
     }

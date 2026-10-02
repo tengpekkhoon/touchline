@@ -162,7 +162,9 @@
             ? preChoice
             : n.kind === 'board'
               ? (nn, k) => FM.Board.answer(nn, k)
-              : () => ({ msg: '' })
+              : n.kind === 'staff'
+                ? (nn, k, pp) => FM.People.staffAnswer(nn, k, pp)
+                : () => ({ msg: '' })
     )(n, ch.k, p);
     n.reply = r.msg;
     return r;

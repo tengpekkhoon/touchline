@@ -129,6 +129,7 @@
       c.clubs.forEach((id) => (S().clubs[id].balance += c.prize * 0.13)); // participation fee
     }
     for (const c of W.worldCups()) Cu.setupWorld(c);
+    Cu.licenceCheck();
   };
 
   // How many of a league's clubs go to its main continental cup (the second-tier cup takes the next places)
@@ -187,12 +188,38 @@
   };
 
   // Fixtures a cup plays on the current calendar day (draws are made lazily, on the day)
+  // A club whose ground is below the competition's licence can't host there: its home games go to a neutral ground
+  Cu.unlicensed = (clubId, comp) => {
+    const c = S().clubs[clubId],
+      min = D.GROUND_MIN[comp.id];
+    return !!(c && min && c.stadium && c.stadium.cap < min);
+  };
   Cu.fixturesFor = function (comp, cal) {
-    return comp.type === 'cup'
-      ? domestic(comp)
-      : comp.type === 'world'
-        ? world(comp, cal.stage)
-        : continental(comp, cal.stage);
+    if (comp.type === 'cup') return domestic(comp);
+    if (comp.type === 'world') return world(comp, cal.stage);
+    const list = continental(comp, cal.stage);
+    for (const f of list) {
+      if (f.res) continue;
+      if (f.base === undefined) f.base = !!f.neutral;
+      f.neutral = f.base || Cu.unlicensed(f.h, comp);
+    }
+    return list;
+  };
+  // The season's draw: tell the user if his ground is below a licence
+  Cu.licenceCheck = function () {
+    const u = S().user,
+      club = u && W.userClub();
+    if (!club) return;
+    for (const c of W.continentals()) {
+      if (!c.clubs || !c.clubs.includes(club.id) || !Cu.unlicensed(club.id, c)) continue;
+      FM.News.add({
+        type: 'club',
+        title: `${club.name}'s ground isn't licensed for the ${c.name}`,
+        body: `It holds ${club.stadium.cap.toLocaleString()}; the competition wants ${D.GROUND_MIN[c.id].toLocaleString()}. Until the stadium is built up your home games there are played at a neutral ground: no home advantage, and the fans are not happy about it.`,
+        clubId: club.id,
+      });
+      club.fanMood = Math.max(0, club.fanMood - 3);
+    }
   };
 
   function domestic(c) {

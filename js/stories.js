@@ -283,9 +283,42 @@
                     'xG says we deserved more. Frustrating.',
                     '{best} was the only one who turned up today',
                   ];
-    U.shuffle(pool)
-      .slice(0, 3)
-      .forEach((t) => posts.push({ h: handle(), t: fill(t), likes: U.randi(12, 2400) }));
+    // The club's regular fan accounts each have a voice: the ultra reacts to the match, the optimist finds the bright
+    // side, the doom-monger the cloud, the numbers man quotes the xG
+    const xgMe = me.xg.toFixed(1),
+      xgOp = op.xg.toFixed(1),
+      unlucky = !won && me.xg > op.xg + 0.5,
+      lucky = !lost && op.xg > me.xg + 0.5;
+    const say = {
+      opt: won
+        ? ['Another win. This team is going places 🚀', 'Every week it clicks a bit more. {mgr} has this right']
+        : lost
+          ? [
+              'One bad day. We go again — this squad is better than that',
+              'Heads up, lads. We have been brilliant for weeks 💪',
+            ]
+          : ["Plenty to build on. We'll win the next one", 'A point and a lot of positives 👏'],
+      doom: won
+        ? ["Won, but we'll be punished for that defending eventually", 'Enjoy it. {worst} will cost us soon enough']
+        : lost
+          ? ['Typical. I said it would end like this', 'Season over. See you in the cup, I guess']
+          : ['A point. Of course. Never a win when we need one', "That's two points thrown away, not one gained"],
+      nerd: lucky
+        ? [`xG ${xgMe}–${xgOp}. We got away with one there`, `Won on xG ${xgMe} to ${xgOp}? Take it, but it won't last`]
+        : unlucky
+          ? [
+              `xG ${xgMe}–${xgOp} and nothing to show for it. That's variance, not form`,
+              `We created more (xG ${xgMe}–${xgOp}). Keep doing it and the results come`,
+            ]
+          : [`xG ${xgMe}–${xgOp}: about what that game deserved`, `Fair result by xG (${xgMe}–${xgOp})`],
+    };
+    const ultra = U.pick(pool);
+    posts.push(
+      { h: `@${club.short}_ultras`, t: fill(ultra), likes: U.randi(40, 2400) },
+      { h: `@AlwaysBelieve${club.short}`, t: fill(U.pick(say.opt)), likes: U.randi(12, 900) },
+      { h: `@Typical${club.short}`, t: fill(U.pick(say.doom)), likes: U.randi(12, 1400) },
+      { h: `@xG_${club.short}`, t: fill(U.pick(say.nerd)), likes: U.randi(8, 600) },
+    );
     if (m.derby) {
       posts.unshift({
         h: handle(),

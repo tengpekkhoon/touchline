@@ -111,6 +111,20 @@
       .filter(([t, f]) => f >= ((p.alt && p.alt[t]) >= 0.8 ? 0.8 : 0.9))
       .sort((a, b) => b[1] - a[1]);
   };
+  // How at home he is in a position, in words (his familiarity: natural, accomplished, competent, unconvincing, awkward)
+  W.famLabel = (f) =>
+    f >= 0.97 ? 'natural' : f >= 0.9 ? 'accomplished' : f >= 0.8 ? 'competent' : f >= 0.65 ? 'unconvincing' : 'awkward';
+  // Every position he can fill at all: [{ t, fit, fam, ovr }], best first; ovr = his overall there, less the cost of it
+  W.positionTable = function (p, min = 0.65) {
+    if (p.pos === 'GK') return [];
+    return D.POS.filter((t) => t !== 'GK')
+      .map((t) => {
+        const fit = W.fitAt(p, t);
+        return { t, fit, fam: W.famLabel(fit), ovr: Math.round(W.calcCA(p, t) * (0.62 + 0.38 * fit)) };
+      })
+      .filter((x) => x.fit >= min)
+      .sort((a, b) => b.fit - a.fit || b.ovr - a.ovr);
+  };
   // A second position as he'd be listed there: LWB for a left-back, LM for a left winger
   W.altLabel = (p, t) => (FLANK_LABEL[t] && FLANK_LABEL[p.pos] ? W.side(p) + FLANK_LABEL[t] : t);
   // Second positions (p.alt, how well he plays there, 0–1). A third of outfield players start with one, a few

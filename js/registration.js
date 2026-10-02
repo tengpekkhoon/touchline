@@ -30,10 +30,10 @@
   const HG = { squad: 25, hg: 8 };
   // By league id. domestic: nations that count as local; exempt: partner nations that don't use a foreign place
   R.RULES = {
-    D1: HG,
-    D2: HG,
-    D3: HG,
-    D4: HG,
+    D1: { ...HG, permit: true },
+    D2: { ...HG, permit: true },
+    D3: { ...HG, permit: true },
+    D4: { ...HG, permit: true },
     ES3: { nonEU: 3 },
     FR2: { nonEU: 4 },
     IT1: { ...HG, nonEUSign: 2 },
@@ -92,10 +92,51 @@
       (t) => t.to === c.id && t.from && FM.S.clubs[t.from] && FM.S.clubs[t.from].nat !== c.nat && !R.EU.has(t.nat),
     ).length;
   // Could the club register this player? { ok, why }. st: a status from R.status, to check many candidates quickly
+  // Work permits in Britain: a player from outside the British Isles who has never played there needs enough points for
+  // his ability, his country's standing in the world ranking, his caps and the size of the club (15 to clear). A good
+  // player from a strong football nation clears it; a journeyman from a smaller one does not.
+  R.UK = new Set(['ENG', 'SCO', 'WAL', 'IRL']);
+  let rankCache = { key: null, map: null };
+  const natRank = (code) => {
+    const s = FM.S,
+      key = `${s.year}-${s.day}`;
+    if (rankCache.key !== key || rankCache.S !== s) {
+      rankCache = { key, S: s, map: {} };
+      if (s.nteams) FM.Intl.ranked().forEach((t, i) => (rankCache.map[t.code] = i));
+    }
+    return rankCache.map[code] ?? 99;
+  };
+  R.permitNeeded = (p) => {
+    const cl = FM.S.clubs;
+    return (
+      !R.UK.has(p.nat) &&
+      !(p.clubId && cl[p.clubId] && R.UK.has(cl[p.clubId].nat)) &&
+      !p.career.spells.some((sp) => cl[sp.c] && R.UK.has(cl[sp.c].nat))
+    );
+  };
+  R.permitPoints = function (p, c) {
+    const rank = natRank(p.nat),
+      caps = (p.intl && p.intl.caps) || 0;
+    return Math.round(
+      (p.ca - 45) * 0.45 +
+        (rank < 10 ? 6 : rank < 20 ? 4 : rank < 35 ? 2 : 0) +
+        (caps >= 20 ? 5 : caps >= 8 ? 3 : caps >= 1 ? 1 : 0) +
+        (c.rep >= 70 ? 2 : 0),
+    );
+  };
+  R.PERMIT_NEED = 15;
   R.canSign = function (c, p, st) {
     st = st || R.status(c, p.id);
     if (!st) return { ok: true };
     const r = st.r;
+    if (r.permit && R.permitNeeded(p)) {
+      const pts = R.permitPoints(p, c);
+      if (pts < R.PERMIT_NEED)
+        return {
+          ok: false,
+          why: `No work permit: ${pts} of the ${R.PERMIT_NEED} points he needs (ability, his country's standing, caps, the club's size).`,
+        };
+    }
     if (r.squad && senior(p) && !R.homegrown(p, c.nat) && st.nonHG >= r.squad - r.hg)
       return {
         ok: false,
