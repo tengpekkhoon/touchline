@@ -396,10 +396,11 @@
     const root = document.documentElement,
       club = FM.S && FM.S.user && W.userClub();
     const theme = root.dataset.theme || 'dark',
-      key = club ? `${club.id}|${theme}|${club.colors.join()}` : '';
+      off = !!(FM.S && FM.S.settings && FM.S.settings.noClubAccent),
+      key = club && !off ? `${club.id}|${theme}|${club.colors.join()}` : '';
     if (UI._themeKey === key) return;
     UI._themeKey = key;
-    const acc = club && UI.clubAccent(club.colors, theme);
+    const acc = club && !off && UI.clubAccent(club.colors, theme);
     if (!acc) {
       root.style.removeProperty('--acc');
       root.style.removeProperty('--acc-ink');

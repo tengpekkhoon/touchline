@@ -186,6 +186,17 @@ if (!args['skip-speed']) {
   );
 }
 
+// ---- media ----
+{
+  const m = FM.S.media;
+  check(
+    'career',
+    !!m && Object.values(m.att).every((v) => Number.isFinite(v) && v >= -100 && v <= 100),
+    'the media view of the manager is out of range',
+  );
+  check('career', FM.S.news.filter((n) => n.outlet).length > 0 || SEASONS < 1, 'no media headlines in the feed');
+}
+
 // ---- career ----
 check('career', !!FM.S.user, 'the manager is left in an impossible state');
 check('career', sackings <= SEASONS * 40, `${sackings} sacked days in ${SEASONS} seasons`);

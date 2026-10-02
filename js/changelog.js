@@ -3,7 +3,7 @@ window.FM = window.FM || {};
 window.FM.CHANGELOG = [
   {
     "build": "Playtest feedback, round 8",
-    "text": "Comparative-review feedback. A training ground that caps development (a player who has outgrown it develops slowly until it is upgraded). Position percentiles on scouting cards, a contract cost table in talks, and a backfilled player history for new worlds. Real-life club abbreviations and nicknames, and overall shown at the slot and per position. A \"What's new\" list in Settings, built from this table. A Positions card on the player profile and an Other positions switch on the squad list. A standout stat in words on squad and shortlist rows. Developer tools (left out of public builds) and a wonderkid test: over 10 seasons 8/8 measures in range. Calibration 49/50."
+    "text": "Comparative-review feedback. A training ground that caps development (a player who has outgrown it develops slowly until it is upgraded). Position percentiles on scouting cards, a contract cost table in talks, and a backfilled player history for new worlds. Real-life club abbreviations and nicknames, and overall shown at the slot and per position. A \"What's new\" list in Settings, built from this table. A Positions card on the player profile and an Other positions switch on the squad list. A standout stat in words on squad and shortlist rows. A Press room with five outlets that report on your club in their own voices, and a switch for your club's colours as the accent. Developer tools (left out of public builds) and a wonderkid test: over 10 seasons 8/8 measures in range. Calibration 49/50."
   },
   {
     "build": "Playtest feedback, round 7",

@@ -44,6 +44,17 @@ npm run test:long
 Wider suite (`tools/suite.mjs`): a manager plays every match for three seasons (`test:long`: twenty, without the speed limits), and it checks speed (a league day, a pre-season day and a season against a budget; `--budget 2` for a slower machine), that every league table adds up, leagues keep their size and as many clubs go up as down, every full-simulation club can field a legal side all season, no club drifts into impossible debt or wealth, and the world keeps its size and shape. About two minutes a season. In the app, the developer panel has the matching UI smoke test: it opens every tab, sub-tab and a sample of sheets and reports what threw or showed a broken value.
 
 ```bash
+npm run test:realstats
+npm run test:worlddef
+npm run test:import
+npm run import:history -- --dir data/samples/history --out world.json
+```
+
+Data tools for the editor and club packs. The real-stats converter (`js/realstats.js`, command line `tools/realstats.mjs players.csv`) turns a real player's numbers into attributes and ability. The world definition (`js/worlddef.js`, command line `tools/worlddef.mjs --export world.json`) is the world as data, apart from a save: export, validation, an editing API and loading onto a new world. The historical importer (`tools/import-history.mjs`) reads season tables, player stats and club details into a definition through the converter; a synthetic sample is in `data/samples/history`.
+
+**Developer tools** are in Settings → Help → Developer tools, and only when the game runs from the source folder (`npm run serve`): `js/devtools.js` is left out of every built version, including the GitHub Pages site. The panel runs on a copy of your save: a world check, the market so far, wonderkids, speed, a season, and a UI smoke test that opens every screen.
+
+```bash
 npm run test:wonderkids
 ```
 

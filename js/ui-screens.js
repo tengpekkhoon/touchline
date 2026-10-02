@@ -119,6 +119,7 @@
         ['club', 'My Club'],
         ['reply', waiting ? `🔔 Needs reply (${waiting})` : 'Needs reply'],
         ['following', '⭐ Following'],
+        ['press', '🗞️ Press'],
         ['world', 'World'],
       ])}
       ${UI.sub.feed === 'world' ? chips('wnews', WNEWS) : ''}
@@ -176,6 +177,7 @@
     if (f === 'following') items = items.filter((n) => FM.News.followed(n) && !FM.News.isClub(n, cid));
     if (f === 'reply') items = items.filter(UI.isOpenDecision);
     if (f === 'stories') items = items.filter((n) => n.type === 'story');
+    if (f === 'press') items = items.filter((n) => n.outlet || n.type === 'press');
     if (f === 'world') {
       // World News: everything about other clubs and the wider game, filtered by topic
       const w = UI.sub.wnews || 'all';
@@ -2064,6 +2066,34 @@
   };
 
   // ======================= CLUB =======================
+  // The press room: what each outlet thinks of you, the pressure it puts on the club, and the latest from each
+  function pressView() {
+    const M = FM.Media,
+      st = M.state(),
+      mood = M.mood(),
+      pr = M.pressure();
+    const effect =
+      pr <= -0.35
+        ? 'A hostile press wears down the board’s confidence and the fans’ patience a little every match.'
+        : pr >= 0.35
+          ? 'A friendly press props up the board’s confidence and the fans’ mood a little every match.'
+          : 'The press is not moving the board or the fans either way.';
+    const latest = (id) => S().news.find((n) => n.outlet === id);
+    const outlet = (id) => {
+      const o = M.OUTLETS[id],
+        v = st.att[id],
+        n = latest(id);
+      return `<div class="card"><div class="row"><span style="font-size:20px">${o.icon}</span><div class="grow" style="margin-left:10px"><div class="h3">${esc(M.name(id, club()))}</div><div class="tiny dim">${esc(o.kind)} · ${esc(o.line)}</div></div><div style="text-align:right"><b style="color:${C.moodColor(50 + v / 2)}">${M.view(id)}</b></div></div>${C.bar(50 + v / 2, C.moodColor(50 + v / 2))}${n ? `<div class="small" style="margin-top:8px">“${esc(n.title)}”</div>` : '<div class="tiny dim" style="margin-top:8px">Nothing printed about you yet.</div>'}</div>`;
+    };
+    return `<div class="card"><div class="row"><div class="grow"><div class="h3">Press mood</div><div class="small dim">${esc(effect)}</div></div><div style="text-align:right"><div class="kpi"><div class="v" style="color:${C.moodColor(50 + mood / 2)}">${M.moodLabel(mood)}</div></div></div></div>${C.bar(50 + mood / 2, C.moodColor(50 + mood / 2))}<div class="tiny dim" style="margin-top:6px">Results move each outlet at its own speed. Press conferences, big signings and sales do too.</div></div>
+      ${M.order.map(outlet).join('')}
+      <div class="card flat"><div class="h3">The panel on Touchline Tonight</div>${st.pundits
+        .map(
+          (p) =>
+            `<div class="row small" style="padding:4px 0"><b style="min-width:120px">${esc(p.name)}</b><span class="dim">${{ sensible: 'measured, talks about shape', contrarian: 'disagrees on principle', hothead: 'says what he feels' }[p.style]}</span></div>`,
+        )
+        .join('')}</div>`;
+  }
   UI.screens.club = function () {
     // Out of work: only your own profile and the settings
     if (!club() && !['manager', 'settings'].includes(UI.sub.club)) UI.sub.club = 'manager';
@@ -2077,6 +2107,7 @@
               ['staff', 'Staff'],
               ['facilities', 'Facilities'],
               ['finances', 'Finances'],
+              ['press', 'Press'],
               ['hof', 'Hall of Fame'],
               ['archive', 'Archive'],
               ['manager', 'Manager'],
@@ -2092,6 +2123,7 @@
         staff: () => UI.staffView(),
         facilities: facilitiesView,
         finances: financesView,
+        press: pressView,
         hof: hofView,
         archive: archiveView,
         manager: managerView,
@@ -2421,6 +2453,7 @@
   function settingsView() {
     const s = S();
     return `<div class="card"><div class="row"><div class="grow"><div class="h3">Theme</div><div class="small dim">Dark or light UI</div></div><div class="seg" style="width:160px"><button class="${s.settings.theme === 'dark' ? 'on' : ''}" data-act="theme" data-v="dark">Dark</button><button class="${s.settings.theme === 'light' ? 'on' : ''}" data-act="theme" data-v="light">Light</button></div></div></div>
+      <div class="card"><div class="row"><div class="grow"><div class="h3">Club colours</div><div class="small dim">Use your club's colours as the app's accent (buttons, highlights); off keeps the standard accent</div></div><div class="seg" style="width:120px"><button class="${!s.settings.noClubAccent ? 'on' : ''}" data-act="setFlag" data-k="noClubAccent" data-v="0">On</button><button class="${s.settings.noClubAccent ? 'on' : ''}" data-act="setFlag" data-k="noClubAccent" data-v="1">Off</button></div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Default match speed</div></div><div class="seg" style="width:160px">${[1, 2, 4].map((v) => `<button class="${s.settings.speed === v ? 'on' : ''}" data-act="speedDef" data-v="${v}">${v}×</button>`).join('')}</div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Season preview popup</div><div class="small dim">Show it automatically in pre-season (it's always on the Home screen)</div></div><div class="seg" style="width:120px"><button class="${!s.settings.skipPreview ? 'on' : ''}" data-act="setFlag" data-k="skipPreview" data-v="0">On</button><button class="${s.settings.skipPreview ? 'on' : ''}" data-act="setFlag" data-k="skipPreview" data-v="1">Off</button></div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Haptics</div><div class="small dim">A light tap on every button (phones that support it)</div></div><div class="seg" style="width:120px"><button class="${!s.settings.noHaptics ? 'on' : ''}" data-act="setFlag" data-k="noHaptics" data-v="0">On</button><button class="${s.settings.noHaptics ? 'on' : ''}" data-act="setFlag" data-k="noHaptics" data-v="1">Off</button></div></div></div>
@@ -2463,6 +2496,7 @@
   };
   UI.acts.setFlag = (d) => {
     S().settings[d.k] = d.v === '1';
+    if (d.k === 'noClubAccent') UI.applyClubTheme();
     UI.save();
     UI.render();
   };
