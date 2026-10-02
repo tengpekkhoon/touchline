@@ -178,7 +178,7 @@
       const made = [];
       for (let i = 0; i < n; i++) {
         const nat = W.youthNat(c);
-        const pos = U.pick(['GK', 'CB', 'CB', 'FB', 'DM', 'CM', 'CM', 'AM', 'W', 'W', 'ST', 'ST']);
+        const pos = U.pick(['GK', 'CB', 'CB', 'FB', 'WB', 'DM', 'CM', 'CM', 'AM', 'W', 'W', 'ST', 'ST']);
         const ca = Math.round(U.clamp(U.gauss(26 + acad * 3, 4), 18, 48));
         let pa = Math.round(
           U.clamp(U.gauss(Y.base + acad * Y.perAcad + (c.identity === 'youth' ? Y.youthClub : 0), Y.sd), ca + 8, 94),

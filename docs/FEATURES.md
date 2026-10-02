@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-241 features are playable in the web prototype today. Build = the build that added it.
+242 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -246,6 +246,7 @@ Every feature from the game design document, with what is playable in the protot
 | Transfers | Loan offers from clubs where he would play, at a level that suits him, each saying why | Playtest round 6 |
 | Transfers | Home-first transfers, prospect signings, step-up moves and star raids by the biggest clubs | Playtest round 6 |
 | Squad | Left and right positions: LB/RB and LW/RW with a natural side | Playtest round 6 |
+| Squad | Wing-backs as a position (LWB/RWB), with their own attribute weights | Playtest round 6 |
 | Tools | Transfer realism test, with a mode for testing a player you describe | Playtest round 6 |
 | Players | Keeper profiles: keeper attribute groups and realistic outfield skills; clean sheets on the career line | Playtest round 6 |
 | Season | A half-played matchday (left on the full-time screen) is finished as the save loads | Playtest round 4 |

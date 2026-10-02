@@ -1478,7 +1478,7 @@
       if (W.isUser(c.id)) return;
       const sq = W.squad(c.id);
       const need = W.squadTarget(c) - sq.length;
-      const want = D.SQUAD_TIER[c.sim] || D.SQUAD_TIER.full;
+      const want = W.squadWant(c);
       for (let i = 0; i < need; i++) {
         const counts = {};
         sq.forEach((p) => (counts[p.pos] = (counts[p.pos] || 0) + 1));

@@ -406,7 +406,7 @@
   };
   T.fillGap = function (c, sq, mkt) {
     if (sq.length >= W.squadTarget(c)) return false;
-    const want = D.SQUAD_TIER[c.sim] || D.SQUAD_TIER.full;
+    const want = W.squadWant(c);
     const short = Object.keys(want)
       .map((pos) => ({ pos, gap: want[pos] - sq.filter((p) => p.pos === pos && !p.loan).length }))
       .filter((x) => x.gap > 0)

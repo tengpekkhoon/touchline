@@ -91,7 +91,7 @@
   };
 
   // ---------- Positions ----------
-  FM.D.POS = ['GK', 'CB', 'FB', 'DM', 'CM', 'AM', 'W', 'ST'];
+  FM.D.POS = ['GK', 'CB', 'FB', 'WB', 'DM', 'CM', 'AM', 'W', 'ST'];
   FM.D.POS_NAME = {
     GK: 'Goalkeeper',
     CB: 'Centre-Back',
@@ -103,12 +103,14 @@
     ST: 'Striker',
     WB: 'Wing-Back',
   };
-  FM.D.POS_GROUP = { GK: 'GK', CB: 'DEF', FB: 'DEF', DM: 'MID', CM: 'MID', AM: 'MID', W: 'ATT', ST: 'ATT' };
+  FM.D.POS_GROUP = { GK: 'GK', CB: 'DEF', FB: 'DEF', WB: 'DEF', DM: 'MID', CM: 'MID', AM: 'MID', W: 'ATT', ST: 'ATT' };
   // Weights used to compute current ability (CA) per position
   FM.D.POS_W = {
     GK: { reflexes: 3, handling: 3, positioning: 1.5, composure: 1, passing: 0.5 },
     CB: { tackling: 3, positioning: 3, strength: 2, pace: 1, composure: 1, passing: 0.5 },
     FB: { pace: 2, tackling: 2, positioning: 1.5, stamina: 1.5, workRate: 1, passing: 1, dribbling: 0.5 },
+    // a wing-back: a full-back's defending, plus the legs and delivery to cover the whole flank
+    WB: { pace: 2, tackling: 2.3, positioning: 1.8, stamina: 2, workRate: 1.5, passing: 1.2, dribbling: 1 },
     DM: { tackling: 2.5, positioning: 2, passing: 2, workRate: 1.5, stamina: 1, strength: 1, vision: 0.5 },
     CM: { passing: 2.5, vision: 2, technique: 1.5, stamina: 1.5, workRate: 1, tackling: 0.7, composure: 1 },
     AM: { vision: 2.5, technique: 2.5, passing: 2, dribbling: 2, finishing: 1, composure: 1 },
@@ -120,6 +122,7 @@
     GK: { GK: 1 },
     CB: { CB: 1, DM: 0.75, FB: 0.7 },
     FB: { FB: 1, WB: 0.95, CB: 0.7, W: 0.65, DM: 0.6 },
+    WB: { WB: 1, FB: 0.92, W: 0.8, CM: 0.55, DM: 0.55 },
     DM: { DM: 1, CM: 0.9, CB: 0.75 },
     CM: { CM: 1, DM: 0.85, AM: 0.85, WB: 0.55 },
     AM: { AM: 1, CM: 0.85, W: 0.8, ST: 0.75 },
@@ -1980,8 +1983,8 @@
   // Squad sizes per tier (+ academy prospects)
   FM.D.SQUAD_TIER = {
     // deep enough to cover injuries, suspensions and rotation (full: 26 senior players, three of them keepers)
-    full: { GK: 3, CB: 5, FB: 4, DM: 2, CM: 4, AM: 2, W: 4, ST: 2 },
-    light: { GK: 2, CB: 3, FB: 3, DM: 2, CM: 3, AM: 2, W: 3, ST: 2 },
+    full: { GK: 3, CB: 5, FB: 3, WB: 1, DM: 2, CM: 4, AM: 2, W: 4, ST: 2 },
+    light: { GK: 2, CB: 3, FB: 2, WB: 1, DM: 2, CM: 3, AM: 2, W: 3, ST: 2 },
     minimal: { GK: 2, CB: 3, FB: 2, DM: 1, CM: 2, AM: 1, W: 2, ST: 2 },
   };
   FM.D.ACADEMY_TIER = { full: 2, light: 2, minimal: 1 };

@@ -9,10 +9,11 @@
   W.age = (p) => FM.S.year - p.born;
   W.name = (p) => `${p.fn} ${p.ln}`;
   W.short = (p) => `${p.fn[0]}. ${p.ln}`;
-  const slotPos = (t) => (t === 'WB' ? 'FB' : t);
 
   W.calcCA = function (p, pos = p.pos) {
-    const w = D.POS_W[slotPos(pos)];
+    // a natural wing-back is judged on wing-back weights; anyone else in a wing-back slot as a full-back (the slot
+    // asks the same of him, and the match engine is calibrated on it)
+    const w = D.POS_W[pos === 'WB' && p.pos !== 'WB' ? 'FB' : pos];
     let s = 0,
       t = 0;
     for (const k in w) {
@@ -87,17 +88,18 @@
   // A full-back's or winger's natural side: chosen when he is made (mostly his stronger foot; wingers are often
   // inverted), or worked out once from his foot for older saves
   W.side = function (p) {
-    if (p.pos !== 'FB' && p.pos !== 'W') return '';
+    if (p.pos !== 'FB' && p.pos !== 'WB' && p.pos !== 'W') return '';
     if (!p.side) {
       const h = (parseInt(String(p.id).replace(/\D/g, ''), 10) || 0) % 100;
       const strong = p.foot === 'Left' ? 'L' : p.foot === 'Right' ? 'R' : h % 2 ? 'L' : 'R';
-      const keep = p.pos === 'FB' ? 85 : 60; // share on their stronger foot's side
+      const keep = p.pos === 'W' ? 60 : 85; // share on their stronger foot's side
       p.side = h < keep ? strong : strong === 'L' ? 'R' : 'L';
     }
     return p.side;
   };
   // What his position is called: LB/RB and LW/RW for full-backs and wingers, the rest as they are
-  W.posLabel = (p) => (p.pos === 'FB' ? W.side(p) + 'B' : p.pos === 'W' ? W.side(p) + 'W' : p.pos);
+  W.posLabel = (p) =>
+    p.pos === 'FB' ? W.side(p) + 'B' : p.pos === 'WB' ? W.side(p) + 'WB' : p.pos === 'W' ? W.side(p) + 'W' : p.pos;
   // Second positions: a third of outfield players start with one (a few with two) from the positions next to
   // theirs; playing there teaches it (Sea.learnPositions)
   W.genAlt = function (p) {
@@ -504,6 +506,16 @@
   }
   const SQUAD = D.SQUAD_TIER.full;
   // Squad size an AI club aims for, by simulation tier
+  // The positions a club's squad is built from: its tier's numbers, with the flank places split by its formation
+  // (a back-five side carries wing-backs, a back four full-backs)
+  W.squadWant = function (c) {
+    const base = { ...(D.SQUAD_TIER[c && c.sim] || SQUAD) },
+      flank = (base.FB || 0) + (base.WB || 0),
+      back5 = !!(c && c.tactic && (D.FORMATIONS[c.tactic.formation] || []).some((s) => s.t === 'WB'));
+    base.WB = Math.min(flank, back5 ? 2 : flank >= 3 ? 1 : 0);
+    base.FB = flank - base.WB;
+    return base;
+  };
   W.squadTarget = (c) => U.sum(Object.values(D.SQUAD_TIER[c.sim] || SQUAD)) + 2;
   // How far short of his prime a generated player is at each age (ability peaks ~26–30)
   const AGE_GAP = {
@@ -564,7 +576,7 @@
 
   function genSquad(club) {
     const lvl = W.levelFor(club.rep);
-    const positions = randomPos(D.SQUAD_TIER[club.sim] || SQUAD);
+    const positions = randomPos(W.squadWant(club));
     const made = []; // nationality and age of each player so far: the squad starts within its league's rules
     const nat = (age, pick) => {
       const n = FM.Reg.genNat(club, made, age, pick);
@@ -591,11 +603,11 @@
         pa: W.potentialFor(ca, age),
         clubId: club.id,
       });
-      if (pos === 'FB' || pos === 'W') {
+      if (pos === 'FB' || pos === 'WB' || pos === 'W') {
         // left and right in turn, the foot to match (most full-backs; wingers are often inverted)
         const n = (sidesMade[pos] = (sidesMade[pos] || 0) + 1);
         p.side = n % 2 ? 'L' : 'R';
-        if (p.foot !== 'Both' && Math.random() < (pos === 'FB' ? 0.85 : 0.55))
+        if (p.foot !== 'Both' && Math.random() < (pos === 'W' ? 0.55 : 0.85))
           p.foot = p.side === 'L' ? 'Left' : 'Right';
       }
       FM.S.players[p.id] = p;
@@ -603,7 +615,7 @@
     // Academy prospects
     for (let i = 0; i < (D.ACADEMY_TIER[club.sim] ?? 2); i++) {
       const age = U.randi(17, 19),
-        pos = U.pick(['CB', 'CM', 'W', 'ST', 'FB', 'AM']);
+        pos = U.pick(['CB', 'CM', 'W', 'ST', 'FB', 'AM', 'WB']);
       const ca = Math.round(lvl - U.randi(12, 20));
       const p = W.genPlayer({
         nat: nat(age, () => W.youthNat(club)),
@@ -1094,6 +1106,7 @@
       news: [],
       archive: [],
       retired: [],
+      wbPos: 2, // wing-backs are a position from the start (older saves convert theirs on load)
       rules: {
         win: opts.win || 3,
         subs: opts.subs || 5,

@@ -155,7 +155,7 @@
         r[sc.id] += 0.9;
         if (ast) r[ast.id] += 0.45;
       });
-      if (ga === 0) played.filter((p) => ['GK', 'CB', 'FB'].includes(p.pos)).forEach((p) => (r[p.id] += 0.45));
+      if (ga === 0) played.filter((p) => ['GK', 'CB', 'FB', 'WB'].includes(p.pos)).forEach((p) => (r[p.id] += 0.45));
       played.forEach((p) => {
         const rt = Math.round(U.clamp(r[p.id], 4, 10) * 10) / 10;
         ratings[p.id] = rt;

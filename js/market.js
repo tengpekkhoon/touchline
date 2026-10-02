@@ -396,13 +396,13 @@
     if (c.balance < 0) f *= c.balance < -2e7 ? 0.8 : 0.9;
     if (!W.isUser(c.id)) {
       const same = W.squad(c.id).filter((q) => q.pos === p.pos && !q.loan).length;
-      if (same > ((D.SQUAD_TIER[c.sim] || D.SQUAD_TIER.full)[p.pos] || 2) + 1) f *= 0.9;
+      if (same > (W.squadWant(c)[p.pos] || 2) + 1) f *= 0.9;
     }
     return f;
   };
   // The buyer's position: a club short at the position, or buying on deadline day, pays over the odds
   M.urgency = function (c, pos) {
-    const want = (D.SQUAD_TIER[c.sim] || D.SQUAD_TIER.full)[pos] || 2;
+    const want = W.squadWant(c)[pos] || 2;
     const have = W.squad(c.id).filter((q) => q.pos === pos && !q.loan).length;
     let f = have < want - 1 ? 1.15 : have < want ? 1.07 : 1;
     if (FM.Season.windowOpen() && M.isDeadline()) f *= 1.1;

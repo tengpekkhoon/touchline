@@ -84,6 +84,44 @@
   // Consistency fixes on every load: references to players who have since left or retired
   Sv.repair = function (s) {
     Sv.relink(s);
+    // wing-backs arrived as a position: each club's most attacking full-backs become wing-backs, as many as its
+    // squad now carries (two at full-tier clubs, one at light), and free agents clearly better there (once)
+    if ((s.wbPos || 0) < 2 && s.players && FM.W) {
+      s.wbPos = 2;
+      const gain = (p) => FM.W.calcCA(p, 'WB') - FM.W.calcCA(p, 'FB');
+      const toWB = (p) => {
+        p.pos = 'WB';
+        (p.alt = p.alt || {}).FB = Math.max(p.alt.FB || 0, 0.92);
+        p.ca = FM.W.calcCA(p); // (its value follows at the next refresh)
+        if (p.pa < p.ca) p.pa = p.ca;
+      };
+      const byClub = {};
+      for (const p of Object.values(s.players)) {
+        if (p.retired || (p.pos !== 'FB' && p.pos !== 'WB')) continue;
+        if (!p.clubId) {
+          if (p.pos === 'FB' && gain(p) >= 2) toWB(p);
+          continue;
+        }
+        (byClub[p.clubId] = byClub[p.clubId] || []).push(p);
+      }
+      for (const [id, list] of Object.entries(byClub)) {
+        const c = s.clubs[id],
+          want = c ? FM.W.squadWant(c).WB || 0 : 0;
+        let have = list.filter((p) => p.pos === 'WB').length;
+        // the best on each flank first (a left and a right wing-back), then the next best
+        const cands = list.filter((x) => x.pos === 'FB' && gain(x) >= -1).sort((a, b) => gain(b) - gain(a));
+        const sides = new Set(list.filter((p) => p.pos === 'WB').map((p) => FM.W.side(p)));
+        const order = [
+          ...cands.filter((p) => !sides.has(FM.W.side(p)) && (sides.add(FM.W.side(p)), true)),
+          ...cands,
+        ].filter((p, i, arr) => arr.indexOf(p) === i);
+        for (const p of order) {
+          if (have >= want) break;
+          toWB(p);
+          have++;
+        }
+      }
+    }
     for (const p of Object.values(s.players || {})) {
       if (p.pos !== 'GK' || !p.attrs) continue;
       const h = (parseInt(String(p.id).replace(/\D/g, ''), 10) || 0) % 4;
