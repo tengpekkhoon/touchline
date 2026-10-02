@@ -27,6 +27,56 @@
     return Sc._lvl;
   };
 
+  // How a player's stats compare with the other players in his position: the league he plays in (or, if that is too
+  // small to mean anything, his country, then the world). Returns { scope, n, best: [{k, pct}], worst: [{k, pct}] },
+  // pct = the share of those players he is better than (0–100). What you can see is as exact as what you know of him.
+  let peerCache = { key: null, by: {} };
+  Sc.peers = function (p) {
+    const S = FM.S,
+      c = p.clubId && S.clubs[p.clubId],
+      key = `${S.year}-${S.day}`;
+    if (peerCache.key !== key || peerCache.S !== S) peerCache = { key, S, by: {}, all: Object.values(S.players) };
+    const ck = `${c ? c.comp : '-'}|${c ? c.nat : p.nat}|${p.pos}`;
+    if (!peerCache.by[ck]) {
+      const same = peerCache.all.filter((q) => q.pos === p.pos && q.clubId && !q.retired);
+      let scope = 'world',
+        list = same;
+      const league = c && same.filter((q) => S.clubs[q.clubId] && S.clubs[q.clubId].comp === c.comp);
+      const nation = c && same.filter((q) => S.clubs[q.clubId] && S.clubs[q.clubId].nat === c.nat);
+      if (league && league.length >= 12) ((scope = 'league'), (list = league));
+      else if (nation && nation.length >= 12) ((scope = 'nation'), (list = nation));
+      const arrs = {};
+      for (const k of Object.keys(D.POS_W[p.pos])) arrs[k] = list.map((q) => q.attrs[k]).sort((a, b) => a - b);
+      peerCache.by[ck] = { scope, n: list.length, arrs };
+    }
+    const g = peerCache.by[ck],
+      known = p.clubId === FM.S.user.clubId ? 100 : Sc.know(p.id),
+      unc = 1 - known / 100;
+    const rows = Object.keys(g.arrs).map((k) => {
+      // an attribute you only partly know is read a little off (the same misreading each time)
+      const v = p.attrs[k] + ((U.hash(p.id + k) % 200) / 100 - 1) * unc * 3,
+        a = g.arrs[k];
+      let less = 0,
+        eq = 0;
+      for (const x of a) {
+        if (x < v - 0.25) less++;
+        else if (x <= v + 0.25) eq++;
+        else break;
+      }
+      return { k, pct: Math.round(((less + eq / 2) / Math.max(1, a.length)) * 100) };
+    });
+    rows.sort((a, b) => b.pct - a.pct);
+    return {
+      scope: g.scope,
+      n: g.n,
+      best: rows.slice(0, 3).filter((r) => r.pct >= 55),
+      worst: rows
+        .slice(-3)
+        .reverse()
+        .filter((r) => r.pct <= 45),
+    };
+  };
+
   Sc.dismiss = function (pid) {
     const u = FM.S.user;
     (u.dismissed = u.dismissed || {})[pid] = { year: FM.S.year, rep: u.reports[pid] || null };

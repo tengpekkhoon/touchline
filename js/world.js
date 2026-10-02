@@ -515,6 +515,112 @@
     p.career.spells.push({ c: clubId, from: FM.S.year, to: null, apps: 0, goals: 0 });
   };
   W.spell = (p) => p.career.spells[p.career.spells.length - 1];
+  // A past for a player of a new world: his last three seasons as history rows (appearances by how good he is for his
+  // club, goals and assists by position and finishing), most at his current club, now and then with an earlier one. The
+  // current spell, his career totals and the rows agree. Young players have fewer seasons, and those at fewer games.
+  const HIST_RATES = {
+    // per appearance: goals, assists, shots, key passes, tackles, interceptions
+    ST: [0.42, 0.12, 2.6, 0.9, 0.5, 0.2],
+    W: [0.24, 0.2, 1.8, 1.6, 0.9, 0.4],
+    WM: [0.15, 0.17, 1.3, 1.5, 1.1, 0.6],
+    AM: [0.2, 0.22, 1.7, 2.0, 0.8, 0.5],
+    CM: [0.08, 0.12, 0.9, 1.3, 1.9, 1.0],
+    DM: [0.04, 0.06, 0.5, 0.8, 2.5, 1.6],
+    WB: [0.04, 0.12, 0.5, 1.1, 2.0, 1.2],
+    FB: [0.03, 0.1, 0.4, 0.9, 2.1, 1.3],
+    CB: [0.05, 0.03, 0.4, 0.2, 1.5, 2.1],
+    GK: [0, 0, 0, 0, 0, 0],
+  };
+  W.backfillHistory = function (p) {
+    const S = FM.S,
+      c = p.clubId && S.clubs[p.clubId],
+      age = W.age(p);
+    if (!c || age < 18 || p.history) return;
+    const seasons = Math.min(3, age - 17),
+      sp = W.spell(p);
+    if (!sp) return;
+    // the young came through here; an older player who arrived recently has an earlier club for the seasons before
+    let here = Math.min(seasons, Math.max(0, S.year - sp.from));
+    if (age < 22) {
+      here = seasons;
+      sp.from = Math.min(sp.from, S.year - seasons);
+    }
+    let prev = null;
+    if (here < seasons) {
+      const near = Object.values(S.clubs).filter(
+        (x) => x.nat === c.nat && x.id !== c.id && x.sim !== 'nation' && Math.abs(x.rep - c.rep) <= 10 && !x.parent,
+      );
+      prev = near.length ? U.pick(near) : null;
+    }
+    const lvl = W.levelFor(c.rep),
+      rate = HIST_RATES[p.pos] || HIST_RATES.CM,
+      comp = c.comp && S.comps[c.comp],
+      games = (comp && comp.fixtures && comp.fixtures.length) || 38;
+    const rows = [],
+      spellAt = {};
+    for (let k = seasons; k >= 1; k--) {
+      const y = S.year - k;
+      const club = k <= here || !prev ? c : prev,
+        young = age - k < 21;
+      // appearances: a regular if he is good for the club, a rotation player or a fringe man if not; the young play less
+      const rel = p.ca - (club === c ? lvl : W.levelFor(prev.rep)) - (age - k < 22 ? 4 : 0);
+      const apps = U.clamp(
+        Math.round(U.gauss(games * (0.45 + rel * 0.03) * (young ? 0.8 : 1), games * 0.14)),
+        0,
+        games,
+      );
+      const finish = 0.6 + p.attrs.finishing / 25;
+      const g = Math.round(apps * rate[0] * finish * U.rand(0.6, 1.4));
+      const a = Math.round(apps * rate[1] * U.rand(0.6, 1.4));
+      const gk = p.pos === 'GK';
+      const ga = gk ? Math.round(apps * U.rand(1.0, 1.5)) : 0;
+      rows.push({
+        y,
+        c: club.id,
+        apps,
+        g,
+        a,
+        r: apps
+          ? +U.clamp(6.55 + rel * 0.025 + U.gauss(0, 0.12) + (g + a) / Math.max(1, apps) / 6, 5.8, 7.9).toFixed(2)
+          : 0,
+        mins: apps * Math.round(U.rand(66, 88)),
+        sh: Math.round(apps * rate[2] * U.rand(0.7, 1.3)),
+        kp: Math.round(apps * rate[3] * U.rand(0.7, 1.3)),
+        tk: Math.round(apps * rate[4] * U.rand(0.7, 1.3)),
+        ic: Math.round(apps * rate[5] * U.rand(0.7, 1.3)),
+        cs: gk ? Math.round(apps * U.rand(0.22, 0.38)) : 0,
+        sv: gk ? Math.round(ga * U.rand(2, 3.2)) : 0,
+        ga,
+        xga: gk ? Math.round(ga * U.rand(0.85, 1.15) * 10) / 10 : 0,
+        motm: Math.round(apps * 0.02 * Math.max(0, 1 + rel * 0.08) * U.rand(0, 2)),
+        yc: Math.round(
+          apps * ({ CB: 0.16, DM: 0.2, CM: 0.12, FB: 0.12, WB: 0.12, GK: 0.02 }[p.pos] || 0.07) * U.rand(0.4, 1.6),
+        ),
+        rc: Math.random() < 0.04 ? 1 : 0,
+      });
+      const sk = club.id;
+      spellAt[sk] = spellAt[sk] || { apps: 0, goals: 0, from: y };
+      spellAt[sk].apps += apps;
+      spellAt[sk].goals += g;
+    }
+    p.history = rows.filter((r) => r.apps > 0); // (a season without a game is no row, as in a played world)
+    // spells and career totals agree with the rows: the current spell covers at least its rows, an earlier club gets one
+    const mine = spellAt[c.id];
+    if (mine) {
+      if (mine.apps > sp.apps) {
+        p.career.apps += mine.apps - sp.apps;
+        sp.apps = mine.apps;
+      }
+      sp.goals = Math.max(sp.goals || 0, mine.goals);
+    }
+    if (prev && spellAt[prev.id] && spellAt[prev.id].apps > 0) {
+      const e = spellAt[prev.id];
+      p.career.spells.splice(-1, 0, { c: prev.id, from: e.from, to: sp.from - 1, apps: e.apps, goals: e.goals });
+      p.career.apps += e.apps;
+      p.career.goals += e.goals;
+    }
+    if (mine) p.career.goals += mine.goals;
+  };
   // Your player: at your club or at your B team (whose players belong to you)
   // Your club or your B team (whose wages you pay): never an AI buyer, borrower or bidder
   W.isUserSide = (clubId) => W.isUser(clubId) || (!!FM.Youth && W.isUser(FM.Youth.owner(clubId)));
@@ -1404,6 +1510,7 @@
       sp.apps = Math.round(yrs * 40 * share * U.rand(0.8, 1.1));
       p.career.apps += sp.apps;
     }
+    for (const id in S.players) W.backfillHistory(S.players[id]); // up to three seasons of stats behind each player
     for (const id in S.players) S.players[id].value = W.value(S.players[id]); // priced with their final club and contract
     FM.Youth.assignAll(); // U21 and U18 squads from the start
     return S;

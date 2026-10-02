@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-253 features are playable in the web prototype today. Build = the build that added it.
+256 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -258,6 +258,9 @@ Every feature from the game design document, with what is playable in the protot
 | Competitions | Real rules per competition (see COMPETITION_RULES.md): each league's own tiebreakers (head-to-head in Spain, Italy and Portugal, wins first in Brazil and MLS, goals scored first in Korea), UEFA's head-to-head in group tables, two-legged semi-finals in the Coppa Italia and Taça, a two-legged Copa do Brasil, neutral grounds for the FA Cup semi-finals and the Copa Argentina, single-match centralised AFC Elite knockouts, two-legged CAF and CONCACAF finals, two-legged play-off finals in Spain and Italy, Germany's relegation play-offs (16th against the 3rd of the division below), and no away goals anywhere | Playtest round 7 |
 | Clubs | Real-life abbreviations (OM, OL, SLB, ASSE, BAR, MIL, ...) and nicknames (Gunners, Los Blancos, Die Roten, Bhoys, ...) for 538 clubs, shown on the club screens and in the chants; older saves get them | Playtest round 7 |
 | Players | Overall at the slot: the number on the pitch is his overall at that position (an improvised full-back reads lower than in his own place), the profile shows his overall and his overall at each position he can play, and its tooltip explains how overall maps to stars | Playtest round 7 |
+| Scouting | A card on a known player's profile: his best and worst three stats against other players in his position in his league (top 4%, bottom 39%), widening to his country or the world when the league is small; approximate when you only partly know him | Playtest round 8 |
+| Contracts | Contract talks show the cost: one line (wages a year, share of your wage bill, total over the deal) and a season-by-season table of wages, bonuses and fees, with the wage bill against revenue and the board's limit | Playtest round 8 |
+| World | A new world starts with a past: up to three seasons of stats behind each player (appearances, goals, assists, ratings), earlier clubs for recent arrivals, and career totals and spells that match | Playtest round 8 |
 | UI | Bottom bar: six equal columns, icons and labels on one line (International is Nations) | Playtest round 7 |
 | Players | Keeper profiles: keeper attribute groups and realistic outfield skills; clean sheets on the career line | Playtest round 6 |
 | Season | A half-played matchday (left on the full-time screen) is finished as the save loads | Playtest round 4 |

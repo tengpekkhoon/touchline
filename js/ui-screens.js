@@ -1009,6 +1009,25 @@
     const alt = W.canPlay(p).map(([t, v]) => `${W.altLabel(p, t)}${v < 0.9 ? ' (learning)' : ''}`);
     return alt.length ? ` · also ${alt.join(', ')}` : '';
   };
+  // Best and worst three stats against the other players in his position (FM.Scouting.peers)
+  const peerCard = (p, v, own) => {
+    if (!(own || v.k >= 40)) return '';
+    const r = FM.Scouting.peers(p),
+      comp = p.clubId && S().clubs[p.clubId] && S().comps[S().clubs[p.clubId].comp];
+    const label = (k) => D.ATTR_LABEL[k] || k.replace(/([A-Z])/g, ' $1').replace(/^./, (x) => x.toUpperCase());
+    const where =
+      r.scope === 'league' && comp
+        ? `in ${comp.name}`
+        : r.scope === 'nation'
+          ? `in ${D.NATIONS[S().clubs[p.clubId].nat].name}`
+          : 'in the world';
+    const line = (x, good) => {
+      const t = good ? Math.max(1, 100 - x.pct) : Math.max(1, x.pct);
+      return `<div class="row small" style="padding:4px 0"><span>${good ? '✅' : '⚠️'}</span><span class="grow" style="margin-left:8px">${esc(label(x.k))}</span><b style="color:var(--${good ? 'good' : 'bad'})">${good ? 'top' : 'bottom'} ${t}%</b></div>`;
+    };
+    if (!r.best.length && !r.worst.length) return '';
+    return `<div class="card"><div class="h3">Against other ${esc((D.POS_NAME[p.pos] || p.pos).toLowerCase())}s ${esc(where)}</div><div class="tiny dim" style="margin-bottom:4px">His best and worst stats among ${r.n} players in his position${!own && v.k < 70 ? ' (approximate)' : ''}</div>${r.best.map((x) => line(x, true)).join('')}${r.worst.map((x) => line(x, false)).join('')}</div>`;
+  };
   function playerHTML(p) {
     const v = FM.Scouting.view(p),
       c = p.clubId && CL(p.clubId),
@@ -1059,6 +1078,7 @@
       ${own && p.traits.length ? `<div class="small dim" style="margin:-2px 2px 12px">${p.traits.map((t) => D.TRAITS[t].desc).join(' ')}</div>` : ''}
       ${report}
       <div class="card"><div class="row"><div class="h3 grow">Profile</div>${!own && v.k < 70 ? '<span class="pill warn">Approximate</span>' : ''}</div>${own || v.k >= 40 ? C.radar(p, !own && v.k < 70) : '<div class="lock">🔒 Profile hidden</div>'}${attrs()}</div>
+      ${peerCard(p, v, own)}
       <div class="card"><div class="row"><div class="h3 grow">Form</div><span class="small dim">last ${p.form.length}</span></div>
         <div class="row" style="align-items:flex-end;gap:5px;height:70px;margin-top:10px">${p.form.length ? p.form.map((r) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px"><div class="tiny b">${r.toFixed(1)}</div><div style="width:100%;border-radius:4px;height:${(r - 4) * 8}px;background:${r >= 7.5 ? 'var(--good)' : r >= 6.5 ? 'var(--acc2)' : 'var(--bad)'}"></div></div>`).join('') : '<div class="dim small">No appearances yet.</div>'}</div>
 </div>

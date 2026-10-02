@@ -207,6 +207,32 @@
     }
     return false;
   };
+  // What a package costs season by season: wages (with the yearly rise), the bonuses you can expect him to earn, and
+  // in the first season the signing-on and agent fees. Returns { rows: [{ label, wages, extras, total }], total,
+  // first (the first season's wages), share (of your current wage bill), ratio (the wage bill against revenue after the
+  // deal) }. A transfer fee is not in it: it is paid once (or in instalments) and shown on its own.
+  Co.costPlan = function (p, club, t, fee, mode) {
+    const WK = FM.D.WAGE_WEEKS,
+      st = FM.D.STATUS[t.status] || FM.D.STATUS.regular;
+    const rows = [];
+    for (let k = 0; k < Math.max(1, t.years); k++) {
+      const wages = t.wage * WK * Math.pow(1 + (t.rise || 0), k);
+      let extras = (t.app || 0) * st.apps * (WK / 43) + (t.goal || 0) * st.apps * goalRate(p);
+      if (k === 0) extras += (t.bonus || 0) + Co.agentFee(p, fee, t.wage, mode);
+      const y = S().year + k;
+      rows.push({ label: `${y}/${String((y + 1) % 100).padStart(2, '0')}`, wages, extras, total: wages + extras });
+    }
+    const bill = FM.Finance.wageBill(club),
+      base = mode === 'renew' ? p.wage * WK : 0,
+      first = rows[0].wages;
+    return {
+      rows,
+      total: U.sum(rows, (r) => r.total),
+      first,
+      share: bill > 0 ? (first - base) / bill : 0,
+      ratio: (bill - base + first) / Math.max(1, FM.Finance.revenue(club)),
+    };
+  };
   Co.agentFee = function (p, fee, wage, mode) {
     const ag = Co.agentInfo(p);
     const base = mode === 'transfer' && fee > 0 ? fee * ag.fee : wage * 52 * ag.fee * 0.6;

@@ -184,6 +184,7 @@
           ${dealBlock(o, p)}`
           : '';
       const w = p.wage;
+      const cost = Co.costPlan(p, c, t, renew || o.mode === 'pre' ? 0 : o.fee, mode);
       body = `${fee}
         <div class="row" style="margin-top:14px"><div class="h3 grow">Weekly wage</div><span class="tiny dim">${need == null ? '' : `needs ~${U.money(need)} with these terms`}</span></div>
         ${numIn('wage', t.wage, 'ngWage')}${stepBtns('wage', [-1000, -250, -50, 50, 250, 1000])}
@@ -213,7 +214,9 @@
         ])}
         <div class="row" style="margin-top:12px"><div class="grow"><div class="h3">Relegation wage cut</div><div class="tiny dim">Wage drops 25% if we go down</div></div><button class="btn sm ${t.relegCut ? 'pri' : ''}" data-act="ngToggle">${t.relegCut ? 'Included' : 'Off'}</button></div>
         <div class="card flat" style="margin-top:14px"><div class="row small"><span class="grow">Package vs his demands</span><b style="color:${ev.ok ? 'var(--good)' : pct >= 90 ? 'var(--warn)' : 'var(--bad)'}">${ev.hard ? 'Refuses the role' : ev.ok ? 'Acceptable' : pct + '%'}</b></div>${C.bar(pct, ev.ok ? 'var(--good)' : pct >= 90 ? 'var(--warn)' : 'var(--bad)')}
-          <div class="tiny dim" style="margin-top:6px">Total cost: ${U.money((renew ? 0 : o.fee) + t.wage * 52 * t.years + (t.bonus || 0) + Co.agentFee(p, o.fee, t.wage, mode))} incl. agent fee ${U.money(Co.agentFee(p, o.fee, t.wage, mode))}${t.release ? ` · a club paying ${U.money(t.release)} can take him` : ''}</div></div>`;
+          <div class="small" style="margin-top:8px"><b>This deal:</b> ${U.money(cost.first)}/yr in wages, ${renew ? 'adding' : ''} ${Math.round(cost.share * 100)}% ${renew ? 'to' : 'of'} your wage bill, ${U.money(cost.total)} over the contract${!renew && o.mode !== 'pre' && o.fee ? ` plus the ${U.money(o.fee)} fee` : ''}</div>
+          <table class="t" style="margin-top:6px"><tr><th class="l">Season</th><th>Wages</th><th>Bonuses &amp; fees</th><th>Total</th></tr>${cost.rows.map((r) => `<tr><td class="l">${r.label}</td><td>${U.money(r.wages)}</td><td>${r.extras ? U.money(r.extras) : '—'}</td><td class="b">${U.money(r.total)}</td></tr>`).join('')}</table>
+          <div class="tiny dim" style="margin-top:6px">Bonuses are what he'd earn at his expected appearances and goals; the first season includes the agent's fee (${U.money(Co.agentFee(p, o.fee, t.wage, mode))}). Your wage bill would be ${Math.round(cost.ratio * 100)}% of revenue${cost.ratio >= FM.Finance.LIMIT.cut ? ` — over the ${Math.round(FM.Finance.LIMIT.cut * 100)}% where the board cut budgets` : ''}.${t.release ? ` A club paying ${U.money(t.release)} can take him.` : ''}</div></div>`;
     }
     const rivals = !renew && o.mode !== 'loan' ? FM.Market.rivals(p) : [];
     const reg = !renew && FM.Reg.real() ? FM.Reg.canSign(c, p) : { ok: true };
