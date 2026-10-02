@@ -629,7 +629,7 @@
                 : squadView())
     );
   };
-  UI._sq = { sort: 'pos', filter: 'all' };
+  UI._sq = { sort: 'pos', filter: 'all', stat: false };
   const SQ_SORT = {
     pos: ['Position', (a, b) => b.ca - a.ca],
     ca: ['Rating', (a, b) => b.ca - a.ca],
@@ -650,6 +650,23 @@
     tired: ['Tired (<75%)', (p) => p.fitness < 75],
     expiring: ['Contract ending', (p) => p.contract <= S().year + 1],
     young: ['21 & under', (p) => W.age(p) <= 21],
+  };
+  // His standout stat in words, against the players in his position in his league (blank when you know too little of
+  // him to say, or nothing stands out): " · Finishing: outstanding"
+  UI.standout = (p) => {
+    if (!(W.ownPlayer(p) || FM.Scouting.know(p.id) >= 40)) return '';
+    const r = FM.Scouting.peers(p),
+      top = r.best[0],
+      low = r.worst[0];
+    const pick = top && (!low || top.pct - 50 >= 50 - low.pct) ? top : low;
+    if (!pick) return '';
+    const w = FM.Scouting.wordPct(pick.pct);
+    const label = D.ATTR_LABEL[pick.k] || pick.k;
+    return ` · <span style="${w.cls ? `color:var(--${w.cls})` : ''}">${esc(label)}: ${w.word.toLowerCase()}</span>`;
+  };
+  UI.acts.sqStat = () => {
+    UI._sq.stat = !UI._sq.stat;
+    UI.render();
   };
   UI.acts.sqSort = (d) => {
     UI._sq.sort = d.v;
@@ -687,7 +704,7 @@
     const foreign = sq.filter((p) => p.nat !== club().nat).length;
     const expiring = sq.filter((p) => !p.loan && p.contract <= S().year).length;
     const extra = (p) =>
-      `${q.sort === 'wage' ? ` · ${U.money(p.wage)}/wk` : ''}${starters.has(p.id) ? ' · <span style="color:var(--acc)">XI</span>' : ''}${p.form.length ? ' · ' + U.avg(p.form.slice(-5)).toFixed(1) + ' avg' : ''}`;
+      `${q.sort === 'wage' ? ` · ${U.money(p.wage)}/wk` : ''}${starters.has(p.id) ? ' · <span style="color:var(--acc)">XI</span>' : ''}${q.stat ? UI.standout(p) : ''}${p.form.length ? ' · ' + U.avg(p.form.slice(-5)).toFixed(1) + ' avg' : ''}`;
     const list = sq.filter((p) => SQ_FILTER[q.filter][1](p, starters)).sort(SQ_SORT[q.sort][1]);
     const chipsRow = (act, cur, map) =>
       `<div class="chips noswipe">${Object.entries(map)
@@ -709,6 +726,7 @@
     return `<div class="row small dim" style="margin:0 2px 8px"><span>${sq.length} players</span><span>·</span><span>Wages ${U.money(U.sum(sq, (p) => p.wage))}/wk</span><span class="grow"></span><span>Foreign ${foreign}${FM.Reg.real() ? '' : ` (${W.foreignLimitText()} in squad)`}</span></div>${UI.regLine(club())}
       ${expiring ? `<button class="warnline tap" style="width:100%;text-align:left;border:0" data-act="sqFilter" data-v="expiring">⏳ ${expiring} contract${expiring === 1 ? '' : 's'} expire this season — unsigned players leave on a free. Show them ›</button>` : ''}
       <div class="small b dim" style="margin:4px 2px 0">SORT</div>${chipsRow('sqSort', q.sort, SQ_SORT)}<div class="small b dim" style="margin:0 2px">SHOW</div>${chipsRow('sqFilter', q.filter, SQ_FILTER)}
+      <div class="chips noswipe"><button class="chip ${q.stat ? 'on' : ''}" data-act="sqStat">Standout stat in words</button></div>
       ${list.length ? body : '<div class="empty">No players match this filter.</div>'}`;
   }
   function academyView() {
@@ -1564,7 +1582,7 @@
       <div class="card flat list" style="padding:4px 12px" id="searchRes">${
         ps
           .slice(0, 50)
-          .map((p) => C.playerRow(p, ` · ${Math.round(FM.Scouting.know(p.id))}% known`))
+          .map((p) => C.playerRow(p, ` · ${Math.round(FM.Scouting.know(p.id))}% known${UI.standout(p)}`))
           .join('') || '<div class="empty">No matches</div>'
       }</div>`;
   }
@@ -1587,7 +1605,7 @@
   function shortlistView() {
     const sl = S().user.shortlist.filter(P);
     return sl.length
-      ? `<div class="card flat list" style="padding:4px 12px">${sl.map((id) => C.playerRow(P(id), ` · ${Math.round(FM.Scouting.know(id))}% known`)).join('')}</div>`
+      ? `<div class="card flat list" style="padding:4px 12px">${sl.map((id) => C.playerRow(P(id), ` · ${Math.round(FM.Scouting.know(id))}% known${UI.standout(P(id))}`)).join('')}</div>`
       : '<div class="empty">Your shortlist is empty. Tap ☆ on a player card.</div>';
   }
 

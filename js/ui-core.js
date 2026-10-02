@@ -529,7 +529,7 @@
   // Out of work, only actions that make sense without a club run (anything club-bound — offers, talks, tactics,
   // old feed decisions — would reach for a club that isn't there). A whitelist fails safe: a toast, never a crash.
   const OUT_OF_WORK_OK =
-    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|warmPick|follow|leagueGo|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|dev[A-Z]w*|reportProblem|sendReport|sendFeedback|sendFeedbackGo|whatsNew|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|roundupAll|currency|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqFilter)$/;
+    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|warmPick|follow|leagueGo|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|dev[A-Z]w*|reportProblem|sendReport|sendFeedback|sendFeedbackGo|whatsNew|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|roundupAll|currency|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqStat|sqFilter)$/;
   // A club badge anywhere opens that club's overview, except where choosing the club is the point of the button,
   // and not during a match
   const CREST_KEEP = /^(ngClub|ngRandom|clubView|clubGoMine|takeJob)$/;
