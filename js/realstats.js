@@ -84,7 +84,10 @@
     return U.clamp(top - (l.tier - 1) * 6, 10, 98);
   };
   // The ability an average regular is expected to have at that strength
-  RS.baseline = (strength) => 34 + strength * 0.36;
+  // The two numbers calibration adjusts: offset moves every ability up or down, spread is how many ability points one
+  // spread above typical is worth (the dashboard's calibration fits both against ratings you trust)
+  RS.TUNE = { offset: 0, spread: 8 };
+  RS.baseline = (strength) => 34 + strength * 0.36 + RS.TUNE.offset;
 
   // ---------- What is typical, per 90 minutes, by position group: [mean, spread] ----------
   // gls goals · ast assists · xg · xa expected assists · sh shots · pas passes · pct pass completion % · kp key passes ·
@@ -249,7 +252,7 @@
     if (rating != null) q = qw ? q * 0.7 + ((rating - 6.8) / 0.55) * 0.3 : (rating - 6.8) / 0.55;
     q = U.clamp(q, -2.5, 3);
     // ability: the baseline moved by quality, pulled back by how little there is to go on
-    const ca = Math.round(U.clamp(base + q * 8 * conf, 22, 94));
+    const ca = Math.round(U.clamp(base + q * RS.TUNE.spread * conf, 22, 94));
 
     // attributes: every one the position asks for starts at the ability level, others a little lower; the metrics
     // that bear on an attribute then move it

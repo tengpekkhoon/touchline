@@ -72,6 +72,14 @@ function loadSave({ b64, seed: s = 7 }) {
   W.rosterVer++;
   return { ...overview(), upgradedFrom: from };
 }
+function loadDef({ def, seed: s = 7 }) {
+  boot(+s);
+  const report = FM.WorldDef.load(def);
+  Sea.init();
+  const pick = Object.values(FM.S.clubs).find((c) => c.comp === 'D1' && c.rep < 70) || Object.values(FM.S.clubs)[0];
+  W.takeCharge(pick.id, 'Dev Manager');
+  return { ...overview(), definition: report };
+}
 function exportSave() {
   need();
   const text = FM.Save.pack(FM.S);
@@ -687,6 +695,7 @@ function inspectSave({ b64 }) {
 const CMDS = {
   newWorld,
   loadSave,
+  loadDef,
   exportSave,
   overview,
   clubs,

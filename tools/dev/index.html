@@ -241,6 +241,7 @@
         <button data-t="saves">Saves</button>
         <button data-t="conv">Converter</button>
         <button data-t="imp">Importer</button>
+        <button data-t="defs">Definitions</button>
         <button data-t="game">Game</button>
       </nav>
       <span class="tiny dim" style="margin-left: auto">local only · 127.0.0.1</span>
@@ -313,6 +314,26 @@
           </div>
         </div>
         <div class="card" style="margin-top: 14px" id="cres" hidden></div>
+        <h2>Calibrate against ratings you trust</h2>
+        <p class="dim">
+          Give the converter players whose ability you already know (another game's ratings, a scouting service, your
+          own judgement) in an <code>expected</code> column, on the same 1–100 scale as the game's ability. It shows how
+          far off it is, where it is biased by position group, and the offset and spread that would fit best (<code
+            >RS.TUNE</code
+          >
+          in <code>js/realstats.js</code>).
+        </p>
+        <div class="card">
+          <textarea id="cal_in" placeholder="name,pos,age,minutes,league,goals,assists,...,expected"></textarea>
+          <div class="row" style="margin-top: 8px">
+            <button class="b ghost" id="cal_sample">Load the synthetic sample</button>
+            <input type="file" id="cal_file" accept=".csv,.txt" />
+            <label class="p">Default league <input id="cal_league" value="D1" style="width: 70px" /></label>
+            <span style="flex: 1"></span>
+            <button class="b" id="cal_go">Calibrate</button>
+          </div>
+        </div>
+        <div class="card" id="cal_res" style="margin-top: 12px" hidden></div>
       </section>
 
       <!-- IMPORTER -->
@@ -347,6 +368,34 @@
           ><input type="file" data-for="iclubs" accept=".csv,.json" />
         </div>
         <div class="card" style="margin-top: 14px" id="ires" hidden></div>
+        <h2>Map a messy file</h2>
+        <p class="dim">
+          Real datasets rarely arrive with the importer's column names. Load any CSV (comma, semicolon or tab), say what
+          it is, check the suggested mapping, match its club names to the base world's clubs, and get a file in the
+          importer's format.
+        </p>
+        <div class="card">
+          <div class="row">
+            <input type="file" id="m_file" accept=".csv,.tsv,.txt" />
+            <label class="p"
+              >It is a
+              <select id="m_kind">
+                <option value="tables">season table</option>
+                <option value="players">player statistics</option>
+                <option value="clubs">list of clubs</option>
+              </select></label
+            >
+            <label class="p"
+              >Season <input id="m_season" type="number" placeholder="if not a column" style="width: 110px"
+            /></label>
+            <label class="p">League <input id="m_league" placeholder="D1 or a name" style="width: 110px" /></label>
+          </div>
+          <textarea id="m_text" style="margin-top: 8px; min-height: 90px" placeholder="…or paste it here"></textarea>
+          <div class="row" style="margin-top: 8px"><button class="b" id="m_go">Read it</button></div>
+        </div>
+        <div class="card" id="m_map" style="margin-top: 12px" hidden></div>
+        <div class="card" id="m_clubs" style="margin-top: 12px" hidden></div>
+        <div class="card" id="m_out" style="margin-top: 12px" hidden></div>
         <h2>Check a world definition</h2>
         <div class="card">
           <div class="row">
@@ -509,6 +558,37 @@
           </div>
         </div>
         <div class="card" id="sres" style="margin-top: 14px" hidden></div>
+      </section>
+
+      <!-- DEFINITIONS -->
+      <section id="defs">
+        <p class="dim">
+          Edit a world definition (<code>js/worlddef.js</code>) in forms, with live validation against the base world:
+          club names, colours, ratings and stadiums, players added with the real-stats converter, past seasons. Start
+          from the base world, a file, or an importer result; try it in the World tab; download it.
+        </p>
+        <div class="card">
+          <div class="row">
+            <button class="b ghost" id="d_base">Start from the base world</button>
+            <label class="b ghost" style="cursor: pointer"
+              >Open a file<input type="file" id="d_file" accept=".json" hidden
+            /></label>
+            <button class="b ghost" id="d_fromimp">From the Importer result</button>
+            <span style="flex: 1"></span>
+            <span id="d_status" class="tiny dim">No definition loaded.</span>
+            <button class="b ghost" id="d_try">Try it in the World tab</button>
+            <button class="b" id="d_dl">Download</button>
+          </div>
+          <div class="row" style="margin-top: 10px" id="d_nav">
+            <button class="b ghost" data-dv="meta">Meta and rules</button>
+            <button class="b ghost" data-dv="clubs">Clubs</button>
+            <button class="b ghost" data-dv="players">Players</button>
+            <button class="b ghost" data-dv="history">History</button>
+            <button class="b ghost" data-dv="raw">Raw JSON</button>
+          </div>
+        </div>
+        <div class="card no" id="d_errs" style="margin-top: 12px" hidden></div>
+        <div id="d_view" style="margin-top: 12px"></div>
       </section>
 
       <!-- GAME -->
@@ -1602,6 +1682,655 @@
       document.querySelector('[data-t="world"]').addEventListener('click', () => {
         refreshWorld().then(() => wview(WV));
       });
+      // ---------- Data tools: definition editor, converter calibration, column mapper ----------
+      let BASE = null; // { clubs, leagues, nations } of the base world, from the reference world (made on first use)
+      async function baseInfo() {
+        if (!BASE) BASE = await api('def/clubs');
+        return BASE;
+      }
+      const post = (p, body) => api(p, body);
+      const clubName = (id) =>
+        BASE && BASE.clubs.find((c) => c.id === id) ? BASE.clubs.find((c) => c.id === id).name : id || '';
+
+      // ----- Definitions -----
+      let DEF = null,
+        DV = 'meta',
+        vtimer = null;
+      const dstat = (t, cls = 'dim') => {
+        $('#d_status').textContent = t;
+        $('#d_status').className = 'tiny ' + cls;
+      };
+      function scheduleValidate() {
+        clearTimeout(vtimer);
+        vtimer = setTimeout(validateDef, 500);
+      }
+      async function validateDef() {
+        if (!DEF) return;
+        try {
+          const r = await post('def/validate', { def: DEF });
+          const el = $('#d_errs');
+          el.hidden = !r.errors.length;
+          el.innerHTML = `<b>${r.errors.length} error${r.errors.length === 1 ? '' : 's'}</b> (a definition with errors will not load)<div class="tiny" style="margin-top:4px">${r.errors.slice(0, 12).map(esc).join('<br>')}${r.errors.length > 12 ? '<br>…' : ''}</div>`;
+          dstat(
+            `${DEF.meta.name} · ${DEF.clubs.length} clubs · ${DEF.players.length} players · ${DEF.history.seasons.length} past seasons · ${r.errors.length ? r.errors.length + ' errors' : 'valid'}${r.warnings.length ? ' · ' + r.warnings.length + ' warnings' : ''}`,
+            r.errors.length ? 'no' : 'ok',
+          );
+          $('#d_try').disabled = !!r.errors.length;
+        } catch (e) {
+          dstat('Could not validate: ' + e.message, 'no');
+        }
+      }
+      async function setDef(def) {
+        await baseInfo();
+        DEF = def;
+        dview(DV);
+        validateDef();
+      }
+      $('#d_base').onclick = async () => {
+        dstat('Building the base world (a few seconds the first time)…');
+        try {
+          await baseInfo();
+          setDef(await (await fetch('/api/def/base')).json());
+        } catch (e) {
+          dstat(e.message, 'no');
+        }
+      };
+      $('#d_file').onchange = async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        try {
+          const d = JSON.parse(await f.text());
+          if (d.format !== 'touchline-world') throw new Error('Not a touchline-world file');
+          setDef(d);
+        } catch (er) {
+          dstat(er.message, 'no');
+        }
+      };
+      $('#d_fromimp').onclick = () => {
+        if (!WORLD) return dstat('Run the importer first (Importer tab)', 'no');
+        setDef(JSON.parse(WORLD));
+      };
+      $('#d_dl').onclick = () =>
+        DEF && download((DEF.meta.name || 'world').replace(/\W+/g, '_') + '.json', JSON.stringify(DEF, null, 1));
+      $('#d_try').onclick = async () => {
+        if (!DEF) return;
+        dstat('Loading it into a new world…');
+        try {
+          const o = await wapi('loadDef', { def: DEF, seed: 7 });
+          setOverview(o);
+          document.querySelector('[data-t="world"]').click();
+          dstat(
+            `Loaded: ${o.definition.clubs} clubs edited, ${o.definition.playersAdded} players added, ${o.definition.seasons} past seasons`,
+            'ok',
+          );
+        } catch (e) {
+          dstat(e.message, 'no');
+        }
+      };
+      $('#d_nav').onclick = (e) => {
+        const v = e.target.dataset && e.target.dataset.dv;
+        if (v) dview(v);
+      };
+      const field = (label, html) =>
+        `<label class="p" style="flex-direction:column;align-items:flex-start">${label}${html}</label>`;
+      const DVIEWS = {
+        meta() {
+          const m = DEF.meta,
+            r = DEF.rules;
+          $('#d_view').innerHTML =
+            `<div class="card"><div class="row" style="gap:14px">${field('Name', `<input data-m="name" value="${esc(m.name || '')}" style="width:220px"/>`)}${field('Author', `<input data-m="author" value="${esc(m.author || '')}" style="width:160px"/>`)}${field('Start year', `<input data-m="startYear" type="number" value="${m.startYear ?? ''}" style="width:90px"/>`)}</div>${field('Description', `<textarea data-m="description" style="min-height:60px">${esc(m.description || '')}</textarea>`)}<h3 style="margin-top:12px">Rules</h3><div class="row" style="gap:14px">${field('Points for a win', `<input data-r="win" type="number" value="${r.win}" style="width:70px"/>`)}${field('Substitutes', `<input data-r="subs" type="number" value="${r.subs}" style="width:70px"/>`)}${field('Foreign limit', `<input data-r="foreignLimit" type="number" value="${r.foreignLimit}" style="width:70px"/>`)}${field('Registration', `<select data-r="reg"><option ${r.reg === 'real' ? 'selected' : ''}>real</option></select>`)}${field('Two-legged ties', `<select data-r="twoLegs"><option value="1" ${r.twoLegs ? 'selected' : ''}>yes</option><option value="0" ${!r.twoLegs ? 'selected' : ''}>no</option></select>`)}${field('Away goals', `<select data-r="awayGoals"><option value="0" ${!r.awayGoals ? 'selected' : ''}>no</option><option value="1" ${r.awayGoals ? 'selected' : ''}>yes</option></select>`)}</div></div>
+            <h2>Leagues (${DEF.leagues.length})</h2><div class="card" style="padding:4px 8px;max-height:300px;overflow:auto"><table>${th(['Id', 'Name', 'Short', 'Tier', 'Simulation'])}<tbody>${DEF.leagues.map((l, i) => `<tr><td class="dim">${l.id}</td><td><input data-lg="${i}" data-f="name" value="${esc(l.name)}" style="width:100%"/></td><td><input data-lg="${i}" data-f="short" value="${esc(l.short || '')}" style="width:70px"/></td><td>${l.tier}</td><td class="dim">${l.sim}</td></tr>`).join('')}</tbody></table></div>`;
+        },
+        clubs() {
+          const f = DEF._f || (DEF._f = {});
+          const leagues = DEF.leagues;
+          $('#d_view').innerHTML =
+            `<div class="card"><div class="row"><select id="dc_l"><option value="">All leagues</option>${leagues.map((l) => `<option value="${l.id}">${esc(l.name)}</option>`).join('')}</select><input id="dc_q" placeholder="club" value="${esc(f.q || '')}" style="width:150px"/><span class="tiny dim" id="dc_n"></span></div></div><div class="card" style="margin-top:10px;padding:4px 8px"><table id="dc_t"></table></div>`;
+          $('#dc_l').value = f.league || '';
+          const draw = () => {
+            f.league = $('#dc_l').value;
+            f.q = $('#dc_q').value;
+            const q = f.q.toLowerCase();
+            const rows = DEF.clubs
+              .map((c, i) => [c, i])
+              .filter(
+                ([c]) =>
+                  (!f.league || c.league === f.league) &&
+                  (!q || c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q)),
+              );
+            $('#dc_n').textContent = `${rows.length} clubs${rows.length > 120 ? ' (first 120)' : ''}`;
+            $('#dc_t').innerHTML =
+              th(['Id', 'Name', 'Short', 'Nickname', 'City', 'Colours', 'Rep', 'Stadium', 'Capacity']) +
+              `<tbody>${rows
+                .slice(0, 120)
+                .map(
+                  ([c, i]) =>
+                    `<tr><td class="dim">${c.id}</td><td><input data-c="${i}" data-f="name" value="${esc(c.name)}" style="width:170px"/></td><td><input data-c="${i}" data-f="short" value="${esc(c.short || '')}" style="width:56px"/></td><td><input data-c="${i}" data-f="nick" value="${esc(c.nick || '')}" style="width:100px"/></td><td><input data-c="${i}" data-f="city" value="${esc(c.city || '')}" style="width:100px"/></td><td><input type="color" data-c="${i}" data-f="c0" value="${c.colors[0]}"/><input type="color" data-c="${i}" data-f="c1" value="${c.colors[1]}"/></td><td><input data-c="${i}" data-f="rep" type="number" value="${c.rep}" style="width:56px"/></td><td><input data-c="${i}" data-f="stadium" value="${esc(c.stadium.name)}" style="width:150px"/></td><td><input data-c="${i}" data-f="cap" type="number" value="${c.stadium.cap}" style="width:76px"/></td></tr>`,
+                )
+                .join('')}</tbody>`;
+          };
+          $('#dc_l').onchange = $('#dc_q').oninput = draw;
+          draw();
+        },
+        async players() {
+          const info = await baseInfo();
+          const A = [
+            'pace',
+            'stamina',
+            'strength',
+            'dribbling',
+            'technique',
+            'passing',
+            'vision',
+            'finishing',
+            'tackling',
+            'positioning',
+            'composure',
+            'workRate',
+            'reflexes',
+            'handling',
+          ];
+          $('#d_view').innerHTML =
+            `<datalist id="dp_c">${info.clubs.map((c) => `<option value="${esc(c.name)}"></option>`).join('')}</datalist><div class="card"><h3>Add a player</h3><div class="row" style="gap:10px;margin-top:8px">${field('First name', '<input id="dp_fn" style="width:110px"/>')}${field('Last name', '<input id="dp_ln" style="width:130px"/>')}${field('Nation', `<input id="dp_nat" list="dp_n" value="ENG" style="width:70px"/><datalist id="dp_n">${(info.nations || []).map((n) => `<option>${n}</option>`).join('')}</datalist>`)}${field('Born', `<input id="dp_born" type="number" value="${(DEF.meta.startYear || 2026) - 24}" style="width:80px"/>`)}${field('Position', '<input id="dp_pos" value="ST" style="width:60px"/>')}${field('Foot', '<select id="dp_foot"><option>Right</option><option>Left</option><option>Both</option></select>')}${field('Club', '<input id="dp_club" list="dp_c" style="width:190px" placeholder="blank = free agent"/>')}${field('Contract to', `<input id="dp_con" type="number" value="${(DEF.meta.startYear || 2026) + 3}" style="width:80px"/>`)}</div>
+            <div class="two" style="margin-top:10px"><div><div class="tiny dim">His numbers (CSV with a header, one row; counts are season totals) — or fill the attributes by hand</div><textarea id="dp_stats" style="min-height:70px" placeholder="minutes,goals,assists,xg,shots,passes,passPct,league&#10;2700,18,4,15.2,95,480,76,D1"></textarea><div class="row" style="margin-top:6px"><button class="b ghost" id="dp_conv">Convert to attributes</button><span class="tiny dim" id="dp_msg"></span></div></div><div><div class="row" style="gap:6px">${A.map((k) => `<label class="p">${k}<input data-a="${k}" type="number" step="0.1" min="1" max="20" style="width:54px"/></label>`).join('')}<label class="p">potential<input id="dp_pa" type="number" style="width:54px"/></label></div></div></div>
+            <div class="row" style="margin-top:10px"><button class="b" id="dp_add">Add to the definition</button></div></div>
+            <h2>Players in the definition (${DEF.players.length})</h2><div class="card" style="padding:4px 8px;max-height:420px;overflow:auto"><table>${th(['Name', 'Pos', 'Born', 'Nat', 'Club', 'Potential', ''])}<tbody>${
+              DEF.players
+                .slice(0, 300)
+                .map(
+                  (p, i) =>
+                    `<tr><td>${esc(p.fn)} ${esc(p.ln)}</td><td>${p.pos}</td><td>${p.born}</td><td class="dim">${p.nat}</td><td class="dim">${esc(p.club ? clubName(p.club) : 'free agent')}</td><td>${p.pa ?? ''}</td><td><a href="#" data-pdel="${i}" class="dim">remove</a></td></tr>`,
+                )
+                .join('') ||
+              '<tr><td colspan="7" class="dim">None. The base world\'s own players stay as they are; players added here join their club and take the place of its weakest at that position.</td></tr>'
+            }</tbody></table></div>`;
+          $('#dp_conv').onclick = async () => {
+            const rows = RSplit($('#dp_stats').value);
+            if (!rows.length) return ($('#dp_msg').textContent = 'Paste a header and a row of numbers');
+            const age = (DEF.meta.startYear || 2026) - +$('#dp_born').value;
+            const r = (
+              await post('def/convert', {
+                rows: [{ name: 'x', pos: $('#dp_pos').value, age, ...rows[0] }],
+                league: 'D1',
+              })
+            )[0];
+            if (r.error) return ($('#dp_msg').textContent = r.error);
+            document.querySelectorAll('#d_view [data-a]').forEach((i) => (i.value = r.attrs[i.dataset.a]));
+            $('#dp_pa').value = r.pa;
+            $('#dp_msg').textContent =
+              `ability ${r.ca}, potential ${r.pa}, ${Math.round(r.confidence * 100)}% evidence`;
+          };
+          $('#dp_add').onclick = () => {
+            const attrs = {};
+            document.querySelectorAll('#d_view [data-a]').forEach((i) => (attrs[i.dataset.a] = +i.value));
+            const club = info.clubs.find((c) => c.name === $('#dp_club').value || c.id === $('#dp_club').value);
+            const p = {
+              id: 'dp_' + Date.now().toString(36),
+              fn: $('#dp_fn').value.trim(),
+              ln: $('#dp_ln').value.trim(),
+              nat: $('#dp_nat').value.trim().toUpperCase(),
+              born: +$('#dp_born').value,
+              pos: $('#dp_pos').value.trim().toUpperCase(),
+              foot: $('#dp_foot').value,
+              attrs,
+              pa: +$('#dp_pa').value || undefined,
+              club: club ? club.id : null,
+              contract: +$('#dp_con').value,
+            };
+            DEF.players.push(p);
+            dview('players');
+            validateDef();
+          };
+        },
+        history() {
+          $('#d_view').innerHTML =
+            `<div class="card" style="padding:4px 8px"><table>${th(['Season', 'Label', 'Leagues', 'Table rows', ''])}<tbody>${DEF.history.seasons.map((s, i) => `<tr><td>${s.year}</td><td class="dim">${esc(s.label || '')}</td><td>${Object.keys(s.comps || {}).join(', ')}</td><td>${Object.values(s.comps || {}).reduce((t, c) => t + (c.table || []).length, 0)}</td><td><a href="#" data-sdel="${i}" class="dim">remove</a></td></tr>`).join('') || '<tr><td colspan="5" class="dim">No past seasons. Add them with the importer (Importer tab) and bring the result here.</td></tr>'}</tbody></table></div>`;
+        },
+        raw() {
+          const t = JSON.stringify(DEF, (k, v) => (k === '_f' ? undefined : v), 1);
+          $('#d_view').innerHTML =
+            `<div class="card"><textarea id="dr_t" style="min-height:420px">${esc(t.length > 3e6 ? t.slice(0, 3e6) + '\n…(cut: too large to show)' : t)}</textarea><div class="row" style="margin-top:8px"><button class="b" id="dr_apply" ${t.length > 3e6 ? 'disabled' : ''}>Apply the text</button><span class="tiny dim" id="dr_msg"></span></div></div>`;
+          $('#dr_apply').onclick = () => {
+            try {
+              DEF = JSON.parse($('#dr_t').value);
+              $('#dr_msg').textContent = 'Applied';
+              validateDef();
+            } catch (e) {
+              $('#dr_msg').textContent = e.message;
+            }
+          };
+        },
+      };
+      // a one-row CSV into an object (numbers as numbers)
+      function RSplit(text) {
+        const lines = text.trim().split(/\r?\n/);
+        if (lines.length < 2) return [];
+        const head = lines[0].split(',').map((x) => x.trim());
+        return lines.slice(1).map((l) =>
+          Object.fromEntries(
+            l
+              .split(',')
+              .map((v, i) => [head[i], v.trim() !== '' && !Number.isNaN(+v) ? +v : v.trim()])
+              .filter(([k, v]) => k && v !== ''),
+          ),
+        );
+      }
+      function dview(v) {
+        DV = v;
+        document.querySelectorAll('#d_nav button').forEach((b) => b.classList.toggle('on', b.dataset.dv === v));
+        if (!DEF)
+          return ($('#d_view').innerHTML =
+            '<div class="card dim">Start from the base world or open a file first.</div>');
+        const r = DVIEWS[v]();
+        if (r && r.catch) r.catch((e) => ($('#d_view').innerHTML = `<div class="card no">${esc(e.message)}</div>`));
+      }
+      // edits write straight into the definition; validation follows
+      $('#d_view').addEventListener('input', (e) => {
+        const t = e.target,
+          d = t.dataset;
+        if (!DEF || !d) return;
+        if (d.c !== undefined) {
+          const c = DEF.clubs[+d.c],
+            v = t.type === 'number' ? +t.value : t.value;
+          if (d.f === 'c0' || d.f === 'c1') c.colors[d.f === 'c0' ? 0 : 1] = t.value;
+          else if (d.f === 'stadium') c.stadium.name = t.value;
+          else if (d.f === 'cap') c.stadium.cap = +t.value;
+          else c[d.f] = v;
+        } else if (d.lg !== undefined) DEF.leagues[+d.lg][d.f] = t.value;
+        else if (d.m) DEF.meta[d.m] = t.type === 'number' ? (t.value === '' ? null : +t.value) : t.value;
+        else if (d.r)
+          DEF.rules[d.r] =
+            d.r === 'twoLegs' || d.r === 'awayGoals' ? t.value === '1' : t.type === 'number' ? +t.value : t.value;
+        else return;
+        scheduleValidate();
+      });
+      $('#d_view').addEventListener('change', (e) => {
+        const d = e.target.dataset;
+        if (d && d.r) $('#d_view').dispatchEvent(new Event('input'));
+      });
+      $('#d_view').addEventListener('click', (e) => {
+        const a = e.target;
+        if (a.dataset && a.dataset.pdel !== undefined) {
+          e.preventDefault();
+          DEF.players.splice(+a.dataset.pdel, 1);
+          dview('players');
+          validateDef();
+        }
+        if (a.dataset && a.dataset.sdel !== undefined) {
+          e.preventDefault();
+          DEF.history.seasons.splice(+a.dataset.sdel, 1);
+          dview('history');
+          validateDef();
+        }
+      });
+      document.querySelector('[data-t="defs"]').addEventListener('click', () => dview(DV));
+
+      // ----- Converter calibration -----
+      $('#cal_sample').onclick = async () =>
+        ($('#cal_in').value = await (await fetch('/game/data/samples/converter/reference.csv')).text());
+      $('#cal_file').onchange = async (e) => {
+        const f = e.target.files[0];
+        if (f) $('#cal_in').value = await f.text();
+      };
+      $('#cal_go').onclick = async () => {
+        const rows = parseDelim($('#cal_in').value).rows;
+        const el = $('#cal_res');
+        el.hidden = false;
+        el.innerHTML = '<span class="dim">Calibrating (the reference world is built on first use)…</span>';
+        const r = await post('def/calibrate', { rows: rows.map(cleanRow), league: $('#cal_league').value });
+        if (r.error) return (el.innerHTML = `<span class="no">${esc(r.error)}</span>`);
+        const f1 = (v) => (Number.isNaN(v) ? '—' : v.toFixed(1));
+        const scatter = () => {
+          const S = 260,
+            lo = 20,
+            hi = 100,
+            x = (v) => 24 + ((v - lo) / (hi - lo)) * (S - 30),
+            y = (v) => S - 18 - ((v - lo) / (hi - lo)) * (S - 30);
+          return `<svg width="${S}" height="${S}" style="background:#0b121b;border-radius:8px"><line x1="${x(lo)}" y1="${y(lo)}" x2="${x(hi)}" y2="${y(hi)}" stroke="#2c3d55"/>${r.rows.map((p) => `<circle cx="${x(p.expected)}" cy="${y(p.predicted)}" r="3.5" fill="${Math.abs(p.error) > 8 ? '#ff5d5d' : Math.abs(p.error) > 4 ? '#ffb020' : '#3ddc84'}"><title>${esc(p.name)}: expected ${p.expected}, converted ${p.predicted}</title></circle>`).join('')}<text x="${S / 2}" y="${S - 3}" fill="#8fa1b8" font-size="10" text-anchor="middle">expected</text><text x="9" y="${S / 2}" fill="#8fa1b8" font-size="10" transform="rotate(-90 9 ${S / 2})" text-anchor="middle">converted</text></svg>`;
+        };
+        el.innerHTML = `<div class="two"><div>${scatter()}<div class="tiny dim" style="margin-top:4px">on the line is right; green within 4, amber within 8</div></div><div>
+          <table><thead><tr><th></th><th>Now</th><th>Best fit</th></tr></thead><tbody>
+          <tr><td>Players</td><td>${r.current.n}</td><td>${r.best ? r.best.n : '—'}</td></tr>
+          <tr><td>Mean error (bias)</td><td>${f1(r.current.bias)}</td><td>${r.best ? f1(r.best.bias) : '—'}</td></tr>
+          <tr><td>Mean absolute error</td><td><b>${f1(r.current.mae)}</b></td><td><b class="ok">${r.best ? f1(r.best.mae) : '—'}</b></td></tr>
+          <tr><td>Root mean square error</td><td>${f1(r.current.rmse)}</td><td>${r.best ? f1(r.best.rmse) : '—'}</td></tr>
+          <tr><td>Correlation</td><td>${r.current.corr.toFixed(2)}</td><td></td></tr>
+          <tr><td>Offset · spread</td><td>${r.current.offset} · ${r.current.spread}</td><td>${r.best ? r.best.offset + ' · ' + r.best.spread : ''}</td></tr></tbody></table>
+          <div class="tiny dim" style="margin-top:8px">By position group (mean error): ${Object.entries(r.byGroup)
+            .map(([g, v]) => `${g} ${v.bias > 0 ? '+' : ''}${v.bias.toFixed(1)} (${v.n})`)
+            .join(' · ')}</div>
+          ${r.best ? `<div class="card flat" style="margin-top:10px"><div class="tiny dim">To adopt the best fit, set in js/realstats.js</div><code>RS.TUNE = { offset: ${r.best.offset}, spread: ${r.best.spread} };</code></div>` : ''}${r.skipped.length ? `<div class="tiny no" style="margin-top:8px">Skipped: ${r.skipped.map(esc).join('; ')}</div>` : ''}</div></div>
+          <h3 style="margin-top:14px">Players, worst first</h3><table style="margin-top:6px"><thead><tr><th>Name</th><th>Pos</th><th>Expected</th><th>Converted</th><th>Error</th><th>At best fit</th></tr></thead><tbody>${r.rows
+            .slice()
+            .sort((a, b) => Math.abs(b.error) - Math.abs(a.error))
+            .map(
+              (p) =>
+                `<tr><td>${esc(p.name)}</td><td>${p.pos}</td><td>${p.expected}</td><td>${p.predicted}</td><td class="${Math.abs(p.error) > 8 ? 'no' : Math.abs(p.error) > 4 ? 'down' : 'ok'}">${p.error > 0 ? '+' : ''}${p.error}</td><td class="dim">${p.atBest}</td></tr>`,
+            )
+            .join('')}</tbody></table>`;
+      };
+
+      // ----- Column mapper -----
+      function parseDelim(text) {
+        const t = String(text).replace(/\r\n?/g, '\n').replace(/^﻿/, '');
+        const first = t.split('\n')[0] || '';
+        const delim = [',', ';', '\t'].map((d) => [d, first.split(d).length]).sort((a, b) => b[1] - a[1])[0][0];
+        const rows = [];
+        let cur = [],
+          f = '',
+          q = false;
+        for (let i = 0; i < t.length; i++) {
+          const c = t[i];
+          if (q) {
+            if (c === '"' && t[i + 1] === '"') {
+              f += '"';
+              i++;
+            } else if (c === '"') q = false;
+            else f += c;
+          } else if (c === '"') q = true;
+          else if (c === delim) {
+            cur.push(f);
+            f = '';
+          } else if (c === '\n') {
+            cur.push(f);
+            rows.push(cur);
+            cur = [];
+            f = '';
+          } else f += c;
+        }
+        if (f.length || cur.length) {
+          cur.push(f);
+          rows.push(cur);
+        }
+        const head = (rows.shift() || []).map((h) => h.trim());
+        const body = rows.filter((r) => r.some((x) => x.trim() !== ''));
+        return { head, rows: body.map((r) => Object.fromEntries(head.map((h, i) => [h, (r[i] ?? '').trim()]))), delim };
+      }
+      const cleanRow = (r) =>
+        Object.fromEntries(
+          Object.entries(r).map(([k, v]) => [k, v !== '' && !Number.isNaN(+v) ? +v : v === '' ? null : v]),
+        );
+      const FIELDS_BY_KIND = {
+        tables: {
+          season: ['season', 'year'],
+          league: ['league', 'competition', 'comp', 'div', 'division'],
+          pos: ['pos', 'rk', 'rank', 'position', '#', 'pl'],
+          club: ['club', 'squad', 'team', 'name'],
+          p: ['p', 'mp', 'pld', 'played', 'games', 'matches'],
+          w: ['w', 'won', 'wins'],
+          d: ['d', 'drawn', 'draws', 'drew'],
+          l: ['l', 'lost', 'losses'],
+          gf: ['gf', 'for', 'f', 'goalsfor', 'scored'],
+          ga: ['ga', 'against', 'goalsagainst', 'conceded'],
+          pts: ['pts', 'points', 'pt'],
+        },
+        players: {
+          name: ['name', 'player'],
+          nat: ['nat', 'nation', 'nationality', 'country'],
+          born: ['born', 'birth', 'yob', 'birthyear'],
+          age: ['age'],
+          pos: ['pos', 'position'],
+          club: ['club', 'squad', 'team'],
+          league: ['league', 'comp', 'competition'],
+          minutes: ['min', 'mins', 'minutes'],
+          goals: ['gls', 'goals', 'g'],
+          assists: ['ast', 'assists', 'a'],
+          xg: ['xg', 'expectedgoals'],
+          xa: ['xag', 'xa'],
+          shots: ['sh', 'shots'],
+          passes: ['cmp', 'passescompleted', 'passes', 'pass'],
+          passPct: ['cmp%', 'pass%', 'passaccuracy', 'passpct'],
+          keyPasses: ['kp', 'keypasses'],
+          tackles: ['tkl', 'tackles', 'tklw'],
+          interceptions: ['int', 'interceptions'],
+          clearances: ['clr', 'clearances'],
+          dribbles: ['succ', 'dribbles', 'dribbleswon', 'takeonswon'],
+          aerials: ['won', 'aerials', 'aerialswon'],
+          pressures: ['press', 'pressures', 'prs'],
+          saves: ['saves', 'sv'],
+          savePct: ['save%', 'savepct', 'sv%'],
+          goalsConceded: ['ga', 'conceded', 'goalsconceded'],
+          rating: ['rating', 'rtg', 'avgrating'],
+          foot: ['foot'],
+        },
+        clubs: {
+          club: ['club', 'id', 'code'],
+          name: ['name', 'fullname'],
+          short: ['short', 'abbr', 'abbreviation', 'tla'],
+          nick: ['nick', 'nickname'],
+          city: ['city', 'town'],
+          colour1: ['colour1', 'color1', 'primary'],
+          colour2: ['colour2', 'color2', 'secondary'],
+          rep: ['rep', 'reputation'],
+          stadium: ['stadium', 'ground', 'venue'],
+          capacity: ['capacity', 'cap'],
+        },
+      };
+      let MP = null; // { kind, head, rows, map: {sourceHeader: field}, res: {sourceClub: clubId} }
+      const normH = (h) => h.toLowerCase().replace(/[^a-z0-9%#]/g, '');
+      $('#m_file').onchange = async (e) => {
+        const f = e.target.files[0];
+        if (f) $('#m_text').value = await f.text();
+      };
+      $('#m_go').onclick = async () => {
+        const text = $('#m_text').value;
+        if (!text.trim()) return;
+        await baseInfo();
+        const { head, rows } = parseDelim(text);
+        const kind = $('#m_kind').value,
+          fields = FIELDS_BY_KIND[kind];
+        const map = {},
+          used = new Set();
+        for (const h of head) {
+          const n = normH(h);
+          const hit = Object.entries(fields).find(([f, al]) => !used.has(f) && al.includes(n));
+          if (hit) {
+            map[h] = hit[0];
+            used.add(hit[0]);
+          }
+        }
+        MP = { kind, head, rows, map, res: {} };
+        drawMap();
+      };
+      function drawMap() {
+        const { kind, head, rows, map } = MP;
+        const fields = Object.keys(FIELDS_BY_KIND[kind]);
+        $('#m_map').hidden = false;
+        $('#m_map').innerHTML =
+          `<h3>${rows.length} rows, ${head.length} columns</h3><table><thead><tr><th>Column in your file</th><th>First values</th><th>Maps to</th></tr></thead><tbody>${head
+            .map(
+              (h) =>
+                `<tr><td><b>${esc(h)}</b></td><td class="dim">${esc(
+                  rows
+                    .slice(0, 3)
+                    .map((r) => r[h])
+                    .join(' · '),
+                )}</td><td><select data-mh="${esc(h)}"><option value="">— ignore —</option>${fields.map((f) => `<option value="${f}" ${map[h] === f ? 'selected' : ''}>${f}</option>`).join('')}</select></td></tr>`,
+            )
+            .join('')}</tbody></table>`;
+        $('#m_map').onchange = (e) => {
+          const h = e.target.dataset.mh;
+          if (h === undefined) return;
+          for (const k in map) if (e.target.value && map[k] === e.target.value) delete map[k];
+          if (e.target.value) map[h] = e.target.value;
+          else delete map[h];
+          drawMap();
+        };
+        drawClubs();
+      }
+      const bigrams = (s) => {
+        const a = new Set();
+        for (let i = 0; i < s.length - 1; i++) a.add(s.slice(i, i + 2));
+        return a;
+      };
+      const normName = (s) =>
+        String(s || '')
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .toLowerCase()
+          .replace(/\b(fc|afc|cf|sc|ac|as|ssc|sv|fk|bk|the)\b/g, '')
+          .replace(/[^a-z0-9]/g, '');
+      // Short forms people use ("Man Utd", "Spurs") are widened to words before comparing
+      const ABBR = {
+        man: 'manchester',
+        utd: 'united',
+        cty: 'city',
+        spurs: 'tottenham hotspur',
+        wolves: 'wolverhampton wanderers',
+        brum: 'birmingham',
+        inter: 'internazionale',
+        atl: 'atletico',
+        gladbach: 'monchengladbach',
+        "m'gladbach": 'monchengladbach',
+        "nott'm": 'nottingham',
+        sheff: 'sheffield',
+        wed: 'wednesday',
+      };
+      const words = (s) =>
+        String(s || '')
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .toLowerCase()
+          .replace(/[^a-z0-9' ]/g, ' ')
+          .split(/\s+/)
+          .filter(Boolean)
+          .flatMap((w) => (ABBR[w] || w).split(' '))
+          .filter((w) => !['fc', 'afc', 'cf', 'sc', 'ac', 'the'].includes(w));
+      function suggest(name) {
+        const qw = words(name),
+          n = normName(name),
+          bn = bigrams(n);
+        return BASE.clubs
+          .map((c) => {
+            let best = 0;
+            for (const key of [c.name, c.short, c.nick, c.id.replace(/^c_/, '')].filter(Boolean)) {
+              const cw = words(key),
+                k = normName(key);
+              if (k === n) return [c, 1];
+              const hit = qw.filter((w) =>
+                cw.some((x) => x === w || (w.length >= 3 && x.startsWith(w)) || (x.length >= 3 && w.startsWith(x))),
+              ).length;
+              const token = qw.length
+                ? hit / qw.length - (cw.length > qw.length ? 0.04 * (cw.length - qw.length) : 0)
+                : 0;
+              const bk = bigrams(k);
+              const dice = (2 * [...bn].filter((x) => bk.has(x)).length) / (bn.size + bk.size || 1);
+              best = Math.max(best, token, dice * 0.9);
+            }
+            return [c, best];
+          })
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3);
+      }
+      const exact = (name) => {
+        const n = normName(name);
+        return BASE.clubs.find((c) =>
+          [c.id, c.name, c.short, c.nick, c.id.replace(/^c_/, '')].some((k) => k && normName(k) === n),
+        );
+      };
+      function drawClubs() {
+        const { map, rows, res } = MP;
+        const col = Object.keys(map).find((h) => map[h] === 'club');
+        const el = $('#m_clubs');
+        if (!col) {
+          el.hidden = true;
+          return drawOut();
+        }
+        const counts = {};
+        for (const r of rows) counts[r[col]] = (counts[r[col]] || 0) + 1;
+        const names = Object.keys(counts).sort();
+        const status = names.map((n) => {
+          const m = res[n] ? BASE.clubs.find((c) => c.id === res[n]) : exact(n);
+          return { n, m, sug: m ? [] : suggest(n) };
+        });
+        const ok = status.filter((s) => s.m).length;
+        el.hidden = false;
+        el.innerHTML = `<h3>Clubs: ${ok} of ${names.length} matched</h3><div class="tiny dim">Names match the base world's clubs by name, short name, nickname or id. Pick a club for the rest (the closest are suggested), or leave them: the importer reports what it cannot match.</div><datalist id="m_dl">${BASE.clubs.map((c) => `<option value="${esc(c.name)}"></option>`).join('')}</datalist><table style="margin-top:8px"><thead><tr><th>In your file</th><th>Rows</th><th>Matched to</th></tr></thead><tbody>${status
+          .sort((a, b) => !!a.m - !!b.m)
+          .map(
+            (s) =>
+              `<tr><td>${esc(s.n)}</td><td class="dim">${counts[s.n]}</td><td>${s.m ? `<span class="ok">✓ ${esc(s.m.name)}</span>` : `<span class="no">?</span> ${s.sug.map(([c, sc]) => `<a href="#" data-pick="${esc(s.n)}" data-id="${c.id}" class="${sc > 0.5 ? 'ok' : 'dim'}">${esc(c.name)}</a>`).join(' · ')} <input list="m_dl" data-other="${esc(s.n)}" placeholder="other…" style="width:150px"/>`}</td></tr>`,
+          )
+          .join('')}</tbody></table>`;
+        el.onclick = (e) => {
+          const a = e.target.closest('[data-pick]');
+          if (a) {
+            e.preventDefault();
+            res[a.dataset.pick] = a.dataset.id;
+            drawClubs();
+          }
+        };
+        el.onchange = (e) => {
+          const n = e.target.dataset.other;
+          if (n === undefined) return;
+          const c = BASE.clubs.find((x) => x.name === e.target.value || x.id === e.target.value);
+          if (c) {
+            res[n] = c.id;
+            drawClubs();
+          }
+        };
+        drawOut();
+      }
+      function build() {
+        const { kind, rows, map, res } = MP;
+        const fields = Object.keys(FIELDS_BY_KIND[kind]);
+        const cols = fields.filter((f) => Object.values(map).includes(f));
+        const season = $('#m_season').value,
+          league = $('#m_league').value.trim();
+        if (kind === 'tables') {
+          if (season && !cols.includes('season')) cols.unshift('season');
+          if (league && !cols.includes('league')) cols.unshift('league');
+        }
+        if (kind === 'players' && league && !cols.includes('league')) cols.push('league');
+        const src = (f) => Object.keys(map).find((h) => map[h] === f);
+        const val = (r, f) => {
+          let v = src(f) ? r[src(f)] : f === 'season' ? season : f === 'league' ? league : '';
+          if (v == null) v = '';
+          v = String(v);
+          if (f === 'age') v = v.split('-')[0];
+          if (f === 'nat') v = (v.match(/[A-Za-z]{3}(?![A-Za-z])/g) || [v]).pop().toUpperCase();
+          if (/^(passPct|savePct)$/.test(f)) v = v.replace('%', '');
+          if (
+            [
+              'minutes',
+              'goals',
+              'assists',
+              'shots',
+              'passes',
+              'p',
+              'w',
+              'd',
+              'l',
+              'gf',
+              'ga',
+              'pts',
+              'capacity',
+              'pos',
+            ].includes(f)
+          )
+            v = v.replace(/[,\s]/g, '');
+          if (f === 'club' || (kind === 'clubs' && f === 'club')) {
+            const m = res[v] ? BASE.clubs.find((c) => c.id === res[v]) : exact(v);
+            if (m) v = m.id;
+          }
+          return v;
+        };
+        const q = (v) => (/[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v);
+        return [cols.join(',')].concat(rows.map((r) => cols.map((f) => q(val(r, f))).join(','))).join('\n') + '\n';
+      }
+      function drawOut() {
+        const csv = build(),
+          lines = csv.split('\n');
+        const el = $('#m_out');
+        el.hidden = false;
+        el.innerHTML = `<div class="row"><h3 style="margin:0">The importer's format</h3><span class="tiny dim">${lines.length - 2} rows</span><span style="flex:1"></span><button class="b ghost" id="m_use">Use it in the importer</button><button class="b" id="m_dl2">Download CSV</button></div><pre class="out">${esc(lines.slice(0, 8).join('\n'))}</pre>`;
+        $('#m_use').onclick = () => {
+          $({ tables: '#itables', players: '#iplayers', clubs: '#iclubs' }[MP.kind]).value = csv;
+          $('#m_use').textContent = 'Done: it is in the importer above';
+        };
+        $('#m_dl2').onclick = () => download(MP.kind + '.csv', csv);
+      }
+      $('#m_season').oninput = $('#m_league').oninput = () => MP && drawOut();
       loadJobs();
       loadHistory();
     </script>

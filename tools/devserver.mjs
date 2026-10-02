@@ -508,9 +508,138 @@ const HOST_CMDS = new Set([
   'advance',
   'matchLab',
   'inspectSave',
+  'loadDef',
   'timeline',
   'ping',
 ]);
+
+// ---------- Reference world: the base world's clubs and the converter, for the data tools ----------
+// Made once on first use and kept (a world is a few hundred MB, so it is only built when a data tool needs it).
+let ref = null;
+async function getRef() {
+  if (!ref) {
+    const { loadSim } = await import('./harness.mjs');
+    const { FM } = loadSim(4);
+    FM.W.newWorld(FM.W.REAL_RULES);
+    FM.Season.init();
+    const S = FM.S;
+    ref = {
+      FM,
+      S,
+      clubs: Object.values(S.clubs).map((c) => ({
+        id: c.id,
+        name: c.name,
+        short: c.short,
+        nick: c.nick || '',
+        league: c.comp,
+        nat: c.nat,
+      })),
+      leagues: Object.values(S.comps)
+        .filter((c) => c.type === 'league')
+        .map((c) => ({ id: c.id, name: c.name, short: c.short, tier: c.tier })),
+      nations: Object.keys(FM.D.NATIONS),
+      baseDef: JSON.stringify(FM.WorldDef.fromState(S, { name: 'Base world', players: false })),
+    };
+  }
+  return ref;
+}
+const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : NaN);
+// Converter against ratings you trust: how far off, and the offset and spread that would fit them best
+async function calibrate(rows, league) {
+  const { FM } = await getRef();
+  const RS = FM.RealStats;
+  const keep = RS.TUNE ? { ...RS.TUNE } : null;
+  const usable = [];
+  const skipped = [];
+  for (const r of rows) {
+    const expected = parseFloat(r.expected ?? r.expectedCA ?? r.ca);
+    if (Number.isNaN(expected)) {
+      skipped.push(`${r.name || '?'}: no expected value`);
+      continue;
+    }
+    usable.push({ row: { league, ...r }, expected, name: r.name || '' });
+  }
+  const run = (offset, spread) => {
+    RS.TUNE.offset = offset;
+    RS.TUNE.spread = spread;
+    return usable.map((u) => {
+      try {
+        const x = RS.convert(u.row);
+        return { ca: x.ca, pos: x.pos, conf: x.confidence };
+      } catch (e) {
+        return { error: e.message };
+      }
+    });
+  };
+  try {
+    const now = run(keep.offset, keep.spread);
+    const good = usable.map((u, i) => [u, now[i]]).filter(([, p]) => !p.error);
+    for (const [u, p] of usable.map((u, i) => [u, now[i]])) if (p.error) skipped.push(`${u.name}: ${p.error}`);
+    const err = (preds) => good.map(([u], i) => preds[i] - u.expected);
+    const stats = (e) => ({
+      n: e.length,
+      bias: mean(e),
+      mae: mean(e.map(Math.abs)),
+      rmse: Math.sqrt(mean(e.map((x) => x * x))),
+    });
+    const preds = good.map(([, p]) => p.ca);
+    const corr = (() => {
+      const xs = good.map(([u]) => u.expected),
+        mx = mean(xs),
+        my = mean(preds);
+      const cov = mean(xs.map((x, i) => (x - mx) * (preds[i] - my)));
+      return (
+        cov / (Math.sqrt(mean(xs.map((x) => (x - mx) ** 2))) * Math.sqrt(mean(preds.map((y) => (y - my) ** 2))) || 1)
+      );
+    })();
+    // a grid of offset and spread; the best by mean squared error
+    let best = null;
+    const goodRows = good.map(([u]) => u);
+    for (let offset = -12; offset <= 12; offset += 1)
+      for (let spread = 3; spread <= 24; spread += 1) {
+        RS.TUNE.offset = offset;
+        RS.TUNE.spread = spread;
+        const e = goodRows.map((u) => {
+          try {
+            return RS.convert(u.row).ca - u.expected;
+          } catch (er) {
+            return 0;
+          }
+        });
+        const m = mean(e.map((x) => x * x));
+        if (!best || m < best.mse) best = { offset, spread, mse: m };
+      }
+    const bestPreds = good.length
+      ? run(best.offset, best.spread)
+          .filter((p) => !p.error)
+          .map((p) => p.ca)
+      : [];
+    const byGroup = {};
+    good.forEach(([u, p], i) => {
+      const g = FM.D.POS_GROUP[p.pos];
+      (byGroup[g] = byGroup[g] || []).push(preds[i] - u.expected);
+    });
+    return {
+      current: { ...stats(err(preds)), corr, offset: keep.offset, spread: keep.spread },
+      best: good.length
+        ? { offset: best.offset, spread: best.spread, ...stats(good.map(([u], i) => bestPreds[i] - u.expected)) }
+        : null,
+      byGroup: Object.fromEntries(Object.entries(byGroup).map(([g, e]) => [g, { n: e.length, bias: mean(e) }])),
+      rows: good.map(([u, p], i) => ({
+        name: u.name,
+        pos: p.pos,
+        expected: u.expected,
+        predicted: p.ca,
+        error: p.ca - u.expected,
+        atBest: bestPreds[i],
+        confidence: p.conf,
+      })),
+      skipped,
+    };
+  } finally {
+    if (keep) Object.assign(RS.TUNE, keep);
+  }
+}
 
 // ---------- HTTP ----------
 const MIME = {
@@ -804,6 +933,32 @@ const server = http.createServer(async (req, res) => {
       if (!HOST_CMDS.has(cmd)) return send(res, 404, { error: 'Unknown command' });
       const r = await hostCall(cmd, await json(req));
       return send(res, r.ok ? 200 : 400, r.ok ? r.result : { error: r.error });
+    }
+    if (p === '/api/def/clubs') {
+      const r = await getRef();
+      return send(res, 200, { clubs: r.clubs, leagues: r.leagues, nations: r.nations });
+    }
+    if (p === '/api/def/base') return send(res, 200, (await getRef()).baseDef, 'application/json');
+    if (p === '/api/def/validate' && req.method === 'POST') {
+      const b = await json(req);
+      const r = await getRef();
+      return send(res, 200, r.FM.WorldDef.validate(b.def, r.S));
+    }
+    if (p === '/api/def/convert' && req.method === 'POST') {
+      const b = await json(req);
+      const { FM } = await getRef();
+      const out = (b.rows || []).map((row) => {
+        try {
+          return { name: row.name, ...FM.RealStats.convert({ league: b.league, ...row }) };
+        } catch (e) {
+          return { name: row.name, error: e.message };
+        }
+      });
+      return send(res, 200, out);
+    }
+    if (p === '/api/def/calibrate' && req.method === 'POST') {
+      const b = await json(req);
+      return send(res, 200, await calibrate(b.rows || [], b.league ?? 'D1'));
     }
     send(res, 404, { error: 'Not found' });
   } catch (e) {

@@ -1,0 +1,18 @@
+name,pos,age,minutes,league,goals,assists,xg,shots,passes,passPct,keyPasses,dribbles,tackles,interceptions,clearances,aerials,pressures,saves,savePct,goalsConceded,expected
+Synthetic elite striker,ST,27,3000,D1,26,6,22,125,480,78,32,48,30,12,10,70,320,,,,84
+Synthetic good striker,ST,25,2800,D1,14,3,12.5,85,420,75,22,30,25,10,8,60,300,,,,72
+Synthetic journeyman striker,ST,29,2000,D2,8,2,8.5,60,350,72,14,20,20,8,6,55,250,,,,58
+Synthetic lower-league striker,ST,24,2400,D3,12,3,11,80,380,70,16,25,22,9,7,60,260,,,,48
+Synthetic elite winger,W,25,2900,D1,12,14,10,90,780,82,70,120,40,20,10,20,360,,,,82
+Synthetic average winger,W,26,2500,D1,5,5,4.5,50,640,78,35,60,38,15,10,15,330,,,,66
+Synthetic elite playmaker,AM,28,3000,D1,10,15,8,75,1500,89,85,60,50,25,15,25,350,,,,83
+Synthetic average midfielder,CM,26,2800,D1,3,4,3,35,1900,87,40,30,70,40,20,40,430,,,,68
+Synthetic lower-league midfielder,CM,27,2600,D3,2,3,2,28,1400,80,24,20,60,35,18,38,400,,,,46
+Synthetic ball-winner,DM,28,3000,D1,2,2,1.5,25,1900,90,25,15,110,70,60,60,500,,,,74
+Synthetic elite centre-back,CB,28,3100,D1,3,1,2.5,28,2300,92,15,10,60,70,160,120,260,,,,81
+Synthetic average centre-back,CB,27,2800,D1,2,0,1.5,18,1800,87,8,6,50,55,150,100,230,,,,65
+Synthetic lower-league centre-back,CB,30,3000,D2,2,0,1.8,20,1500,80,6,5,55,60,170,110,240,,,,54
+Synthetic attacking full-back,FB,24,2900,D1,2,7,2,25,1500,86,45,40,70,45,35,25,420,,,,72
+Synthetic elite keeper,GK,29,3420,D1,,,,,900,76,,,,,,,,120,0.78,28,83
+Synthetic average keeper,GK,30,3420,D1,,,,,800,70,,,,,,,,105,0.7,44,64
+Synthetic lower-league keeper,GK,27,3000,D3,,,,,700,62,,,,,,,,95,0.67,50,45
