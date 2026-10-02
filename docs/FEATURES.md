@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-242 features are playable in the web prototype today. Build = the build that added it.
+251 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
