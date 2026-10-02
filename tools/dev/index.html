@@ -242,6 +242,8 @@
         <button data-t="conv">Converter</button>
         <button data-t="imp">Importer</button>
         <button data-t="defs">Definitions</button>
+        <button data-t="release">Release</button>
+        <button data-t="profile">Profile</button>
         <button data-t="game">Game</button>
       </nav>
       <span class="tiny dim" style="margin-left: auto">local only · 127.0.0.1</span>
@@ -589,6 +591,66 @@
         </div>
         <div class="card no" id="d_errs" style="margin-top: 12px" hidden></div>
         <div id="d_view" style="margin-top: 12px"></div>
+      </section>
+
+      <!-- RELEASE -->
+      <section id="release">
+        <p class="dim">
+          Everything that should be true before a build goes out, on one page: the repository is clean and pushed, the
+          checks passed on this commit, the Pages deploy succeeded and the live site is the build you expect, the build
+          has not grown unexpectedly, the UI smoke test is recent, and the Claude Docs copies are in step.
+        </p>
+        <div class="card">
+          <div class="row">
+            <button class="b" id="r_run">Run the release check</button>
+            <label class="p"
+              ><input type="checkbox" id="r_full" /> include the long jobs (regression, calibration, wonderkids,
+              transfers)</label
+            >
+            <span style="flex: 1"></span>
+            <button class="b ghost" id="r_refresh">Refresh</button>
+          </div>
+          <div class="tiny dim" style="margin-top: 6px">
+            The check runs docs, lint, format, the converter, definition and importer tests, a build and a 1-season
+            suite, then reads the repository, GitHub and the live site.
+          </div>
+        </div>
+        <div id="r_verdict" style="margin-top: 12px"></div>
+        <div class="card" style="margin-top: 12px; padding: 4px 8px"><table id="r_table"></table></div>
+        <div class="card" id="rview" style="margin-top: 12px" hidden></div>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="profile">
+        <p class="dim">
+          A CPU profile of a headless run shows where the time really goes, by file and by function, without changing
+          how the code runs. The time here is the simulation's, on this machine; a phone is several times slower, so
+          read it as proportions. Open a downloaded <code>.cpuprofile</code> in Chrome's Performance panel or speedscope
+          for a full flame graph.
+        </p>
+        <div class="card">
+          <div class="row">
+            <label class="p"
+              >Seasons <input id="pf_seasons" type="number" value="1" min="1" max="3" style="width: 60px"
+            /></label>
+            <label class="p">Seed <input id="pf_seed" type="number" value="11" style="width: 70px" /></label>
+            <button class="b" id="pf_run">Profile a run</button>
+            <span class="tiny dim" id="pf_msg"></span>
+            <span style="flex: 1"></span>
+            <label class="p"
+              >Earlier profiles
+              <select id="pf_list"></select
+            ></label>
+            <button class="b ghost" id="pf_open">Open</button>
+          </div>
+        </div>
+        <div id="pf_view" style="margin-top: 12px"></div>
+        <h2>Speed across runs</h2>
+        <p class="dim tiny" style="margin: 0 0 6px">
+          From every suite run: a league day, the slowest 1% of days, a pre-season day, a season and the save size, so a
+          slowdown shows up as a trend.
+        </p>
+        <div class="card" id="pf_perf"></div>
       </section>
 
       <!-- GAME -->
@@ -2331,6 +2393,287 @@
         $('#m_dl2').onclick = () => download(MP.kind + '.csv', csv);
       }
       $('#m_season').oninput = $('#m_league').oninput = () => MP && drawOut();
+      // ---------- Release and health ----------
+      const ago = (t) => {
+        if (!t) return 'never';
+        const m = Math.round((Date.now() - t) / 60000);
+        return m < 1
+          ? 'just now'
+          : m < 90
+            ? m + ' min ago'
+            : m < 2880
+              ? Math.round(m / 60) + ' h ago'
+              : Math.round(m / 1440) + ' days ago';
+      };
+      let REL = null;
+      async function loadRelease() {
+        $('#r_table').innerHTML = '<tr><td class="dim">Reading the repository, GitHub and the live site…</td></tr>';
+        REL = await api('release');
+        drawRelease();
+      }
+      function releaseItems(r) {
+        const G = r.git,
+          items = [];
+        const add = (name, state, detail) => items.push({ name, state, detail });
+        // state: ok, bad, warn (something to look at), none (no information)
+        add(
+          'Working tree is clean',
+          G.dirty ? 'bad' : 'ok',
+          G.dirty
+            ? `${G.dirty} changed file${G.dirty === 1 ? '' : 's'}: ${G.dirtyFiles.map((x) => x.trim()).join(', ')}`
+            : `on ${G.branch}: ${G.last}`,
+        );
+        add(
+          'Everything is pushed',
+          G.ahead ? 'bad' : G.behind ? 'warn' : 'ok',
+          G.ahead
+            ? `${G.ahead} commit${G.ahead === 1 ? '' : 's'} not pushed`
+            : G.behind
+              ? `${G.behind} commit(s) on the remote that you do not have`
+              : 'in step with origin',
+        );
+        if (r.gh.error) add('Pages deploy for this commit', 'none', r.gh.error);
+        else {
+          const run = r.gh.runs.find((x) => x.headSha === G.head);
+          add(
+            'Pages deploy for this commit',
+            !run
+              ? G.ahead
+                ? 'none'
+                : 'warn'
+              : run.status !== 'completed'
+                ? 'warn'
+                : run.conclusion === 'success'
+                  ? 'ok'
+                  : 'bad',
+            run
+              ? `${run.workflowName}: ${run.status === 'completed' ? run.conclusion : run.status} · ${ago(Date.parse(run.createdAt))}`
+              : G.ahead
+                ? 'not pushed yet'
+                : 'no workflow run found for this commit',
+          );
+        }
+        const S = r.site;
+        add(
+          'Live site is up',
+          S.error ? 'bad' : S.status === 200 ? 'ok' : 'bad',
+          S.error ? S.error : `${S.url} answered ${S.status} in ${S.ms} ms`,
+        );
+        add(
+          'Live build matches a local build',
+          !S.liveBuild || !S.localBuild ? 'none' : S.liveBuild === S.localBuild ? 'ok' : 'warn',
+          !S.liveBuild
+            ? 'could not read the live build'
+            : !S.localBuild
+              ? `live build ${S.liveBuild}; build locally (below) to compare`
+              : S.liveBuild === S.localBuild
+                ? `build ${S.liveBuild}`
+                : `live ${S.liveBuild}, local dist ${S.localBuild} (the deploy may be behind, or dist is old)`,
+        );
+        const job = (key, label) => {
+          const j = r.jobs[key];
+          const stale =
+            j && j.head && G.head.startsWith(j.head) ? '' : j && j.head ? ` · ran at ${j.head}, not this commit` : '';
+          add(
+            label,
+            !j ? 'none' : j.code !== 0 ? 'bad' : stale ? 'warn' : 'ok',
+            !j ? 'not run from the dashboard yet' : `${j.summary || 'passed'} · ${ago(j.at)}${stale}`,
+          );
+        };
+        job('docs', 'Docs agree with the data');
+        job('lint', 'Lint is clean');
+        job('format', 'Formatting is clean');
+        job('realstats', 'Converter self-test');
+        job('worlddef', 'World definition test');
+        job('import', 'Importer test');
+        const su = r.suite;
+        add(
+          'Wider suite (speed, tables, squads, finances)',
+          !su ? 'none' : su.code !== 0 ? 'bad' : G.head.startsWith(su.head || '-') ? 'ok' : 'warn',
+          !su
+            ? 'not run from the dashboard yet'
+            : `${su.summary || 'passed'} · ${ago(su.at)}${su.head && !G.head.startsWith(su.head) ? ' · ran at ' + su.head : ''}`,
+        );
+        add(
+          'Gate against baselines',
+          !r.gate ? 'none' : r.gate.verdict === 'pass' ? 'ok' : 'bad',
+          !r.gate ? 'no gate has been run' : `${r.gate.label}: ${r.gate.verdict} · ${ago(r.gate.at)}`,
+        );
+        job('build', 'Build succeeds');
+        const z = r.sizes;
+        if (z.latest) {
+          const grow = z.previous ? ((z.latest.total - z.previous.total) / z.previous.total) * 100 : 0;
+          add(
+            'Build size',
+            grow > 10 ? 'warn' : 'ok',
+            `${z.latest.total} KB in ${z.latest.files} files (sim ${z.latest.sim} KB, ui ${z.latest.ui} KB, css ${z.latest.css} KB)${z.previous ? ` · ${grow >= 0 ? '+' : ''}${grow.toFixed(1)}% since the last build` : ''}`,
+          );
+        } else add('Build size', 'none', 'no build recorded yet');
+        const sm = r.smoke;
+        add(
+          'UI smoke test',
+          !sm ? 'none' : sm.problems.length ? 'bad' : sm.head === G.head ? 'ok' : 'warn',
+          !sm
+            ? 'run it in the Game tab (the button above the frame)'
+            : `${sm.opened} screens, ${sm.problems.length} problems · ${ago(sm.at)}${sm.head === G.head ? '' : ' · at an older commit'}`,
+        );
+        const changed = r.docs.docs.filter((d) => d.state !== 'synced');
+        add(
+          'Claude Docs copies are in step',
+          changed.length ? 'warn' : 'ok',
+          changed.length
+            ? `${changed.map((d) => d.file + ' (' + d.state + ')').join(', ')} — sync, then run npm run docs:synced`
+            : `all ${r.docs.docs.length} synced${r.docs.syncedOn ? ' on ' + r.docs.syncedOn : ''}`,
+        );
+        add(
+          'Version numbers agree',
+          r.version.package === r.version.game ? 'ok' : 'bad',
+          `package.json ${r.version.package}, game ${r.version.game}`,
+        );
+        return items;
+      }
+      function drawRelease() {
+        const items = releaseItems(REL);
+        const bad = items.filter((i) => i.state === 'bad').length,
+          warn = items.filter((i) => i.state === 'warn').length,
+          none = items.filter((i) => i.state === 'none').length;
+        $('#r_verdict').innerHTML =
+          `<div class="card" style="border-color:${bad ? 'var(--bad)' : warn || none ? 'var(--warn)' : 'var(--good)'}"><h3 style="margin:0;font-size:17px" class="${bad ? 'no' : warn || none ? 'down' : 'ok'}">${bad ? `Not ready: ${bad} problem${bad === 1 ? '' : 's'}` : warn || none ? `Nothing is failing, but ${warn + none} item${warn + none === 1 ? ' needs' : 's need'} a look` : 'Ready to release'}</h3><div class="tiny dim">${items.filter((i) => i.state === 'ok').length} of ${items.length} items are green · read ${ago(REL.now)}</div></div>`;
+        $('#r_table').innerHTML =
+          `<tbody>${items.map((i) => `<tr><td style="width:26px" class="${{ ok: 'ok', bad: 'no', warn: 'down', none: 'dim' }[i.state]}">${{ ok: '✓', bad: '✗', warn: '●', none: '○' }[i.state]}</td><td style="width:34%">${esc(i.name)}</td><td class="dim">${esc(i.detail)}</td></tr>`).join('')}</tbody>`;
+      }
+      $('#r_refresh').onclick = loadRelease;
+      $('#r_run').onclick = async () => {
+        const r = await api('release/run', { full: $('#r_full').checked });
+        const el = $('#rview');
+        el.hidden = false;
+        const poll = async () => {
+          const g = await api('group/' + r.id);
+          el.innerHTML = renderGroup(g);
+          bindGroup(g, el, 'release');
+          if (g.status === 'running') setTimeout(poll, 3000);
+          else loadRelease();
+        };
+        poll();
+      };
+      document.querySelector('[data-t="release"]').addEventListener('click', loadRelease);
+
+      // the smoke test, run in the Game tab's frame, reported to the dashboard
+      const smokeBar = document.createElement('div');
+      smokeBar.className = 'row';
+      smokeBar.style.margin = '0 0 10px';
+      smokeBar.innerHTML =
+        '<button class="b ghost" id="g_smoke">Run the UI smoke test</button><span class="tiny dim" id="g_smoke_msg">Start or continue a career in the frame first; the test opens every screen on a copy and reports to the Release tab.</span>';
+      $('#frame').before(smokeBar);
+      $('#g_smoke').onclick = async () => {
+        const w = $('#frame').contentWindow;
+        if (!w || !w.FM || !w.FM.S || !w.FM.Dev)
+          return ($('#g_smoke_msg').textContent = 'There is no career open in the frame yet.');
+        $('#g_smoke_msg').textContent = 'Opening every screen…';
+        try {
+          const r = await w.FM.Dev.smoke();
+          await api('release/smoke', { opened: r.opened, problems: r.problems });
+          $('#g_smoke_msg').innerHTML = r.problems.length
+            ? `<span class="no">${r.opened} screens, ${r.problems.length} problems: ${esc(r.problems.slice(0, 3).join('; '))}</span>`
+            : `<span class="ok">${r.opened} screens opened, no problems.</span> Recorded for the Release tab.`;
+        } catch (e) {
+          $('#g_smoke_msg').textContent = 'Failed: ' + e.message;
+        }
+      };
+
+      // ----- Profile -----
+      const hue = (s) => {
+        let h = 0;
+        for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360;
+        return h;
+      };
+      const icicle = (n, parent) => {
+        const w = parent ? Math.max(0.4, (100 * n.ms) / parent.ms) : 100;
+        const label = w > 6 ? `${n.name} ${n.ms >= 1 ? Math.round(n.ms) : n.ms} ms` : '';
+        return `<div style="width:${w}%;min-width:2px;box-sizing:border-box"><div title="${esc(n.name)} · ${esc(n.file)}:${n.line}\n${n.ms} ms in all, ${n.self} ms itself" style="background:hsl(${hue(n.file)} 45% 36%);border:1px solid #0b0f15;border-radius:2px;height:20px;overflow:hidden;white-space:nowrap;font-size:11px;padding:0 3px;line-height:19px">${esc(label)}</div><div style="display:flex">${n.children.map((c) => icicle(c, n)).join('')}</div></div>`;
+      };
+      async function showProfile(file) {
+        const r = await api('profile/summary?file=' + encodeURIComponent(file));
+        if (r.error) return ($('#pf_view').innerHTML = `<div class="card no">${esc(r.error)}</div>`);
+        const max = r.byFile[0] ? r.byFile[0].ms : 1;
+        $('#pf_view').innerHTML =
+          `<div class="card"><div class="row"><h3 style="margin:0">${esc(r.file)}</h3><span class="tiny dim">${(r.totalMs / 1000).toFixed(1)} s sampled</span><span style="flex:1"></span><a class="b ghost" style="text-decoration:none" href="/api/profile/file/${encodeURIComponent(r.file)}">Download .cpuprofile</a></div></div>
+          <div class="two" style="margin-top:12px"><div class="card"><h3>By file</h3><table style="margin-top:6px">${r.byFile.map((f) => `<tr><td>${esc(f.file)}</td><td style="width:42%"><div style="background:hsl(${hue(f.file)} 55% 46%);height:8px;border-radius:4px;width:${(100 * f.ms) / max}%"></div></td><td class="dim">${f.ms >= 1000 ? (f.ms / 1000).toFixed(1) + ' s' : Math.round(f.ms) + ' ms'}</td><td>${f.pct}%</td></tr>`).join('')}</table></div>
+          <div class="card" style="padding:4px 8px"><h3 style="padding:6px 0 0">Functions by their own time</h3><table style="margin-top:6px">${r.byFunction
+            .slice(0, 22)
+            .map(
+              (f) =>
+                `<tr><td>${esc(f.name)}</td><td class="dim tiny">${esc(f.file)}:${f.line}</td><td class="dim">${f.ms >= 1000 ? (f.ms / 1000).toFixed(1) + ' s' : Math.round(f.ms) + ' ms'}</td><td>${f.pct}%</td></tr>`,
+            )
+            .join('')}</table></div></div>
+          <h3 style="margin-top:14px">Where the calls go</h3><div class="tiny dim" style="margin-bottom:6px">Each bar is a function, as wide as the time spent in it and what it calls; the colour is its file. Hover for the numbers. Branches under 1.2% are left out.</div><div class="card" style="overflow-x:auto"><div style="min-width:900px">${icicle(r.tree, null)}</div></div>`;
+      }
+      async function loadProfiles() {
+        const list = await api('profiles');
+        $('#pf_list').innerHTML =
+          list
+            .map(
+              (f) =>
+                `<option value="${esc(f.file)}">${esc(f.file)} · ${(f.bytes / 1048576).toFixed(1)} MB · ${ago(f.at)}</option>`,
+            )
+            .join('') || '<option value="">none yet</option>';
+        return list;
+      }
+      $('#pf_open').onclick = () => $('#pf_list').value && showProfile($('#pf_list').value);
+      $('#pf_run').onclick = async () => {
+        $('#pf_run').disabled = true;
+        $('#pf_msg').textContent = 'Profiling (about two minutes a season)…';
+        const rec = await api('run', {
+          job: 'profile',
+          params: { seasons: +$('#pf_seasons').value, seed: +$('#pf_seed').value },
+        });
+        const wait = async () => {
+          const r = await api('job/' + rec.id);
+          if (r.running) return setTimeout(wait, 4000);
+          $('#pf_run').disabled = false;
+          $('#pf_msg').textContent = r.profile ? 'Done.' : 'Finished, but no profile was written.';
+          await loadProfiles();
+          if (r.profile) {
+            $('#pf_list').value = r.profile;
+            showProfile(r.profile);
+          }
+          loadHistory();
+          drawPerf();
+        };
+        wait();
+      };
+      async function drawPerf() {
+        const rows = await api('perf');
+        const el = $('#pf_perf');
+        if (!rows.length)
+          return (el.innerHTML =
+            '<span class="dim">No suite runs with speed numbers yet. Run the wider suite from the Run tab.</span>');
+        const med = (a) => a.slice().sort((x, y) => x - y)[a.length >> 1];
+        const series = [
+          ['League day (ms)', 'dayMs'],
+          ['Slowest 1% of days (ms)', 'dayP99'],
+          ['Pre-season day (ms)', 'preMs'],
+          ['Season (s)', 'seasonSecs'],
+          ['Save (MB)', 'saveMB'],
+        ];
+        el.innerHTML = `<table><thead><tr><th>Measure</th><th>Across runs</th><th>Latest</th><th>Median</th><th></th></tr></thead><tbody>${series
+          .map(([l, k]) => {
+            const vs = rows.map((r) => r[k]),
+              last = vs[vs.length - 1],
+              m = med(vs);
+            const pts = rows.map((r) => ({ id: r.id, v: r[k], ok: true }));
+            const slow = vs.length >= 3 && last > m * 1.2;
+            return `<tr><td>${l}</td><td>${spark({ pts, range: null })}</td><td class="${slow ? 'down' : ''}">${fmtN(last)}</td><td class="dim">${fmtN(m)}</td><td class="down">${slow ? 'slower than usual' : ''}</td></tr>`;
+          })
+          .join(
+            '',
+          )}</tbody></table><div class="tiny dim" style="margin-top:6px">${rows.length} runs · seasons per run vary, so a run of one season is not exactly comparable with a run of three</div>`;
+      }
+      document.querySelector('[data-t="profile"]').addEventListener('click', async () => {
+        const l = await loadProfiles();
+        if (l.length && !$('#pf_view').innerHTML) showProfile(l[0].file);
+        drawPerf();
+      });
       loadJobs();
       loadHistory();
     </script>

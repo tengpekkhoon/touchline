@@ -16,7 +16,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { spawn, fork } from 'node:child_process';
+import { spawn, spawnSync, fork } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -64,6 +64,12 @@ const JOBS = {
     note: 'the market against real transfers',
     cmd: [NODE, 'tools/transfer-realism.mjs'],
     params: { seasons: { default: 3, min: 2, max: 8 }, seed: { default: 5, min: 1, max: 9999 } },
+  },
+  profile: {
+    label: 'CPU profile',
+    note: 'a sampling profile of a run: where the time goes, by file and function',
+    cmd: [NODE, '--cpu-prof', '--cpu-prof-dir=.devtools/prof', 'tools/suite.mjs', '--skip-speed'],
+    params: { seasons: { default: 1, min: 1, max: 3 }, seed: { default: 11, min: 1, max: 9999 } },
   },
   regens: { label: 'Regens', note: 'academy intakes aged year by year', cmd: [NODE, 'tools/regens.mjs'], params: {} },
   realstats: {
@@ -117,6 +123,10 @@ const parseOutput = (text) => {
         range: m[4].trim(),
       });
   }
+  const sp = text.match(
+    /league day (\d+) ms avg, (\d+) ms p99 \u00b7 pre-season day (\d+) ms \u00b7 season (\d+) s \u00b7 save ([\d.]+) MB/,
+  );
+  const perf = sp ? { dayMs: +sp[1], dayP99: +sp[2], preMs: +sp[3], seasonSecs: +sp[4], saveMB: +sp[5] } : undefined;
   const t = text.slice(-4000);
   const ratio = t.match(/(\d+)\/(\d+) in range/);
   const summary = ratio
@@ -126,7 +136,7 @@ const parseOutput = (text) => {
       : /\bFAIL\b|Failures:/.test(t)
         ? 'Failed'
         : '';
-  return { metrics, summary };
+  return perf ? { metrics, summary, perf } : { metrics, summary };
 };
 
 // ---------- Running ----------
@@ -175,6 +185,20 @@ function startRun(jobId, params = {}, opts = {}) {
       rec.code = code;
       Object.assign(rec, parseOutput(r.out));
       rec.tail = r.out.slice(-6000);
+      try {
+        rec.head = spawnSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).stdout.trim();
+        if (jobId === 'build' && code === 0) rec.size = recordBuildSize(r.out);
+        if (jobId === 'profile') {
+          const f = fs
+            .readdirSync(PROF_DIR)
+            .filter((x) => x.endsWith('.cpuprofile'))
+            .map((x) => [x, fs.statSync(path.join(PROF_DIR, x)).mtimeMs])
+            .sort((x, y) => y[1] - x[1])[0];
+          if (f && f[1] >= rec.started - 2000) rec.profile = f[0];
+        }
+      } catch (e) {
+        // (the run is still recorded)
+      }
       history.push(rec);
       saveHistory();
       for (const l of r.listeners) l(null);
@@ -641,6 +665,248 @@ async function calibrate(rows, league) {
   }
 }
 
+// ---------- Release and health ----------
+const sh = (cmd, args, timeout = 20000) => {
+  const r = spawnSync(cmd, args, { cwd: ROOT, encoding: 'utf8', timeout, windowsHide: true });
+  return { ok: r.status === 0, out: (r.stdout || '').trim(), err: (r.stderr || '').trim() };
+};
+function gitInfo() {
+  const status = sh('git', ['status', '--porcelain']);
+  const branch = sh('git', ['rev-parse', '--abbrev-ref', 'HEAD']).out;
+  const head = sh('git', ['rev-parse', 'HEAD']).out;
+  const last = sh('git', ['log', '-1', '--format=%h %s']).out;
+  const lr = sh('git', ['rev-list', '--left-right', '--count', `origin/${branch}...HEAD`])
+    .out.split(/\s+/)
+    .map(Number);
+  const remote = sh('git', ['remote', 'get-url', 'origin']).out;
+  return {
+    branch,
+    head,
+    last,
+    dirty: status.out ? status.out.split('\n').length : 0,
+    dirtyFiles: status.out ? status.out.split('\n').slice(0, 8) : [],
+    behind: lr[0] || 0,
+    ahead: lr[1] || 0,
+    remote,
+  };
+}
+function ghInfo() {
+  const r = sh(
+    'gh',
+    ['run', 'list', '--limit', '4', '--json', 'status,conclusion,headSha,displayTitle,createdAt,url,workflowName'],
+    25000,
+  );
+  if (!r.ok) return { error: r.err || 'gh is not available' };
+  try {
+    return { runs: JSON.parse(r.out) };
+  } catch (e) {
+    return { error: 'Could not read the run list' };
+  }
+}
+const localBuild = () => {
+  try {
+    return (fs.readFileSync(path.join(ROOT, 'dist/sw.js'), 'utf8').match(/touchline-([0-9a-f]{6,})/) || [])[1] || null;
+  } catch (e) {
+    return null;
+  }
+};
+async function siteInfo(remote) {
+  const m = String(remote).match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+  if (!m) return { error: 'No GitHub remote' };
+  const base = `https://${m[1]}.github.io/${m[2]}/`;
+  try {
+    const t0 = Date.now();
+    const page = await fetch(base, { signal: AbortSignal.timeout(15000) });
+    const sw = await fetch(base + 'sw.js', { signal: AbortSignal.timeout(15000) });
+    const live = sw.ok ? ((await sw.text()).match(/touchline-([0-9a-f]{6,})/) || [])[1] : null;
+    return {
+      url: base,
+      status: page.status,
+      ms: Date.now() - t0,
+      modified: page.headers.get('last-modified'),
+      liveBuild: live,
+      localBuild: localBuild(),
+    };
+  } catch (e) {
+    return { url: base, error: String(e.message || e) };
+  }
+}
+// The size of what ships, from the build's own report, kept so the next build can be compared
+const SIZE_FILE = path.join(STORE, 'buildsize.json');
+function recordBuildSize(text) {
+  const m = String(text).match(/js: sim (\d+) KB \+ ui (\d+) KB .*css (\d+) KB/);
+  const t = String(text).match(/(\d+) files, (\d+) KB total/);
+  if (!m || !t) return null;
+  let hist = [];
+  try {
+    hist = JSON.parse(fs.readFileSync(SIZE_FILE, 'utf8'));
+  } catch (e) {
+    hist = [];
+  }
+  const rec = { at: Date.now(), sim: +m[1], ui: +m[2], css: +m[3], files: +t[1], total: +t[2] };
+  hist.push(rec);
+  fs.writeFileSync(SIZE_FILE, JSON.stringify(hist.slice(-60)));
+  return rec;
+}
+const buildSizes = () => {
+  try {
+    return JSON.parse(fs.readFileSync(SIZE_FILE, 'utf8'));
+  } catch (e) {
+    return [];
+  }
+};
+const SMOKE_FILE = path.join(STORE, 'smoke.json');
+const readSmoke = () => {
+  try {
+    return JSON.parse(fs.readFileSync(SMOKE_FILE, 'utf8'));
+  } catch (e) {
+    return null;
+  }
+};
+const lastRun = (job, filter = () => true) => [...history].reverse().find((r) => r.job === job && !r.tune && filter(r));
+
+async function releaseInfo() {
+  const git = gitInfo();
+  const docs = (await import('./docsync.mjs')).status();
+  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+  let fmVersion = null;
+  try {
+    fmVersion = (fs.readFileSync(path.join(ROOT, 'js/core.js'), 'utf8').match(/FM\.VERSION = '([^']+)'/) || [])[1];
+  } catch (e) {
+    fmVersion = null;
+  }
+  const gates = groups.filter((g) => g.kind === 'gate' && g.status === 'done').slice(-2);
+  const sizes = buildSizes();
+  const [gh, site] = await Promise.all([Promise.resolve(ghInfo()), siteInfo(git.remote)]);
+  const runInfo = (job, filter) => {
+    const r = lastRun(job, filter);
+    return r ? { id: r.id, code: r.code, summary: r.summary, at: r.ended || r.started, head: r.head || null } : null;
+  };
+  return {
+    now: Date.now(),
+    git,
+    gh,
+    site,
+    docs,
+    version: { package: pkg.version, game: fmVersion },
+    smoke: readSmoke(),
+    sizes: {
+      latest: sizes[sizes.length - 1] || null,
+      previous: sizes[sizes.length - 2] || null,
+      first: sizes[0] || null,
+    },
+    jobs: Object.fromEntries(
+      ['docs', 'lint', 'format', 'realstats', 'worlddef', 'import', 'build'].map((j) => [j, runInfo(j)]),
+    ),
+    suite: runInfo('suite'),
+    gate: gates.length
+      ? {
+          id: gates[gates.length - 1].id,
+          verdict: gates[gates.length - 1].result && gates[gates.length - 1].result.verdict,
+          at: gates[gates.length - 1].ended,
+          label: gates[gates.length - 1].label,
+        }
+      : null,
+    headChangedSince: (() => {
+      // jobs run before the newest commit or edit are not evidence for it
+      const last = Math.max(0, ...['docs', 'lint', 'format', 'build'].map((j) => (lastRun(j) || {}).ended || 0));
+      return last;
+    })(),
+  };
+}
+
+// ---------- Profiles: a CPU profile of a run, and where the time went ----------
+const PROF_DIR = path.join(STORE, 'prof');
+fs.mkdirSync(PROF_DIR, { recursive: true });
+function summariseProfile(file) {
+  const raw = JSON.parse(fs.readFileSync(path.join(PROF_DIR, path.basename(file)), 'utf8'));
+  const byId = new Map(raw.nodes.map((n) => [n.id, n]));
+  const self = new Map();
+  const dt = raw.timeDeltas || [];
+  raw.samples.forEach((id, i) => self.set(id, (self.get(id) || 0) + (dt[i + 1] ?? dt[i] ?? 0)));
+  const total = [...self.values()].reduce((a, b) => a + b, 0) || 1;
+  const nameOf = (n) => n.callFrame.functionName || '(anonymous)';
+  const fileOf = (n) => {
+    const u = n.callFrame.url || '';
+    if (!u)
+      return n.callFrame.functionName && n.callFrame.functionName.startsWith('(')
+        ? n.callFrame.functionName
+        : '(native)';
+    return u
+      .replace(/^file:\/\/\//, '')
+      .split(/[\\/]/)
+      .slice(-2)
+      .join('/');
+  };
+  const incl = new Map();
+  const visit = (id) => {
+    const n = byId.get(id);
+    let t = self.get(id) || 0;
+    for (const c of n.children || []) t += visit(c);
+    incl.set(id, t);
+    return t;
+  };
+  visit(raw.nodes[0].id);
+  const fn = new Map();
+  const files = new Map();
+  for (const n of raw.nodes) {
+    const key = `${nameOf(n)}|${fileOf(n)}|${n.callFrame.lineNumber}`;
+    const e = fn.get(key) || { name: nameOf(n), file: fileOf(n), line: n.callFrame.lineNumber + 1, self: 0 };
+    e.self += self.get(n.id) || 0;
+    fn.set(key, e);
+    files.set(fileOf(n), (files.get(fileOf(n)) || 0) + (self.get(n.id) || 0));
+  }
+  // an icicle of the call tree: the heavy branches to a depth of 7
+  const tree = (id, depth) => {
+    const n = byId.get(id);
+    const node = {
+      name: nameOf(n),
+      file: fileOf(n),
+      line: n.callFrame.lineNumber + 1,
+      ms: Math.round((incl.get(id) || 0) / 100) / 10,
+      self: Math.round((self.get(id) || 0) / 100) / 10,
+      children: [],
+    };
+    if (depth < 7)
+      for (const c of (n.children || []).slice().sort((a, b) => incl.get(b) - incl.get(a))) {
+        if ((incl.get(c) || 0) / total < 0.012) continue;
+        node.children.push(tree(c, depth + 1));
+      }
+    return node;
+  };
+  const ms = (us) => Math.round(us / 100) / 10;
+  return {
+    file: path.basename(file),
+    totalMs: ms(total),
+    byFile: [...files]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 25)
+      .map(([f, us]) => ({ file: f, ms: ms(us), pct: Math.round((1000 * us) / total) / 10 })),
+    byFunction: [...fn.values()]
+      .sort((a, b) => b.self - a.self)
+      .slice(0, 40)
+      .map((e) => ({ ...e, ms: ms(e.self), pct: Math.round((1000 * e.self) / total) / 10 })),
+    tree: tree(raw.nodes[0].id, 0),
+  };
+}
+const profiles = () =>
+  fs
+    .readdirSync(PROF_DIR)
+    .filter((f) => f.endsWith('.cpuprofile'))
+    .map((f) => ({
+      file: f,
+      bytes: fs.statSync(path.join(PROF_DIR, f)).size,
+      at: fs.statSync(path.join(PROF_DIR, f)).mtimeMs,
+    }))
+    .sort((a, b) => b.at - a.at);
+
+// ---------- Performance across runs: what the suite reports about speed ----------
+const perfSeries = () =>
+  history
+    .filter((r) => r.job === 'suite' && r.perf && !r.tune)
+    .slice(-60)
+    .map((r) => ({ id: r.id, t: r.started, seasons: r.params.seasons, ...r.perf }));
+
 // ---------- HTTP ----------
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -960,6 +1226,63 @@ const server = http.createServer(async (req, res) => {
       const b = await json(req);
       return send(res, 200, await calibrate(b.rows || [], b.league ?? 'D1'));
     }
+    if (p === '/api/release') return send(res, 200, await releaseInfo());
+    if (p === '/api/release/run' && req.method === 'POST') {
+      const b = await json(req);
+      const items = [
+        ['docs'],
+        ['lint'],
+        ['format'],
+        ['realstats'],
+        ['worlddef'],
+        ['import'],
+        ['build'],
+        ['suite', { seasons: 1 }],
+      ];
+      if (b.full)
+        items.push(
+          ['test', { seasons: 2 }],
+          ['calibrate', { seasons: 3 }],
+          ['wonderkids', { seasons: 10 }],
+          ['transfers', { seasons: 3 }],
+        );
+      const g = newGroup(
+        'release',
+        b.full ? 'Release check (full)' : 'Release check',
+        items.map(([job, params]) => ({ job, params: params || {} })),
+      );
+      runGroup(g, 3);
+      return send(res, 200, { id: g.id });
+    }
+    if (p === '/api/release/smoke' && req.method === 'POST') {
+      const b = await json(req);
+      fs.writeFileSync(
+        SMOKE_FILE,
+        JSON.stringify({
+          at: Date.now(),
+          opened: b.opened,
+          problems: (b.problems || []).slice(0, 30),
+          head: gitInfo().head,
+        }),
+      );
+      return send(res, 200, { ok: true });
+    }
+    if (p === '/api/release/sizes') return send(res, 200, buildSizes());
+    if (p === '/api/profiles') return send(res, 200, profiles());
+    if (p === '/api/profile/summary') {
+      const f = url.searchParams.get('file') || '';
+      if (!/^[\w.-]+\.cpuprofile$/.test(f) || !fs.existsSync(path.join(PROF_DIR, f)))
+        return send(res, 404, { error: 'No such profile' });
+      return send(res, 200, summariseProfile(f));
+    }
+    if (p.startsWith('/api/profile/file/')) {
+      const f = path.basename(p);
+      if (!/^[\w.-]+\.cpuprofile$/.test(f) || !fs.existsSync(path.join(PROF_DIR, f)))
+        return send(res, 404, { error: 'No such profile' });
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Content-Disposition': `attachment; filename="${f}"` });
+      return res.end(fs.readFileSync(path.join(PROF_DIR, f)));
+    }
+    if (p === '/api/perf') return send(res, 200, perfSeries());
     send(res, 404, { error: 'Not found' });
   } catch (e) {
     send(res, 500, { error: String(e.message || e) });
