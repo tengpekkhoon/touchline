@@ -1,0 +1,12921 @@
+{
+ "clubs": {
+  "MCI": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Marstead Victoria",
+    "MCI",
+    "Marstead",
+    "#6CABDD",
+    "#1C2C5B",
+    "oil",
+    88,
+    "Marstead Park",
+    53400
+   ],
+   "short": "MAR",
+   "nick": "Eagles"
+  },
+  "LIV": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Harborough County",
+    "LIV",
+    "Harborough",
+    "#C8102E",
+    "#00B2A9",
+    "giant",
+    88,
+    "Shafstead Road",
+    61276
+   ],
+   "short": "HAR",
+   "nick": "Badgers"
+  },
+  "ARS": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth County",
+    "ARS",
+    "Ripmouth",
+    "#EF0107",
+    "#FFFFFF",
+    "giant",
+    87,
+    "Whitbridge Lane",
+    60704
+   ],
+   "short": "RIP",
+   "nick": "Reds"
+  },
+  "CHE": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth Wanderers",
+    "CHE",
+    "Ripmouth",
+    "#034694",
+    "#FFFFFF",
+    "oil",
+    82,
+    "Cheling Road",
+    40343
+   ],
+   "short": "RIH",
+   "nick": "Eagles"
+  },
+  "MUN": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Marstead Athletic",
+    "MUN",
+    "Marstead",
+    "#DA291C",
+    "#FFFFFF",
+    "fallen",
+    80,
+    "Tunstead Road",
+    74310
+   ],
+   "short": "MAD",
+   "nick": "Reds"
+  },
+  "NEW": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Sedgefield Borough",
+    "NEW",
+    "Sedgefield",
+    "#241F20",
+    "#FFFFFF",
+    "oil",
+    78,
+    "Wynwick Road",
+    52305
+   ],
+   "short": "SED",
+   "nick": "Lions"
+  },
+  "TOT": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth Albion",
+    "TOT",
+    "Ripmouth",
+    "#FFFFFF",
+    "#132257",
+    "historic",
+    78,
+    "Shafgate Road",
+    62850
+   ],
+   "short": "RTH",
+   "nick": "Lions"
+  },
+  "AVL": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Wexbridge Borough",
+    "AVL",
+    "Wexbridge",
+    "#670E36",
+    "#95BFE5",
+    "historic",
+    75,
+    "Shafley Field",
+    42640
+   ],
+   "short": "WEX",
+   "nick": "Wolves"
+  },
+  "BHA": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Ashford Orient",
+    "BHA",
+    "Ashford",
+    "#0057B8",
+    "#FFFFFF",
+    "selling",
+    72,
+    "Darham Park",
+    31876
+   ],
+   "short": "ASH",
+   "nick": "Blues"
+  },
+  "NFO": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Yarwood Wanderers",
+    "NFO",
+    "Yarwood",
+    "#DD0000",
+    "#FFFFFF",
+    "fallen",
+    71,
+    "Shafcliff Road",
+    30404
+   ],
+   "short": "YAR",
+   "nick": "Reds"
+  },
+  "WHU": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth Athletic",
+    "WHU",
+    "Ripmouth",
+    "#7A263A",
+    "#1BB1E7",
+    "historic",
+    68,
+    "Dorcliff Road",
+    62500
+   ],
+   "short": "RIPM",
+   "nick": "Maroons"
+  },
+  "CRY": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth United",
+    "CRY",
+    "Ripmouth",
+    "#1B458F",
+    "#C4122E",
+    "historic",
+    68,
+    "Redham Park",
+    25486
+   ],
+   "short": "RIP2",
+   "nick": "Blues"
+  },
+  "BOU": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Darminster Rovers",
+    "BOU",
+    "Darminster",
+    "#DA291C",
+    "#000000",
+    "selling",
+    68,
+    "Ripbrook Park",
+    11307
+   ],
+   "short": "DAR",
+   "nick": "Herons"
+  },
+  "FUL": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth Town",
+    "FUL",
+    "Ripmouth",
+    "#FFFFFF",
+    "#000000",
+    "historic",
+    67,
+    "Ripmouth Park",
+    29589
+   ],
+   "short": "RIP3",
+   "nick": "Rams"
+  },
+  "BRE": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth Rangers",
+    "BRE",
+    "Ripmouth",
+    "#E30613",
+    "#FFFFFF",
+    "selling",
+    67,
+    "Dargate Field",
+    17250
+   ],
+   "short": "RIP4",
+   "nick": "Chargers"
+  },
+  "EVE": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Harborough City",
+    "EVE",
+    "Harborough",
+    "#003399",
+    "#FFFFFF",
+    "fallen",
+    67,
+    "Broming Park",
+    52888
+   ],
+   "short": "HAH",
+   "nick": "Blues"
+  },
+  "WOL": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Wexminster Victoria",
+    "WOL",
+    "Wexminster",
+    "#FDB913",
+    "#231F20",
+    "selling",
+    66,
+    "Whitthorpe Park",
+    31750
+   ],
+   "short": "WER",
+   "nick": "Yellows"
+  },
+  "LEE": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Calwick Athletic",
+    "LEE",
+    "Calwick",
+    "#FFFFFF",
+    "#1D428A",
+    "fallen",
+    64,
+    "Penchester Road",
+    37645
+   ],
+   "short": "CAL",
+   "nick": "Ironmen"
+  },
+  "SUN": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Gilwick City",
+    "SUN",
+    "Gilwick",
+    "#EB172B",
+    "#FFFFFF",
+    "fallen",
+    62,
+    "The Whitthorpe Stadium",
+    48707
+   ],
+   "short": "GIL",
+   "nick": "Reds"
+  },
+  "BUR": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Branby Orient",
+    "BUR",
+    "Branby",
+    "#6C1D45",
+    "#99D6EA",
+    "youth",
+    61,
+    "Gilmere Lane",
+    21944
+   ],
+   "short": "BRA",
+   "nick": "Otters"
+  },
+  "LEI": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Branwood Orient",
+    "LEI",
+    "Branwood",
+    "#003090",
+    "#FDBE11",
+    "fallen",
+    61,
+    "Branwood Park",
+    32259
+   ],
+   "short": "BRD",
+   "nick": "Badgers"
+  },
+  "SOU": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Shafborough Borough",
+    "SOU",
+    "Shafborough",
+    "#D71920",
+    "#FFFFFF",
+    "youth",
+    60,
+    "Keswick Park",
+    32384
+   ],
+   "short": "SHA",
+   "nick": "Reds"
+  },
+  "IPS": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Sedgebridge Victoria",
+    "IPS",
+    "Sedgebridge",
+    "#3A64A3",
+    "#FFFFFF",
+    "historic",
+    59,
+    "The Lanford Stadium",
+    30311
+   ],
+   "short": "SEE",
+   "nick": "Blues"
+  },
+  "SHU": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Barstead Wanderers",
+    "SHU",
+    "Barstead",
+    "#EE2737",
+    "#FFFFFF",
+    "fan",
+    58,
+    "Bexborough Lane",
+    32050
+   ],
+   "short": "BAR",
+   "nick": "Lions"
+  },
+  "MID": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Yarhaven City",
+    "MID",
+    "Yarhaven",
+    "#E11B22",
+    "#FFFFFF",
+    "historic",
+    57,
+    "Kelton Field",
+    34742
+   ],
+   "short": "YAN",
+   "nick": "Reds"
+  },
+  "BIR": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Wexbridge County",
+    "BIR",
+    "Wexbridge",
+    "#0000FF",
+    "#FFFFFF",
+    "oil",
+    57,
+    "Gilbrook Field",
+    29409
+   ],
+   "short": "WEE",
+   "nick": "Eagles"
+  },
+  "WBA": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Kesmouth Borough",
+    "WBA",
+    "Kesmouth",
+    "#122F67",
+    "#FFFFFF",
+    "historic",
+    56,
+    "The Keswood Stadium",
+    26850
+   ],
+   "short": "KES",
+   "nick": "Navy"
+  },
+  "NCI": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Barfield Albion",
+    "NCI",
+    "Barfield",
+    "#FFF200",
+    "#00A650",
+    "youth",
+    56,
+    "The Thornbrook Stadium",
+    27359
+   ],
+   "short": "BAD",
+   "nick": "Yellows"
+  },
+  "COV": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Dorminster United",
+    "COV",
+    "Dorminster",
+    "#6CABDD",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Salgate Park",
+    32609
+   ],
+   "short": "DOR",
+   "nick": "Sky Blues"
+  },
+  "WAT": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "West Gilton Town",
+    "WAT",
+    "West Gilton",
+    "#FBEE23",
+    "#ED2127",
+    "selling",
+    55,
+    "West Gilton Park",
+    22200
+   ],
+   "short": "WES",
+   "nick": "Mariners"
+  },
+  "WRX": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Bradton Rangers",
+    "WRX",
+    "Bradton",
+    "#D6001C",
+    "#FFFFFF",
+    "oil",
+    54,
+    "Glenhaven Field",
+    12600
+   ],
+   "short": "BRN",
+   "nick": "Reds"
+  },
+  "STK": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Oakfield Rovers",
+    "STK",
+    "Oakfield",
+    "#E03A3E",
+    "#FFFFFF",
+    "fallen",
+    54,
+    "Margate Lane",
+    30089
+   ],
+   "short": "OAK",
+   "nick": "Reds"
+  },
+  "HUL": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Thornminster County",
+    "HUL",
+    "Thornminster",
+    "#F18A01",
+    "#000000",
+    "fan",
+    53,
+    "The Salcliff Stadium",
+    25586
+   ],
+   "short": "THO",
+   "nick": "Spartans"
+  },
+  "SWA": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Dorport Borough",
+    "SWA",
+    "Dorport",
+    "#FFFFFF",
+    "#121212",
+    "youth",
+    53,
+    "Dorport Park",
+    21088
+   ],
+   "short": "DOT",
+   "nick": "Falcons"
+  },
+  "DER": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Linham County",
+    "DER",
+    "Linham",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    53,
+    "Dorthorpe Lane",
+    32956
+   ],
+   "short": "LIN",
+   "nick": "Whites"
+  },
+  "SHW": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Barstead Town",
+    "SHW",
+    "Barstead",
+    "#0E00F7",
+    "#FFFFFF",
+    "fallen",
+    52,
+    "Oakbrook Lane",
+    39732
+   ],
+   "short": "BARS",
+   "nick": "Otters"
+  },
+  "BLB": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Dorgate Borough",
+    "BLB",
+    "Dorgate",
+    "#009EE0",
+    "#FFFFFF",
+    "fallen",
+    52,
+    "The Preston Stadium",
+    31367
+   ],
+   "short": "DOE",
+   "nick": "Mariners"
+  },
+  "BRC": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Glenstead United",
+    "BRC",
+    "Glenstead",
+    "#E21A23",
+    "#FFFFFF",
+    "youth",
+    52,
+    "Shafham Park",
+    27000
+   ],
+   "short": "GLE",
+   "nick": "Reds"
+  },
+  "QPR": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth Rovers",
+    "QPR",
+    "Ripmouth",
+    "#1D5BA4",
+    "#FFFFFF",
+    "fan",
+    51,
+    "Wynport Road",
+    18439
+   ],
+   "short": "RIP5",
+   "nick": "Stags"
+  },
+  "PNE": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "West Gildale United",
+    "PNE",
+    "West Gildale",
+    "#FFFFFF",
+    "#000080",
+    "fan",
+    51,
+    "Presbridge Road",
+    23404
+   ],
+   "short": "WLE",
+   "nick": "Whites"
+  },
+  "MIL": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth Borough",
+    "MIL",
+    "Ripmouth",
+    "#001D5E",
+    "#FFFFFF",
+    "fan",
+    51,
+    "Darminster Road",
+    20146
+   ],
+   "short": "RIP6",
+   "nick": "Falcons"
+  },
+  "POM": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Dardale Orient",
+    "POM",
+    "Dardale",
+    "#001489",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Kelbrook Park",
+    20899
+   ],
+   "short": "DAE",
+   "nick": "Mariners"
+  },
+  "CHA": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth Orient",
+    "CHA",
+    "Ripmouth",
+    "#D4021D",
+    "#FFFFFF",
+    "historic",
+    49,
+    "The Marchester Stadium",
+    27111
+   ],
+   "short": "RIP7",
+   "nick": "Herons"
+  },
+  "OXF": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Sedgeborough Rangers",
+    "OXF",
+    "Sedgeborough",
+    "#FFD100",
+    "#001D5E",
+    "fan",
+    47,
+    "Stanbury Lane",
+    12500
+   ],
+   "short": "SEH",
+   "nick": "Wolves"
+  },
+  "CAR": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Tunmere Albion",
+    "CAR",
+    "Tunmere",
+    "#0070B5",
+    "#FFFFFF",
+    "fallen",
+    49,
+    "Tunmere Ground",
+    33280
+   ],
+   "short": "TUN",
+   "nick": "Badgers"
+  },
+  "LUT": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Linborough Wanderers",
+    "LUT",
+    "Linborough",
+    "#F78F1E",
+    "#002D62",
+    "fallen",
+    48,
+    "Tunminster Park",
+    12000
+   ],
+   "short": "LIH",
+   "nick": "Chargers"
+  },
+  "HUD": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Fenworth Albion",
+    "HUD",
+    "Fenworth",
+    "#0E63AD",
+    "#FFFFFF",
+    "historic",
+    48,
+    "Sedgeworth Lane",
+    24121
+   ],
+   "short": "FEN",
+   "nick": "Lions"
+  },
+  "BWA": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Harham United",
+    "BWA",
+    "Harham",
+    "#FFFFFF",
+    "#263C7E",
+    "fallen",
+    48,
+    "Fenstead Field",
+    28723
+   ],
+   "short": "HAM",
+   "nick": "Whites"
+  },
+  "PLY": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Hexmere Albion",
+    "PLY",
+    "Hexmere",
+    "#00563F",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Aldham Park",
+    17900
+   ],
+   "short": "HEX",
+   "nick": "Greens"
+  },
+  "REA": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Wexton Orient",
+    "REA",
+    "Wexton",
+    "#004494",
+    "#FFFFFF",
+    "fallen",
+    46,
+    "Calbridge Park",
+    24161
+   ],
+   "short": "WEN",
+   "nick": "Blues"
+  },
+  "BNS": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Barton Rangers",
+    "BNS",
+    "Barton",
+    "#D71921",
+    "#FFFFFF",
+    "youth",
+    45,
+    "Barton Park",
+    23287
+   ],
+   "short": "BAN",
+   "nick": "Reds"
+  },
+  "WIG": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Malby Victoria",
+    "WIG",
+    "Malby",
+    "#1D59AF",
+    "#FFFFFF",
+    "selling",
+    45,
+    "Darcombe Park",
+    25138
+   ],
+   "short": "MAL",
+   "nick": "Blues"
+  },
+  "STO": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Whithaven Albion",
+    "STO",
+    "Whithaven",
+    "#0B4EA2",
+    "#FFFFFF",
+    "fan",
+    45,
+    "Salmere Lane",
+    10841
+   ],
+   "short": "WHI",
+   "nick": "Blues"
+  },
+  "BFD": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Darham United",
+    "BFD",
+    "Darham",
+    "#8E1B3A",
+    "#FFB81C",
+    "fallen",
+    44,
+    "Kesfield Park",
+    25136
+   ],
+   "short": "DAM",
+   "nick": "Maroons"
+  },
+  "BLP": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Great Gilfield Rovers",
+    "BLP",
+    "Great Gilfield",
+    "#F68712",
+    "#FFFFFF",
+    "fan",
+    44,
+    "Salstead Park",
+    16616
+   ],
+   "short": "GRE",
+   "nick": "Spartans"
+  },
+  "PBO": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Chelthorpe United",
+    "PBO",
+    "Chelthorpe",
+    "#0055A4",
+    "#FFFFFF",
+    "selling",
+    44,
+    "Thornford Park",
+    15314
+   ],
+   "short": "CHE",
+   "nick": "Blues"
+  },
+  "ROT": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Gilfield City",
+    "ROT",
+    "Gilfield",
+    "#D71920",
+    "#FFFFFF",
+    "fallen",
+    43,
+    "Dorford Lane",
+    12021
+   ],
+   "short": "GID",
+   "nick": "Ironmen"
+  },
+  "LIN": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Kelborough City",
+    "LIN",
+    "Kelborough",
+    "#E1251B",
+    "#FFFFFF",
+    "youth",
+    43,
+    "Kelborough Ground",
+    10669
+   ],
+   "short": "KEL",
+   "nick": "Foresters"
+  },
+  "DON": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Great Chelford Victoria",
+    "DON",
+    "Great Chelford",
+    "#E21E26",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Norham Lane",
+    15231
+   ],
+   "short": "GRD",
+   "nick": "Spartans"
+  },
+  "LEY": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth City",
+    "LEY",
+    "Ripmouth",
+    "#C8102E",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Yardale Park",
+    9271
+   ],
+   "short": "RIP8",
+   "nick": "Miners"
+  },
+  "WYC": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Ashbury Victoria",
+    "WYC",
+    "Ashbury",
+    "#88C4E6",
+    "#0B1D4F",
+    "youth",
+    42,
+    "Barcliff Park",
+    10137
+   ],
+   "short": "ASY",
+   "nick": "Sky Blues"
+  },
+  "MNS": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "West Lanstead Victoria",
+    "MNS",
+    "West Lanstead",
+    "#FEDD00",
+    "#0033A0",
+    "fan",
+    41,
+    "Oakgate Field",
+    9186
+   ],
+   "short": "WED",
+   "nick": "Yellows"
+  },
+  "EXE": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Norchester Borough",
+    "EXE",
+    "Norchester",
+    "#D6001C",
+    "#FFFFFF",
+    "fan",
+    40,
+    "Chelbridge Road",
+    8696
+   ],
+   "short": "NOR",
+   "nick": "Wolves"
+  },
+  "PVA": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Oakfield Albion",
+    "PVA",
+    "Oakfield",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    40,
+    "Elmwick Lane",
+    15036
+   ],
+   "short": "OAD",
+   "nick": "Whites"
+  },
+  "WIM": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth Victoria",
+    "WIM",
+    "Ripmouth",
+    "#0033A0",
+    "#FFD100",
+    "fan",
+    40,
+    "The Brombury Stadium",
+    9215
+   ],
+   "short": "RIP9",
+   "nick": "Badgers"
+  },
+  "STV": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Aldbrook Orient",
+    "STV",
+    "Aldbrook",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    40,
+    "Caldale Road",
+    7800
+   ],
+   "short": "ALD",
+   "nick": "Badgers"
+  },
+  "NTN": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Wynley United",
+    "NTN",
+    "Wynley",
+    "#7A263A",
+    "#FFFFFF",
+    "fan",
+    39,
+    "Wynley Park",
+    7798
+   ],
+   "short": "WYN",
+   "nick": "Maroons"
+  },
+  "BRT": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Malcliff Athletic",
+    "BRT",
+    "Malcliff",
+    "#FFD100",
+    "#000000",
+    "selling",
+    39,
+    "Malcliff Ground",
+    6912
+   ],
+   "short": "MAF",
+   "nick": "Yellows"
+  },
+  "ACS": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Bexing Rangers",
+    "ACS",
+    "Bexing",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Ashborough Park",
+    5450
+   ],
+   "short": "BEX",
+   "nick": "Falcons"
+  },
+  "BNT": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth 14",
+    "BNT",
+    "Ripmouth",
+    "#F79A20",
+    "#000000",
+    "fan",
+    36,
+    "Ripton Field",
+    6500
+   ],
+   "short": "RIP10",
+   "nick": "Mariners"
+  },
+  "BRW": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Bexley Athletic",
+    "BRW",
+    "Bexley",
+    "#FFFFFF",
+    "#00205B",
+    "fan",
+    37,
+    "Bexley Ground",
+    5045
+   ],
+   "short": "BEY",
+   "nick": "Ironmen"
+  },
+  "BRR": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Glenstead Victoria",
+    "BRR",
+    "Glenstead",
+    "#0050A0",
+    "#FFFFFF",
+    "historic",
+    42,
+    "Bradbrook Park",
+    9832
+   ],
+   "short": "GLD",
+   "nick": "Herons"
+  },
+  "BRO": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Ripmouth 15",
+    "BRO",
+    "Ripmouth",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    37,
+    "Norwell Field",
+    5000
+   ],
+   "short": "RIP11",
+   "nick": "Whites"
+  },
+  "CAMU": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Bromhaven Rangers",
+    "CAMU",
+    "Bromhaven",
+    "#F9A01B",
+    "#000000",
+    "fan",
+    40,
+    "Keswick Road",
+    8127
+   ],
+   "short": "BRO",
+   "nick": "Oranges"
+  },
+  "CHT": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "West Norham Town",
+    "CHT",
+    "West Norham",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    37,
+    "Harstead Lane",
+    7066
+   ],
+   "short": "WEM",
+   "nick": "Reds"
+  },
+  "CHF": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Wynbrook County",
+    "CHF",
+    "Wynbrook",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    40,
+    "Thornwell Park",
+    10504
+   ],
+   "short": "WYK",
+   "nick": "Ironmen"
+  },
+  "COL": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Wynthorpe Borough",
+    "COL",
+    "Wynthorpe",
+    "#0045A0",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Barworth Park",
+    10105
+   ],
+   "short": "WYE",
+   "nick": "Drovers"
+  },
+  "CRAW": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Hexport Victoria",
+    "CRAW",
+    "Hexport",
+    "#C8102E",
+    "#FFFFFF",
+    "fan",
+    39,
+    "Wynwold Park",
+    6134
+   ],
+   "short": "HET",
+   "nick": "Reds"
+  },
+  "CREW": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Keswold Albion",
+    "CREW",
+    "Keswold",
+    "#E2001A",
+    "#FFFFFF",
+    "youth",
+    38,
+    "Keswold Park",
+    10153
+   ],
+   "short": "KED",
+   "nick": "Reds"
+  },
+  "FLE": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Wynhaven County",
+    "FLE",
+    "Wynhaven",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Tunstead Park",
+    5327
+   ],
+   "short": "WYNH",
+   "nick": "Drovers"
+  },
+  "GILL": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Wynwood County",
+    "GILL",
+    "Wynwood",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    39,
+    "Presby Field",
+    11582
+   ],
+   "short": "WYD",
+   "nick": "Blues"
+  },
+  "GRI": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Great Oakhaven Rovers",
+    "GRI",
+    "Great Oakhaven",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    39,
+    "Lanchester Park",
+    9052
+   ],
+   "short": "GRN",
+   "nick": "Drovers"
+  },
+  "HARR": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Prescombe Rangers",
+    "HARR",
+    "Prescombe",
+    "#FFD700",
+    "#000000",
+    "fan",
+    35,
+    "Prescombe Ground",
+    5000
+   ],
+   "short": "PRE",
+   "nick": "Yellows"
+  },
+  "MKD": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Fenstead Victoria",
+    "MKD",
+    "Fenstead",
+    "#FFFFFF",
+    "#000000",
+    "selling",
+    41,
+    "Fenstead Park",
+    30500
+   ],
+   "short": "FED",
+   "nick": "Whites"
+  },
+  "NWP": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Thorncliff City",
+    "NWP",
+    "Thorncliff",
+    "#F79A20",
+    "#000000",
+    "fan",
+    36,
+    "Thorncliff Park",
+    7850
+   ],
+   "short": "THF",
+   "nick": "Oranges"
+  },
+  "NCO": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Yarwood County",
+    "NCO",
+    "Yarwood",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    41,
+    "Yarwood Park",
+    19841
+   ],
+   "short": "YAD",
+   "nick": "Blacks"
+  },
+  "OLD": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Bexham Rangers",
+    "OLD",
+    "Bexham",
+    "#0033A0",
+    "#FFFFFF",
+    "fallen",
+    38,
+    "The Aldby Stadium",
+    13512
+   ],
+   "short": "BEM",
+   "nick": "Blues"
+  },
+  "SAL": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Barwold Wanderers",
+    "SAL",
+    "Barwold",
+    "#E2001A",
+    "#FFFFFF",
+    "oil",
+    40,
+    "Kelwold Park",
+    5108
+   ],
+   "short": "BLD",
+   "nick": "Spartans"
+  },
+  "SHR": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Caling Victoria",
+    "SHR",
+    "Caling",
+    "#0033A0",
+    "#F9A01B",
+    "fan",
+    38,
+    "Kesbury Lane",
+    9875
+   ],
+   "short": "CAG",
+   "nick": "Miners"
+  },
+  "SWI": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Elmminster County",
+    "SWI",
+    "Elmminster",
+    "#E2001A",
+    "#FFFFFF",
+    "fallen",
+    39,
+    "Fenchester Park",
+    15728
+   ],
+   "short": "ELM",
+   "nick": "Rams"
+  },
+  "TRA": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Braning Borough",
+    "TRA",
+    "Braning",
+    "#FFFFFF",
+    "#0033A0",
+    "fallen",
+    37,
+    "Bradmouth Park",
+    16587
+   ],
+   "short": "BRG",
+   "nick": "Whites"
+  },
+  "WAL": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "South Ashby Wanderers",
+    "WAL",
+    "South Ashby",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Barstead Field",
+    11300
+   ],
+   "short": "SOU",
+   "nick": "Reds"
+  },
+  "RMA": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "UD Puenteblanca",
+    "RMA",
+    "Puenteblanca",
+    "#FFFFFF",
+    "#FEBE10",
+    "giant",
+    89,
+    "Estadio Puentemora",
+    83186
+   ],
+   "short": "PUE",
+   "nick": "Blancos"
+  },
+  "FCB": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Racing Vallegrande",
+    "FCB",
+    "Vallegrande",
+    "#A50044",
+    "#004D98",
+    "giant",
+    88,
+    "Estadio Santareal",
+    99354
+   ],
+   "short": "VAL",
+   "nick": "Leones"
+  },
+  "ATM": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "CD Puenteblanca",
+    "ATM",
+    "Puenteblanca",
+    "#CB3524",
+    "#272E61",
+    "historic",
+    82,
+    "Estadio Cañadamora",
+    70460
+   ],
+   "short": "PUA",
+   "nick": "Venados"
+  },
+  "ATH": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Atlético Arroyosur",
+    "ATH",
+    "Arroyosur",
+    "#EE2523",
+    "#FFFFFF",
+    "youth",
+    76,
+    "Estadio Lomassur",
+    53289
+   ],
+   "short": "ARR",
+   "nick": "Rojos"
+  },
+  "VIL": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Cañadanorte Balompié",
+    "VIL",
+    "Cañadanorte",
+    "#FFE667",
+    "#005187",
+    "selling",
+    74,
+    "Nuevo Estadio Cañadanorte",
+    23500
+   ],
+   "short": "CAÑ",
+   "nick": "Amarillos"
+  },
+  "RSO": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Real Playagrande",
+    "RSO",
+    "Playagrande",
+    "#143C8B",
+    "#FFFFFF",
+    "youth",
+    73,
+    "Nuevo Estadio Playagrande",
+    39313
+   ],
+   "short": "PLA",
+   "nick": "Azules"
+  },
+  "BET": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Nuevagrande Balompié",
+    "BET",
+    "Nuevagrande",
+    "#0BB363",
+    "#FFFFFF",
+    "historic",
+    72,
+    "Estadio Municipal de Nuevagrande",
+    60721
+   ],
+   "short": "NUE",
+   "nick": "Verdes"
+  },
+  "SEV": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Unión Nuevagrande",
+    "SEV",
+    "Nuevagrande",
+    "#FFFFFF",
+    "#D81E05",
+    "fallen",
+    68,
+    "Estadio Peñabella",
+    43883
+   ],
+   "short": "NDE",
+   "nick": "Blancos"
+  },
+  "GIR": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "UD Sanluna",
+    "GIR",
+    "Sanluna",
+    "#CD2534",
+    "#FFFFFF",
+    "oil",
+    66,
+    "Estadio Municipal de Sanluna",
+    14624
+   ],
+   "short": "SAN",
+   "nick": "Rojos"
+  },
+  "VAL": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Club Lomassol",
+    "VAL",
+    "Lomassol",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    66,
+    "Estadio La Puentebella",
+    49430
+   ],
+   "short": "LOM",
+   "nick": "Gladiadores"
+  },
+  "CEL": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "CD Mesareal",
+    "CEL",
+    "Mesareal",
+    "#8AC3EE",
+    "#FFFFFF",
+    "selling",
+    64,
+    "Nuevo Estadio Mesareal",
+    24870
+   ],
+   "short": "MES",
+   "nick": "Celestes"
+  },
+  "OSA": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "UD Torrenorte",
+    "OSA",
+    "Torrenorte",
+    "#D91A21",
+    "#0A346F",
+    "fan",
+    64,
+    "Estadio Puertosol",
+    23576
+   ],
+   "short": "TOR",
+   "nick": "Jaguares"
+  },
+  "MLL": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Deportivo Puenterosa",
+    "MLL",
+    "Puenterosa",
+    "#E20613",
+    "#000000",
+    "fan",
+    62,
+    "Estadio Nuevarosa",
+    26020
+   ],
+   "short": "PSA",
+   "nick": "Gladiadores"
+  },
+  "RCD": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Vallegrande CF",
+    "RCD",
+    "Vallegrande",
+    "#007FC8",
+    "#FFFFFF",
+    "fallen",
+    62,
+    "Campo de Vallegrande",
+    40000
+   ],
+   "short": "VAE",
+   "nick": "Azules"
+  },
+  "RAY": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Racing Puenteblanca",
+    "RAY",
+    "Puenteblanca",
+    "#FFFFFF",
+    "#E53027",
+    "fan",
+    61,
+    "Campo de Puenteblanca",
+    14708
+   ],
+   "short": "PCA",
+   "nick": "Cóndores"
+  },
+  "GET": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Real Mesabella",
+    "GET",
+    "Mesabella",
+    "#005999",
+    "#FFFFFF",
+    "selling",
+    61,
+    "Campo de Mesabella",
+    16500
+   ],
+   "short": "MEA",
+   "nick": "Azules"
+  },
+  "ALA": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Mesaalta Balompié",
+    "ALA",
+    "Mesaalta",
+    "#0761AF",
+    "#FFFFFF",
+    "youth",
+    60,
+    "Estadio Municipal de Mesaalta",
+    19840
+   ],
+   "short": "MTA",
+   "nick": "Azules"
+  },
+  "OVI": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Atlético Santaalta",
+    "OVI",
+    "Santaalta",
+    "#0033A0",
+    "#FFFFFF",
+    "fan",
+    59,
+    "Nuevo Estadio Santaalta",
+    30500
+   ],
+   "short": "SAA",
+   "nick": "Azules"
+  },
+  "LEV": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Deportivo Lomassol",
+    "LEV",
+    "Lomassol",
+    "#B5123E",
+    "#004F9F",
+    "fan",
+    59,
+    "Estadio Villagrande",
+    26354
+   ],
+   "short": "LOL",
+   "nick": "Jaguares"
+  },
+  "ELC": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Racing Pozoverde",
+    "ELC",
+    "Pozoverde",
+    "#FFFFFF",
+    "#05642C",
+    "fan",
+    58,
+    "Campo de Pozoverde",
+    31388
+   ],
+   "short": "POZ",
+   "nick": "Marineros"
+  },
+  "DEP": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Pozoalta Balompié",
+    "DEP",
+    "Pozoalta",
+    "#0067B1",
+    "#FFFFFF",
+    "fallen",
+    56,
+    "Estadio Valleluna",
+    32660
+   ],
+   "short": "POA",
+   "nick": "Azules"
+  },
+  "LPA": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Racing Peñaalta",
+    "LPA",
+    "Peñaalta",
+    "#FFE400",
+    "#0055A5",
+    "fan",
+    56,
+    "Estadio Municipal de Peñaalta",
+    32400
+   ],
+   "short": "PEÑ",
+   "nick": "Alacranes"
+  },
+  "VLD": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Racing Montelara",
+    "VLD",
+    "Montelara",
+    "#5B2C83",
+    "#FFFFFF",
+    "fallen",
+    56,
+    "Estadio Llanomora",
+    27618
+   ],
+   "short": "MON",
+   "nick": "Granates"
+  },
+  "MAL": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "CD Lomasbella",
+    "MAL",
+    "Lomasbella",
+    "#0073CF",
+    "#FFFFFF",
+    "fallen",
+    55,
+    "Estadio La Puenteluna",
+    30044
+   ],
+   "short": "LOA",
+   "nick": "Azules"
+  },
+  "ALM": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Atlético Vegabella",
+    "ALM",
+    "Vegabella",
+    "#EE1119",
+    "#FFFFFF",
+    "oil",
+    55,
+    "Estadio Rocaluna",
+    15274
+   ],
+   "short": "VEG",
+   "nick": "Halcones"
+  },
+  "ZAR": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "UD Rioreal",
+    "ZAR",
+    "Rioreal",
+    "#FFFFFF",
+    "#0A3A82",
+    "fallen",
+    54,
+    "Estadio Municipal de Rioreal",
+    33608
+   ],
+   "short": "RIO",
+   "nick": "Blancos"
+  },
+  "LEG": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Altomar Balompié",
+    "LEG",
+    "Altomar",
+    "#FFFFFF",
+    "#0B3F8C",
+    "youth",
+    54,
+    "Campo de Altomar",
+    12454
+   ],
+   "short": "ALT",
+   "nick": "Halcones"
+  },
+  "GRA": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Llanosur Balompié",
+    "GRA",
+    "Llanosur",
+    "#C8102E",
+    "#FFFFFF",
+    "selling",
+    54,
+    "Nuevo Estadio Llanosur",
+    19336
+   ],
+   "short": "LLA",
+   "nick": "Rojos"
+  },
+  "SPG": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Atlético Altogrande",
+    "SPG",
+    "Altogrande",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    53,
+    "Nuevo Estadio Altogrande",
+    29371
+   ],
+   "short": "ALE",
+   "nick": "Rojos"
+  },
+  "RSA": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Unión Rioverde",
+    "RSA",
+    "Rioverde",
+    "#FFFFFF",
+    "#00843D",
+    "historic",
+    53,
+    "Estadio Valleblanca",
+    22222
+   ],
+   "short": "RIE",
+   "nick": "Blancos"
+  },
+  "CAD": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "CD Peñasol",
+    "CAD",
+    "Peñasol",
+    "#FFE400",
+    "#0045A7",
+    "fan",
+    53,
+    "Campo de Peñasol",
+    20724
+   ],
+   "short": "PEL",
+   "nick": "Amarillos"
+  },
+  "EIB": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Santanorte CF",
+    "EIB",
+    "Santanorte",
+    "#004F9F",
+    "#A6192E",
+    "youth",
+    51,
+    "Campo de Santanorte",
+    8164
+   ],
+   "short": "SAE",
+   "nick": "Cóndores"
+  },
+  "CAS": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Villaluna Balompié",
+    "CAS",
+    "Villaluna",
+    "#FFFFFF",
+    "#000000",
+    "oil",
+    51,
+    "Estadio Sanmora",
+    15500
+   ],
+   "short": "VIL",
+   "nick": "Marineros"
+  },
+  "AND": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "CD Puenteluna",
+    "AND",
+    "Puenteluna",
+    "#0038A8",
+    "#FEDD00",
+    "oil",
+    50,
+    "Estadio La Montereal",
+    3306
+   ],
+   "short": "PNA",
+   "nick": "Azules"
+  },
+  "HUE": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Mesagrande Balompié",
+    "HUE",
+    "Mesagrande",
+    "#003DA5",
+    "#A6192E",
+    "youth",
+    49,
+    "Estadio Arroyolara",
+    9128
+   ],
+   "short": "MEE",
+   "nick": "Azules"
+  },
+  "ALB": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Real Fuenteverde",
+    "ALB",
+    "Fuenteverde",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    49,
+    "Campo de Fuenteverde",
+    17524
+   ],
+   "short": "FUE",
+   "nick": "Águilas"
+  },
+  "BGS": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Fortínalta CF",
+    "BGS",
+    "Fortínalta",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    48,
+    "Nuevo Estadio Fortínalta",
+    12200
+   ],
+   "short": "FOR",
+   "nick": "Blancos"
+  },
+  "CCF": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Atlético Pradoblanca",
+    "CCF",
+    "Pradoblanca",
+    "#FFFFFF",
+    "#00843D",
+    "fan",
+    48,
+    "Estadio Costamora",
+    21822
+   ],
+   "short": "PRA",
+   "nick": "Blancos"
+  },
+  "MIR": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Club Valledorada",
+    "MIR",
+    "Valledorada",
+    "#E30613",
+    "#000000",
+    "youth",
+    48,
+    "Estadio La Rocagrande",
+    5759
+   ],
+   "short": "VAA",
+   "nick": "Rojos"
+  },
+  "RSS": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Real Playagrande B",
+    "RSS",
+    "Playagrande",
+    "#143C8B",
+    "#FFFFFF",
+    "youth",
+    47,
+    "Nuevo Estadio Playagrande",
+    2500,
+    "RSO"
+   ],
+   "short": "PLAB",
+   "nick": ""
+  },
+  "CYD": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Unión Camposur",
+    "CYD",
+    "Camposur",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    46,
+    "Nuevo Estadio Camposur",
+    13346
+   ],
+   "short": "CAM",
+   "nick": "Blancos"
+  },
+  "CEU": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Sporting Ríolara",
+    "CEU",
+    "Ríolara",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    45,
+    "Estadio Mesarosa",
+    6500
+   ],
+   "short": "RÍO",
+   "nick": "Blancos"
+  },
+  "RMC": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "UD Puenteblanca B",
+    "RMC",
+    "Puenteblanca",
+    "#FFFFFF",
+    "#FEBE10",
+    "youth",
+    45,
+    "Estadio Puentemora",
+    6000,
+    "RMA"
+   ],
+   "short": "PUEB",
+   "nick": ""
+  },
+  "BAT": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Racing Vallegrande B",
+    "BAT",
+    "Vallegrande",
+    "#A50044",
+    "#004D98",
+    "youth",
+    44,
+    "Estadio Santareal",
+    6000,
+    "FCB"
+   ],
+   "short": "VALB",
+   "nick": ""
+  },
+  "BIA": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Atlético Arroyosur B",
+    "BIA",
+    "Arroyosur",
+    "#EE2523",
+    "#FFFFFF",
+    "youth",
+    42,
+    "Estadio Lomassur",
+    3250,
+    "ATH"
+   ],
+   "short": "ARRB",
+   "nick": ""
+  },
+  "ZAM": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Deportivo Pradonueva",
+    "ZAM",
+    "Pradonueva",
+    "#FFFFFF",
+    "#E2001A",
+    "fan",
+    37,
+    "Estadio Municipal de Pradonueva",
+    7813
+   ],
+   "short": "PVA",
+   "nick": "Blancos"
+  },
+  "ATB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "CD Puenteblanca B",
+    "ATB",
+    "Puenteblanca",
+    "#CB3524",
+    "#272E61",
+    "youth",
+    42,
+    "Estadio Cañadamora",
+    2800,
+    "ATM"
+   ],
+   "short": "PUAB",
+   "nick": ""
+  },
+  "VIB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Cañadanorte Balompié B",
+    "VIB",
+    "Cañadanorte",
+    "#FFE667",
+    "#005187",
+    "youth",
+    42,
+    "Nuevo Estadio Cañadanorte",
+    5000,
+    "VIL"
+   ],
+   "short": "CAÑB",
+   "nick": ""
+  },
+  "SEB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Unión Nuevagrande B",
+    "SEB",
+    "Nuevagrande",
+    "#FFFFFF",
+    "#D81E05",
+    "youth",
+    40,
+    "Estadio Peñabella",
+    7000,
+    "SEV"
+   ],
+   "short": "NDEB",
+   "nick": ""
+  },
+  "CEB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "CD Mesareal B",
+    "CEB",
+    "Mesareal",
+    "#8AC3EE",
+    "#FFFFFF",
+    "youth",
+    40,
+    "Nuevo Estadio Mesareal",
+    4500,
+    "CEL"
+   ],
+   "short": "MESB",
+   "nick": ""
+  },
+  "BEB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Nuevagrande Balompié B",
+    "BEB",
+    "Nuevagrande",
+    "#0BB363",
+    "#FFFFFF",
+    "youth",
+    39,
+    "Estadio Municipal de Nuevagrande",
+    3000,
+    "BET"
+   ],
+   "short": "NUEB",
+   "nick": ""
+  },
+  "TEN": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "CD Vegarosa",
+    "TEN",
+    "Vegarosa",
+    "#FFFFFF",
+    "#0046AD",
+    "fallen",
+    46,
+    "Campo de Vegarosa",
+    22824
+   ],
+   "short": "VEA",
+   "nick": "Blancos"
+  },
+  "CTG": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Sporting Mesaluna",
+    "CTG",
+    "Mesaluna",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    43,
+    "Estadio Municipal de Mesaluna",
+    15105
+   ],
+   "short": "MNA",
+   "nick": "Tiburones"
+  },
+  "PON": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Club Mesanorte",
+    "PON",
+    "Mesanorte",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    41,
+    "Estadio Municipal de Mesanorte",
+    8400
+   ],
+   "short": "MTE",
+   "nick": "Azules"
+  },
+  "NAS": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Unión Puertobella",
+    "NAS",
+    "Puertobella",
+    "#C8102E",
+    "#000000",
+    "historic",
+    41,
+    "Nuevo Estadio Puertobella",
+    14591
+   ],
+   "short": "PUER",
+   "nick": "Rojos"
+  },
+  "ALC": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Puentesur Balompié",
+    "ALC",
+    "Puentesur",
+    "#FFD700",
+    "#003DA5",
+    "fan",
+    39,
+    "Nuevo Estadio Puentesur",
+    5100
+   ],
+   "short": "PUR",
+   "nick": "Jaguares"
+  },
+  "MUR": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "CD Pozoblanca",
+    "MUR",
+    "Pozoblanca",
+    "#C8102E",
+    "#FFFFFF",
+    "fallen",
+    42,
+    "Nuevo Estadio Pozoblanca",
+    31179
+   ],
+   "short": "POZO",
+   "nick": "Toros"
+  },
+  "HERC": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Sporting Villablanca",
+    "HERC",
+    "Villablanca",
+    "#0033A0",
+    "#FFFFFF",
+    "fallen",
+    40,
+    "Estadio La Montesur",
+    30000
+   ],
+   "short": "VIA",
+   "nick": "Azules"
+  },
+  "IBI": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Club Peñanorte",
+    "IBI",
+    "Peñanorte",
+    "#0057B8",
+    "#FFFFFF",
+    "oil",
+    40,
+    "Estadio Riobella",
+    4500
+   ],
+   "short": "PEE",
+   "nick": "Azules"
+  },
+  "CDLU": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "UD Bajorosa",
+    "CDLU",
+    "Bajorosa",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Estadio Cabosol",
+    7840
+   ],
+   "short": "BAJ",
+   "nick": "Águilas"
+  },
+  "UNS": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "CD Costareal",
+    "UNS",
+    "Costareal",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    37,
+    "Estadio Fortínverde",
+    4000
+   ],
+   "short": "COS",
+   "nick": "Negros"
+  },
+  "ALG": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Real Bahíaverde",
+    "ALG",
+    "Bahíaverde",
+    "#C8102E",
+    "#FFFFFF",
+    "fan",
+    37,
+    "Estadio La Riomora",
+    7100
+   ],
+   "short": "BAH",
+   "nick": "Rojos"
+  },
+  "BAY": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "FSV Kirchhausen",
+    "BAY",
+    "Kirchhausen",
+    "#DC052D",
+    "#FFFFFF",
+    "giant",
+    89,
+    "Bergsee-Stadion",
+    75024
+   ],
+   "short": "KIR",
+   "nick": "Roten"
+  },
+  "BVB": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "TSV Rheinstadt",
+    "BVB",
+    "Rheinstadt",
+    "#FDE100",
+    "#000000",
+    "fan",
+    84,
+    "Stadion am Steiningen",
+    81365
+   ],
+   "short": "RHE",
+   "nick": "Pioniere"
+  },
+  "B04": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "SpVgg Unterheim",
+    "B04",
+    "Unterheim",
+    "#E32221",
+    "#000000",
+    "historic",
+    81,
+    "Oberau-Stadion",
+    30210
+   ],
+   "short": "UNT",
+   "nick": "Löwen"
+  },
+  "RBL": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "FSV Zellhafen",
+    "RBL",
+    "Zellhafen",
+    "#FFFFFF",
+    "#DD0741",
+    "oil",
+    78,
+    "Haghafen-Stadion",
+    47069
+   ],
+   "short": "ZEL",
+   "nick": "Falken"
+  },
+  "SGE": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Eichkirchen 04",
+    "SGE",
+    "Eichkirchen",
+    "#000000",
+    "#E1000F",
+    "fan",
+    74,
+    "Waldberg-Stadion",
+    58000
+   ],
+   "short": "EIC",
+   "nick": "Bären"
+  },
+  "VFB": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "FC Linddorf",
+    "VFB",
+    "Linddorf",
+    "#FFFFFF",
+    "#E32219",
+    "historic",
+    74,
+    "Bergingen-Stadion",
+    60449
+   ],
+   "short": "LIF",
+   "nick": "Löwen"
+  },
+  "SCF": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "VfB Lindberg",
+    "SCF",
+    "Lindberg",
+    "#C00000",
+    "#000000",
+    "youth",
+    69,
+    "Berghafen-Stadion",
+    34700
+   ],
+   "short": "LIG",
+   "nick": "Roten"
+  },
+  "WOB": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "FC Steinfurt",
+    "WOB",
+    "Steinfurt",
+    "#65B32E",
+    "#FFFFFF",
+    "selling",
+    66,
+    "Sportpark Hohensee",
+    28917
+   ],
+   "short": "STE",
+   "nick": "Grünen"
+  },
+  "BMG": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "SpVgg Rheintal",
+    "BMG",
+    "Rheintal",
+    "#FFFFFF",
+    "#000000",
+    "historic",
+    66,
+    "Stadion Dorndorf",
+    54042
+   ],
+   "short": "RHL",
+   "nick": "Bären"
+  },
+  "HSV": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "FC Obertal",
+    "HSV",
+    "Obertal",
+    "#FFFFFF",
+    "#0A3E8C",
+    "fallen",
+    66,
+    "Lindfeld-Stadion",
+    57000
+   ],
+   "short": "OBE",
+   "nick": "Löwen"
+  },
+  "KOE": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "VfB Dornsee",
+    "KOE",
+    "Dornsee",
+    "#FFFFFF",
+    "#ED1C24",
+    "fallen",
+    64,
+    "Eichheim-Stadion",
+    50000
+   ],
+   "short": "DEE",
+   "nick": "Weißen"
+  },
+  "SVW": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "FSV Lindhausen",
+    "SVW",
+    "Lindhausen",
+    "#1D9053",
+    "#FFFFFF",
+    "historic",
+    64,
+    "Sportpark Eichberg",
+    42100
+   ],
+   "short": "LEN",
+   "nick": "Grünen"
+  },
+  "M05": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Sportfreunde Badberg",
+    "M05",
+    "Badberg",
+    "#C3141E",
+    "#FFFFFF",
+    "fan",
+    63,
+    "Stadion am Dornfeld",
+    33305
+   ],
+   "short": "BAG",
+   "nick": "Falken"
+  },
+  "FCU": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "FC Thalhausen",
+    "FCU",
+    "Thalhausen",
+    "#EB1923",
+    "#FFFFFF",
+    "fan",
+    62,
+    "Mühlhafen-Stadion",
+    22012
+   ],
+   "short": "THA",
+   "nick": "Roten"
+  },
+  "TSG": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "TSV Neufurt",
+    "TSG",
+    "Neufurt",
+    "#1C63B7",
+    "#FFFFFF",
+    "selling",
+    62,
+    "Sportpark Mühlhafen",
+    30150
+   ],
+   "short": "NEU",
+   "nick": "Blauen"
+  },
+  "AUG": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Sportfreunde Westeringen",
+    "AUG",
+    "Westeringen",
+    "#FFFFFF",
+    "#BA3733",
+    "fan",
+    61,
+    "Sportpark Lindfurt",
+    30660
+   ],
+   "short": "WEST",
+   "nick": "Adler"
+  },
+  "STP": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "VfB Obertal",
+    "STP",
+    "Obertal",
+    "#624839",
+    "#FFFFFF",
+    "fan",
+    60,
+    "Sportpark Dorndorf",
+    29546
+   ],
+   "short": "OBL",
+   "nick": "Weinroten"
+  },
+  "HDH": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "VfL Zelldorf",
+    "HDH",
+    "Zelldorf",
+    "#E2001A",
+    "#003B79",
+    "youth",
+    58,
+    "Zelldorf-Arena",
+    15000
+   ],
+   "short": "ZEF",
+   "nick": "Roten"
+  },
+  "BSC": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Sportfreunde Thalhausen",
+    "BSC",
+    "Thalhausen",
+    "#005CA9",
+    "#FFFFFF",
+    "fallen",
+    58,
+    "Stadion am Rheindorf",
+    74475
+   ],
+   "short": "THN",
+   "nick": "Ritter"
+  },
+  "S04": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "VfB Waldstadt",
+    "S04",
+    "Waldstadt",
+    "#004D9D",
+    "#FFFFFF",
+    "fallen",
+    60,
+    "Waldstadt-Arena",
+    62271
+   ],
+   "short": "WAL",
+   "nick": "Blauen"
+  },
+  "KSV": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Eintracht Zellhausen",
+    "KSV",
+    "Zellhausen",
+    "#0033A0",
+    "#FFFFFF",
+    "youth",
+    55,
+    "Sportpark Thalheim",
+    15034
+   ],
+   "short": "ZEN",
+   "nick": "Blauen"
+  },
+  "VFLB": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Fortuna Oberhausen",
+    "VFLB",
+    "Oberhausen",
+    "#005CA9",
+    "#FFFFFF",
+    "historic",
+    56,
+    "Stadion am Thaltal",
+    26000
+   ],
+   "short": "OBN",
+   "nick": "Blauen"
+  },
+  "F95": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Steinberg SC",
+    "F95",
+    "Steinberg",
+    "#E2001A",
+    "#FFFFFF",
+    "historic",
+    55,
+    "Hagberg-Stadion",
+    54600
+   ],
+   "short": "STG",
+   "nick": "Löwen"
+  },
+  "H96": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "TSV Westerheim",
+    "H96",
+    "Westerheim",
+    "#00863D",
+    "#000000",
+    "historic",
+    55,
+    "Sportpark Thalbach",
+    49000
+   ],
+   "short": "WIM",
+   "nick": "Grünen"
+  },
+  "FCKL": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "SV Neuberg",
+    "FCKL",
+    "Neuberg",
+    "#E2001A",
+    "#FFFFFF",
+    "fallen",
+    54,
+    "Sportpark Badberg",
+    49327
+   ],
+   "short": "NEG",
+   "nick": "Schmiede"
+  },
+  "SCPA": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Lindfurt 04",
+    "SCPA",
+    "Lindfurt",
+    "#003DA5",
+    "#000000",
+    "selling",
+    51,
+    "Stadion am Rheinberg",
+    15000
+   ],
+   "short": "LIT",
+   "nick": "Schmiede"
+  },
+  "FCNB": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Bergdorf SC",
+    "FCNB",
+    "Bergdorf",
+    "#9B1B30",
+    "#000000",
+    "fallen",
+    54,
+    "Zellheim-Stadion",
+    50000
+   ],
+   "short": "BER",
+   "nick": "Roten"
+  },
+  "KSC": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "VfL Unterdorf",
+    "KSC",
+    "Unterdorf",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    52,
+    "Unterdorf-Arena",
+    34302
+   ],
+   "short": "UNF",
+   "nick": "Blauen"
+  },
+  "D98": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Westerhausen SC",
+    "D98",
+    "Westerhausen",
+    "#004D9D",
+    "#FFFFFF",
+    "fan",
+    52,
+    "Burgheim-Stadion",
+    17810
+   ],
+   "short": "WES2",
+   "nick": "Füchse"
+  },
+  "SGF": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "TSV Altstadt",
+    "SGF",
+    "Altstadt",
+    "#00863D",
+    "#FFFFFF",
+    "youth",
+    50,
+    "Sportpark Eichstadt",
+    16626
+   ],
+   "short": "ADT",
+   "nick": "Adler"
+  },
+  "FCMA": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Sportfreunde Rheinfeld",
+    "FCMA",
+    "Rheinfeld",
+    "#0033A0",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Grünstadt-Stadion",
+    30098
+   ],
+   "short": "RHD",
+   "nick": "Blauen"
+  },
+  "EBS": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "SV Altbach",
+    "EBS",
+    "Altbach",
+    "#FFD700",
+    "#004D9D",
+    "historic",
+    50,
+    "Zelldorf-Stadion",
+    23325
+   ],
+   "short": "ALH",
+   "nick": "Gelben"
+  },
+  "PRM": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Eintracht Eichheim",
+    "PRM",
+    "Eichheim",
+    "#00863D",
+    "#000000",
+    "fan",
+    48,
+    "Altbach-Stadion",
+    14300
+   ],
+   "short": "EIM",
+   "nick": "Wölfe"
+  },
+  "SVE": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "VfL Eichbach",
+    "SVE",
+    "Eichbach",
+    "#000000",
+    "#FFFFFF",
+    "selling",
+    48,
+    "Stadion Kirchsee",
+    10000
+   ],
+   "short": "EIH",
+   "nick": "Schwarzen"
+  },
+  "DSC": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "SV Hohental",
+    "DSC",
+    "Hohental",
+    "#0033A0",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Stadion Neukirchen",
+    26515
+   ],
+   "short": "HOH",
+   "nick": "Wölfe"
+  },
+  "SGD": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "VfB Bergberg",
+    "SGD",
+    "Bergberg",
+    "#FFD700",
+    "#000000",
+    "fan",
+    50,
+    "Stadion Thalhafen",
+    32066
+   ],
+   "short": "BEG",
+   "nick": "Gelben"
+  },
+  "VFS": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "FC Linddorf B",
+    "VFS",
+    "Linddorf",
+    "#FFFFFF",
+    "#E32219",
+    "youth",
+    42,
+    "Bergingen-Stadion",
+    5000,
+    "VFB"
+   ],
+   "short": "LIFB",
+   "nick": ""
+  },
+  "BVZ": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "TSV Rheinstadt B",
+    "BVZ",
+    "Rheinstadt",
+    "#FDE100",
+    "#000000",
+    "youth",
+    43,
+    "Stadion am Steiningen",
+    9999,
+    "BVB"
+   ],
+   "short": "RHEB",
+   "nick": ""
+  },
+  "TSZ": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "TSV Neufurt B",
+    "TSZ",
+    "Neufurt",
+    "#1C63B7",
+    "#FFFFFF",
+    "youth",
+    41,
+    "Sportpark Mühlhafen",
+    6350,
+    "TSG"
+   ],
+   "short": "NEUB",
+   "nick": ""
+  },
+  "M60": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "VfL Kirchhausen",
+    "M60",
+    "Kirchhausen",
+    "#6CABDD",
+    "#FFFFFF",
+    "fallen",
+    45,
+    "Stadion am Kirchfeld",
+    15000
+   ],
+   "short": "KIN",
+   "nick": "Fischer"
+  },
+  "FCE": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SpVgg Grüningen",
+    "FCE",
+    "Grüningen",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    44,
+    "Stadion am Lindheim",
+    22528
+   ],
+   "short": "GRÜ",
+   "nick": "Schmiede"
+  },
+  "FCH": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Mühlstadt 04",
+    "FCH",
+    "Mühlstadt",
+    "#0033A0",
+    "#FFFFFF",
+    "fallen",
+    45,
+    "Sportpark Althausen",
+    29000
+   ],
+   "short": "MÜH",
+   "nick": "Fischer"
+  },
+  "SVWW": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SpVgg Neuhausen",
+    "SVWW",
+    "Neuhausen",
+    "#E2001A",
+    "#000000",
+    "fan",
+    43,
+    "Stadion Eichingen",
+    15295
+   ],
+   "short": "NEN",
+   "nick": "Bergleute"
+  },
+  "VKO": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "VfL Dornsee",
+    "VKO",
+    "Dornsee",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    40,
+    "Westerdorf-Stadion",
+    8343
+   ],
+   "short": "DORN",
+   "nick": "Roten"
+  },
+  "SVM": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Fortuna Bergfeld",
+    "SVM",
+    "Bergfeld",
+    "#0033A0",
+    "#000000",
+    "fan",
+    42,
+    "Stadion Altbach",
+    24302
+   ],
+   "short": "BED",
+   "nick": "Blauen"
+  },
+  "AUE": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SV Thalburg",
+    "AUE",
+    "Thalburg",
+    "#6A0DAD",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Sportpark Neuhausen",
+    16485
+   ],
+   "short": "THG",
+   "nick": "Adler"
+  },
+  "AAC": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Steindorf 04",
+    "AAC",
+    "Steindorf",
+    "#FFD700",
+    "#000000",
+    "historic",
+    43,
+    "Hagau-Stadion",
+    32960
+   ],
+   "short": "STF",
+   "nick": "Gelben"
+  },
+  "SCV": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Fortuna Zellkirchen",
+    "SCV",
+    "Zellkirchen",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    39,
+    "Stadion Oberstadt",
+    5207
+   ],
+   "short": "ZELL",
+   "nick": "Wölfe"
+  },
+  "OSN": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "FC Hohenburg",
+    "OSN",
+    "Hohenburg",
+    "#6A0DAD",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Sportpark Dornau",
+    15741
+   ],
+   "short": "HOG",
+   "nick": "Wölfe"
+  },
+  "RWE": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Eintracht Hagdorf",
+    "RWE",
+    "Hagdorf",
+    "#E2001A",
+    "#FFFFFF",
+    "historic",
+    44,
+    "Stadion Waldhafen",
+    20650
+   ],
+   "short": "HAG",
+   "nick": "Bären"
+  },
+  "JAH": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Steinsee SC",
+    "JAH",
+    "Steinsee",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    43,
+    "Rheinheim-Stadion",
+    15210
+   ],
+   "short": "STEI",
+   "nick": "Bergleute"
+  },
+  "ULM": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Sportfreunde Freiheim",
+    "ULM",
+    "Freiheim",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Freiheim-Arena",
+    17000
+   ],
+   "short": "FRE",
+   "nick": "Schwarzen"
+  },
+  "MSV": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SpVgg Rheinberg",
+    "MSV",
+    "Rheinberg",
+    "#005CA9",
+    "#FFFFFF",
+    "fallen",
+    44,
+    "Dornstadt-Stadion",
+    31500
+   ],
+   "short": "RHG",
+   "nick": "Blauen"
+  },
+  "FCS": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SV Hohenheim",
+    "FCS",
+    "Hohenheim",
+    "#0033A0",
+    "#000000",
+    "fan",
+    43,
+    "Stadion am Rheinstadt",
+    16003
+   ],
+   "short": "HOM",
+   "nick": "Blauen"
+  },
+  "FCI": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "FC Waldfurt",
+    "FCI",
+    "Waldfurt",
+    "#E2001A",
+    "#000000",
+    "selling",
+    42,
+    "Stadion am Lindfurt",
+    15800
+   ],
+   "short": "WAT",
+   "nick": "Roten"
+  },
+  "S05": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "VfL Althafen",
+    "S05",
+    "Althafen",
+    "#00863D",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Dornkirchen-Stadion",
+    15060
+   ],
+   "short": "ALN",
+   "nick": "Grünen"
+  },
+  "PSG": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "RC Bourlac",
+    "PSG",
+    "Bourlac",
+    "#004170",
+    "#DA291C",
+    "oil",
+    90,
+    "Stade Municipal de Bourlac",
+    47929
+   ],
+   "short": "BOU",
+   "nick": "Faucons"
+  },
+  "OMA": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Athlétic Vilens",
+    "OMA",
+    "Vilens",
+    "#FFFFFF",
+    "#2FAEE0",
+    "giant",
+    82,
+    "Stade Municipal de Vilens",
+    67394
+   ],
+   "short": "VIS",
+   "nick": "Blancs"
+  },
+  "ASM": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "SC Lavlieu",
+    "ASM",
+    "Lavlieu",
+    "#E30613",
+    "#FFFFFF",
+    "oil",
+    78,
+    "Complexe Durgnan",
+    18523
+   ],
+   "short": "LAV",
+   "nick": "Rouges"
+  },
+  "OLY": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Athlétic Chales-bains",
+    "OLY",
+    "Chales-bains",
+    "#FFFFFF",
+    "#DA291C",
+    "fallen",
+    74,
+    "Stade Lavlac",
+    59186
+   ],
+   "short": "CHA",
+   "nick": "Blancs"
+  },
+  "LIL": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "AJ Chaon",
+    "LIL",
+    "Chaon",
+    "#E01E13",
+    "#1B2C5A",
+    "selling",
+    74,
+    "Parc des Sports de Chaon",
+    50186
+   ],
+   "short": "CHN",
+   "nick": "Rouges"
+  },
+  "NIC": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "SC Lanlieu",
+    "NIC",
+    "Lanlieu",
+    "#CE1126",
+    "#000000",
+    "oil",
+    70,
+    "Stade Lansur-mer",
+    36178
+   ],
+   "short": "LAN",
+   "nick": "Lions"
+  },
+  "REN": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "US Fonac",
+    "REN",
+    "Fonac",
+    "#E2001A",
+    "#000000",
+    "youth",
+    70,
+    "Parc des Sports de Fonac",
+    29778
+   ],
+   "short": "FON",
+   "nick": "Rouges"
+  },
+  "RCL": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "AJ Pongnan",
+    "RCL",
+    "Pongnan",
+    "#FFD100",
+    "#E30613",
+    "fan",
+    69,
+    "Stade Tourbourg",
+    38223
+   ],
+   "short": "PON",
+   "nick": "Jaunes"
+  },
+  "RCS": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "SC Valville",
+    "RCS",
+    "Valville",
+    "#0056A6",
+    "#FFFFFF",
+    "oil",
+    66,
+    "Complexe Marens",
+    29230
+   ],
+   "short": "VLE",
+   "nick": "Mineurs"
+  },
+  "SBR": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Athlétic Aubac",
+    "SBR",
+    "Aubac",
+    "#E30613",
+    "#FFFFFF",
+    "selling",
+    62,
+    "Stade de la Durbourg",
+    15220
+   ],
+   "short": "AUB",
+   "nick": "Rouges"
+  },
+  "TFC": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Belsur-mer FC",
+    "TFC",
+    "Belsur-mer",
+    "#6B2C91",
+    "#FFFFFF",
+    "youth",
+    62,
+    "Complexe Monmont",
+    33150
+   ],
+   "short": "BEL",
+   "nick": "Grenats"
+  },
+  "NAN": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "AJ Chalac",
+    "NAN",
+    "Chalac",
+    "#FCD405",
+    "#009A44",
+    "historic",
+    61,
+    "Stade de la Valsur-mer",
+    35322
+   ],
+   "short": "CHC",
+   "nick": "Jaunes"
+  },
+  "PFC": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "AS Bourlac",
+    "PFC",
+    "Bourlac",
+    "#1B2C5A",
+    "#FFFFFF",
+    "oil",
+    60,
+    "Stade de la Clerlieu",
+    20000
+   ],
+   "short": "BOC",
+   "nick": "Cerfs"
+  },
+  "LOR": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "FC Roclac",
+    "LOR",
+    "Roclac",
+    "#F58025",
+    "#000000",
+    "fan",
+    59,
+    "Stade Marens",
+    18110
+   ],
+   "short": "ROC",
+   "nick": "Cerfs"
+  },
+  "AUX": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "SC Lanmont",
+    "AUX",
+    "Lanmont",
+    "#FFFFFF",
+    "#0033A0",
+    "fan",
+    58,
+    "Parc des Sports de Lanmont",
+    18541
+   ],
+   "short": "LAT",
+   "nick": "Mineurs"
+  },
+  "HAC": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "AJ Valay",
+    "HAC",
+    "Valay",
+    "#1D5EAE",
+    "#89CFF0",
+    "historic",
+    58,
+    "Stade de la Villieu",
+    25178
+   ],
+   "short": "VAY",
+   "nick": "Bleus"
+  },
+  "ANG": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "AS Naneau",
+    "ANG",
+    "Naneau",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    58,
+    "Stade Municipal de Naneau",
+    18752
+   ],
+   "short": "NAN",
+   "nick": "Forgerons"
+  },
+  "FCM": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Stade Clercourt",
+    "FCM",
+    "Clercourt",
+    "#8E1B3A",
+    "#FFFFFF",
+    "historic",
+    57,
+    "Stade Rocgnan",
+    28786
+   ],
+   "short": "CLE",
+   "nick": "Grenats"
+  },
+  "MHS": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "RC Chaville",
+    "MHS",
+    "Chaville",
+    "#F58025",
+    "#1B3A6B",
+    "selling",
+    56,
+    "Stade Municipal de Chaville",
+    32900
+   ],
+   "short": "CHAV",
+   "nick": "Cigognes"
+  },
+  "STE": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Courlac FC",
+    "STE",
+    "Courlac",
+    "#009A44",
+    "#FFFFFF",
+    "fallen",
+    58,
+    "Stade Valgnan",
+    41965
+   ],
+   "short": "COU",
+   "nick": "Lynx"
+  },
+  "SDR": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Durbourg FC",
+    "SDR",
+    "Durbourg",
+    "#E2001A",
+    "#FFFFFF",
+    "selling",
+    56,
+    "Complexe Chasur-mer",
+    21029
+   ],
+   "short": "DUR",
+   "nick": "Rouges"
+  },
+  "EAG": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "SC Courens",
+    "EAG",
+    "Courens",
+    "#E2001A",
+    "#000000",
+    "fan",
+    50,
+    "Stade Moncourt",
+    18378
+   ],
+   "short": "CNS",
+   "nick": "Lynx"
+  },
+  "PAU": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "SC Nanlieu",
+    "PAU",
+    "Nanlieu",
+    "#FFD700",
+    "#005CA9",
+    "fan",
+    47,
+    "Stade de la Lavlieu",
+    4031
+   ],
+   "short": "NAU",
+   "nick": "Mineurs"
+  },
+  "ANN": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "AS Chagnan",
+    "ANN",
+    "Chagnan",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    47,
+    "Complexe Clerens",
+    15660
+   ],
+   "short": "CAN",
+   "nick": "Rouges"
+  },
+  "LAV": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "FC Valac",
+    "LAV",
+    "Valac",
+    "#F58025",
+    "#000000",
+    "fan",
+    47,
+    "Stade de la Couray",
+    18467
+   ],
+   "short": "VAC",
+   "nick": "Cerfs"
+  },
+  "GRE2": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Athlétic Ponville",
+    "GRE2",
+    "Ponville",
+    "#005CA9",
+    "#FFFFFF",
+    "fan",
+    47,
+    "Stade Municipal de Ponville",
+    20068
+   ],
+   "short": "POE",
+   "nick": "Bleus"
+  },
+  "AMI": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Belcourt FC",
+    "AMI",
+    "Belcourt",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    48,
+    "Complexe Aubmont",
+    12097
+   ],
+   "short": "BET",
+   "nick": "Blancs"
+  },
+  "RSF": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "US Lavles-bains",
+    "RSF",
+    "Lavles-bains",
+    "#00863D",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Stade Valon",
+    10000
+   ],
+   "short": "LAS",
+   "nick": "Cigognes"
+  },
+  "ROD": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "AJ Lavcourt",
+    "ROD",
+    "Lavcourt",
+    "#E2001A",
+    "#FFD700",
+    "fan",
+    46,
+    "Parc des Sports de Lavcourt",
+    5955
+   ],
+   "short": "LRT",
+   "nick": "Rouges"
+  },
+  "CF63": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Athlétic Tourville",
+    "CF63",
+    "Tourville",
+    "#E2001A",
+    "#005CA9",
+    "fan",
+    49,
+    "Complexe Mareau",
+    11980
+   ],
+   "short": "TOU",
+   "nick": "Rouges"
+  },
+  "USL": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "RC Coureau",
+    "USL",
+    "Coureau",
+    "#005CA9",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Stade Municipal de Coureau",
+    4933
+   ],
+   "short": "CAU",
+   "nick": "Lions"
+  },
+  "SCBA": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "AS Bourac",
+    "SCBA",
+    "Bourac",
+    "#005CA9",
+    "#FFFFFF",
+    "historic",
+    47,
+    "Stade Municipal de Bourac",
+    16078
+   ],
+   "short": "BAC",
+   "nick": "Bleus"
+  },
+  "LMF": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "SC Bellac",
+    "LMF",
+    "Bellac",
+    "#E2001A",
+    "#FFD700",
+    "fallen",
+    47,
+    "Stade de la Saintcourt",
+    25064
+   ],
+   "short": "BEC",
+   "nick": "Lynx"
+  },
+  "ASN": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "SC Beauens",
+    "ASN",
+    "Beauens",
+    "#FFFFFF",
+    "#E2001A",
+    "fallen",
+    48,
+    "Stade de la Marsur-mer",
+    20087
+   ],
+   "short": "BEA",
+   "nick": "Blancs"
+  },
+  "USB": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "AS Belles-bains",
+    "USB",
+    "Belles-bains",
+    "#E2001A",
+    "#000000",
+    "fan",
+    44,
+    "Stade Municipal de Belles-bains",
+    9534
+   ],
+   "short": "BES",
+   "nick": "Lynx"
+  },
+  "ETA": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Lavay FC",
+    "ETA",
+    "Lavay",
+    "#005CA9",
+    "#FFFFFF",
+    "fallen",
+    50,
+    "Stade Villes-bains",
+    21877
+   ],
+   "short": "LAY",
+   "nick": "Bleus"
+  },
+  "FLA": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Racing Montebranca",
+    "FLA",
+    "Montebranca",
+    "#C4122E",
+    "#000000",
+    "giant",
+    85,
+    "Estádio Portosol",
+    78838
+   ],
+   "short": "MOA",
+   "nick": "Rubro-Negros"
+  },
+  "PAL": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Sãorio EC",
+    "PAL",
+    "Sãorio",
+    "#006437",
+    "#FFFFFF",
+    "giant",
+    84,
+    "Estádio Nova Santalua",
+    43713
+   ],
+   "short": "SÃO",
+   "nick": "Verdes"
+  },
+  "COR": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "União Sãorio",
+    "COR",
+    "Sãorio",
+    "#FFFFFF",
+    "#000000",
+    "historic",
+    79,
+    "Estádio Boamar",
+    49205
+   ],
+   "short": "SIO",
+   "nick": "Mineiros"
+  },
+  "SAO": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Clube Sãorio",
+    "SAO",
+    "Sãorio",
+    "#FFFFFF",
+    "#E4002B",
+    "historic",
+    78,
+    "Estádio Municipal de Sãorio",
+    66795
+   ],
+   "short": "SÃOR",
+   "nick": "Brancos"
+  },
+  "BOT": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Montebranca EC",
+    "BOT",
+    "Montebranca",
+    "#000000",
+    "#FFFFFF",
+    "oil",
+    77,
+    "Estádio Boareal",
+    46831
+   ],
+   "short": "MCA",
+   "nick": "Leões"
+  },
+  "CAM": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Atlético Campomar",
+    "CAM",
+    "Campomar",
+    "#000000",
+    "#FFFFFF",
+    "oil",
+    76,
+    "Estádio Portomar",
+    46000
+   ],
+   "short": "CAR",
+   "nick": "Pretos"
+  },
+  "GRE": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Torresol FC",
+    "GRE",
+    "Torresol",
+    "#0D80BF",
+    "#000000",
+    "historic",
+    75,
+    "Arena Altosol",
+    55662
+   ],
+   "short": "TOL",
+   "nick": "Azuis"
+  },
+  "SCI": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Sporting Torresol",
+    "SCI",
+    "Torresol",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    75,
+    "Estádio Municipal de Torresol",
+    50128
+   ],
+   "short": "TORR",
+   "nick": "Rubro-Negros"
+  },
+  "FLU": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Grémio Montebranca",
+    "FLU",
+    "Montebranca",
+    "#7A1F3D",
+    "#00613C",
+    "historic",
+    74,
+    "Estádio Nova Torrealegre",
+    78838
+   ],
+   "short": "MONT",
+   "nick": "Grenás"
+  },
+  "CRU": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Sporting Campomar",
+    "CRU",
+    "Campomar",
+    "#0033A0",
+    "#FFFFFF",
+    "fallen",
+    73,
+    "Estádio Nova Ribeiramar",
+    61846
+   ],
+   "short": "CAMP",
+   "nick": "Tigres"
+  },
+  "VAS": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "União Montebranca",
+    "VAS",
+    "Montebranca",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    72,
+    "Estádio Valverdegrande",
+    21880
+   ],
+   "short": "MON2",
+   "nick": "Gaviões"
+  },
+  "SAN": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "União Portomar",
+    "SAN",
+    "Portomar",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    71,
+    "Estádio Municipal de Portomar",
+    16068
+   ],
+   "short": "POR",
+   "nick": "Mineiros"
+  },
+  "BAH": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Atlético Ribeiramar",
+    "BAH",
+    "Ribeiramar",
+    "#004A99",
+    "#E30613",
+    "oil",
+    70,
+    "Arena Belamar",
+    47907
+   ],
+   "short": "RIB",
+   "nick": "Azuis"
+  },
+  "FTZ": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Grémio Boanova",
+    "FTZ",
+    "Boanova",
+    "#1F3B8E",
+    "#E30613",
+    "fan",
+    68,
+    "Arena Praiamar",
+    63903
+   ],
+   "short": "BOA",
+   "nick": "Azuis"
+  },
+  "RBB": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Esporte Clube Torrereal",
+    "RBB",
+    "Torrereal",
+    "#FFFFFF",
+    "#D1001F",
+    "oil",
+    67,
+    "Estádio Sãolua",
+    17022
+   ],
+   "short": "TAL",
+   "nick": "Mineiros"
+  },
+  "CEA": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Boanova EC",
+    "CEA",
+    "Boanova",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    64,
+    "Estádio Altoverde",
+    63903
+   ],
+   "short": "BVA",
+   "nick": "Pretos"
+  },
+  "SPT": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Esporte Clube Campobranca",
+    "SPT",
+    "Campobranca",
+    "#E30613",
+    "#000000",
+    "fan",
+    64,
+    "Estádio Novario",
+    32983
+   ],
+   "short": "CAA",
+   "nick": "Rubro-Negros"
+  },
+  "VIT": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Sporting Ribeiramar",
+    "VIT",
+    "Ribeiramar",
+    "#E30613",
+    "#000000",
+    "fan",
+    63,
+    "Estádio Nova Boalua",
+    30793
+   ],
+   "short": "RIR",
+   "nick": "Rubro-Negros"
+  },
+  "JVD": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Valverdealegre EC",
+    "JVD",
+    "Valverdealegre",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    62,
+    "Estádio Nova Sãoverde",
+    19924
+   ],
+   "short": "VRE",
+   "nick": "Lobos"
+  },
+  "MSL": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Esporte Clube Altosol",
+    "MSL",
+    "Altosol",
+    "#FFE600",
+    "#00843D",
+    "youth",
+    62,
+    "Estádio Monteazul",
+    15000
+   ],
+   "short": "ALL",
+   "nick": "Lobos"
+  },
+  "INT": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "SSC Borara",
+    "INT",
+    "Borara",
+    "#0068A8",
+    "#000000",
+    "giant",
+    86,
+    "Stadio Nuovo Vilara",
+    75817
+   ],
+   "short": "BOR",
+   "nick": "Azzurri"
+  },
+  "JUV": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Virtus Belezia",
+    "JUV",
+    "Belezia",
+    "#FFFFFF",
+    "#000000",
+    "giant",
+    84,
+    "Stadio Nuovo Santana",
+    41507
+   ],
+   "short": "BIA",
+   "nick": "Minatori"
+  },
+  "NAP": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "AC Albaana",
+    "NAP",
+    "Albaana",
+    "#12A0D7",
+    "#FFFFFF",
+    "historic",
+    83,
+    "Stadio Comunale di Albaana",
+    54726
+   ],
+   "short": "ALB",
+   "nick": "Celesti"
+  },
+  "ACM": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "FC Borara",
+    "ACM",
+    "Borara",
+    "#FB090B",
+    "#000000",
+    "giant",
+    82,
+    "Stadio Vilana",
+    75817
+   ],
+   "short": "BORA",
+   "nick": "Rossi"
+  },
+  "ATA": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "ASD Lanola",
+    "ATA",
+    "Lanola",
+    "#1E71B8",
+    "#000000",
+    "selling",
+    78,
+    "Arena Santate",
+    24950
+   ],
+   "short": "LAA",
+   "nick": "Azzurri"
+  },
+  "ROM": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Virtus Lanara",
+    "ROM",
+    "Lanara",
+    "#8E1F2F",
+    "#F0BC42",
+    "historic",
+    78,
+    "Stadio Belara",
+    70634
+   ],
+   "short": "LRA",
+   "nick": "Granata"
+  },
+  "LAZ": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "ASD Lanara",
+    "LAZ",
+    "Lanara",
+    "#87D8F7",
+    "#FFFFFF",
+    "historic",
+    74,
+    "Stadio Pieate",
+    70634
+   ],
+   "short": "LANA",
+   "nick": "Cervi"
+  },
+  "BOL": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Sanetto Calcio",
+    "BOL",
+    "Sanetto",
+    "#A21C26",
+    "#1A2F48",
+    "youth",
+    73,
+    "Arena Marello",
+    36462
+   ],
+   "short": "SAO",
+   "nick": "Lupi"
+  },
+  "FIO": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Virtus Toretto",
+    "FIO",
+    "Toretto",
+    "#482E92",
+    "#FFFFFF",
+    "historic",
+    73,
+    "Stadio Nuovo Marate",
+    43147
+   ],
+   "short": "TOO",
+   "nick": "Grifoni"
+  },
+  "COM": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "AC Albaetto",
+    "COM",
+    "Albaetto",
+    "#0E3E8C",
+    "#FFFFFF",
+    "oil",
+    70,
+    "Stadio Comunale di Albaetto",
+    13602
+   ],
+   "short": "ALO",
+   "nick": "Azzurri"
+  },
+  "TOR": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "ASD Belezia",
+    "TOR",
+    "Belezia",
+    "#8A1E03",
+    "#FFFFFF",
+    "historic",
+    66,
+    "Arena Casia",
+    28177
+   ],
+   "short": "BELE",
+   "nick": "Granata"
+  },
+  "UDI": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Torate 1908",
+    "UDI",
+    "Torate",
+    "#FFFFFF",
+    "#000000",
+    "selling",
+    64,
+    "Stadio Serola",
+    25144
+   ],
+   "short": "TOE",
+   "nick": "Bianchi"
+  },
+  "GEN": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Vilago Calcio",
+    "GEN",
+    "Vilago",
+    "#A6192E",
+    "#002E5D",
+    "fan",
+    64,
+    "Stadio Marona",
+    36599
+   ],
+   "short": "VIO",
+   "nick": "Rossi"
+  },
+  "PAR": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Sanana 1908",
+    "PAR",
+    "Sanana",
+    "#FFFFFF",
+    "#FFD100",
+    "fan",
+    62,
+    "Stadio Nuovo Sanello",
+    22352
+   ],
+   "short": "SNA",
+   "nick": "Bianchi"
+  },
+  "CAG": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "AC Ferino",
+    "CAG",
+    "Ferino",
+    "#A6192E",
+    "#002E5D",
+    "fan",
+    62,
+    "Arena Venago",
+    16416
+   ],
+   "short": "FER",
+   "nick": "Tori"
+  },
+  "SAS": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "ASD Borona",
+    "SAS",
+    "Borona",
+    "#00A650",
+    "#000000",
+    "youth",
+    61,
+    "Stadio Nuovo Serello",
+    21584
+   ],
+   "short": "BNA",
+   "nick": "Verdi"
+  },
+  "VER": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Santia Calcio",
+    "VER",
+    "Santia",
+    "#FFD100",
+    "#003DA5",
+    "youth",
+    60,
+    "Arena Albaello",
+    39211
+   ],
+   "short": "SIA",
+   "nick": "Gialli"
+  },
+  "LEC": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Atletico Ponola",
+    "LEC",
+    "Ponola",
+    "#FFD100",
+    "#E30613",
+    "youth",
+    60,
+    "Stadio Albaana",
+    31533
+   ],
+   "short": "PONO",
+   "nick": "Gialli"
+  },
+  "CRE": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "ASD Ravago",
+    "CRE",
+    "Ravago",
+    "#E30613",
+    "#9A9A9A",
+    "fan",
+    58,
+    "Stadio Monola",
+    16003
+   ],
+   "short": "RAV",
+   "nick": "Rossi"
+  },
+  "PIS": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Atletico Ponara",
+    "PIS",
+    "Ponara",
+    "#000000",
+    "#0033A0",
+    "fan",
+    58,
+    "Stadio Santezia",
+    25000
+   ],
+   "short": "PONA",
+   "nick": "Neri"
+  },
+  "MNZ": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Virtus Feria",
+    "MNZ",
+    "Feria",
+    "#E2001A",
+    "#FFFFFF",
+    "selling",
+    58,
+    "Stadio Ponago",
+    16917
+   ],
+   "short": "FEA",
+   "nick": "Rossi"
+  },
+  "VEN": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "AC Monara",
+    "VEN",
+    "Monara",
+    "#000000",
+    "#F18A00",
+    "selling",
+    57,
+    "Arena Casago",
+    11150
+   ],
+   "short": "MRA",
+   "nick": "Neri"
+  },
+  "EMP": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Venino 1908",
+    "EMP",
+    "Venino",
+    "#005CA9",
+    "#FFFFFF",
+    "youth",
+    57,
+    "Stadio Comunale di Venino",
+    16284
+   ],
+   "short": "VEN",
+   "nick": "Azzurri"
+  },
+  "PAL2": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "ASD Venello",
+    "PAL2",
+    "Venello",
+    "#F4A6C1",
+    "#000000",
+    "oil",
+    56,
+    "Stadio Borello",
+    36365
+   ],
+   "short": "VEO",
+   "nick": "Bianchi"
+  },
+  "SAM": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "FC Vilago",
+    "SAM",
+    "Vilago",
+    "#1B5EA6",
+    "#FFFFFF",
+    "fallen",
+    55,
+    "Stadio Boria",
+    36599
+   ],
+   "short": "VGO",
+   "nick": "Cervi"
+  },
+  "BARI": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "ASD Borate",
+    "BARI",
+    "Borate",
+    "#FFFFFF",
+    "#E2001A",
+    "fallen",
+    52,
+    "Stadio Serona",
+    58270
+   ],
+   "short": "BOE",
+   "nick": "Bianchi"
+  },
+  "SPE": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "US Marento",
+    "SPE",
+    "Marento",
+    "#FFFFFF",
+    "#000000",
+    "selling",
+    53,
+    "Stadio Nuovo Valello",
+    10336
+   ],
+   "short": "MAO",
+   "nick": "Cavalieri"
+  },
+  "MOD": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Virtus Roccaate",
+    "MOD",
+    "Roccaate",
+    "#FFD700",
+    "#0033A0",
+    "fan",
+    51,
+    "Stadio Belona",
+    21151
+   ],
+   "short": "ROE",
+   "nick": "Grifoni"
+  },
+  "CTZ": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Albaello Calcio",
+    "CTZ",
+    "Albaello",
+    "#FFD700",
+    "#E2001A",
+    "fan",
+    50,
+    "Stadio Comunale di Albaello",
+    14650
+   ],
+   "short": "ALBA",
+   "nick": "Gialli"
+  },
+  "CES": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "US Serezia",
+    "CES",
+    "Serezia",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    50,
+    "Stadio Valia",
+    23860
+   ],
+   "short": "SER",
+   "nick": "Bianchi"
+  },
+  "JST": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Atletico Venola",
+    "JST",
+    "Venola",
+    "#FFD700",
+    "#0033A0",
+    "fan",
+    48,
+    "Stadio Nuovo Albaello",
+    12800
+   ],
+   "short": "VLA",
+   "nick": "Gialli"
+  },
+  "SUD2": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Venona Calcio",
+    "SUD2",
+    "Venona",
+    "#FFFFFF",
+    "#E2001A",
+    "selling",
+    48,
+    "Stadio Nuovo Ravetto",
+    5539
+   ],
+   "short": "VNA",
+   "nick": "Bianchi"
+  },
+  "REG": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Virtus Vilara",
+    "REG",
+    "Vilara",
+    "#8B0000",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Stadio Comunale di Vilara",
+    21525
+   ],
+   "short": "VRA",
+   "nick": "Marinai"
+  },
+  "CAR2": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Unione Galago",
+    "CAR2",
+    "Galago",
+    "#FFD700",
+    "#0033A0",
+    "fan",
+    46,
+    "Stadio Monento",
+    9500
+   ],
+   "short": "GAL",
+   "nick": "Gialli"
+  },
+  "PAD": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Virtus Albaona",
+    "PAD",
+    "Albaona",
+    "#FFFFFF",
+    "#E2001A",
+    "historic",
+    47,
+    "Stadio Ravezia",
+    32336
+   ],
+   "short": "ALA",
+   "nick": "Lupi"
+  },
+  "MAN": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Atletico Pieate",
+    "MAN",
+    "Pieate",
+    "#FFFFFF",
+    "#E2001A",
+    "fan",
+    46,
+    "Arena Albaento",
+    14844
+   ],
+   "short": "PIE",
+   "nick": "Bianchi"
+  },
+  "ENT": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "FC Ravello",
+    "ENT",
+    "Ravello",
+    "#005CA9",
+    "#FFFFFF",
+    "fan",
+    45,
+    "Stadio Toria",
+    5535
+   ],
+   "short": "RAO",
+   "nick": "Azzurri"
+  },
+  "AVE": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Atletico Ponona",
+    "AVE",
+    "Ponona",
+    "#00863D",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Stadio Comunale di Ponona",
+    26308
+   ],
+   "short": "PON2",
+   "nick": "Fabbri"
+  },
+  "PES": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "FC Lania",
+    "PES",
+    "Lania",
+    "#005CA9",
+    "#FFFFFF",
+    "fan",
+    47,
+    "Stadio Nuovo Marello",
+    20476
+   ],
+   "short": "LIA",
+   "nick": "Leoni"
+  },
+  "FRO": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Serento 1908",
+    "FRO",
+    "Serento",
+    "#FFD700",
+    "#005CA9",
+    "selling",
+    51,
+    "Stadio Albaetto",
+    16227
+   ],
+   "short": "SEO",
+   "nick": "Marinai"
+  },
+  "BEN": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Novamar FC",
+    "BEN",
+    "Novamar",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    83,
+    "Arena Praiario",
+    64642
+   ],
+   "short": "NOV",
+   "nick": "Rubro-Negros"
+  },
+  "FCP": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Novaverde EC",
+    "FCP",
+    "Novaverde",
+    "#003893",
+    "#FFFFFF",
+    "giant",
+    82,
+    "Estádio Praialua",
+    50033
+   ],
+   "short": "NOE",
+   "nick": "Veados"
+  },
+  "SCP": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Racing Novamar",
+    "SCP",
+    "Novamar",
+    "#008057",
+    "#FFFFFF",
+    "historic",
+    82,
+    "Estádio Valverdebranca",
+    50095
+   ],
+   "short": "NAR",
+   "nick": "Verdes"
+  },
+  "SCB": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Atlético Serragrande",
+    "SCB",
+    "Serragrande",
+    "#E30613",
+    "#FFFFFF",
+    "selling",
+    74,
+    "Estádio Belabranca",
+    30286
+   ],
+   "short": "SDE",
+   "nick": "Rubro-Negros"
+  },
+  "VSC": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Esporte Clube Campogrande",
+    "VSC",
+    "Campogrande",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    66,
+    "Arena Portobela",
+    30029
+   ],
+   "short": "CAE",
+   "nick": "Marinheiros"
+  },
+  "SCL": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Esporte Clube Ribeirasol",
+    "SCL",
+    "Ribeirasol",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    60,
+    "Estádio Municipal de Ribeirasol",
+    13277
+   ],
+   "short": "RIL",
+   "nick": "Rubro-Negros"
+  },
+  "FAM": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Esporte Clube Torreverde",
+    "FAM",
+    "Torreverde",
+    "#FFFFFF",
+    "#003DA5",
+    "selling",
+    60,
+    "Estádio Sãoreal",
+    5307
+   ],
+   "short": "TDE",
+   "nick": "Brancos"
+  },
+  "EST": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Sporting Belabela",
+    "EST",
+    "Belabela",
+    "#FFDD00",
+    "#0038A8",
+    "youth",
+    60,
+    "Estádio Belabela",
+    8000
+   ],
+   "short": "BLA",
+   "nick": "Corvos"
+  },
+  "GIL": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Esporte Clube Vilasol",
+    "GIL",
+    "Vilasol",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    58,
+    "Estádio Belaverde",
+    12046
+   ],
+   "short": "VOL",
+   "nick": "Lobos"
+  },
+  "ARO": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Clube Montenova",
+    "ARO",
+    "Montenova",
+    "#FFD100",
+    "#0033A0",
+    "fan",
+    58,
+    "Arena Valverdebela",
+    5600
+   ],
+   "short": "MVA",
+   "nick": "Leões"
+  },
+  "RAV": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Racing Boareal",
+    "RAV",
+    "Boareal",
+    "#00843D",
+    "#FFFFFF",
+    "oil",
+    57,
+    "Estádio Valverdesol",
+    9065
+   ],
+   "short": "BOL",
+   "nick": "Verdes"
+  },
+  "MOR": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Clube Praiabela",
+    "MOR",
+    "Praiabela",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Estádio Nova Altoazul",
+    6153
+   ],
+   "short": "PRAI",
+   "nick": "Verdes"
+  },
+  "CPI": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Clube Novamar",
+    "CPI",
+    "Novamar",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Arena Serralua",
+    3000
+   ],
+   "short": "NOVA",
+   "nick": "Gaviões"
+  },
+  "CDN": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Vilaazul EC",
+    "CDN",
+    "Vilaazul",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    55,
+    "Arena Praiabela",
+    5132
+   ],
+   "short": "VUL",
+   "nick": "Corvos"
+  },
+  "AVS": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Montemar FC",
+    "AVS",
+    "Montemar",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    54,
+    "Estádio Santaazul",
+    8560
+   ],
+   "short": "MOR",
+   "nick": "Rubro-Negros"
+  },
+  "EAM": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Ribeirario FC",
+    "EAM",
+    "Ribeirario",
+    "#E30613",
+    "#00843D",
+    "fan",
+    54,
+    "Estádio Nova Torrelua",
+    9288
+   ],
+   "short": "RIBE",
+   "nick": "Rubro-Negros"
+  },
+  "ALV": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "União Valverdegrande",
+    "ALV",
+    "Valverdegrande",
+    "#E30613",
+    "#FFFFFF",
+    "selling",
+    54,
+    "Arena Valverdereal",
+    7705
+   ],
+   "short": "VDE",
+   "nick": "Rubro-Negros"
+  },
+  "TON": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Grémio Novasol",
+    "TON",
+    "Novasol",
+    "#FFD100",
+    "#00843D",
+    "fan",
+    53,
+    "Estádio Municipal de Novasol",
+    5000
+   ],
+   "short": "NOL",
+   "nick": "Amarelos"
+  },
+  "AJA": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "FC Oudwijk",
+    "AJA",
+    "Oudwijk",
+    "#FFFFFF",
+    "#D2122E",
+    "giant",
+    81,
+    "Oudwijk Arena",
+    55865
+   ],
+   "short": "OUD",
+   "nick": "Witten"
+  },
+  "PSV": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "SC Dijklo",
+    "PSV",
+    "Dijklo",
+    "#ED1C24",
+    "#FFFFFF",
+    "historic",
+    80,
+    "Haarbrug Stadion",
+    35119
+   ],
+   "short": "DIJ",
+   "nick": "Rooien"
+  },
+  "FEY": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "KV Zuidhorst",
+    "FEY",
+    "Zuidhorst",
+    "#FF0000",
+    "#FFFFFF",
+    "fan",
+    79,
+    "Dijkstad Stadion",
+    47500
+   ],
+   "short": "ZUI",
+   "nick": "Bijen"
+  },
+  "AZA": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "SC Laagkerk",
+    "AZA",
+    "Laagkerk",
+    "#DB0021",
+    "#FFFFFF",
+    "selling",
+    72,
+    "De Westveen",
+    19478
+   ],
+   "short": "LAK",
+   "nick": "Rooien"
+  },
+  "TWE": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "KV Noordhorst",
+    "TWE",
+    "Noordhorst",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    68,
+    "Dijklo Stadion",
+    30205
+   ],
+   "short": "NOO",
+   "nick": "Rooien"
+  },
+  "UTR": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "RKC Veenhoven",
+    "UTR",
+    "Veenhoven",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    66,
+    "Westhorst Stadion",
+    23750
+   ],
+   "short": "VEE",
+   "nick": "Zwanen"
+  },
+  "GAE": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "KV Oostkerk",
+    "GAE",
+    "Oostkerk",
+    "#E30613",
+    "#FFD100",
+    "fan",
+    62,
+    "Stadion Veenburg",
+    10400
+   ],
+   "short": "OOS",
+   "nick": "Stieren"
+  },
+  "NEC": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "RKC Westburg",
+    "NEC",
+    "Westburg",
+    "#E30613",
+    "#00843D",
+    "fan",
+    62,
+    "Hoogdijk Stadion",
+    12500
+   ],
+   "short": "WEG",
+   "nick": "Stieren"
+  },
+  "HEE": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Sparta Noordhoven",
+    "HEE",
+    "Noordhoven",
+    "#0055A4",
+    "#FFFFFF",
+    "youth",
+    61,
+    "Noordhoven Arena",
+    26100
+   ],
+   "short": "NON",
+   "nick": "Leeuwen"
+  },
+  "GRO": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "KV Zuidbrug",
+    "GRO",
+    "Zuidbrug",
+    "#008000",
+    "#FFFFFF",
+    "historic",
+    60,
+    "Westzand Stadion",
+    22525
+   ],
+   "short": "ZUG",
+   "nick": "Groenen"
+  },
+  "SPR": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "FC Zuidhorst",
+    "SPR",
+    "Zuidhorst",
+    "#E4002B",
+    "#FFFFFF",
+    "youth",
+    58,
+    "Stadion Haarstad",
+    11026
+   ],
+   "short": "ZUT",
+   "nick": "Rooien"
+  },
+  "PEC": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "AFC Oostdam",
+    "PEC",
+    "Oostdam",
+    "#0055A4",
+    "#FFFFFF",
+    "fan",
+    58,
+    "Stadion Veenbrug",
+    14000
+   ],
+   "short": "OOM",
+   "nick": "Blauwen"
+  },
+  "FSI": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "SC Kleinstad",
+    "FSI",
+    "Kleinstad",
+    "#FFD100",
+    "#00843D",
+    "fan",
+    57,
+    "Kleinstad Arena",
+    12500
+   ],
+   "short": "KLE",
+   "nick": "Geelen"
+  },
+  "NAC": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "RKC Kleinkerk",
+    "NAC",
+    "Kleinkerk",
+    "#FFD100",
+    "#000000",
+    "fan",
+    57,
+    "Zuidwijk Stadion",
+    19000
+   ],
+   "short": "KLK",
+   "nick": "Geelen"
+  },
+  "HER": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "KV Westveen",
+    "HER",
+    "Westveen",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    56,
+    "De Oudbrug",
+    12080
+   ],
+   "short": "WES3",
+   "nick": "Zwarten"
+  },
+  "VOL": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Sparta Westlo",
+    "VOL",
+    "Westlo",
+    "#FF7F00",
+    "#000000",
+    "youth",
+    55,
+    "Westlo Arena",
+    7384
+   ],
+   "short": "WEO",
+   "nick": "Oranjes"
+  },
+  "EXC": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Victoria Zuidhorst",
+    "EXC",
+    "Zuidhorst",
+    "#E30613",
+    "#000000",
+    "fan",
+    55,
+    "Kleinburg Stadion",
+    4500
+   ],
+   "short": "ZST",
+   "nick": "Kikkers"
+  },
+  "TEL": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "ADO Bergburg",
+    "TEL",
+    "Bergburg",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    54,
+    "Stadion Haardijk",
+    5200
+   ],
+   "short": "BERG",
+   "nick": "Witten"
+  },
+  "RIV": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Ríonueva CF",
+    "RIV",
+    "Ríonueva",
+    "#FFFFFF",
+    "#E30613",
+    "giant",
+    79,
+    "Estadio La Cerrosur",
+    85018
+   ],
+   "short": "RÍA",
+   "nick": "Alacranes"
+  },
+  "BOC": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Atlético Ríonueva",
+    "BOC",
+    "Ríonueva",
+    "#0033A0",
+    "#FFD100",
+    "giant",
+    78,
+    "Nuevo Estadio Ríonueva",
+    54000
+   ],
+   "short": "RVA",
+   "nick": "Águilas"
+  },
+  "RAC": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Racing Bajosol",
+    "RAC",
+    "Bajosol",
+    "#6CACE4",
+    "#FFFFFF",
+    "historic",
+    70,
+    "Estadio Llanobella",
+    51389
+   ],
+   "short": "BAL",
+   "nick": "Celestes"
+  },
+  "IND": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "UD Bajosol",
+    "IND",
+    "Bajosol",
+    "#E30613",
+    "#FFFFFF",
+    "fallen",
+    67,
+    "Estadio Municipal de Bajosol",
+    48069
+   ],
+   "short": "BAJO",
+   "nick": "Rojos"
+  },
+  "ELP": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "UD Rocarosa",
+    "ELP",
+    "Rocarosa",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    66,
+    "Nuevo Estadio Rocarosa",
+    30018
+   ],
+   "short": "ROA",
+   "nick": "Rojos"
+  },
+  "SLO": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Racing Ríonueva",
+    "SLO",
+    "Ríonueva",
+    "#0033A0",
+    "#E30613",
+    "historic",
+    65,
+    "Estadio Santamar",
+    47964
+   ],
+   "short": "RÍON",
+   "nick": "Gladiadores"
+  },
+  "VEL": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "UD Ríonueva",
+    "VEL",
+    "Ríonueva",
+    "#FFFFFF",
+    "#0033A0",
+    "youth",
+    64,
+    "Campo de Ríonueva",
+    49540
+   ],
+   "short": "RÍO2",
+   "nick": "Toros"
+  },
+  "TAL": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Altoverde CF",
+    "TAL",
+    "Altoverde",
+    "#0033A0",
+    "#FFFFFF",
+    "selling",
+    63,
+    "Campo de Altoverde",
+    57000
+   ],
+   "short": "ADE",
+   "nick": "Azules"
+  },
+  "ROS": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Club Fuentesur",
+    "ROS",
+    "Fuentesur",
+    "#003DA5",
+    "#FFD100",
+    "fan",
+    63,
+    "Estadio La Cerronueva",
+    41654
+   ],
+   "short": "FUR",
+   "nick": "Azules"
+  },
+  "LAN": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Sporting Cañadaverde",
+    "LAN",
+    "Cañadaverde",
+    "#8A1538",
+    "#FFFFFF",
+    "selling",
+    63,
+    "Estadio Altomora",
+    47027
+   ],
+   "short": "CDE",
+   "nick": "Granates"
+  },
+  "ARJ": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Ríonueva Balompié",
+    "ARJ",
+    "Ríonueva",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    62,
+    "Estadio La Lomasluna",
+    26000
+   ],
+   "short": "RÍO3",
+   "nick": "Rojos"
+  },
+  "NOB": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Real Fuentesur",
+    "NOB",
+    "Fuentesur",
+    "#E30613",
+    "#000000",
+    "fan",
+    61,
+    "Estadio Altolara",
+    42000
+   ],
+   "short": "FUEN",
+   "nick": "Rojos"
+  },
+  "HUR": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Club Ríonueva",
+    "HUR",
+    "Ríonueva",
+    "#FFFFFF",
+    "#E30613",
+    "fan",
+    60,
+    "Estadio Lomasreal",
+    48314
+   ],
+   "short": "RÍO4",
+   "nick": "Blancos"
+  },
+  "DYJ": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Deportivo Ríoblanca",
+    "DYJ",
+    "Ríoblanca",
+    "#FFD100",
+    "#00843D",
+    "selling",
+    60,
+    "Estadio Municipal de Ríoblanca",
+    20000
+   ],
+   "short": "RCA",
+   "nick": "Amarillos"
+  },
+  "BEL": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Sporting Altoverde",
+    "BEL",
+    "Altoverde",
+    "#6CACE4",
+    "#FFFFFF",
+    "fan",
+    60,
+    "Estadio Rocagrande",
+    30000
+   ],
+   "short": "ALTO",
+   "nick": "Celestes"
+  },
+  "GLP": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "CD Rocarosa",
+    "GLP",
+    "Rocarosa",
+    "#FFFFFF",
+    "#1B2C5A",
+    "fan",
+    58,
+    "Estadio La Pradogrande",
+    24544
+   ],
+   "short": "RSA",
+   "nick": "Lobos"
+  },
+  "GOD": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Club Costasol",
+    "GOD",
+    "Costasol",
+    "#0033A0",
+    "#FFFFFF",
+    "youth",
+    58,
+    "Estadio Nuevanorte",
+    42000
+   ],
+   "short": "COL",
+   "nick": "Azules"
+  },
+  "TIG": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "CD Camporeal",
+    "TIG",
+    "Camporeal",
+    "#0033A0",
+    "#E30613",
+    "fan",
+    57,
+    "Estadio Municipal de Camporeal",
+    26282
+   ],
+   "short": "CAM2",
+   "nick": "Marineros"
+  },
+  "UNI": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Club Monterosa",
+    "UNI",
+    "Monterosa",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Estadio La Cerroalta",
+    22852
+   ],
+   "short": "MSA",
+   "nick": "Rojos"
+  },
+  "INS": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Altoverde Balompié",
+    "INS",
+    "Altoverde",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Estadio Fuentenueva",
+    26535
+   ],
+   "short": "ALT2",
+   "nick": "Rojos"
+  },
+  "BAN": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Deportivo Vegaalta",
+    "BAN",
+    "Vegaalta",
+    "#00843D",
+    "#FFFFFF",
+    "youth",
+    57,
+    "Estadio La Bajobella",
+    34901
+   ],
+   "short": "VTA",
+   "nick": "Verdes"
+  },
+  "IRI": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Real Costasol",
+    "IRI",
+    "Costasol",
+    "#0033A0",
+    "#FFFFFF",
+    "fan",
+    56,
+    "Estadio Puertoblanca",
+    24000
+   ],
+   "short": "COST",
+   "nick": "Cóndores"
+  },
+  "ATU": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Deportivo Arroyonorte",
+    "ATU",
+    "Arroyonorte",
+    "#6CACE4",
+    "#FFFFFF",
+    "fan",
+    56,
+    "Nuevo Estadio Arroyonorte",
+    35200
+   ],
+   "short": "ARE",
+   "nick": "Celestes"
+  },
+  "PLA": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Atlético Cabonorte",
+    "PLA",
+    "Cabonorte",
+    "#FFFFFF",
+    "#6B3F1F",
+    "fan",
+    56,
+    "Estadio Llanoreal",
+    28530
+   ],
+   "short": "CAB",
+   "nick": "Águilas"
+  },
+  "BAR": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "CD Ríonueva",
+    "BAR",
+    "Ríonueva",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Estadio Ríolara",
+    4500
+   ],
+   "short": "RÍO5",
+   "nick": "Venados"
+  },
+  "CCD": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Atlético Pozolara",
+    "CCD",
+    "Pozolara",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Estadio Pradoreal",
+    30000
+   ],
+   "short": "POZ2",
+   "nick": "Negros"
+  },
+  "SAR": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Racing Altoalta",
+    "SAR",
+    "Altoalta",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    54,
+    "Estadio Playarosa",
+    22000
+   ],
+   "short": "ATA",
+   "nick": "Gladiadores"
+  },
+  "RIE": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Real Ríonueva",
+    "RIE",
+    "Ríonueva",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    53,
+    "Estadio Municipal de Ríonueva",
+    3000
+   ],
+   "short": "RÍO6",
+   "nick": "Cóndores"
+  },
+  "MIA": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Redstead Athletic",
+    "MIA",
+    "Redstead",
+    "#F7B5CD",
+    "#231F20",
+    "oil",
+    67,
+    "Redstead Ground",
+    21550
+   ],
+   "short": "RED",
+   "nick": "Foresters"
+  },
+  "LAF": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Stanhaven City",
+    "LAF",
+    "Stanhaven",
+    "#000000",
+    "#C39E6D",
+    "oil",
+    66,
+    "Stanhaven Park",
+    22000
+   ],
+   "short": "STA",
+   "nick": "Blacks"
+  },
+  "LAG": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Stanhaven Athletic",
+    "LAG",
+    "Stanhaven",
+    "#FFFFFF",
+    "#00245D",
+    "historic",
+    65,
+    "Oakstead Road",
+    27000
+   ],
+   "short": "STN",
+   "nick": "Whites"
+  },
+  "SEA": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Aldby Rangers",
+    "SEA",
+    "Aldby",
+    "#5D9741",
+    "#005595",
+    "fan",
+    64,
+    "Bromport Field",
+    37722
+   ],
+   "short": "ALY",
+   "nick": "Stags"
+  },
+  "CIN": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Ripwell United",
+    "CIN",
+    "Ripwell",
+    "#003087",
+    "#FE5000",
+    "youth",
+    63,
+    "Aldgate Field",
+    26000
+   ],
+   "short": "RLL",
+   "nick": "Blues"
+  },
+  "CLB": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Gilbridge Albion",
+    "CLB",
+    "Gilbridge",
+    "#FEDD00",
+    "#000000",
+    "historic",
+    62,
+    "Gilbridge Ground",
+    20371
+   ],
+   "short": "GIE",
+   "nick": "Yellows"
+  },
+  "PHI": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Kelgate County",
+    "PHI",
+    "Kelgate",
+    "#071B2C",
+    "#B19B69",
+    "youth",
+    62,
+    "Ashminster Field",
+    18500
+   ],
+   "short": "KEE",
+   "nick": "Blacks"
+  },
+  "NYC": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Chelminster Wanderers",
+    "NYC",
+    "Chelminster",
+    "#6CACE4",
+    "#041E42",
+    "oil",
+    62,
+    "Bargate Park",
+    28743
+   ],
+   "short": "CHR",
+   "nick": "Sky Blues"
+  },
+  "ATL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Aldwood Rangers",
+    "ATL",
+    "Aldwood",
+    "#80000A",
+    "#A19060",
+    "fan",
+    61,
+    "Linfield Park",
+    42500
+   ],
+   "short": "AOD",
+   "nick": "Herons"
+  },
+  "NYR": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Chelminster City",
+    "NYR",
+    "Chelminster",
+    "#FFFFFF",
+    "#BA0C2F",
+    "oil",
+    60,
+    "Chelminster Park",
+    25000
+   ],
+   "short": "CER",
+   "nick": "Badgers"
+  },
+  "NSH": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Malwell City",
+    "NSH",
+    "Malwell",
+    "#ECE83A",
+    "#1F1646",
+    "fan",
+    60,
+    "Malwell Park",
+    30000
+   ],
+   "short": "MLL",
+   "nick": "Yellows"
+  },
+  "ORL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Harbury City",
+    "ORL",
+    "Harbury",
+    "#633492",
+    "#FDE192",
+    "fan",
+    60,
+    "Harbury Ground",
+    25500
+   ],
+   "short": "HAY",
+   "nick": "Maroons"
+  },
+  "VAN": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Branmouth Victoria",
+    "VAN",
+    "Branmouth",
+    "#FFFFFF",
+    "#00245E",
+    "youth",
+    60,
+    "Branmouth Park",
+    22120
+   ],
+   "short": "BRH",
+   "nick": "Whites"
+  },
+  "PTI": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Hexford Wanderers",
+    "PTI",
+    "Hexford",
+    "#00482B",
+    "#D69A00",
+    "fan",
+    59,
+    "Hexford Park",
+    25218
+   ],
+   "short": "HED",
+   "nick": "Blacks"
+  },
+  "MIN": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Linwood City",
+    "MIN",
+    "Linwood",
+    "#585958",
+    "#8CD2F4",
+    "fan",
+    58,
+    "The Wynborough Stadium",
+    19400
+   ],
+   "short": "LID",
+   "nick": "Badgers"
+  },
+  "SDG": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Elmbrook Albion",
+    "SDG",
+    "Elmbrook",
+    "#1B1F23",
+    "#6E4C9F",
+    "oil",
+    58,
+    "Wynport Park",
+    35000
+   ],
+   "short": "ELK",
+   "nick": "Blacks"
+  },
+  "RSL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Linbridge County",
+    "RSL",
+    "Linbridge",
+    "#B30838",
+    "#013A81",
+    "youth",
+    58,
+    "Sedgeham Field",
+    20213
+   ],
+   "short": "LIE",
+   "nick": "Reds"
+  },
+  "DAL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Linwell County",
+    "DAL",
+    "Linwell",
+    "#E81F3E",
+    "#2A4076",
+    "youth",
+    58,
+    "Linwell Ground",
+    20500
+   ],
+   "short": "LIL",
+   "nick": "Reds"
+  },
+  "CLT": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Ashwell Rovers",
+    "CLT",
+    "Ashwell",
+    "#1A85C8",
+    "#000000",
+    "fan",
+    57,
+    "Elmwood Lane",
+    38000
+   ],
+   "short": "ASL",
+   "nick": "Blues"
+  },
+  "HOU": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Stanborough Town",
+    "HOU",
+    "Stanborough",
+    "#FF6B00",
+    "#101820",
+    "fan",
+    57,
+    "Kelstead Road",
+    22039
+   ],
+   "short": "STH",
+   "nick": "Oranges"
+  },
+  "SKC": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Barmere Rangers",
+    "SKC",
+    "Barmere",
+    "#91B0D5",
+    "#002F65",
+    "fan",
+    57,
+    "Darhaven Park",
+    18467
+   ],
+   "short": "BAE",
+   "nick": "Kestrels"
+  },
+  "STL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Thornbury County",
+    "STL",
+    "Thornbury",
+    "#DD004A",
+    "#0A1E2C",
+    "fan",
+    57,
+    "The Elmborough Stadium",
+    22423
+   ],
+   "short": "THY",
+   "nick": "Reds"
+  },
+  "RAP": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Hexwell United",
+    "RAP",
+    "Hexwell",
+    "#960A2C",
+    "#9CC2EA",
+    "youth",
+    56,
+    "Hexwell Park",
+    18061
+   ],
+   "short": "HEL",
+   "nick": "Maroons"
+  },
+  "AUS": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Hexbury City",
+    "AUS",
+    "Hexbury",
+    "#00B140",
+    "#000000",
+    "fan",
+    56,
+    "Malham Lane",
+    20738
+   ],
+   "short": "HEY",
+   "nick": "Herons"
+  },
+  "CHI": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Lanminster Borough",
+    "CHI",
+    "Lanminster",
+    "#7CCDEF",
+    "#FF0000",
+    "fan",
+    56,
+    "Gilbury Park",
+    61500
+   ],
+   "short": "LAR",
+   "nick": "Sky Blues"
+  },
+  "DCU": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Lanmouth Town",
+    "DCU",
+    "Lanmouth",
+    "#000000",
+    "#EF3E42",
+    "fan",
+    56,
+    "Calmere Park",
+    20000
+   ],
+   "short": "LAH",
+   "nick": "Eagles"
+  },
+  "NER": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Bradhaven Rovers",
+    "NER",
+    "Bradhaven",
+    "#0A2240",
+    "#CE0E2D",
+    "fan",
+    56,
+    "Bradhaven Ground",
+    65878
+   ],
+   "short": "BEN",
+   "nick": "Herons"
+  },
+  "TRT": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Barley Rangers",
+    "TRT",
+    "Barley",
+    "#B81137",
+    "#455560",
+    "fan",
+    57,
+    "Saldale Lane",
+    30991
+   ],
+   "short": "BAY",
+   "nick": "Foresters"
+  },
+  "MTL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Presmouth Athletic",
+    "MTL",
+    "Presmouth",
+    "#000000",
+    "#0033A1",
+    "fan",
+    55,
+    "Presmouth Park",
+    19619
+   ],
+   "short": "PRH",
+   "nick": "Blacks"
+  },
+  "SJE": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Lincombe City",
+    "SJE",
+    "Lincombe",
+    "#0067B1",
+    "#000000",
+    "fan",
+    55,
+    "Thorncombe Road",
+    18000
+   ],
+   "short": "LBE",
+   "nick": "Blues"
+  },
+  "VIS": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Kawamoto Blaze",
+    "VIS",
+    "Kawamoto",
+    "#8B0000",
+    "#FFFFFF",
+    "oil",
+    64,
+    "Miyagawa Stadium",
+    30132
+   ],
+   "short": "KAW",
+   "nick": "Hawks"
+  },
+  "KAS": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Narishima Sport Club",
+    "KAS",
+    "Narishima",
+    "#B8002D",
+    "#1D2088",
+    "historic",
+    64,
+    "Narishima Sports Complex",
+    40728
+   ],
+   "short": "NAA",
+   "nick": "Reds"
+  },
+  "URA": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Kitahama Verde",
+    "URA",
+    "Kitahama",
+    "#E60012",
+    "#000000",
+    "giant",
+    63,
+    "Sakurata Park",
+    63700
+   ],
+   "short": "KIT",
+   "nick": "Hawks"
+  },
+  "SFH": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Takegawa Sevens",
+    "SFH",
+    "Takegawa",
+    "#50318F",
+    "#FFFFFF",
+    "youth",
+    63,
+    "Sakurahama Arena",
+    28520
+   ],
+   "short": "TAK",
+   "nick": "Tigers"
+  },
+  "KAW": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Akahara Sevens",
+    "KAW",
+    "Akahara",
+    "#1E90FF",
+    "#000000",
+    "historic",
+    62,
+    "Fujiura Park",
+    26827
+   ],
+   "short": "AKA",
+   "nick": "Sky Blues"
+  },
+  "YFM": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Hokugawa Verde",
+    "YFM",
+    "Hokugawa",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    61,
+    "Miyaura Arena",
+    72327
+   ],
+   "short": "HOK",
+   "nick": "Blues"
+  },
+  "GAM": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Haruyama City",
+    "GAM",
+    "Haruyama",
+    "#1A3D8F",
+    "#000000",
+    "historic",
+    60,
+    "Haruyama Athletic Stadium",
+    39694
+   ],
+   "short": "HAA",
+   "nick": "Bears"
+  },
+  "MAC": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Takehara Phoenix",
+    "MAC",
+    "Takehara",
+    "#002E6E",
+    "#C8A200",
+    "oil",
+    60,
+    "Minamishima Stadium",
+    15489
+   ],
+   "short": "TAA",
+   "nick": "Phoenixes"
+  },
+  "FCT": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Akiura City",
+    "FCT",
+    "Akiura",
+    "#0033A0",
+    "#E60012",
+    "fan",
+    60,
+    "Saimoto Stadium",
+    49970
+   ],
+   "short": "AKI",
+   "nick": "Blues"
+  },
+  "KSW": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Miyaura Blaze",
+    "KSW",
+    "Miyaura",
+    "#FFF000",
+    "#000000",
+    "selling",
+    58,
+    "Miyaura Sports Complex",
+    15109
+   ],
+   "short": "MIY",
+   "nick": "Yellows"
+  },
+  "NAG": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Kawakami Phoenix",
+    "NAG",
+    "Kawakami",
+    "#D6000F",
+    "#F9A61A",
+    "fan",
+    58,
+    "Sakuramoto Arena",
+    44380
+   ],
+   "short": "KAI",
+   "nick": "Warriors"
+  },
+  "CER": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Haruyama Blaze",
+    "CER",
+    "Haruyama",
+    "#EC6A9E",
+    "#0A1F5C",
+    "historic",
+    58,
+    "Harukami Arena",
+    24481
+   ],
+   "short": "HMA",
+   "nick": "Phoenixes"
+  },
+  "AVI": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Harumori United",
+    "AVI",
+    "Harumori",
+    "#1C1C7C",
+    "#AAAAAA",
+    "youth",
+    56,
+    "Sakuramori Park",
+    21562
+   ],
+   "short": "HAI",
+   "nick": "Tigers"
+  },
+  "KYO": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Takeyama United",
+    "KYO",
+    "Takeyama",
+    "#6A1B9A",
+    "#FFFFFF",
+    "fan",
+    56,
+    "Nishikami Park",
+    21600
+   ],
+   "short": "TMA",
+   "nick": "Crimsons"
+  },
+  "NII": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Shinmoto Phoenix",
+    "NII",
+    "Shinmoto",
+    "#FF6600",
+    "#003DA5",
+    "youth",
+    55,
+    "Takayama Stadium",
+    42300
+   ],
+   "short": "SHI",
+   "nick": "Phoenixes"
+  },
+  "SBM": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Saita Sport Club",
+    "SBM",
+    "Saita",
+    "#8CC63F",
+    "#003DA5",
+    "youth",
+    55,
+    "Takakami Arena",
+    15380
+   ],
+   "short": "SAI",
+   "nick": "Yellows"
+  },
+  "TVE": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Akiura Phoenix",
+    "TVE",
+    "Akiura",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Akiura Sports Complex",
+    49970
+   ],
+   "short": "ARA",
+   "nick": "Dragons"
+  },
+  "SHI": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Saiyama Phoenix",
+    "SHI",
+    "Saiyama",
+    "#FF8200",
+    "#003DA5",
+    "fan",
+    55,
+    "Hokuhama Arena",
+    19594
+   ],
+   "short": "SMA",
+   "nick": "Oranges"
+  },
+  "OKA": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Shinta Phoenix",
+    "OKA",
+    "Shinta",
+    "#9E1B32",
+    "#FFFFFF",
+    "fan",
+    53,
+    "Kawakami Park",
+    15479
+   ],
+   "short": "SHIN",
+   "nick": "Reds"
+  },
+  "YFC": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Hokugawa City",
+    "YFC",
+    "Hokugawa",
+    "#00A0E9",
+    "#FFFFFF",
+    "fan",
+    53,
+    "Sakurano Arena",
+    15440
+   ],
+   "short": "HOA",
+   "nick": "Tigers"
+  },
+  "AME": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Sporting Costagrande",
+    "AME",
+    "Costagrande",
+    "#FFE600",
+    "#0A1F5C",
+    "giant",
+    70,
+    "Estadio Lomasrosa"
+   ],
+   "short": "COE",
+   "nick": "Amarillos"
+  },
+  "MTY": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "CD Santareal",
+    "MTY",
+    "Santareal",
+    "#0B2240",
+    "#FFFFFF",
+    "oil",
+    68,
+    "Estadio Puentesol"
+   ],
+   "short": "SAL",
+   "nick": "Azulones"
+  },
+  "TGR": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Atlético Villareal",
+    "TGR",
+    "Villareal",
+    "#FDB913",
+    "#003DA5",
+    "oil",
+    68,
+    "Estadio Playablanca"
+   ],
+   "short": "VILL",
+   "nick": "Amarillos"
+  },
+  "CHV": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "UD Fortínreal",
+    "CHV",
+    "Fortínreal",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    67,
+    "Estadio La Sierrarosa"
+   ],
+   "short": "FOL",
+   "nick": "Rojos"
+  },
+  "CAZ": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "UD Costagrande",
+    "CAZ",
+    "Costagrande",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    66,
+    "Estadio Lomasnueva"
+   ],
+   "short": "COS2",
+   "nick": "Azules"
+  },
+  "TOL": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Unión Picoblanca",
+    "TOL",
+    "Picoblanca",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    64,
+    "Estadio Santamora"
+   ],
+   "short": "PIC",
+   "nick": "Leones"
+  },
+  "PUM": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Club Costagrande",
+    "PUM",
+    "Costagrande",
+    "#0B2240",
+    "#C5A45A",
+    "youth",
+    63,
+    "Campo de Costagrande"
+   ],
+   "short": "COS3",
+   "nick": "Azulones"
+  },
+  "PAC": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Club Nuevasol",
+    "PAC",
+    "Nuevasol",
+    "#FFFFFF",
+    "#0033A0",
+    "selling",
+    63,
+    "Estadio La Playaverde"
+   ],
+   "short": "NUL",
+   "nick": "Blancos"
+  },
+  "LEO": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Deportivo Montenueva",
+    "LEO",
+    "Montenueva",
+    "#00843D",
+    "#FFFFFF",
+    "selling",
+    62,
+    "Estadio Playaluna"
+   ],
+   "short": "MON3",
+   "nick": "Verdes"
+  },
+  "SLA": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Atlético Mesalara",
+    "SLA",
+    "Mesalara",
+    "#00843D",
+    "#FFFFFF",
+    "youth",
+    60,
+    "Estadio Villabella"
+   ],
+   "short": "MESA",
+   "nick": "Leones"
+  },
+  "ATS": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Unión Fortínreal",
+    "ATS",
+    "Fortínreal",
+    "#E30613",
+    "#000000",
+    "fan",
+    60,
+    "Campo de Fortínreal"
+   ],
+   "short": "FAL",
+   "nick": "Venados"
+  },
+  "TIJ": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Sporting Bahíarosa",
+    "TIJ",
+    "Bahíarosa",
+    "#E30613",
+    "#000000",
+    "fan",
+    58,
+    "Campo de Bahíarosa"
+   ],
+   "short": "BAA",
+   "nick": "Rojos"
+  },
+  "NCX": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Playarosa Balompié",
+    "NCX",
+    "Playarosa",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Campo de Playarosa"
+   ],
+   "short": "PLAY",
+   "nick": "Rojos"
+  },
+  "QRO": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Atlético Ríosol",
+    "QRO",
+    "Ríosol",
+    "#0033A0",
+    "#000000",
+    "fan",
+    56,
+    "Estadio Villaalta"
+   ],
+   "short": "RÍL",
+   "nick": "Azules"
+  },
+  "PUE": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Sporting Arroyorosa",
+    "PUE",
+    "Arroyorosa",
+    "#FFFFFF",
+    "#0033A0",
+    "fan",
+    56,
+    "Estadio Municipal de Arroyorosa"
+   ],
+   "short": "ASA",
+   "nick": "Blancos"
+  },
+  "JUA": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "CD Vallemar",
+    "JUA",
+    "Vallemar",
+    "#00843D",
+    "#E30613",
+    "fan",
+    56,
+    "Estadio Arroyogrande"
+   ],
+   "short": "VAR",
+   "nick": "Leones"
+  },
+  "ASL": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Deportivo Rocadorada",
+    "ASL",
+    "Rocadorada",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    56,
+    "Estadio Pozonueva"
+   ],
+   "short": "RDA",
+   "nick": "Rojos"
+  },
+  "MAZ": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Unión Arroyogrande",
+    "MAZ",
+    "Arroyogrande",
+    "#6A1B9A",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Campo de Arroyogrande"
+   ],
+   "short": "ARRO",
+   "nick": "Toros"
+  },
+  "ULS": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Gangdong Citizen",
+    "ULS",
+    "Gangdong",
+    "#003DA5",
+    "#FFD100",
+    "oil",
+    60,
+    "Gangdong Stadium"
+   ],
+   "short": "GAN",
+   "nick": "Bears"
+  },
+  "JBH": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "FC Haeri",
+    "JBH",
+    "Haeri",
+    "#00843D",
+    "#FFD100",
+    "giant",
+    60,
+    "Haeri Civic Stadium"
+   ],
+   "short": "HAE",
+   "nick": "Greens"
+  },
+  "POH": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Namsan Stars",
+    "POH",
+    "Namsan",
+    "#E30613",
+    "#000000",
+    "historic",
+    57,
+    "Namjeong Sports Complex"
+   ],
+   "short": "NAM",
+   "nick": "Bears"
+  },
+  "SEO": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Jeonjin Athletic",
+    "SEO",
+    "Jeonjin",
+    "#E30613",
+    "#000000",
+    "historic",
+    57,
+    "Jeonjin Stadium"
+   ],
+   "short": "JEO",
+   "nick": "Reds"
+  },
+  "DJN": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Haesan Athletic",
+    "DJN",
+    "Haesan",
+    "#6A1B9A",
+    "#00843D",
+    "oil",
+    55,
+    "Daedong Arena"
+   ],
+   "short": "HAN",
+   "nick": "Hawks"
+  },
+  "GWA": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Gyeongri Tigers",
+    "GWA",
+    "Gyeongri",
+    "#FFD100",
+    "#E30613",
+    "youth",
+    54,
+    "Gyeongri Stadium"
+   ],
+   "short": "GYE",
+   "nick": "Yellows"
+  },
+  "GAN": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Jeonsan FC",
+    "GAN",
+    "Jeonsan",
+    "#FF7F00",
+    "#003DA5",
+    "fan",
+    53,
+    "Gangdong Arena"
+   ],
+   "short": "JEN",
+   "nick": "Oranges"
+  },
+  "GIM": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Daewon Citizen",
+    "GIM",
+    "Daewon",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    53,
+    "Jeonhwa Sports Complex"
+   ],
+   "short": "DAN",
+   "nick": "Bears"
+  },
+  "JEJ": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Seohwa FC",
+    "JEJ",
+    "Seohwa",
+    "#FF6600",
+    "#000000",
+    "fan",
+    52,
+    "Seohwa Civic Stadium"
+   ],
+   "short": "SEA",
+   "nick": "Eagles"
+  },
+  "DGU": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Munhwa United",
+    "DGU",
+    "Munhwa",
+    "#87CEEB",
+    "#1C2B4F",
+    "youth",
+    52,
+    "Munhwa Civic Stadium"
+   ],
+   "short": "MUN",
+   "nick": "Bears"
+  },
+  "SUW": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Wolyang Dolphins",
+    "SUW",
+    "Wolyang",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    52,
+    "Wolyang Stadium"
+   ],
+   "short": "WOL",
+   "nick": "Reds"
+  },
+  "ANY": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Sincheon Citizen",
+    "ANY",
+    "Sincheon",
+    "#5B2C83",
+    "#FFFFFF",
+    "fan",
+    51,
+    "Sincheon Civic Stadium"
+   ],
+   "short": "SIN",
+   "nick": "Phoenixes"
+  },
+  "BRU": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Nongra City",
+    "BRU",
+    "Nongra",
+    "#003DA5",
+    "#FFD100",
+    "oil",
+    56,
+    "Singlek Stadium"
+   ],
+   "short": "NOA",
+   "nick": "Blues"
+  },
+  "BGP": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "FC Sriyai",
+    "BGP",
+    "Sriyai",
+    "#0A1E5E",
+    "#FFFFFF",
+    "oil",
+    52,
+    "Phusai Stadium"
+   ],
+   "short": "SRI",
+   "nick": "Navy"
+  },
+  "BKU": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Nakhonpur Rangers",
+    "BKU",
+    "Nakhonpur",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    51,
+    "Nakhonpur Provincial Stadium"
+   ],
+   "short": "NAK",
+   "nick": "Hornbills"
+  },
+  "PRT": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Nakhonpur United",
+    "PRT",
+    "Nakhonpur",
+    "#FF7F00",
+    "#003DA5",
+    "fan",
+    50,
+    "Thasai Stadium"
+   ],
+   "short": "NUR",
+   "nick": "Lions"
+  },
+  "MTU": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Kaopur Rangers",
+    "MTU",
+    "Kaopur",
+    "#E30613",
+    "#000000",
+    "historic",
+    50,
+    "Kaopur Provincial Stadium"
+   ],
+   "short": "KAO",
+   "nick": "Reds"
+  },
+  "CRA": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Paklek United",
+    "CRA",
+    "Paklek",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    48,
+    "Phranong Sports Park"
+   ],
+   "short": "PAK",
+   "nick": "Blues"
+  },
+  "CHB": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Pakchan Rangers",
+    "CHB",
+    "Pakchan",
+    "#0055A4",
+    "#FFFFFF",
+    "historic",
+    48,
+    "Phramai Arena"
+   ],
+   "short": "PAN",
+   "nick": "Eagles"
+  },
+  "RAT": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Maethong United",
+    "RAT",
+    "Maethong",
+    "#E30613",
+    "#FFD100",
+    "youth",
+    47,
+    "Phunong Sports Park"
+   ],
+   "short": "MAE",
+   "nick": "Reds"
+  },
+  "UTH": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Ubonnong Rangers",
+    "UTH",
+    "Ubonnong",
+    "#FF7F00",
+    "#000000",
+    "fan",
+    46,
+    "Srithong Sports Park"
+   ],
+   "short": "UBO",
+   "nick": "Oranges"
+  },
+  "PRA": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Thachan Athletic",
+    "PRA",
+    "Thachan",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Thachan Stadium"
+   ],
+   "short": "TAN",
+   "nick": "Reds"
+  },
+  "SKT": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Chiangmai Athletic",
+    "SKT",
+    "Chiangmai",
+    "#FFD100",
+    "#000000",
+    "fan",
+    46,
+    "Singmai Arena"
+   ],
+   "short": "CHI",
+   "nick": "Elephants"
+  },
+  "KBP": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Phusai Athletic",
+    "KBP",
+    "Phusai",
+    "#003DA5",
+    "#E30613",
+    "oil",
+    46,
+    "Phralek Sports Park"
+   ],
+   "short": "PHU",
+   "nick": "Blues"
+  },
+  "LPW": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Srichan FC",
+    "LPW",
+    "Srichan",
+    "#6A1B9A",
+    "#FFFFFF",
+    "fan",
+    45,
+    "Srichan Provincial Stadium"
+   ],
+   "short": "SRN",
+   "nick": "Crimsons"
+  },
+  "AYU": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Maenam Rangers",
+    "AYU",
+    "Maenam",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    45,
+    "Maenam Provincial Stadium"
+   ],
+   "short": "MAM",
+   "nick": "Lions"
+  },
+  "RYG": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Khaosai Athletic",
+    "RYG",
+    "Khaosai",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    44,
+    "Bannam Sports Park"
+   ],
+   "short": "KHA",
+   "nick": "Elephants"
+  },
+  "NRS": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "FC Lamburi",
+    "NRS",
+    "Lamburi",
+    "#FF7F00",
+    "#6A1B9A",
+    "fan",
+    44,
+    "Maeburi Arena"
+   ],
+   "short": "LAM",
+   "nick": "Oranges"
+  },
+  "ENY": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Stangate Orient",
+    "ENY",
+    "Stangate",
+    "#003DA5",
+    "#FFFFFF",
+    "giant",
+    55,
+    "Oakham Road"
+   ],
+   "short": "STAN",
+   "nick": "Blues"
+  },
+  "RAN": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "New Tunfield Wanderers",
+    "RAN",
+    "New Tunfield",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    52,
+    "Darcombe Lane"
+   ],
+   "short": "NEW",
+   "nick": "Reds"
+  },
+  "RVU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Linthorpe Victoria",
+    "RVU",
+    "Linthorpe",
+    "#0369A1",
+    "#F59E0B",
+    "oil",
+    52,
+    "Fenport Lane"
+   ],
+   "short": "LPE",
+   "nick": "Blues"
+  },
+  "REM": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Yarport United",
+    "REM",
+    "Yarport",
+    "#15803D",
+    "#FFFFFF",
+    "selling",
+    51,
+    "Ashwold Park"
+   ],
+   "short": "YAT",
+   "nick": "Lions"
+  },
+  "KPI": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Aldborough Victoria",
+    "KPI",
+    "Aldborough",
+    "#FFD100",
+    "#006400",
+    "historic",
+    51,
+    "Tuncombe Field"
+   ],
+   "short": "AGH",
+   "nick": "Yellows"
+  },
+  "SSC": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Calbrook City",
+    "SSC",
+    "Calbrook",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Presminster Field"
+   ],
+   "short": "CAK",
+   "nick": "Blues"
+  },
+  "LOB": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Redwick Borough",
+    "LOB",
+    "Redwick",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Linwood Lane"
+   ],
+   "short": "REK",
+   "nick": "Lions"
+  },
+  "PLU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Chelley Rovers",
+    "PLU",
+    "Chelley",
+    "#E30613",
+    "#FFD100",
+    "youth",
+    48,
+    "Elmmouth Park"
+   ],
+   "short": "CHY",
+   "nick": "Reds"
+  },
+  "BDI": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Barbridge Athletic",
+    "BDI",
+    "Barbridge",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    47,
+    "Yarwell Park"
+   ],
+   "short": "BGE",
+   "nick": "Miners"
+  },
+  "HRT": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Shafstead Rangers",
+    "HRT",
+    "Shafstead",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    47,
+    "Fenstead Lane"
+   ],
+   "short": "SHD",
+   "nick": "Reds"
+  },
+  "IKC": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Upper Oakbridge Town",
+    "IKC",
+    "Upper Oakbridge",
+    "#003DA5",
+    "#FFD100",
+    "oil",
+    47,
+    "Upper Oakbridge Ground"
+   ],
+   "short": "UPP",
+   "nick": "Mariners"
+  },
+  "ABW": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Yargate Rovers",
+    "ABW",
+    "Yargate",
+    "#00843D",
+    "#FFD100",
+    "fan",
+    47,
+    "Stancliff Park"
+   ],
+   "short": "YAE",
+   "nick": "Mariners"
+  },
+  "AKW": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Aldfield Wanderers",
+    "AKW",
+    "Aldfield",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    47,
+    "The Cheldale Stadium"
+   ],
+   "short": "ALDF",
+   "nick": "Drovers"
+  },
+  "KWU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Marbrook Rovers",
+    "KWU",
+    "Marbrook",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Linwold Field"
+   ],
+   "short": "MAK",
+   "nick": "Lions"
+  },
+  "NSU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Shafworth County",
+    "NSU",
+    "Shafworth",
+    "#FFD100",
+    "#00843D",
+    "fan",
+    46,
+    "Bexcliff Field"
+   ],
+   "short": "SHH",
+   "nick": "Spartans"
+  },
+  "NIT": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Aldcliff Wanderers",
+    "NIT",
+    "Aldcliff",
+    "#FFD100",
+    "#003DA5",
+    "fan",
+    46,
+    "Aldcliff Ground"
+   ],
+   "short": "ALF",
+   "nick": "Eagles"
+  },
+  "BYU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "New Penwell Orient",
+    "BYU",
+    "New Penwell",
+    "#003DA5",
+    "#E30613",
+    "fan",
+    46,
+    "Kesing Park"
+   ],
+   "short": "NEL",
+   "nick": "Blues"
+  },
+  "EKW": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Fenwell Orient",
+    "EKW",
+    "Fenwell",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Wexfield Park"
+   ],
+   "short": "FEL",
+   "nick": "Greens"
+  },
+  "KTU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Lancombe County",
+    "KTU",
+    "Lancombe",
+    "#E30613",
+    "#00843D",
+    "fan",
+    45,
+    "Oakthorpe Park"
+   ],
+   "short": "LAE",
+   "nick": "Herons"
+  },
+  "SUS": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Wynwick Town",
+    "SUS",
+    "Wynwick",
+    "#FFD100",
+    "#003DA5",
+    "fan",
+    45,
+    "Wynwick Park"
+   ],
+   "short": "WCK",
+   "nick": "Yellows"
+  },
+  "WAC": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Athlétic Belay",
+    "WAC",
+    "Belay",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    59,
+    "Complexe Nanmont"
+   ],
+   "short": "BELA",
+   "nick": "Rouges"
+  },
+  "RCA": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "SC Belay",
+    "RCA",
+    "Belay",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    59,
+    "Stade Courmont"
+   ],
+   "short": "BEL2",
+   "nick": "Verts"
+  },
+  "FAR": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Athlétic Nangnan",
+    "FAR",
+    "Nangnan",
+    "#E30613",
+    "#000000",
+    "historic",
+    57,
+    "Complexe Foncourt"
+   ],
+   "short": "NANG",
+   "nick": "Rouges"
+  },
+  "RSB": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "RC Ponlac",
+    "RSB",
+    "Ponlac",
+    "#FF7F00",
+    "#000000",
+    "oil",
+    56,
+    "Complexe Chaay"
+   ],
+   "short": "POC",
+   "nick": "Oranges"
+  },
+  "FUS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "US Nangnan",
+    "FUS",
+    "Nangnan",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    54,
+    "Complexe Saintay"
+   ],
+   "short": "NAN2",
+   "nick": "Bleus"
+  },
+  "MAS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Athlétic Beaulieu",
+    "MAS",
+    "Beaulieu",
+    "#FFD100",
+    "#000000",
+    "historic",
+    52,
+    "Complexe Bourac"
+   ],
+   "short": "BEU",
+   "nick": "Jaunes"
+  },
+  "HAG": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "FC Lavville",
+    "HAG",
+    "Lavville",
+    "#E30613",
+    "#FFD100",
+    "fan",
+    50,
+    "Stade Vilsur-mer"
+   ],
+   "short": "LLE",
+   "nick": "Aigles"
+  },
+  "IRT": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "FC Belac",
+    "IRT",
+    "Belac",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    50,
+    "Parc des Sports de Belac"
+   ],
+   "short": "BEL3",
+   "nick": "Bleus"
+  },
+  "MAT": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Athlétic Chasur-mer",
+    "MAT",
+    "Chasur-mer",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    49,
+    "Complexe Durlac"
+   ],
+   "short": "CHAS",
+   "nick": "Loups"
+  },
+  "OCS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "SC Bourles-bains",
+    "OCS",
+    "Bourles-bains",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Parc des Sports de Bourles-bains"
+   ],
+   "short": "BOS",
+   "nick": "Lynx"
+  },
+  "DHJ": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "US Fonville",
+    "DHJ",
+    "Fonville",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Stade Municipal de Fonville"
+   ],
+   "short": "FOE",
+   "nick": "Verts"
+  },
+  "RSZ": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "AJ Lanbourg",
+    "RSZ",
+    "Lanbourg",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    47,
+    "Stade de la Langnan"
+   ],
+   "short": "LAG",
+   "nick": "Verts"
+  },
+  "UTS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "ES Nangnan",
+    "UTS",
+    "Nangnan",
+    "#FF7F00",
+    "#000000",
+    "fan",
+    47,
+    "Stade Beaules-bains"
+   ],
+   "short": "NAN3",
+   "nick": "Oranges"
+  },
+  "COD": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "US Rocay",
+    "COD",
+    "Rocay",
+    "#E30613",
+    "#00843D",
+    "fan",
+    47,
+    "Parc des Sports de Rocay"
+   ],
+   "short": "ROY",
+   "nick": "Forgerons"
+  },
+  "SCC": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "ES Dureau",
+    "SCC",
+    "Dureau",
+    "#E30613",
+    "#000000",
+    "fan",
+    46,
+    "Parc des Sports de Dureau"
+   ],
+   "short": "DUU",
+   "nick": "Rouges"
+  },
+  "JSS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "US Margnan",
+    "JSS",
+    "Margnan",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Complexe Chaville"
+   ],
+   "short": "MAN",
+   "nick": "Bleus"
+  },
+  "CZV": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "FC Draovac",
+    "CZV",
+    "Draovac",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    64,
+    "Stadion Novin"
+   ],
+   "short": "DRA",
+   "nick": "Lavovi"
+  },
+  "FKP": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "KS Draovac",
+    "FKP",
+    "Draovac",
+    "#000000",
+    "#FFFFFF",
+    "giant",
+    61,
+    "Novina Arena"
+   ],
+   "short": "DRC",
+   "nick": "Rakete"
+  },
+  "VOJ": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "FK Slaica",
+    "VOJ",
+    "Slaica",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    57,
+    "Slaica Park"
+   ],
+   "short": "SLA",
+   "nick": "Crveni"
+  },
+  "TSC": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Mirina Sokol",
+    "TSC",
+    "Mirina",
+    "#003DA5",
+    "#FFFFFF",
+    "oil",
+    56,
+    "Stadion Mirek"
+   ],
+   "short": "MIR",
+   "nick": "Plavi"
+  },
+  "CUK": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Union Draovac",
+    "CUK",
+    "Draovac",
+    "#000000",
+    "#FFD100",
+    "youth",
+    53,
+    "Stadion Bratina"
+   ],
+   "short": "DAC",
+   "nick": "Vukovi"
+  },
+  "RAD": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "SK Novek",
+    "RAD",
+    "Novek",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    53,
+    "Gradski Stadion Novek"
+   ],
+   "short": "NOK",
+   "nick": "Crveni"
+  },
+  "NPZ": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Kraina Sokol",
+    "NPZ",
+    "Kraina",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    52,
+    "Stadion Bratava"
+   ],
+   "short": "KRA",
+   "nick": "Crveni"
+  },
+  "OFK": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Slavia Draovac",
+    "OFK",
+    "Draovac",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    51,
+    "Stadion Borec"
+   ],
+   "short": "DRAO",
+   "nick": "Plavi"
+  },
+  "IMT": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Draovac Sokol",
+    "IMT",
+    "Draovac",
+    "#1F2937",
+    "#E5E7EB",
+    "youth",
+    50,
+    "Draovac Park"
+   ],
+   "short": "DRA2",
+   "nick": "Gavranovi"
+  },
+  "SPS": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "NK Malin",
+    "SPS",
+    "Malin",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Malin Park"
+   ],
+   "short": "MIN",
+   "nick": "Plavi"
+  },
+  "RNI": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "KS Velgrad",
+    "RNI",
+    "Velgrad",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    50,
+    "Bogek Arena"
+   ],
+   "short": "VEL",
+   "nick": "Baroni"
+  },
+  "ZEL": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "SK Plesina",
+    "ZEL",
+    "Plesina",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Stadion Gorin"
+   ],
+   "short": "PLE",
+   "nick": "Plavi"
+  },
+  "NKR": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "KS Gorica",
+    "NKR",
+    "Gorica",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Stadion Zelina"
+   ],
+   "short": "GOR",
+   "nick": "Crveni"
+  },
+  "MLU": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "FK Radina",
+    "MLU",
+    "Radina",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Stadion Tarany"
+   ],
+   "short": "RAD",
+   "nick": "Crveni"
+  },
+  "JUB": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Union Bratgrad",
+    "JUB",
+    "Bratgrad",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Stadion Tarovo"
+   ],
+   "short": "BRAT",
+   "nick": "Plavi"
+  },
+  "TEK": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "KS Zagpol",
+    "TEK",
+    "Zagpol",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Zagpol Park"
+   ],
+   "short": "ZAG",
+   "nick": "Zeleni"
+  },
+  "CLB2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "AFC Westbrug",
+    "CLB2",
+    "Westbrug",
+    "#0E4DA4",
+    "#000000",
+    "giant",
+    68,
+    "Zuidburg Stadion"
+   ],
+   "short": "WUG",
+   "nick": "Blauwen"
+  },
+  "USG": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "FC Kleinrade",
+    "USG",
+    "Kleinrade",
+    "#FFDD00",
+    "#0033A0",
+    "selling",
+    64,
+    "Wagehoven Stadion"
+   ],
+   "short": "KDE",
+   "nick": "Geelen"
+  },
+  "AND2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "AFC Kleinrade",
+    "AND2",
+    "Kleinrade",
+    "#4B2C85",
+    "#FFFFFF",
+    "giant",
+    65,
+    "Oostlo Stadion"
+   ],
+   "short": "KLEI",
+   "nick": "Donkerblauwen"
+  },
+  "GNK": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "FC Oudveen",
+    "GNK",
+    "Oudveen",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    63,
+    "Oudveen Arena"
+   ],
+   "short": "OUN",
+   "nick": "Blauwen"
+  },
+  "GNT": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Sparta Hoogburg",
+    "GNT",
+    "Hoogburg",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    61,
+    "Stadion Nieuwstad"
+   ],
+   "short": "HOO",
+   "nick": "Wolven"
+  },
+  "ANT": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Kleinveen Boys",
+    "ANT",
+    "Kleinveen",
+    "#E30613",
+    "#FFFFFF",
+    "oil",
+    61,
+    "Kleinveen Arena"
+   ],
+   "short": "KLN",
+   "nick": "Ruiters"
+  },
+  "STL2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Sparta Noordstad",
+    "STL2",
+    "Noordstad",
+    "#E30613",
+    "#FFFFFF",
+    "fallen",
+    59,
+    "Stadion Bergstad"
+   ],
+   "short": "NOD",
+   "nick": "Rooien"
+  },
+  "CER2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Westbrug Boys",
+    "CER2",
+    "Westbrug",
+    "#00843D",
+    "#000000",
+    "youth",
+    56,
+    "De Veenrade"
+   ],
+   "short": "WES4",
+   "nick": "Ruiters"
+  },
+  "KVM": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "AFC Haardijk",
+    "KVM",
+    "Haardijk",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    56,
+    "Stadion Oostdam"
+   ],
+   "short": "HAK",
+   "nick": "Geelen"
+  },
+  "WES": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Veenveen Boys",
+    "WES",
+    "Veenveen",
+    "#FFDD00",
+    "#003DA5",
+    "oil",
+    55,
+    "De Dijkburg"
+   ],
+   "short": "VEEN",
+   "nick": "Valken"
+  },
+  "CHL": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "FC Hooghoven",
+    "CHL",
+    "Hooghoven",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Stadion Noorddijk"
+   ],
+   "short": "HON",
+   "nick": "Wolven"
+  },
+  "OHL": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Sparta Hoograde",
+    "OHL",
+    "Hoograde",
+    "#FFFFFF",
+    "#00843D",
+    "fan",
+    54,
+    "Stadion Veenzand"
+   ],
+   "short": "HOE",
+   "nick": "Witten"
+  },
+  "STV2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Sparta Weststad",
+    "STV2",
+    "Weststad",
+    "#FFDD00",
+    "#003DA5",
+    "selling",
+    53,
+    "Weststad Arena"
+   ],
+   "short": "WAD",
+   "nick": "Ruiters"
+  },
+  "DEN2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Sparta Dijkdijk",
+    "DEN2",
+    "Dijkdijk",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    51,
+    "Haarveen Stadion"
+   ],
+   "short": "DIK",
+   "nick": "Stieren"
+  },
+  "ZWA": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "RKC Dijkkerk",
+    "ZWA",
+    "Dijkkerk",
+    "#E30613",
+    "#00843D",
+    "fan",
+    51,
+    "Dijkkerk Arena"
+   ],
+   "short": "DRK",
+   "nick": "Rooien"
+  },
+  "RAAL": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "ADO Dijkveen",
+    "RAAL",
+    "Dijkveen",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Dijkveen Arena"
+   ],
+   "short": "DIN",
+   "nick": "Wolven"
+  },
+  "GAL": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Yeni Bozköyspor",
+    "GAL",
+    "Bozköy",
+    "#A90432",
+    "#FDB912",
+    "giant",
+    72,
+    "Karadere Stadyumu"
+   ],
+   "short": "BOZ",
+   "nick": "Kırmızılar"
+  },
+  "FEN": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Bozköy İdman Yurdu",
+    "FEN",
+    "Bozköy",
+    "#FFED00",
+    "#004A9F",
+    "giant",
+    71,
+    "Gültepe Arena"
+   ],
+   "short": "BOY",
+   "nick": "Aslanlar"
+  },
+  "BJK": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Bozköy Gençlik",
+    "BJK",
+    "Bozköy",
+    "#000000",
+    "#FFFFFF",
+    "giant",
+    67,
+    "Karehir Stadyumu"
+   ],
+   "short": "BÖY",
+   "nick": "Siyahlar"
+  },
+  "TS": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Mersaraygücü",
+    "TS",
+    "Mersaray",
+    "#7A1E3A",
+    "#6CABDD",
+    "historic",
+    63,
+    "Esksaray Stadyumu"
+   ],
+   "short": "MER",
+   "nick": "Bordolar"
+  },
+  "IBFK": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Bozköygücü",
+    "IBFK",
+    "Bozköy",
+    "#F47920",
+    "#0B1F4B",
+    "oil",
+    60,
+    "Bozköy Şehir Stadyumu"
+   ],
+   "short": "BOZK",
+   "nick": "Boğalar"
+  },
+  "SAM2": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Baypınar FK",
+    "SAM2",
+    "Baypınar",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Özova Arena"
+   ],
+   "short": "BAYP",
+   "nick": "Şahinler"
+  },
+  "GOZ": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Boztepe Atletik",
+    "GOZ",
+    "Boztepe",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    56,
+    "Özpınar Stadyumu"
+   ],
+   "short": "BPE",
+   "nick": "Sarılar"
+  },
+  "EYP": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Bozköyspor",
+    "EYP",
+    "Bozköy",
+    "#6A1B9A",
+    "#FFDD00",
+    "oil",
+    55,
+    "Mersaray Stadyumu"
+   ],
+   "short": "BOZ2",
+   "nick": "Bordolar"
+  },
+  "KAS2": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Bozköy Gücü",
+    "KAS2",
+    "Bozköy",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    54,
+    "Bozköy Cumhuriyet Stadyumu"
+   ],
+   "short": "BOZ3",
+   "nick": "Mavililer"
+  },
+  "RIZ": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Karlar Atletik",
+    "RIZ",
+    "Karlar",
+    "#00843D",
+    "#003DA5",
+    "fan",
+    54,
+    "Merova Stadyumu"
+   ],
+   "short": "KAR",
+   "nick": "Kaplanlar"
+  },
+  "KON": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Kızkalegücü",
+    "KON",
+    "Kızkale",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    54,
+    "Kızkale Cumhuriyet Stadyumu"
+   ],
+   "short": "KZK",
+   "nick": "Yeşiller"
+  },
+  "ANT2": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Gültepe Gençlik",
+    "ANT2",
+    "Gültepe",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    53,
+    "Karbahçe Stadyumu"
+   ],
+   "short": "GÜL",
+   "nick": "Aslanlar"
+  },
+  "ALY": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Tekehir Belediyespor",
+    "ALY",
+    "Tekehir",
+    "#F47920",
+    "#00843D",
+    "fan",
+    53,
+    "Çamköy Stadyumu"
+   ],
+   "short": "TEK",
+   "nick": "Yıldızlar"
+  },
+  "GAZ": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Özlar Gençlik",
+    "GAZ",
+    "Özlar",
+    "#E30613",
+    "#000000",
+    "fan",
+    53,
+    "Özlar Cumhuriyet Stadyumu"
+   ],
+   "short": "ÖZL",
+   "nick": "Kırmızılar"
+  },
+  "KAY": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Eskdere Belediyespor",
+    "KAY",
+    "Eskdere",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    52,
+    "Eskdere Şehir Stadyumu"
+   ],
+   "short": "ESK",
+   "nick": "Atmacalar"
+  },
+  "KOC": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Tekbahçe Gücü",
+    "KOC",
+    "Tekbahçe",
+    "#00843D",
+    "#000000",
+    "fan",
+    52,
+    "Tekbahçe Şehir Stadyumu"
+   ],
+   "short": "TEE",
+   "nick": "Şahinler"
+  },
+  "GEN2": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Bozpınar Gençlik",
+    "GEN2",
+    "Bozpınar",
+    "#E30613",
+    "#000000",
+    "youth",
+    51,
+    "Bozpınar Cumhuriyet Stadyumu"
+   ],
+   "short": "BOZP",
+   "nick": "Kırmızılar"
+  },
+  "FKG": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Bozköy Belediyespor",
+    "FKG",
+    "Bozköy",
+    "#E30613",
+    "#000000",
+    "fan",
+    51,
+    "Sarova Arena"
+   ],
+   "short": "BOZ4",
+   "nick": "Aslanlar"
+  },
+  "SLA2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "KS Radovac",
+    "SLA2",
+    "Radovac",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    64,
+    "Stadion Radin"
+   ],
+   "short": "RAC",
+   "nick": "Zmajevi"
+  },
+  "SPA": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "FK Radovac",
+    "SPA",
+    "Radovac",
+    "#8A1538",
+    "#FFFFFF",
+    "giant",
+    63,
+    "Stadion Plesin"
+   ],
+   "short": "RADO",
+   "nick": "Bordo"
+  },
+  "PLZ": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Plesava Sokol",
+    "PLZ",
+    "Plesava",
+    "#E30613",
+    "#003DA5",
+    "historic",
+    61,
+    "Stadion Velice"
+   ],
+   "short": "PLES",
+   "nick": "Crveni"
+  },
+  "BAN2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Novice Sokol",
+    "BAN2",
+    "Novice",
+    "#6CABDD",
+    "#FFFFFF",
+    "fan",
+    56,
+    "Stadion Kospol"
+   ],
+   "short": "NCE",
+   "nick": "Svetloplavi"
+  },
+  "SIG": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "FC Zagany",
+    "SIG",
+    "Zagany",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    53,
+    "Stadion Radovac"
+   ],
+   "short": "ZAY",
+   "nick": "Plavi"
+  },
+  "LIB2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "KS Kraava",
+    "LIB2",
+    "Kraava",
+    "#FFFFFF",
+    "#003DA5",
+    "youth",
+    53,
+    "Gradski Stadion Kraava"
+   ],
+   "short": "KVA",
+   "nick": "Beli"
+  },
+  "HKR": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "MFK Novin",
+    "HKR",
+    "Novin",
+    "#000000",
+    "#FFDD00",
+    "fan",
+    51,
+    "Stadion Draec"
+   ],
+   "short": "NIN",
+   "nick": "Crni"
+  },
+  "MBO": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "AO Bratec",
+    "MBO",
+    "Bratec",
+    "#003DA5",
+    "#FFFFFF",
+    "selling",
+    51,
+    "Stadion Dragrad"
+   ],
+   "short": "BRC",
+   "nick": "Sokolovi"
+  },
+  "BOH": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Radovac Sokol",
+    "BOH",
+    "Radovac",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Stadion Plesica"
+   ],
+   "short": "RAD2",
+   "nick": "Zeleni"
+  },
+  "JAB": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "SK Bogovo",
+    "JAB",
+    "Bogovo",
+    "#00843D",
+    "#000000",
+    "fan",
+    50,
+    "Bogovo Park"
+   ],
+   "short": "BOG",
+   "nick": "Zeleni"
+  },
+  "TEP": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Slavia Mirovac",
+    "TEP",
+    "Mirovac",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    49,
+    "Mirovac Park"
+   ],
+   "short": "MIC",
+   "nick": "Žuti"
+  },
+  "PAR2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Slavia Slapol",
+    "PAR2",
+    "Slapol",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Lubpol Arena"
+   ],
+   "short": "SLL",
+   "nick": "Orlovi"
+  },
+  "KAR": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "AO Zagek",
+    "KAR",
+    "Zagek",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Radpol Arena"
+   ],
+   "short": "ZAK",
+   "nick": "Bikovi"
+  },
+  "SLO2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Tarek Sokol",
+    "SLO2",
+    "Tarek",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Gradski Stadion Tarek"
+   ],
+   "short": "TAR",
+   "nick": "Plavi"
+  },
+  "DUK": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "MFK Radovac",
+    "DUK",
+    "Radovac",
+    "#FFDD00",
+    "#8A1538",
+    "historic",
+    47,
+    "Radovac Park"
+   ],
+   "short": "RAD3",
+   "nick": "Žuti"
+  },
+  "ZLN": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Slavia Zagec",
+    "ZLN",
+    "Zagec",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    47,
+    "Novice Arena"
+   ],
+   "short": "ZAC",
+   "nick": "Žuti"
+  },
+  "OLY2": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "AO Zagovac",
+    "OLY2",
+    "Zagovac",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    68,
+    "Stadion Gorek"
+   ],
+   "short": "ZAGO",
+   "nick": "Rakete"
+  },
+  "PAO": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "FK Radin",
+    "PAO",
+    "Radin",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    64,
+    "Stadion Polany"
+   ],
+   "short": "RAN",
+   "nick": "Vukovi"
+  },
+  "AEK": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Radin Sokol",
+    "AEK",
+    "Radin",
+    "#FFDD00",
+    "#000000",
+    "giant",
+    64,
+    "Radin Park"
+   ],
+   "short": "RIN",
+   "nick": "Žuti"
+  },
+  "PAOK": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "AO Polava",
+    "PAOK",
+    "Polava",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    65,
+    "Polava Park"
+   ],
+   "short": "POL",
+   "nick": "Crni"
+  },
+  "ARI": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "SK Polava",
+    "ARI",
+    "Polava",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    57,
+    "Stadion Drapol"
+   ],
+   "short": "POLA",
+   "nick": "Baroni"
+  },
+  "OFI": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "MFK Kraany",
+    "OFI",
+    "Kraany",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    53,
+    "Gradski Stadion Kraany"
+   ],
+   "short": "KRY",
+   "nick": "Sokolovi"
+  },
+  "ATR": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "FK Lubica",
+    "ATR",
+    "Lubica",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    52,
+    "Gradski Stadion Lubica"
+   ],
+   "short": "LUB",
+   "nick": "Plavi"
+  },
+  "AST": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Mirice Sokol",
+    "AST",
+    "Mirice",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    51,
+    "Gradski Stadion Mirice"
+   ],
+   "short": "MIE",
+   "nick": "Žuti"
+  },
+  "PNT": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "KS Zagovo",
+    "PNT",
+    "Zagovo",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    50,
+    "Zagovo Park"
+   ],
+   "short": "ZAO",
+   "nick": "Žuti"
+  },
+  "VOL2": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Slavia Mirin",
+    "VOL2",
+    "Mirin",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    50,
+    "Velek Arena"
+   ],
+   "short": "MIRI",
+   "nick": "Crveni"
+  },
+  "LEV2": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Bogin Sokol",
+    "LEV2",
+    "Bogin",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Gradski Stadion Bogin"
+   ],
+   "short": "BON",
+   "nick": "Baroni"
+  },
+  "KIF": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Slavia Novovac",
+    "KIF",
+    "Novovac",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Stadion Novek"
+   ],
+   "short": "NOC",
+   "nick": "Zmajevi"
+  },
+  "AEL": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Slavia Gorice",
+    "AEL",
+    "Gorice",
+    "#8A1538",
+    "#FFFFFF",
+    "historic",
+    48,
+    "Stadion Lubava"
+   ],
+   "short": "GOE",
+   "nick": "Bordo"
+  },
+  "PSR": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Union Kosovo",
+    "PSR",
+    "Kosovo",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Stadion Lubica"
+   ],
+   "short": "KOS",
+   "nick": "Rakete"
+  },
+  "BOD": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Fremad Nordnæs",
+    "BOD",
+    "Nordnæs",
+    "#FFDD00",
+    "#000000",
+    "youth",
+    63,
+    "Skovvik Stadion"
+   ],
+   "short": "NOS",
+   "nick": "De Gule"
+  },
+  "BRA2": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Storløkke FK",
+    "BRA2",
+    "Storløkke",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    58,
+    "Storløkke Arena"
+   ],
+   "short": "STO",
+   "nick": "De Røde"
+  },
+  "VIK": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Gammelnæs IF",
+    "VIK",
+    "Gammelnæs",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    57,
+    "Dalsund Stadion"
+   ],
+   "short": "GAM",
+   "nick": "De Blå"
+  },
+  "RBK": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Solholm BK",
+    "RBK",
+    "Solholm",
+    "#FFFFFF",
+    "#000000",
+    "giant",
+    58,
+    "Solholm Arena"
+   ],
+   "short": "SOL",
+   "nick": "Falke"
+  },
+  "MOL": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "IK Vestsund",
+    "MOL",
+    "Vestsund",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    58,
+    "Havlund Idrætspark"
+   ],
+   "short": "VES",
+   "nick": "Rever"
+  },
+  "S08": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Fremad Dalby",
+    "S08",
+    "Dalby",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    51,
+    "Gammelnæs Park"
+   ],
+   "short": "DAL",
+   "nick": "De Blå"
+  },
+  "FFK": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Vestvik IF",
+    "FFK",
+    "Vestvik",
+    "#FFFFFF",
+    "#E30613",
+    "historic",
+    51,
+    "Solsund Idrætspark"
+   ],
+   "short": "VEK",
+   "nick": "De Hvide"
+  },
+  "TIL": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Skovvik Boldklub",
+    "TIL",
+    "Skovvik",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    51,
+    "Østsund Stadion"
+   ],
+   "short": "SKO",
+   "nick": "Elge"
+  },
+  "SAF2": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Østby IF",
+    "SAF2",
+    "Østby",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Sydstrup Stadion"
+   ],
+   "short": "ØST",
+   "nick": "Løver"
+  },
+  "KFU": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Fremad Østnæs",
+    "KFU",
+    "Østnæs",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Nordfors Idrætspark"
+   ],
+   "short": "ØSS",
+   "nick": "De Blå"
+  },
+  "HAM": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Skovø FK",
+    "HAM",
+    "Skovø",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Bergsund Stadion"
+   ],
+   "short": "SKØ",
+   "nick": "De Grønne"
+  },
+  "KBK": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "BK Solnæs",
+    "KBK",
+    "Solnæs",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Storø Stadion"
+   ],
+   "short": "SOS",
+   "nick": "De Blå"
+  },
+  "VIF": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "BK Østnæs",
+    "VIF",
+    "Østnæs",
+    "#003DA5",
+    "#E30613",
+    "historic",
+    52,
+    "Østnæs Arena"
+   ],
+   "short": "ØÆS",
+   "nick": "Bæverne"
+  },
+  "BRY": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Havø IL",
+    "BRY",
+    "Havø",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Veststrup Stadion"
+   ],
+   "short": "HAV",
+   "nick": "Elge"
+  },
+  "SIF": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Nordby IL",
+    "SIF",
+    "Nordby",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Vestfors Stadion"
+   ],
+   "short": "NOY",
+   "nick": "De Blå"
+  },
+  "FKH": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Fremad Nordløkke",
+    "FKH",
+    "Nordløkke",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    47,
+    "Skovnæs Park"
+   ],
+   "short": "NKE",
+   "nick": "Bæverne"
+  },
+  "LPO": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "MFK Malice",
+    "LPO",
+    "Malice",
+    "#003DA5",
+    "#FFFFFF",
+    "giant",
+    60,
+    "Gradski Stadion Malice"
+   ],
+   "short": "MCE",
+   "nick": "Plavi"
+  },
+  "RAK": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "FC Kosek",
+    "RAK",
+    "Kosek",
+    "#E30613",
+    "#003DA5",
+    "oil",
+    59,
+    "Stadion Zelice"
+   ],
+   "short": "KOK",
+   "nick": "Crveni"
+  },
+  "JAG": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Slavia Zelpol",
+    "JAG",
+    "Zelpol",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    58,
+    "Stadion Radovo"
+   ],
+   "short": "ZOL",
+   "nick": "Rakete"
+  },
+  "LEG2": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "KS Malek",
+    "LEG2",
+    "Malek",
+    "#FFFFFF",
+    "#00843D",
+    "giant",
+    60,
+    "Malek Park"
+   ],
+   "short": "MEK",
+   "nick": "Gavranovi"
+  },
+  "POG": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "NK Bogina",
+    "POG",
+    "Bogina",
+    "#003DA5",
+    "#8A1538",
+    "fan",
+    55,
+    "Bogina Park"
+   ],
+   "short": "BOGI",
+   "nick": "Plavi"
+  },
+  "GOR": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "NK Velava",
+    "GOR",
+    "Velava",
+    "#FFFFFF",
+    "#003DA5",
+    "historic",
+    54,
+    "Velava Park"
+   ],
+   "short": "VVA",
+   "nick": "Beli"
+  },
+  "CRA2": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Union Tarica",
+    "CRA2",
+    "Tarica",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    53,
+    "Tarica Park"
+   ],
+   "short": "TCA",
+   "nick": "Crveni"
+  },
+  "WID": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "MFK Belany",
+    "WID",
+    "Belany",
+    "#E30613",
+    "#FFFFFF",
+    "oil",
+    53,
+    "Stadion Malpol"
+   ],
+   "short": "BNY",
+   "nick": "Crveni"
+  },
+  "GKS": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "AO Belek",
+    "GKS",
+    "Belek",
+    "#FFDD00",
+    "#00843D",
+    "fan",
+    51,
+    "Belek Park"
+   ],
+   "short": "BEK",
+   "nick": "Žuti"
+  },
+  "ZAG": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "SK Malec",
+    "ZAG",
+    "Malec",
+    "#F47920",
+    "#00843D",
+    "youth",
+    52,
+    "Stadion Draek"
+   ],
+   "short": "MAC",
+   "nick": "Narandžasti"
+  },
+  "PIA": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Union Draina",
+    "PIA",
+    "Draina",
+    "#003DA5",
+    "#E30613",
+    "fan",
+    52,
+    "Belin Arena"
+   ],
+   "short": "DNA",
+   "nick": "Plavi"
+  },
+  "MOT": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "AO Mirovo",
+    "MOT",
+    "Mirovo",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    50,
+    "Stadion Borovo"
+   ],
+   "short": "MIO",
+   "nick": "Vukovi"
+  },
+  "KOR": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "FK Lubava",
+    "KOR",
+    "Lubava",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    50,
+    "Gradski Stadion Lubava"
+   ],
+   "short": "LUA",
+   "nick": "Sokolovi"
+  },
+  "RAD2": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "MFK Velica",
+    "RAD2",
+    "Velica",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Velica Park"
+   ],
+   "short": "VCA",
+   "nick": "Rakete"
+  },
+  "LGD": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "SK Draovo",
+    "LGD",
+    "Draovo",
+    "#00843D",
+    "#FFFFFF",
+    "fallen",
+    50,
+    "Gradski Stadion Draovo"
+   ],
+   "short": "DRO",
+   "nick": "Zeleni"
+  },
+  "ARK": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "AO Radava",
+    "ARK",
+    "Radava",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    48,
+    "Gradski Stadion Radava"
+   ],
+   "short": "RAA",
+   "nick": "Žuti"
+  },
+  "WPL": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Union Radice",
+    "WPL",
+    "Radice",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Gradski Stadion Radice"
+   ],
+   "short": "RAE",
+   "nick": "Gavranovi"
+  },
+  "TER": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "FK Malovo",
+    "TER",
+    "Malovo",
+    "#F47920",
+    "#000000",
+    "fan",
+    47,
+    "Stadion Bratin"
+   ],
+   "short": "MVO",
+   "nick": "Narandžasti"
+  },
+  "FCK": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Fremad Østø",
+    "FCK",
+    "Østø",
+    "#FFFFFF",
+    "#003DA5",
+    "giant",
+    64,
+    "Bergvik Park"
+   ],
+   "short": "ØSØ",
+   "nick": "De Hvide"
+  },
+  "FCM2": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Dalnæs BK",
+    "FCM2",
+    "Dalnæs",
+    "#000000",
+    "#E30613",
+    "selling",
+    62,
+    "Havstrup Park"
+   ],
+   "short": "DAS",
+   "nick": "De Sorte"
+  },
+  "BIF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Fremad Sydfors",
+    "BIF",
+    "Sydfors",
+    "#FFDD00",
+    "#003DA5",
+    "historic",
+    58,
+    "Sydfors Arena"
+   ],
+   "short": "SYD",
+   "nick": "De Gule"
+  },
+  "AGF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Vestgård IL",
+    "AGF",
+    "Vestgård",
+    "#FFFFFF",
+    "#003DA5",
+    "fan",
+    56,
+    "Gammelløkke Stadion"
+   ],
+   "short": "VED",
+   "nick": "De Hvide"
+  },
+  "FCN": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "BK Gammelholm",
+    "FCN",
+    "Gammelholm",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    56,
+    "Gammelholm Arena"
+   ],
+   "short": "GLM",
+   "nick": "De Røde"
+  },
+  "RFC": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Stranddal IL",
+    "RFC",
+    "Stranddal",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    52,
+    "Soldal Park"
+   ],
+   "short": "STR",
+   "nick": "Bjørne"
+  },
+  "SIL": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "FC Sydgård",
+    "SIL",
+    "Sydgård",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    52,
+    "Nydal Park"
+   ],
+   "short": "SRD",
+   "nick": "Svaner"
+  },
+  "VFF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Strandvik IF",
+    "VFF",
+    "Strandvik",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    51,
+    "Storløkke Park"
+   ],
+   "short": "STK",
+   "nick": "De Grønne"
+  },
+  "OB": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Syddal IL",
+    "OB",
+    "Syddal",
+    "#003DA5",
+    "#FFFFFF",
+    "fallen",
+    51,
+    "Berglund Idrætspark"
+   ],
+   "short": "SYL",
+   "nick": "Ørne"
+  },
+  "SJF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Dalløkke IL",
+    "SJF",
+    "Dalløkke",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Strandsund Stadion"
+   ],
+   "short": "DKE",
+   "nick": "De Blå"
+  },
+  "VBK": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Fremad Lilleby",
+    "VBK",
+    "Lilleby",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Vestby Idrætspark"
+   ],
+   "short": "LIY",
+   "nick": "De Røde"
+  },
+  "FCF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Fremad Østborg",
+    "FCF",
+    "Østborg",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Strandborg Park"
+   ],
+   "short": "ØSG",
+   "nick": "De Røde"
+  },
+  "RBS": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "FSV Hagkirchen",
+    "RBS",
+    "Hagkirchen",
+    "#FFFFFF",
+    "#E30613",
+    "oil",
+    64,
+    "Stadion am Dornstadt"
+   ],
+   "short": "HEN",
+   "nick": "Weißen"
+  },
+  "STU": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Hohenbach SC",
+    "STU",
+    "Hohenbach",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    61,
+    "Hohenbach-Arena"
+   ],
+   "short": "HCH",
+   "nick": "Schmiede"
+  },
+  "RAP2": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "SpVgg Neuingen",
+    "RAP2",
+    "Neuingen",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    58,
+    "Stadion Lindfurt"
+   ],
+   "short": "NEUI",
+   "nick": "Hirsche"
+  },
+  "FAK": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Eintracht Neuingen",
+    "FAK",
+    "Neuingen",
+    "#6A1B9A",
+    "#FFFFFF",
+    "historic",
+    56,
+    "Neuingen-Arena"
+   ],
+   "short": "NEU2",
+   "nick": "Schmiede"
+  },
+  "LASK": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "VfB Unterburg",
+    "LASK",
+    "Unterburg",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    56,
+    "Stadion am Grünsee"
+   ],
+   "short": "UNG",
+   "nick": "Schwarzen"
+  },
+  "WAC2": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "TSV Eichhausen",
+    "WAC2",
+    "Eichhausen",
+    "#000000",
+    "#F47920",
+    "fan",
+    51,
+    "Sportpark Thalhafen"
+   ],
+   "short": "EIN",
+   "nick": "Pioniere"
+  },
+  "HAR": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "FSV Eichfeld",
+    "HAR",
+    "Eichfeld",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Stadion am Hoheningen"
+   ],
+   "short": "EID",
+   "nick": "Pioniere"
+  },
+  "BWL": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "FC Unterburg",
+    "BWL",
+    "Unterburg",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Stadion Lindsee"
+   ],
+   "short": "URG",
+   "nick": "Blauen"
+  },
+  "WSG": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Sportfreunde Mühlhafen",
+    "WSG",
+    "Mühlhafen",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    48,
+    "Stadion am Zellkirchen"
+   ],
+   "short": "MÜN",
+   "nick": "Grünen"
+  },
+  "ALT": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "VfB Baddorf",
+    "ALT",
+    "Baddorf",
+    "#000000",
+    "#FFDD00",
+    "fan",
+    48,
+    "Baddorf-Arena"
+   ],
+   "short": "BAF",
+   "nick": "Schmiede"
+  },
+  "GAK": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Hohenbach 04",
+    "GAK",
+    "Hohenbach",
+    "#E30613",
+    "#FFFFFF",
+    "fallen",
+    47,
+    "Stadion am Westerdorf"
+   ],
+   "short": "HOHE",
+   "nick": "Falken"
+  },
+  "RIE2": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "SV Mühlberg",
+    "RIE2",
+    "Mühlberg",
+    "#000000",
+    "#00843D",
+    "fan",
+    47,
+    "Mühlberg-Arena"
+   ],
+   "short": "MÜG",
+   "nick": "Schwarzen"
+  },
+  "BAS": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "SV Grünhafen",
+    "BAS",
+    "Grünhafen",
+    "#E30613",
+    "#003DA5",
+    "giant",
+    62,
+    "Bergburg-Stadion"
+   ],
+   "short": "GEN",
+   "nick": "Roten"
+  },
+  "YB": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "VfB Hagsee",
+    "YB",
+    "Hagsee",
+    "#FFDD00",
+    "#000000",
+    "giant",
+    62,
+    "Hagsee-Arena"
+   ],
+   "short": "HEE",
+   "nick": "Gelben"
+  },
+  "SER": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "Unterhafen SC",
+    "SER",
+    "Unterhafen",
+    "#8A1538",
+    "#FFFFFF",
+    "historic",
+    56,
+    "Hohenbach-Stadion"
+   ],
+   "short": "UNN",
+   "nick": "Weinroten"
+  },
+  "LUG": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "VfL Burghausen",
+    "LUG",
+    "Burghausen",
+    "#000000",
+    "#FFFFFF",
+    "oil",
+    56,
+    "Stadion am Hagheim"
+   ],
+   "short": "BUR",
+   "nick": "Füchse"
+  },
+  "LUZ": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FC Dorningen",
+    "LUZ",
+    "Dorningen",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    53,
+    "Dorningen-Arena"
+   ],
+   "short": "DON",
+   "nick": "Löwen"
+  },
+  "STG": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "Kirchstadt SC",
+    "STG",
+    "Kirchstadt",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    53,
+    "Stadion Oberhafen"
+   ],
+   "short": "KDT",
+   "nick": "Grünen"
+  },
+  "FCZ": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "Badhausen SC",
+    "FCZ",
+    "Badhausen",
+    "#FFFFFF",
+    "#003DA5",
+    "historic",
+    54,
+    "Unterburg-Stadion"
+   ],
+   "short": "BADH",
+   "nick": "Weißen"
+  },
+  "GCZ": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FSV Badhausen",
+    "GCZ",
+    "Badhausen",
+    "#003DA5",
+    "#FFFFFF",
+    "fallen",
+    51,
+    "Eichfeld-Stadion"
+   ],
+   "short": "BAD2",
+   "nick": "Falken"
+  },
+  "LS": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "TSV Dornbach",
+    "LS",
+    "Dornbach",
+    "#003DA5",
+    "#FFFFFF",
+    "oil",
+    52,
+    "Zellstadt-Stadion"
+   ],
+   "short": "DOH",
+   "nick": "Bergleute"
+  },
+  "SIO": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "SV Rheinbach",
+    "SIO",
+    "Rheinbach",
+    "#FFFFFF",
+    "#E30613",
+    "fan",
+    51,
+    "Stadion Burgtal"
+   ],
+   "short": "RHH",
+   "nick": "Weißen"
+  },
+  "WIN": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "Sportfreunde Thalsee",
+    "WIN",
+    "Thalsee",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Stadion Westerkirchen"
+   ],
+   "short": "THE",
+   "nick": "Roten"
+  },
+  "THU": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "Neuheim 04",
+    "THU",
+    "Neuheim",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Stadion am Bergingen"
+   ],
+   "short": "NEM",
+   "nick": "Wölfe"
+  },
+  "CEL2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Little Chelbury City",
+    "CEL2",
+    "Little Chelbury",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    70,
+    "Barham Field"
+   ],
+   "short": "LRY",
+   "nick": "Greens"
+  },
+  "RAN2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Little Chelbury County",
+    "RAN2",
+    "Little Chelbury",
+    "#1B458F",
+    "#FFFFFF",
+    "giant",
+    68,
+    "Salwick Field"
+   ],
+   "short": "LITT",
+   "nick": "Blues"
+  },
+  "HEA": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Glenminster Rovers",
+    "HEA",
+    "Glenminster",
+    "#8A1538",
+    "#FFFFFF",
+    "historic",
+    56,
+    "Glenminster Ground"
+   ],
+   "short": "GLR",
+   "nick": "Maroons"
+  },
+  "ABE": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Hardale Rangers",
+    "ABE",
+    "Hardale",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    56,
+    "The Whitmere Stadium"
+   ],
+   "short": "HLE",
+   "nick": "Reds"
+  },
+  "HIB": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Glenminster United",
+    "HIB",
+    "Glenminster",
+    "#00843D",
+    "#FFFFFF",
+    "historic",
+    55,
+    "Dorborough Road"
+   ],
+   "short": "GER",
+   "nick": "Greens"
+  },
+  "MOT2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Yarby Orient",
+    "MOT2",
+    "Yarby",
+    "#FFB81C",
+    "#8A1538",
+    "fan",
+    50,
+    "Calchester Park"
+   ],
+   "short": "YAY",
+   "nick": "Yellows"
+  },
+  "DUN2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Presley Rangers",
+    "DUN2",
+    "Presley",
+    "#F47920",
+    "#000000",
+    "fan",
+    51,
+    "The Tunworth Stadium"
+   ],
+   "short": "PRY",
+   "nick": "Oranges"
+  },
+  "KIL": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Dorley Athletic",
+    "KIL",
+    "Dorley",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Bexfield Park"
+   ],
+   "short": "DOY",
+   "nick": "Spartans"
+  },
+  "SMI": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Kesham Orient",
+    "SMI",
+    "Kesham",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Marworth Field"
+   ],
+   "short": "KEM",
+   "nick": "Lions"
+  },
+  "DND": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Presley Town",
+    "DND",
+    "Presley",
+    "#0B1F4B",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Presley Park"
+   ],
+   "short": "PEY",
+   "nick": "Navy"
+  },
+  "LIV2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Lower Yarwood County",
+    "LIV2",
+    "Lower Yarwood",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    47,
+    "Stanwood Field"
+   ],
+   "short": "LOW",
+   "nick": "Yellows"
+  },
+  "FAL": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Lanworth Albion",
+    "FAL",
+    "Lanworth",
+    "#0B1F4B",
+    "#FFFFFF",
+    "fan",
+    47,
+    "Lanworth Park"
+   ],
+   "short": "LTH",
+   "nick": "Navy"
+  },
+  "MCY": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Salborough Athletic",
+    "MCY",
+    "Salborough",
+    "#6CABDD",
+    "#FFFFFF",
+    "oil",
+    57,
+    "Bromminster Park"
+   ],
+   "short": "SAH",
+   "nick": "Sky Blues"
+  },
+  "SYD": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Dormouth Wanderers",
+    "SYD",
+    "Dormouth",
+    "#6CACE4",
+    "#0B1F4B",
+    "giant",
+    57,
+    "Dormouth Park"
+   ],
+   "short": "DTH",
+   "nick": "Sky Blues"
+  },
+  "MVC": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Salborough Wanderers",
+    "MVC",
+    "Salborough",
+    "#0B1F4B",
+    "#FFFFFF",
+    "giant",
+    55,
+    "Kelborough Lane"
+   ],
+   "short": "SGH",
+   "nick": "Navy"
+  },
+  "WSW": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Dormouth Town",
+    "WSW",
+    "Dormouth",
+    "#E30613",
+    "#000000",
+    "fan",
+    53,
+    "Dorwood Field"
+   ],
+   "short": "DORM",
+   "nick": "Reds"
+  },
+  "CCM": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Ripmere Orient",
+    "CCM",
+    "Ripmere",
+    "#FFDD00",
+    "#0B1F4B",
+    "youth",
+    52,
+    "The Yarbrook Stadium"
+   ],
+   "short": "RRE",
+   "nick": "Eagles"
+  },
+  "BRQ": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Oakham Athletic",
+    "BRQ",
+    "Oakham",
+    "#F47920",
+    "#000000",
+    "historic",
+    51,
+    "Oakham Ground"
+   ],
+   "short": "OAM",
+   "nick": "Oranges"
+  },
+  "AUC": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Marworth County",
+    "AUC",
+    "Marworth",
+    "#0B1F4B",
+    "#00A3E0",
+    "oil",
+    51,
+    "The Marbridge Stadium"
+   ],
+   "short": "MAH",
+   "nick": "Navy"
+  },
+  "ADU": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Sedgeport United",
+    "ADU",
+    "Sedgeport",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Sedgeport Park"
+   ],
+   "short": "SET",
+   "nick": "Reds"
+  },
+  "WPX": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Norwell Albion",
+    "WPX",
+    "Norwell",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    49,
+    "The Gilport Stadium"
+   ],
+   "short": "NLL",
+   "nick": "Ironmen"
+  },
+  "MAF": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Elmworth Town",
+    "MAF",
+    "Elmworth",
+    "#000000",
+    "#FFFFFF",
+    "selling",
+    48,
+    "The Marcombe Stadium"
+   ],
+   "short": "ELH",
+   "nick": "Blacks"
+  },
+  "NJE": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Harton Rovers",
+    "NJE",
+    "Harton",
+    "#003DA5",
+    "#E30613",
+    "fan",
+    48,
+    "Harton Park"
+   ],
+   "short": "HART",
+   "nick": "Blues"
+  },
+  "PGL": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Elmborough Wanderers",
+    "PGL",
+    "Elmborough",
+    "#6A1B9A",
+    "#FFFFFF",
+    "fallen",
+    47,
+    "Elmborough Park"
+   ],
+   "short": "EGH",
+   "nick": "Maroons"
+  },
+  "FTC": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "NK Bratava",
+    "FTC",
+    "Bratava",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    62,
+    "Zelin Arena"
+   ],
+   "short": "BRA2",
+   "nick": "Gavranovi"
+  },
+  "PAK": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "KS Lubice",
+    "PAK",
+    "Lubice",
+    "#00843D",
+    "#FFFFFF",
+    "selling",
+    53,
+    "Stadion Polica"
+   ],
+   "short": "LUE",
+   "nick": "Gavranovi"
+  },
+  "ETO": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "AO Bratek",
+    "ETO",
+    "Bratek",
+    "#00843D",
+    "#FFFFFF",
+    "historic",
+    52,
+    "Stadion Zelec"
+   ],
+   "short": "BRK",
+   "nick": "Zeleni"
+  },
+  "DVS": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "FK Polin",
+    "DVS",
+    "Polin",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    53,
+    "Novek Arena"
+   ],
+   "short": "PIN",
+   "nick": "Crveni"
+  },
+  "PUS": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Kosany Sokol",
+    "PUS",
+    "Kosany",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    53,
+    "Gradski Stadion Kosany"
+   ],
+   "short": "KOY",
+   "nick": "Plavi"
+  },
+  "ZTE": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Slavia Polec",
+    "ZTE",
+    "Polec",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    51,
+    "Gradski Stadion Polec"
+   ],
+   "short": "PEC",
+   "nick": "Baroni"
+  },
+  "UJP": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "MFK Bratava",
+    "UJP",
+    "Bratava",
+    "#6A1B9A",
+    "#FFFFFF",
+    "historic",
+    52,
+    "Bratava Park"
+   ],
+   "short": "BRA3",
+   "nick": "Bordo"
+  },
+  "DIO": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "FC Zelek",
+    "DIO",
+    "Zelek",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Zelava Arena"
+   ],
+   "short": "ZEK",
+   "nick": "Vukovi"
+  },
+  "KIS": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "KS Belin",
+    "KIS",
+    "Belin",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    48,
+    "Gradski Stadion Belin"
+   ],
+   "short": "BIN",
+   "nick": "Rakete"
+  },
+  "MTK": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "FK Bratava",
+    "MTK",
+    "Bratava",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    49,
+    "Stadion Bogava"
+   ],
+   "short": "BRA4",
+   "nick": "Plavi"
+  },
+  "NYI": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Slavia Borica",
+    "NYI",
+    "Borica",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Borica Park"
+   ],
+   "short": "BCA",
+   "nick": "Baroni"
+  },
+  "KTE": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "AO Kosec",
+    "KTE",
+    "Kosec",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Stadion Slaovo"
+   ],
+   "short": "KOC",
+   "nick": "Zmajevi"
+  },
+  "SHL": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Yarbrook United",
+    "SHL",
+    "Yarbrook",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    51,
+    "The Penton Stadium"
+   ],
+   "short": "YAK",
+   "nick": "Foresters"
+  },
+  "SRO": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Yarbrook Wanderers",
+    "SRO",
+    "Yarbrook",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    51,
+    "Malwood Field"
+   ],
+   "short": "YOK",
+   "nick": "Greens"
+  },
+  "DRY": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "North Bexwold County",
+    "DRY",
+    "North Bexwold",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48,
+    "North Bexwold Ground"
+   ],
+   "short": "NLD",
+   "nick": "Herons"
+  },
+  "BHI": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Yarbrook City",
+    "BHI",
+    "Yarbrook",
+    "#E30613",
+    "#000000",
+    "fan",
+    47,
+    "Whitton Lane"
+   ],
+   "short": "YARB",
+   "nick": "Reds"
+  },
+  "SPAT": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Yarbrook Victoria",
+    "SPAT",
+    "Yarbrook",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    47,
+    "The Aldstead Stadium"
+   ],
+   "short": "YAR2",
+   "nick": "Rams"
+  },
+  "DRO": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Upper Malthorpe City",
+    "DRO",
+    "Upper Malthorpe",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    44,
+    "The Maring Stadium"
+   ],
+   "short": "UPE",
+   "nick": "Kestrels"
+  },
+  "GAU": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Barcliff Rovers",
+    "GAU",
+    "Barcliff",
+    "#8A1538",
+    "#FFFFFF",
+    "fan",
+    43,
+    "Bromchester Field"
+   ],
+   "short": "BFF",
+   "nick": "Chargers"
+  },
+  "SLR": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Glenwick Albion",
+    "SLR",
+    "Glenwick",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    43,
+    "The Gilcombe Stadium"
+   ],
+   "short": "GLK",
+   "nick": "Reds"
+  },
+  "WFI": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Glengate City",
+    "WFI",
+    "Glengate",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    42,
+    "The Lanmere Stadium"
+   ],
+   "short": "GTE",
+   "nick": "Blues"
+  },
+  "DDK": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Upper Salwood Town",
+    "DDK",
+    "Upper Salwood",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    44,
+    "Stanmere Field"
+   ],
+   "short": "UPD",
+   "nick": "Drovers"
+  },
+  "TNS": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Wexthorpe Town",
+    "TNS",
+    "Wexthorpe",
+    "#00843D",
+    "#FFFFFF",
+    "oil",
+    49,
+    "Bexham Lane"
+   ],
+   "short": "WPE",
+   "nick": "Greens"
+  },
+  "BAL": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Whitley Athletic",
+    "BAL",
+    "Whitley",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    42,
+    "Dorwood Road"
+   ],
+   "short": "WHY",
+   "nick": "Whites"
+  },
+  "CQN": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Aldwold Athletic",
+    "CQN",
+    "Aldwold",
+    "#FFFFFF",
+    "#003DA5",
+    "fan",
+    41,
+    "Shafwold Park"
+   ],
+   "short": "ALDW",
+   "nick": "Wolves"
+  },
+  "PEN": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Shafley Victoria",
+    "PEN",
+    "Shafley",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    41,
+    "Wynley Field"
+   ],
+   "short": "SHY",
+   "nick": "Kestrels"
+  },
+  "HAV": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Aldton Victoria",
+    "HAV",
+    "Aldton",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    40,
+    "The Calchester Stadium"
+   ],
+   "short": "AON",
+   "nick": "Blues"
+  },
+  "BTU": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Lower Shafwold Athletic",
+    "BTU",
+    "Lower Shafwold",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    40,
+    "Barley Lane"
+   ],
+   "short": "LOD",
+   "nick": "Falcons"
+  },
+  "CMU": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Broming Rovers",
+    "CMU",
+    "Broming",
+    "#FFDD00",
+    "#000000",
+    "youth",
+    40,
+    "Dorley Park"
+   ],
+   "short": "BNG",
+   "nick": "Spartans"
+  },
+  "LLA": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Gilwell City",
+    "LLA",
+    "Gilwell",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    38,
+    "The Ashwood Stadium"
+   ],
+   "short": "GLL",
+   "nick": "Reds"
+  },
+  "CAE": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Great Bradton Victoria",
+    "CAE",
+    "Great Bradton",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Barbrook Lane"
+   ],
+   "short": "GON",
+   "nick": "Reds"
+  },
+  "NEW2": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Oaking Rovers",
+    "NEW2",
+    "Oaking",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Oaking Park"
+   ],
+   "short": "OAG",
+   "nick": "Reds"
+  },
+  "COL2": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Darworth Victoria",
+    "COL2",
+    "Darworth",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    38,
+    "Presdale Field"
+   ],
+   "short": "DAH",
+   "nick": "Yellows"
+  },
+  "FLI": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Ripham Athletic",
+    "FLI",
+    "Ripham",
+    "#FFFFFF",
+    "#E30613",
+    "fan",
+    37,
+    "Darminster Park"
+   ],
+   "short": "RIM",
+   "nick": "Whites"
+  }
+ },
+ "leagues": {
+  "D1": {
+   "nat": "ENG",
+   "tier": 1,
+   "name": "English Premier Division",
+   "short": "D1"
+  },
+  "D2": {
+   "nat": "ENG",
+   "tier": 2,
+   "name": "English National Championship",
+   "short": "D2"
+  },
+  "D3": {
+   "nat": "ENG",
+   "tier": 3,
+   "name": "English National League One",
+   "short": "D3"
+  },
+  "D4": {
+   "nat": "ENG",
+   "tier": 4,
+   "name": "English National League Two",
+   "short": "D4"
+  },
+  "ES1": {
+   "nat": "ESP",
+   "tier": 1,
+   "name": "Spanish Liga Nacional",
+   "short": "ES1"
+  },
+  "ES2": {
+   "nat": "ESP",
+   "tier": 2,
+   "name": "Spanish Segunda Nacional",
+   "short": "ES2"
+  },
+  "ES3": {
+   "nat": "ESP",
+   "tier": 3,
+   "name": "Spanish Tercera Nacional",
+   "short": "ES3"
+  },
+  "DE1": {
+   "nat": "GER",
+   "tier": 1,
+   "name": "German Nationalliga",
+   "short": "DE1"
+  },
+  "DE2": {
+   "nat": "GER",
+   "tier": 2,
+   "name": "German Zweite Nationalliga",
+   "short": "DE2"
+  },
+  "DE3": {
+   "nat": "GER",
+   "tier": 3,
+   "name": "German Dritte Nationalliga",
+   "short": "DE3"
+  },
+  "FR1": {
+   "nat": "FRA",
+   "tier": 1,
+   "name": "French Division Nationale",
+   "short": "FR1"
+  },
+  "FR2": {
+   "nat": "FRA",
+   "tier": 2,
+   "name": "French Division Nationale 2",
+   "short": "FR2"
+  },
+  "BR1": {
+   "nat": "BRA",
+   "tier": 1,
+   "name": "Brazilian Série Nacional A",
+   "short": "BR1"
+  },
+  "IT1": {
+   "nat": "ITA",
+   "tier": 1,
+   "name": "Italian Campionato Nazionale",
+   "short": "IT1"
+  },
+  "IT2": {
+   "nat": "ITA",
+   "tier": 2,
+   "name": "Italian Campionato Nazionale B",
+   "short": "IT2"
+  },
+  "PT1": {
+   "nat": "POR",
+   "tier": 1,
+   "name": "Portuguese Liga Nacional",
+   "short": "PT1"
+  },
+  "NL1": {
+   "nat": "NED",
+   "tier": 1,
+   "name": "Dutch Eerste Nationale",
+   "short": "NL1"
+  },
+  "AR1": {
+   "nat": "ARG",
+   "tier": 1,
+   "name": "Argentine Premier Division",
+   "short": "AR1"
+  },
+  "US1": {
+   "nat": "USA",
+   "tier": 1,
+   "name": "American Premier Division",
+   "short": "US1"
+  },
+  "JP1": {
+   "nat": "JPN",
+   "tier": 1,
+   "name": "Japanese Premier Division",
+   "short": "JP1"
+  },
+  "MX1": {
+   "nat": "MEX",
+   "tier": 1,
+   "name": "Mexican Premier Division",
+   "short": "MX1"
+  },
+  "KR1": {
+   "nat": "KOR",
+   "tier": 1,
+   "name": "Korean Premier Division",
+   "short": "KR1"
+  },
+  "TH1": {
+   "nat": "THA",
+   "tier": 1,
+   "name": "Thai Premier Division",
+   "short": "TH1"
+  },
+  "NG1": {
+   "nat": "NGA",
+   "tier": 1,
+   "name": "Nigerian Premier Division",
+   "short": "NG1"
+  },
+  "MA1": {
+   "nat": "MAR",
+   "tier": 1,
+   "name": "Moroccan Premier Division",
+   "short": "MA1"
+  },
+  "RS1": {
+   "nat": "SRB",
+   "tier": 1,
+   "name": "Serbian Premier Division",
+   "short": "RS1"
+  },
+  "BE1": {
+   "nat": "BEL",
+   "tier": 1,
+   "name": "Belgian Premier Division",
+   "short": "BE1"
+  },
+  "TR1": {
+   "nat": "TUR",
+   "tier": 1,
+   "name": "Turkish Premier Division",
+   "short": "TR1"
+  },
+  "CZ1": {
+   "nat": "CZE",
+   "tier": 1,
+   "name": "Czech Premier Division",
+   "short": "CZ1"
+  },
+  "GR1": {
+   "nat": "GRE",
+   "tier": 1,
+   "name": "Greek Premier Division",
+   "short": "GR1"
+  },
+  "NO1": {
+   "nat": "NOR",
+   "tier": 1,
+   "name": "Norwegian Premier Division",
+   "short": "NO1"
+  },
+  "PL1": {
+   "nat": "POL",
+   "tier": 1,
+   "name": "Polish Premier Division",
+   "short": "PL1"
+  },
+  "DK1": {
+   "nat": "DEN",
+   "tier": 1,
+   "name": "Danish Premier Division",
+   "short": "DK1"
+  },
+  "AT1": {
+   "nat": "AUT",
+   "tier": 1,
+   "name": "Austrian Premier Division",
+   "short": "AT1"
+  },
+  "CH1": {
+   "nat": "SUI",
+   "tier": 1,
+   "name": "Swiss Premier Division",
+   "short": "CH1"
+  },
+  "SC1": {
+   "nat": "SCO",
+   "tier": 1,
+   "name": "Scottish Premier Division",
+   "short": "SC1"
+  },
+  "AU1": {
+   "nat": "AUS",
+   "tier": 1,
+   "name": "Australian Premier Division",
+   "short": "AU1"
+  },
+  "HU1": {
+   "nat": "HUN",
+   "tier": 1,
+   "name": "Hungarian Premier Division",
+   "short": "HU1"
+  },
+  "IE1": {
+   "nat": "IRL",
+   "tier": 1,
+   "name": "Irish Premier Division",
+   "short": "IE1"
+  },
+  "WA1": {
+   "nat": "WAL",
+   "tier": 1,
+   "name": "Welsh Premier Division",
+   "short": "WA1"
+  }
+ },
+ "continentals": {
+  "CC": {
+   "region": "Europe",
+   "tier": 1,
+   "name": "European Champions Cup",
+   "short": "EUR1"
+  },
+  "CL": {
+   "region": "South America",
+   "tier": 1,
+   "name": "South American Champions Cup",
+   "short": "SAM1"
+  },
+  "AC": {
+   "region": "Asia",
+   "tier": 1,
+   "name": "Asian Champions Cup",
+   "short": "ASI1"
+  },
+  "AF": {
+   "region": "Africa",
+   "tier": 1,
+   "name": "African Champions Cup",
+   "short": "AFR1"
+  },
+  "NC": {
+   "region": "North America",
+   "tier": 1,
+   "name": "North American Champions Cup",
+   "short": "NAM1"
+  },
+  "EL": {
+   "region": "Europe",
+   "tier": 2,
+   "name": "European Shield",
+   "short": "EUR2"
+  },
+  "SA": {
+   "region": "South America",
+   "tier": 2,
+   "name": "South American Shield",
+   "short": "SAM2"
+  },
+  "UC": {
+   "region": "Europe",
+   "tier": 3,
+   "name": "European Trophy",
+   "short": "EUR3"
+  },
+  "A2": {
+   "region": "Asia",
+   "tier": 2,
+   "name": "Asian Shield",
+   "short": "ASI2"
+  },
+  "AX": {
+   "region": "Africa",
+   "tier": 2,
+   "name": "African Shield",
+   "short": "AFR2"
+  }
+ },
+ "cups": {
+  "CUPENG": {
+   "nat": "ENG",
+   "name": "English Cup",
+   "short": "ENGC"
+  },
+  "CUPESP": {
+   "nat": "ESP",
+   "name": "Spanish Copa Nacional",
+   "short": "ESPC"
+  },
+  "CUPGER": {
+   "nat": "GER",
+   "name": "German Nationalpokal",
+   "short": "GERC"
+  },
+  "CUPFRA": {
+   "nat": "FRA",
+   "name": "French Coupe Nationale",
+   "short": "FRAC"
+  },
+  "CUPBRA": {
+   "nat": "BRA",
+   "name": "Brazilian Copa Nacional",
+   "short": "BRAC"
+  },
+  "CUPITA": {
+   "nat": "ITA",
+   "name": "Italian Coppa Nazionale",
+   "short": "ITAC"
+  },
+  "CUPPOR": {
+   "nat": "POR",
+   "name": "Portuguese Taça Nacional",
+   "short": "PORC"
+  },
+  "CUPNED": {
+   "nat": "NED",
+   "name": "Dutch Nationale Beker",
+   "short": "NEDC"
+  },
+  "CUPARG": {
+   "nat": "ARG",
+   "name": "Argentine Copa Nacional",
+   "short": "ARGC"
+  },
+  "CUPUSA": {
+   "nat": "USA",
+   "name": "American Cup",
+   "short": "USAC"
+  },
+  "CUPJPN": {
+   "nat": "JPN",
+   "name": "Japanese Cup",
+   "short": "JPNC"
+  }
+ },
+ "rivals": [
+  [
+   "MCI",
+   "MUN",
+   "Marstead Derby"
+  ],
+  [
+   "LIV",
+   "EVE",
+   "Harborough Derby"
+  ],
+  [
+   "ARS",
+   "TOT",
+   "Ripmouth Derby"
+  ],
+  [
+   "CHE",
+   "FUL",
+   "Ripmouth Derby"
+  ],
+  [
+   "NEW",
+   "SUN",
+   "Sedgefield–Gilwick Derby"
+  ],
+  [
+   "AVL",
+   "BIR",
+   "Wexbridge Derby"
+  ],
+  [
+   "NFO",
+   "DER",
+   "Yarwood–Linham Derby"
+  ],
+  [
+   "BHA",
+   "CRY",
+   "Ashford–Ripmouth Derby"
+  ],
+  [
+   "WHU",
+   "MIL",
+   "Ripmouth Derby"
+  ],
+  [
+   "WOL",
+   "WBA",
+   "Wexminster–Kesmouth Derby"
+  ],
+  [
+   "LEE",
+   "HUD",
+   "Calwick–Fenworth Derby"
+  ],
+  [
+   "SOU",
+   "POM",
+   "Shafborough–Dardale Derby"
+  ],
+  [
+   "BRE",
+   "QPR",
+   "Ripmouth Derby"
+  ],
+  [
+   "BUR",
+   "BLB",
+   "Branby–Dorgate Derby"
+  ],
+  [
+   "SHU",
+   "SHW",
+   "Barstead Derby"
+  ],
+  [
+   "IPS",
+   "NCI",
+   "Sedgebridge–Barfield Derby"
+  ],
+  [
+   "LEI",
+   "COV",
+   "Branwood–Dorminster Derby"
+  ],
+  [
+   "STK",
+   "PVA",
+   "Oakfield Derby"
+  ],
+  [
+   "SWA",
+   "CAR",
+   "Dorport–Tunmere Derby"
+  ],
+  [
+   "PNE",
+   "BLP",
+   "West Gildale–Great Gilfield Derby"
+  ],
+  [
+   "WAT",
+   "LUT",
+   "West Gilton–Linborough Derby"
+  ],
+  [
+   "BWA",
+   "WIG",
+   "Harham–Malby Derby"
+  ],
+  [
+   "BNS",
+   "ROT",
+   "Barton–Gilfield Derby"
+  ],
+  [
+   "PLY",
+   "EXE",
+   "Hexmere–Norchester Derby"
+  ],
+  [
+   "PBO",
+   "NTN",
+   "Chelthorpe–Wynley Derby"
+  ],
+  [
+   "RMA",
+   "FCB",
+   "Puenteblanca–Vallegrande Derby"
+  ],
+  [
+   "ATM",
+   "GET",
+   "Puenteblanca–Mesabella Derby"
+  ],
+  [
+   "ATH",
+   "RSO",
+   "Arroyosur–Playagrande Derby"
+  ],
+  [
+   "BET",
+   "SEV",
+   "Nuevagrande Derby"
+  ],
+  [
+   "VAL",
+   "LEV",
+   "Lomassol Derby"
+  ],
+  [
+   "VIL",
+   "CAS",
+   "Cañadanorte–Villaluna Derby"
+  ],
+  [
+   "CEL",
+   "DEP",
+   "Mesareal–Pozoalta Derby"
+  ],
+  [
+   "RCD",
+   "GIR",
+   "Vallegrande–Sanluna Derby"
+  ],
+  [
+   "OVI",
+   "SPG",
+   "Santaalta–Altogrande Derby"
+  ],
+  [
+   "RAY",
+   "LEG",
+   "Puenteblanca–Altomar Derby"
+  ],
+  [
+   "MAL",
+   "GRA",
+   "Lomasbella–Llanosur Derby"
+  ],
+  [
+   "LPA",
+   "TEN",
+   "Peñaalta–Vegarosa Derby"
+  ],
+  [
+   "ZAR",
+   "HUE",
+   "Rioreal–Mesagrande Derby"
+  ],
+  [
+   "ALA",
+   "EIB",
+   "Mesaalta–Santanorte Derby"
+  ],
+  [
+   "VLD",
+   "BGS",
+   "Montelara–Fortínalta Derby"
+  ],
+  [
+   "BAY",
+   "BVB",
+   "Kirchhausen–Rheinstadt Derby"
+  ],
+  [
+   "B04",
+   "KOE",
+   "Unterheim–Dornsee Derby"
+  ],
+  [
+   "SVW",
+   "HSV",
+   "Lindhausen–Obertal Derby"
+  ],
+  [
+   "SGE",
+   "M05",
+   "Eichkirchen–Badberg Derby"
+  ],
+  [
+   "VFB",
+   "SCF",
+   "Linddorf–Lindberg Derby"
+  ],
+  [
+   "RBL",
+   "FCU",
+   "Zellhafen–Thalhausen Derby"
+  ],
+  [
+   "PSG",
+   "OMA",
+   "Bourlac–Vilens Derby"
+  ],
+  [
+   "LIL",
+   "RCL",
+   "Chaon–Pongnan Derby"
+  ],
+  [
+   "NIC",
+   "ASM",
+   "Lanlieu–Lavlieu Derby"
+  ],
+  [
+   "REN",
+   "NAN",
+   "Fonac–Chalac Derby"
+  ],
+  [
+   "OLY",
+   "STE",
+   "Chales-bains–Courlac Derby"
+  ],
+  [
+   "RCS",
+   "FCM",
+   "Valville–Clercourt Derby"
+  ],
+  [
+   "SBR",
+   "LOR",
+   "Aubac–Roclac Derby"
+  ],
+  [
+   "PFC",
+   "HAC",
+   "Bourlac–Valay Derby"
+  ],
+  [
+   "FLA",
+   "FLU",
+   "Montebranca Derby"
+  ],
+  [
+   "PAL",
+   "COR",
+   "Sãorio Derby"
+  ],
+  [
+   "GRE",
+   "SCI",
+   "Torresol Derby"
+  ],
+  [
+   "CAM",
+   "CRU",
+   "Campomar Derby"
+  ],
+  [
+   "SAO",
+   "SAN",
+   "Sãorio–Portomar Derby"
+  ],
+  [
+   "BOT",
+   "VAS",
+   "Montebranca Derby"
+  ],
+  [
+   "BAH",
+   "VIT",
+   "Ribeiramar Derby"
+  ],
+  [
+   "FTZ",
+   "CEA",
+   "Boanova Derby"
+  ],
+  [
+   "INT",
+   "ACM",
+   "Borara Derby"
+  ],
+  [
+   "ROM",
+   "LAZ",
+   "Lanara Derby"
+  ],
+  [
+   "JUV",
+   "TOR",
+   "Belezia Derby"
+  ],
+  [
+   "FIO",
+   "BOL",
+   "Toretto–Sanetto Derby"
+  ],
+  [
+   "GEN",
+   "PIS",
+   "Vilago–Ponara Derby"
+  ],
+  [
+   "AJA",
+   "FEY",
+   "Oudwijk–Zuidhorst Derby"
+  ],
+  [
+   "TWE",
+   "HER",
+   "Noordhorst–Westveen Derby"
+  ],
+  [
+   "GRO",
+   "HEE",
+   "Zuidbrug–Noordhoven Derby"
+  ],
+  [
+   "GAE",
+   "PEC",
+   "Oostkerk–Oostdam Derby"
+  ],
+  [
+   "SPR",
+   "EXC",
+   "Zuidhorst Derby"
+  ],
+  [
+   "BEN",
+   "SCP",
+   "Novamar Derby"
+  ],
+  [
+   "VSC",
+   "SCB",
+   "Campogrande–Serragrande Derby"
+  ],
+  [
+   "RIV",
+   "BOC",
+   "Ríonueva Derby"
+  ],
+  [
+   "RAC",
+   "IND",
+   "Bajosol Derby"
+  ],
+  [
+   "ROS",
+   "NOB",
+   "Fuentesur Derby"
+  ],
+  [
+   "SLO",
+   "HUR",
+   "Ríonueva Derby"
+  ],
+  [
+   "ELP",
+   "GLP",
+   "Rocarosa Derby"
+  ],
+  [
+   "TAL",
+   "BEL",
+   "Altoverde Derby"
+  ],
+  [
+   "LAN",
+   "BAN",
+   "Cañadaverde–Vegaalta Derby"
+  ],
+  [
+   "GOD",
+   "IRI",
+   "Costasol Derby"
+  ],
+  [
+   "LAG",
+   "LAF",
+   "Stanhaven Derby"
+  ],
+  [
+   "SEA",
+   "PTI",
+   "Aldby–Hexford Derby"
+  ],
+  [
+   "NYC",
+   "NYR",
+   "Chelminster Derby"
+  ],
+  [
+   "TRT",
+   "MTL",
+   "Barley–Presmouth Derby"
+  ],
+  [
+   "HOU",
+   "DAL",
+   "Stanborough–Linwell Derby"
+  ],
+  [
+   "RAP",
+   "RSL",
+   "Hexwell–Linbridge Derby"
+  ],
+  [
+   "CIN",
+   "CLB",
+   "Ripwell–Gilbridge Derby"
+  ],
+  [
+   "ATL",
+   "ORL",
+   "Aldwood–Harbury Derby"
+  ],
+  [
+   "GAM",
+   "CER",
+   "Haruyama Derby"
+  ],
+  [
+   "YFM",
+   "KAW",
+   "Hokugawa–Akahara Derby"
+  ],
+  [
+   "FCT",
+   "TVE",
+   "Akiura Derby"
+  ],
+  [
+   "URA",
+   "KAS",
+   "Kitahama–Narishima Derby"
+  ],
+  [
+   "AME",
+   "CHV",
+   "Costagrande–Fortínreal Derby"
+  ],
+  [
+   "MTY",
+   "TGR",
+   "Santareal–Villareal Derby"
+  ],
+  [
+   "CAZ",
+   "PUM",
+   "Costagrande Derby"
+  ],
+  [
+   "ULS",
+   "POH",
+   "Gangdong–Namsan Derby"
+  ],
+  [
+   "SEO",
+   "ANY",
+   "Jeonjin–Sincheon Derby"
+  ],
+  [
+   "BKU",
+   "PRT",
+   "Nakhonpur Derby"
+  ],
+  [
+   "ENY",
+   "RAN",
+   "Stangate–New Tunfield Derby"
+  ],
+  [
+   "WAC",
+   "RCA",
+   "Belay Derby"
+  ],
+  [
+   "FAR",
+   "FUS",
+   "Nangnan Derby"
+  ],
+  [
+   "MAT",
+   "IRT",
+   "Chasur-mer–Belac Derby"
+  ],
+  [
+   "CZV",
+   "FKP",
+   "Draovac Derby"
+  ],
+  [
+   "VOJ",
+   "SPS",
+   "Slaica–Malin Derby"
+  ],
+  [
+   "CLB2",
+   "CER2",
+   "Westbrug Derby"
+  ],
+  [
+   "AND2",
+   "STL2",
+   "Kleinrade–Noordstad Derby"
+  ],
+  [
+   "GAL",
+   "FEN",
+   "Bozköy Derby"
+  ],
+  [
+   "BJK",
+   "TS",
+   "Bozköy–Mersaray Derby"
+  ],
+  [
+   "SLA2",
+   "SPA",
+   "Radovac Derby"
+  ],
+  [
+   "OLY2",
+   "PAO",
+   "Zagovac–Radin Derby"
+  ],
+  [
+   "PAOK",
+   "ARI",
+   "Polava Derby"
+  ],
+  [
+   "RBK",
+   "MOL",
+   "Solholm–Vestsund Derby"
+  ],
+  [
+   "VIF",
+   "KFU",
+   "Østnæs Derby"
+  ],
+  [
+   "LEG2",
+   "LPO",
+   "Malek–Malice Derby"
+  ],
+  [
+   "CRA2",
+   "WID",
+   "Tarica–Belany Derby"
+  ],
+  [
+   "FCK",
+   "BIF",
+   "Østø–Sydfors Derby"
+  ],
+  [
+   "RAP2",
+   "FAK",
+   "Neuingen Derby"
+  ],
+  [
+   "STU",
+   "GAK",
+   "Hohenbach Derby"
+  ],
+  [
+   "BAS",
+   "FCZ",
+   "Grünhafen–Badhausen Derby"
+  ],
+  [
+   "GCZ",
+   "YB",
+   "Badhausen–Hagsee Derby"
+  ],
+  [
+   "CEL2",
+   "RAN2",
+   "Little Chelbury Derby"
+  ],
+  [
+   "HEA",
+   "HIB",
+   "Glenminster Derby"
+  ],
+  [
+   "DUN2",
+   "DND",
+   "Presley Derby"
+  ],
+  [
+   "MCY",
+   "MVC",
+   "Salborough Derby"
+  ],
+  [
+   "SYD",
+   "WSW",
+   "Dormouth Derby"
+  ],
+  [
+   "SYD",
+   "MVC",
+   "Dormouth–Salborough Derby"
+  ],
+  [
+   "FTC",
+   "UJP",
+   "Bratava Derby"
+  ],
+  [
+   "FTC",
+   "MTK",
+   "Bratava Derby"
+  ],
+  [
+   "SHL",
+   "BHI",
+   "Yarbrook Derby"
+  ],
+  [
+   "SRO",
+   "SPAT",
+   "Yarbrook Derby"
+  ],
+  [
+   "DRY",
+   "SRO",
+   "North Bexwold–Yarbrook Derby"
+  ],
+  [
+   "TNS",
+   "BAL",
+   "Wexthorpe–Whitley Derby"
+  ],
+  [
+   "CQN",
+   "FLI",
+   "Aldwold–Ripham Derby"
+  ]
+ ],
+ "nations": {
+  "ENG": "England",
+  "BRA": "Brazil",
+  "ARG": "Argentina",
+  "JPN": "Japan",
+  "KOR": "South Korea",
+  "THA": "Thailand",
+  "SRB": "Serbia",
+  "FRA": "France",
+  "ESP": "Spain",
+  "NGA": "Nigeria",
+  "POR": "Portugal",
+  "NED": "Netherlands",
+  "GER": "Germany",
+  "BEL": "Belgium",
+  "IRL": "Ireland",
+  "SCO": "Scotland",
+  "WAL": "Wales",
+  "URU": "Uruguay",
+  "COL": "Colombia",
+  "SEN": "Senegal",
+  "GHA": "Ghana",
+  "CIV": "Ivory Coast",
+  "MAR": "Morocco",
+  "USA": "United States",
+  "DEN": "Denmark",
+  "NOR": "Norway",
+  "CRO": "Croatia",
+  "ITA": "Italy",
+  "MEX": "Mexico",
+  "TUR": "Turkey",
+  "CZE": "Czechia",
+  "GRE": "Greece",
+  "POL": "Poland",
+  "AUT": "Austria",
+  "SUI": "Switzerland",
+  "AUS": "Australia",
+  "HUN": "Hungary",
+  "SWE": "Sweden",
+  "UKR": "Ukraine",
+  "ROU": "Romania",
+  "SVK": "Slovakia",
+  "SVN": "Slovenia",
+  "BIH": "Bosnia and Herzegovina",
+  "ALB": "Albania",
+  "MKD": "North Macedonia",
+  "MNE": "Montenegro",
+  "BUL": "Bulgaria",
+  "FIN": "Finland",
+  "ISL": "Iceland",
+  "NIR": "Northern Ireland",
+  "GEO": "Georgia",
+  "ISR": "Israel",
+  "RUS": "Russia",
+  "CYP": "Cyprus",
+  "ALG": "Algeria",
+  "TUN": "Tunisia",
+  "EGY": "Egypt",
+  "CMR": "Cameroon",
+  "COD": "DR Congo",
+  "MLI": "Mali",
+  "BFA": "Burkina Faso",
+  "GUI": "Guinea",
+  "CPV": "Cape Verde",
+  "RSA": "South Africa",
+  "ANG": "Angola",
+  "CAN": "Canada",
+  "CHI": "Chile",
+  "PAR": "Paraguay",
+  "ECU": "Ecuador",
+  "PER": "Peru",
+  "VEN": "Venezuela",
+  "CRC": "Costa Rica",
+  "JAM": "Jamaica",
+  "HON": "Honduras",
+  "PAN": "Panama",
+  "IRN": "Iran",
+  "KSA": "Saudi Arabia",
+  "UZB": "Uzbekistan",
+  "CHN": "China",
+  "NZL": "New Zealand",
+  "IRQ": "Iraq"
+ },
+ "format": "touchline-names",
+ "version": 1,
+ "note": "A fictional world (seed 1): the real structure, rules and club codes with generated names. The real names are in data/real-world.json.",
+ "seed": 1
+}

@@ -289,8 +289,11 @@
   const line = (kind, outlet, x, seed) => fill(pick(T[kind][outlet], seed + outlet + kind), x);
 
   // The pundits' take, in their own style, for the television item
-  M.punditTake = function (kind, x, seed) {
-    const p = pick(M.state().pundits, seed + 'pundit');
+  M.punditTake = function (kind, x, seed, clubId) {
+    // a pundit who played for the club speaks for the occasion
+    const all = M.state().pundits,
+      own = clubId ? all.filter((q) => q.cids && q.cids[clubId]) : [],
+      p = pick(own.length ? own : all, seed + 'pundit');
     const good = ['win', 'bigwin', 'hot', 'derbywin', 'upset'].includes(kind);
     const said = {
       sensible: good
@@ -318,7 +321,43 @@
             'Unacceptable. Where was the fight? Where was the desire?',
           ],
     }[p.style];
-    return { who: p.name, text: pick(said, seed + 'text') };
+    const text = pick(said, seed + 'text'),
+      games = clubId && p.cids && p.cids[clubId];
+    return { who: p.name, text: games ? `I played ${games} games for them, so I know. ${text}` : text };
+  };
+  // A great who has just retired joins the panel (a former player, so the panel is not only invented names): his
+  // manner follows his personality, and he speaks with weight about the clubs he played for. At most six; the
+  // invented pundits make way first, then the longest-serving.
+  M.PANEL_MAX = 6;
+  M.addPundit = function (p, entry) {
+    const S = FM.S,
+      st = M.state(),
+      name = `${p.fn} ${p.ln}`;
+    if (st.pundits.some((q) => q.name === name)) return;
+    const cids = {};
+    for (const sp of entry.spells) cids[sp.c] = (cids[sp.c] || 0) + sp.apps;
+    const top = Object.keys(cids).sort((a, b) => cids[b] - cids[a])[0],
+      topClub = top && S.clubs[top];
+    const style = p.hid.temp >= 14 ? 'hothead' : p.hid.cons >= 12 ? 'sensible' : 'contrarian';
+    st.pundits.push({
+      name,
+      style,
+      cids,
+      year: S.year,
+      bio: `Former ${D.POS_NAME[p.pos] ? D.POS_NAME[p.pos].toLowerCase() : 'player'}${topClub ? `, ${cids[top]} games for ${topClub.name}` : `, ${entry.apps} games`}${entry.caps ? `, ${entry.caps} caps` : ''}`,
+    });
+    while (st.pundits.length > M.PANEL_MAX) {
+      const i = st.pundits.findIndex((q) => !q.cids);
+      st.pundits.splice(i >= 0 ? i : 0, 1);
+    }
+    const mine = S.user && S.user.clubId && cids[S.user.clubId];
+    if (mine || entry.caps >= 50)
+      FM.News.add({
+        type: 'club',
+        title: `${name} joins the Touchline Tonight panel`,
+        body: `${st.pundits[st.pundits.length - 1].bio}. ${mine ? 'He knows your club well' : 'A familiar voice on a Monday night'}: expect his opinion after the big results.`,
+        quiet: !mine,
+      });
   };
 
   // ---------- Reaction to events ----------
@@ -424,7 +463,7 @@
       ['derbywin', 'derbyloss', 'upset', 'heavyloss', 'bigwin', 'cold'].includes(kind) &&
       hash(seed + 'tv') % 100 < 70
     ) {
-      const t = M.punditTake(kind, x, seed);
+      const t = M.punditTake(kind, x, seed, club.id);
       post('tv', kind, `${t.who} on ${club.name}: “${t.text}”`, 'Touchline Tonight panel', { mediaKind: 'pundit' });
     }
     // Pressure: the press moves the board and the fans a little every match

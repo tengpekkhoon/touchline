@@ -1220,6 +1220,7 @@
         ${p.intl && p.intl.caps ? `<div class="row small" style="margin-top:8px"><span class="grow muted">International</span><b>${natLink(`${C.flag(p.nat)} ${p.intl.caps} caps · ${p.pos === 'GK' ? `${p.intl.cs ?? '—'} clean sheets` : `${p.intl.goals} goals`}`)}</b></div>` : ''}
         ${p.honours && p.honours.length ? `<div class="row small" style="margin-top:8px"><span class="grow muted">Honours</span><b>${honoursLine(p)}</b></div>` : ''}
         <div class="row small" style="margin-top:8px"><span class="grow muted">Contract</span><b>until ${p.contract}</b></div></div>
+      ${bioCard(p)}
       ${UI.seasonsCard(p, history)}
       ${injuryCard(p)}`;
   }
@@ -1289,6 +1290,44 @@
       ${history.map(row).join('')}
       <tr style="font-weight:700"><td class="l">Total</td><td></td>${(gk ? [tot.apps, tot.cs, tot.ga, ''] : [tot.apps, tot.g, tot.a, '']).map((x) => `<td>${x}</td>`).join('')}</tr></table></div>`;
   };
+  // His story in words, from what the game has recorded: where he started, each move and what it cost, his totals,
+  // caps, honours and his worst injury. (A long career shows the first move and the latest few.)
+  function bioCard(p) {
+    const nat = D.NATIONS[p.nat],
+      cn = (id) => (CL(id) ? CL(id).name : null),
+      sp = p.career.spells.filter((x) => cn(x.c)),
+      out = [];
+    out.push(
+      `Born in ${p.born}, a ${D.POS_NAME[p.pos].toLowerCase()}${nat ? ` from ${nat.name}` : ''}${p.heritage && D.HERITAGE_LABEL[p.heritage] ? ` of ${D.HERITAGE_LABEL[p.heritage]} heritage` : ''}.`,
+    );
+    // players made with the world have games from before their recorded clubs
+    const earlier = p.career.apps - p.career.spells.reduce((t, x) => t + x.apps, 0);
+    const moves = sp.map((x, i) => {
+      const club = cn(x.c),
+        span = x.to && x.to !== x.from ? `${x.from}–${x.to}` : `${x.from}`;
+      if (x.loan) return `On loan at ${club} (${span}).`;
+      if (i === 0 && earlier > 30)
+        return `By ${x.from} he was at ${club}, with about ${earlier} games already behind him.`;
+      if (i === 0)
+        return p.youth === x.c ? `Came through ${club}'s academy.` : `Began his career at ${club} in ${x.from}.`;
+      if (x.fee != null)
+        return `Joined ${club} in ${x.from} ${x.fee ? `for ${U.money(x.fee)}` : 'on a free transfer'}.`;
+      return `Moved to ${club} in ${x.from}.`;
+    });
+    out.push(...(moves.length > 6 ? [moves[0], '…', ...moves.slice(-4)] : moves));
+    const gk = p.pos === 'GK',
+      cs = (p.history || []).reduce((t, h) => t + (h.cs || 0), 0) + (p.season.cs || 0);
+    if (p.career.apps)
+      out.push(`${p.career.apps} games${gk ? ` and ${cs} clean sheets` : ` and ${p.career.goals} goals`} so far.`);
+    if (p.intl && p.intl.caps)
+      out.push(`Capped ${p.intl.caps} times by ${nat ? nat.name : 'his country'}, first in ${p.intl.first}.`);
+    const potm = (p.honours || []).filter((h) => h[1] === 'potm').length;
+    if (potm) out.push(`Player of the Month ${potm > 1 ? `${potm} times` : 'once'}.`);
+    const worst = (p.injHist || []).slice().sort((a, b) => b[2] - a[2])[0];
+    if (worst && worst[2] >= 8)
+      out.push(`His longest layoff: ${worst[1].toLowerCase()}, ${worst[2]} weeks (${worst[0]}).`);
+    return `<div class="card"><div class="h3">Story so far</div><div class="small" style="margin-top:8px;line-height:1.6">${out.map(esc).join(' ')}</div></div>`;
+  }
   // Player of the month awards, grouped: "🏅 Player of the Month ×2 (Oct 2026, Jan 2027)"
   function honoursLine(p) {
     const potm = p.honours.filter((h) => h[1] === 'potm');
@@ -2095,7 +2134,7 @@
       <div class="card flat"><div class="h3">The panel on Touchline Tonight</div>${st.pundits
         .map(
           (p) =>
-            `<div class="row small" style="padding:4px 0"><b style="min-width:120px">${esc(p.name)}</b><span class="dim">${{ sensible: 'measured, talks about shape', contrarian: 'disagrees on principle', hothead: 'says what he feels' }[p.style]}</span></div>`,
+            `<div class="row small" style="padding:4px 0"><b style="min-width:120px">${esc(p.name)}</b><span class="dim">${p.bio ? `${esc(p.bio)} · ` : ''}${{ sensible: 'measured, talks about shape', contrarian: 'disagrees on principle', hothead: 'says what he feels' }[p.style]}</span></div>`,
         )
         .join('')}</div>`;
   }

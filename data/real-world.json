@@ -1,0 +1,12630 @@
+{
+ "clubs": {
+  "MCI": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Manchester City",
+    "MCI",
+    "Manchester",
+    "#6CABDD",
+    "#1C2C5B",
+    "oil",
+    88,
+    "Etihad Stadium",
+    53400
+   ],
+   "short": "",
+   "nick": "Citizens"
+  },
+  "LIV": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Liverpool",
+    "LIV",
+    "Liverpool",
+    "#C8102E",
+    "#00B2A9",
+    "giant",
+    88,
+    "Anfield",
+    61276
+   ],
+   "short": "",
+   "nick": "Reds"
+  },
+  "ARS": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Arsenal",
+    "ARS",
+    "London",
+    "#EF0107",
+    "#FFFFFF",
+    "giant",
+    87,
+    "Emirates Stadium",
+    60704
+   ],
+   "short": "",
+   "nick": "Gunners"
+  },
+  "CHE": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Chelsea",
+    "CHE",
+    "London",
+    "#034694",
+    "#FFFFFF",
+    "oil",
+    82,
+    "Stamford Bridge",
+    40343
+   ],
+   "short": "",
+   "nick": "Blues"
+  },
+  "MUN": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Manchester United",
+    "MUN",
+    "Manchester",
+    "#DA291C",
+    "#FFFFFF",
+    "fallen",
+    80,
+    "Old Trafford",
+    74310
+   ],
+   "short": "",
+   "nick": "Red Devils"
+  },
+  "NEW": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Newcastle United",
+    "NEW",
+    "Newcastle",
+    "#241F20",
+    "#FFFFFF",
+    "oil",
+    78,
+    "St James' Park",
+    52305
+   ],
+   "short": "",
+   "nick": "Magpies"
+  },
+  "TOT": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Tottenham Hotspur",
+    "TOT",
+    "London",
+    "#FFFFFF",
+    "#132257",
+    "historic",
+    78,
+    "Tottenham Hotspur Stadium",
+    62850
+   ],
+   "short": "",
+   "nick": "Spurs"
+  },
+  "AVL": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Aston Villa",
+    "AVL",
+    "Birmingham",
+    "#670E36",
+    "#95BFE5",
+    "historic",
+    75,
+    "Villa Park",
+    42640
+   ],
+   "short": "",
+   "nick": "Villans"
+  },
+  "BHA": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Brighton & Hove Albion",
+    "BHA",
+    "Brighton",
+    "#0057B8",
+    "#FFFFFF",
+    "selling",
+    72,
+    "Amex Stadium",
+    31876
+   ],
+   "short": "",
+   "nick": "Seagulls"
+  },
+  "NFO": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Nottingham Forest",
+    "NFO",
+    "Nottingham",
+    "#DD0000",
+    "#FFFFFF",
+    "fallen",
+    71,
+    "City Ground",
+    30404
+   ],
+   "short": "",
+   "nick": "Tricky Trees"
+  },
+  "WHU": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "West Ham United",
+    "WHU",
+    "London",
+    "#7A263A",
+    "#1BB1E7",
+    "historic",
+    68,
+    "London Stadium",
+    62500
+   ],
+   "short": "",
+   "nick": "Hammers"
+  },
+  "CRY": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Crystal Palace",
+    "CRY",
+    "London",
+    "#1B458F",
+    "#C4122E",
+    "historic",
+    68,
+    "Selhurst Park",
+    25486
+   ],
+   "short": "",
+   "nick": "Eagles"
+  },
+  "BOU": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "AFC Bournemouth",
+    "BOU",
+    "Bournemouth",
+    "#DA291C",
+    "#000000",
+    "selling",
+    68,
+    "Vitality Stadium",
+    11307
+   ],
+   "short": "",
+   "nick": "Cherries"
+  },
+  "FUL": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Fulham",
+    "FUL",
+    "London",
+    "#FFFFFF",
+    "#000000",
+    "historic",
+    67,
+    "Craven Cottage",
+    29589
+   ],
+   "short": "",
+   "nick": "Cottagers"
+  },
+  "BRE": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Brentford",
+    "BRE",
+    "London",
+    "#E30613",
+    "#FFFFFF",
+    "selling",
+    67,
+    "Gtech Community Stadium",
+    17250
+   ],
+   "short": "",
+   "nick": "Bees"
+  },
+  "EVE": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Everton",
+    "EVE",
+    "Liverpool",
+    "#003399",
+    "#FFFFFF",
+    "fallen",
+    67,
+    "Hill Dickinson Stadium",
+    52888
+   ],
+   "short": "",
+   "nick": "Toffees"
+  },
+  "WOL": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Wolverhampton Wanderers",
+    "WOL",
+    "Wolverhampton",
+    "#FDB913",
+    "#231F20",
+    "selling",
+    66,
+    "Molineux",
+    31750
+   ],
+   "short": "",
+   "nick": "Wolves"
+  },
+  "LEE": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Leeds United",
+    "LEE",
+    "Leeds",
+    "#FFFFFF",
+    "#1D428A",
+    "fallen",
+    64,
+    "Elland Road",
+    37645
+   ],
+   "short": "",
+   "nick": "Whites"
+  },
+  "SUN": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Sunderland",
+    "SUN",
+    "Sunderland",
+    "#EB172B",
+    "#FFFFFF",
+    "fallen",
+    62,
+    "Stadium of Light",
+    48707
+   ],
+   "short": "",
+   "nick": "Black Cats"
+  },
+  "BUR": {
+   "league": "D1",
+   "nat": "ENG",
+   "row": [
+    "Burnley",
+    "BUR",
+    "Burnley",
+    "#6C1D45",
+    "#99D6EA",
+    "youth",
+    61,
+    "Turf Moor",
+    21944
+   ],
+   "short": "",
+   "nick": "Clarets"
+  },
+  "LEI": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Leicester City",
+    "LEI",
+    "Leicester",
+    "#003090",
+    "#FDBE11",
+    "fallen",
+    61,
+    "King Power Stadium",
+    32259
+   ],
+   "short": "",
+   "nick": "Foxes"
+  },
+  "SOU": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Southampton",
+    "SOU",
+    "Southampton",
+    "#D71920",
+    "#FFFFFF",
+    "youth",
+    60,
+    "St Mary's Stadium",
+    32384
+   ],
+   "short": "",
+   "nick": "Saints"
+  },
+  "IPS": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Ipswich Town",
+    "IPS",
+    "Ipswich",
+    "#3A64A3",
+    "#FFFFFF",
+    "historic",
+    59,
+    "Portman Road",
+    30311
+   ],
+   "short": "",
+   "nick": "Tractor Boys"
+  },
+  "SHU": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Sheffield United",
+    "SHU",
+    "Sheffield",
+    "#EE2737",
+    "#FFFFFF",
+    "fan",
+    58,
+    "Bramall Lane",
+    32050
+   ],
+   "short": "",
+   "nick": "Blades"
+  },
+  "MID": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Middlesbrough",
+    "MID",
+    "Middlesbrough",
+    "#E11B22",
+    "#FFFFFF",
+    "historic",
+    57,
+    "Riverside Stadium",
+    34742
+   ],
+   "short": "",
+   "nick": "Boro"
+  },
+  "BIR": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Birmingham City",
+    "BIR",
+    "Birmingham",
+    "#0000FF",
+    "#FFFFFF",
+    "oil",
+    57,
+    "St Andrew's",
+    29409
+   ],
+   "short": "",
+   "nick": "Blues"
+  },
+  "WBA": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "West Bromwich Albion",
+    "WBA",
+    "West Bromwich",
+    "#122F67",
+    "#FFFFFF",
+    "historic",
+    56,
+    "The Hawthorns",
+    26850
+   ],
+   "short": "",
+   "nick": "Baggies"
+  },
+  "NCI": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Norwich City",
+    "NCI",
+    "Norwich",
+    "#FFF200",
+    "#00A650",
+    "youth",
+    56,
+    "Carrow Road",
+    27359
+   ],
+   "short": "NOR",
+   "nick": "Canaries"
+  },
+  "COV": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Coventry City",
+    "COV",
+    "Coventry",
+    "#6CABDD",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Coventry Building Society Arena",
+    32609
+   ],
+   "short": "",
+   "nick": "Sky Blues"
+  },
+  "WAT": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Watford",
+    "WAT",
+    "Watford",
+    "#FBEE23",
+    "#ED2127",
+    "selling",
+    55,
+    "Vicarage Road",
+    22200
+   ],
+   "short": "",
+   "nick": "Hornets"
+  },
+  "WRX": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Wrexham",
+    "WRX",
+    "Wrexham",
+    "#D6001C",
+    "#FFFFFF",
+    "oil",
+    54,
+    "Racecourse Ground",
+    12600
+   ],
+   "short": "WRE",
+   "nick": "Red Dragons"
+  },
+  "STK": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Stoke City",
+    "STK",
+    "Stoke-on-Trent",
+    "#E03A3E",
+    "#FFFFFF",
+    "fallen",
+    54,
+    "bet365 Stadium",
+    30089
+   ],
+   "short": "",
+   "nick": "Potters"
+  },
+  "HUL": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Hull City",
+    "HUL",
+    "Hull",
+    "#F18A01",
+    "#000000",
+    "fan",
+    53,
+    "MKM Stadium",
+    25586
+   ],
+   "short": "",
+   "nick": "Tigers"
+  },
+  "SWA": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Swansea City",
+    "SWA",
+    "Swansea",
+    "#FFFFFF",
+    "#121212",
+    "youth",
+    53,
+    "Swansea.com Stadium",
+    21088
+   ],
+   "short": "",
+   "nick": "Swans"
+  },
+  "DER": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Derby County",
+    "DER",
+    "Derby",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    53,
+    "Pride Park",
+    32956
+   ],
+   "short": "",
+   "nick": "Rams"
+  },
+  "SHW": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Sheffield Wednesday",
+    "SHW",
+    "Sheffield",
+    "#0E00F7",
+    "#FFFFFF",
+    "fallen",
+    52,
+    "Hillsborough",
+    39732
+   ],
+   "short": "",
+   "nick": "Owls"
+  },
+  "BLB": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Blackburn Rovers",
+    "BLB",
+    "Blackburn",
+    "#009EE0",
+    "#FFFFFF",
+    "fallen",
+    52,
+    "Ewood Park",
+    31367
+   ],
+   "short": "",
+   "nick": "Rovers"
+  },
+  "BRC": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Bristol City",
+    "BRC",
+    "Bristol",
+    "#E21A23",
+    "#FFFFFF",
+    "youth",
+    52,
+    "Ashton Gate",
+    27000
+   ],
+   "short": "",
+   "nick": "Robins"
+  },
+  "QPR": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Queens Park Rangers",
+    "QPR",
+    "London",
+    "#1D5BA4",
+    "#FFFFFF",
+    "fan",
+    51,
+    "Loftus Road",
+    18439
+   ],
+   "short": "",
+   "nick": "Hoops"
+  },
+  "PNE": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Preston North End",
+    "PNE",
+    "Preston",
+    "#FFFFFF",
+    "#000080",
+    "fan",
+    51,
+    "Deepdale",
+    23404
+   ],
+   "short": "",
+   "nick": "Lilywhites"
+  },
+  "MIL": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Millwall",
+    "MIL",
+    "London",
+    "#001D5E",
+    "#FFFFFF",
+    "fan",
+    51,
+    "The Den",
+    20146
+   ],
+   "short": "",
+   "nick": "Lions"
+  },
+  "POM": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Portsmouth",
+    "POM",
+    "Portsmouth",
+    "#001489",
+    "#FFFFFF",
+    "fan",
+    50,
+    "Fratton Park",
+    20899
+   ],
+   "short": "POR",
+   "nick": "Pompey"
+  },
+  "CHA": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Charlton Athletic",
+    "CHA",
+    "London",
+    "#D4021D",
+    "#FFFFFF",
+    "historic",
+    49,
+    "The Valley",
+    27111
+   ],
+   "short": "",
+   "nick": "Addicks"
+  },
+  "OXF": {
+   "league": "D2",
+   "nat": "ENG",
+   "row": [
+    "Oxford United",
+    "OXF",
+    "Oxford",
+    "#FFD100",
+    "#001D5E",
+    "fan",
+    47,
+    "Kassam Stadium",
+    12500
+   ],
+   "short": "",
+   "nick": "U's"
+  },
+  "CAR": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Cardiff City",
+    "CAR",
+    "Cardiff",
+    "#0070B5",
+    "#FFFFFF",
+    "fallen",
+    49,
+    "Cardiff City Stadium",
+    33280
+   ],
+   "short": "",
+   "nick": "Bluebirds"
+  },
+  "LUT": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Luton Town",
+    "LUT",
+    "Luton",
+    "#F78F1E",
+    "#002D62",
+    "fallen",
+    48,
+    "Kenilworth Road",
+    12000
+   ],
+   "short": "",
+   "nick": "Hatters"
+  },
+  "HUD": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Huddersfield Town",
+    "HUD",
+    "Huddersfield",
+    "#0E63AD",
+    "#FFFFFF",
+    "historic",
+    48,
+    "John Smith's Stadium",
+    24121
+   ],
+   "short": "",
+   "nick": "Terriers"
+  },
+  "BWA": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Bolton Wanderers",
+    "BWA",
+    "Bolton",
+    "#FFFFFF",
+    "#263C7E",
+    "fallen",
+    48,
+    "Toughsheet Community Stadium",
+    28723
+   ],
+   "short": "BOL",
+   "nick": "Trotters"
+  },
+  "PLY": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Plymouth Argyle",
+    "PLY",
+    "Plymouth",
+    "#00563F",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Home Park",
+    17900
+   ],
+   "short": "",
+   "nick": "Pilgrims"
+  },
+  "REA": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Reading",
+    "REA",
+    "Reading",
+    "#004494",
+    "#FFFFFF",
+    "fallen",
+    46,
+    "Select Car Leasing Stadium",
+    24161
+   ],
+   "short": "",
+   "nick": "Royals"
+  },
+  "BNS": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Barnsley",
+    "BNS",
+    "Barnsley",
+    "#D71921",
+    "#FFFFFF",
+    "youth",
+    45,
+    "Oakwell",
+    23287
+   ],
+   "short": "BAR",
+   "nick": "Tykes"
+  },
+  "WIG": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Wigan Athletic",
+    "WIG",
+    "Wigan",
+    "#1D59AF",
+    "#FFFFFF",
+    "selling",
+    45,
+    "Brick Community Stadium",
+    25138
+   ],
+   "short": "",
+   "nick": "Latics"
+  },
+  "STO": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Stockport County",
+    "STO",
+    "Stockport",
+    "#0B4EA2",
+    "#FFFFFF",
+    "fan",
+    45,
+    "Edgeley Park",
+    10841
+   ],
+   "short": "SCO",
+   "nick": "Hatters"
+  },
+  "BFD": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Bradford City",
+    "BFD",
+    "Bradford",
+    "#8E1B3A",
+    "#FFB81C",
+    "fallen",
+    44,
+    "Valley Parade",
+    25136
+   ],
+   "short": "BRA",
+   "nick": "Bantams"
+  },
+  "BLP": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Blackpool",
+    "BLP",
+    "Blackpool",
+    "#F68712",
+    "#FFFFFF",
+    "fan",
+    44,
+    "Bloomfield Road",
+    16616
+   ],
+   "short": "",
+   "nick": "Seasiders"
+  },
+  "PBO": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Peterborough United",
+    "PBO",
+    "Peterborough",
+    "#0055A4",
+    "#FFFFFF",
+    "selling",
+    44,
+    "Weston Homes Stadium",
+    15314
+   ],
+   "short": "",
+   "nick": "Posh"
+  },
+  "ROT": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Rotherham United",
+    "ROT",
+    "Rotherham",
+    "#D71920",
+    "#FFFFFF",
+    "fallen",
+    43,
+    "New York Stadium",
+    12021
+   ],
+   "short": "",
+   "nick": "Millers"
+  },
+  "LIN": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Lincoln City",
+    "LIN",
+    "Lincoln",
+    "#E1251B",
+    "#FFFFFF",
+    "youth",
+    43,
+    "Sincil Bank",
+    10669
+   ],
+   "short": "",
+   "nick": "Imps"
+  },
+  "DON": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Doncaster Rovers",
+    "DON",
+    "Doncaster",
+    "#E21E26",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Eco-Power Stadium",
+    15231
+   ],
+   "short": "",
+   "nick": "Rovers"
+  },
+  "LEY": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Leyton Orient",
+    "LEY",
+    "London",
+    "#C8102E",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Brisbane Road",
+    9271
+   ],
+   "short": "",
+   "nick": "O's"
+  },
+  "WYC": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Wycombe Wanderers",
+    "WYC",
+    "High Wycombe",
+    "#88C4E6",
+    "#0B1D4F",
+    "youth",
+    42,
+    "Adams Park",
+    10137
+   ],
+   "short": "",
+   "nick": "Chairboys"
+  },
+  "MNS": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Mansfield Town",
+    "MNS",
+    "Mansfield",
+    "#FEDD00",
+    "#0033A0",
+    "fan",
+    41,
+    "Field Mill",
+    9186
+   ],
+   "short": "",
+   "nick": "Stags"
+  },
+  "EXE": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Exeter City",
+    "EXE",
+    "Exeter",
+    "#D6001C",
+    "#FFFFFF",
+    "fan",
+    40,
+    "St James Park",
+    8696
+   ],
+   "short": "",
+   "nick": "Grecians"
+  },
+  "PVA": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Port Vale",
+    "PVA",
+    "Stoke-on-Trent",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    40,
+    "Vale Park",
+    15036
+   ],
+   "short": "",
+   "nick": "Valiants"
+  },
+  "WIM": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "AFC Wimbledon",
+    "WIM",
+    "London",
+    "#0033A0",
+    "#FFD100",
+    "fan",
+    40,
+    "Plough Lane",
+    9215
+   ],
+   "short": "",
+   "nick": "Dons"
+  },
+  "STV": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Stevenage",
+    "STV",
+    "Stevenage",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    40,
+    "Lamex Stadium",
+    7800
+   ],
+   "short": "",
+   "nick": "Boro"
+  },
+  "NTN": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Northampton Town",
+    "NTN",
+    "Northampton",
+    "#7A263A",
+    "#FFFFFF",
+    "fan",
+    39,
+    "Sixfields Stadium",
+    7798
+   ],
+   "short": "",
+   "nick": "Cobblers"
+  },
+  "BRT": {
+   "league": "D3",
+   "nat": "ENG",
+   "row": [
+    "Burton Albion",
+    "BRT",
+    "Burton upon Trent",
+    "#FFD100",
+    "#000000",
+    "selling",
+    39,
+    "Pirelli Stadium",
+    6912
+   ],
+   "short": "",
+   "nick": "Brewers"
+  },
+  "ACS": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Accrington Stanley",
+    "ACS",
+    "Accrington",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Wham Stadium",
+    5450
+   ],
+   "short": "ACC",
+   "nick": "Stanley"
+  },
+  "BNT": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Barnet",
+    "BNT",
+    "London",
+    "#F79A20",
+    "#000000",
+    "fan",
+    36,
+    "The Hive",
+    6500
+   ],
+   "short": "",
+   "nick": "Bees"
+  },
+  "BRW": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Barrow",
+    "BRW",
+    "Barrow-in-Furness",
+    "#FFFFFF",
+    "#00205B",
+    "fan",
+    37,
+    "Holker Street",
+    5045
+   ],
+   "short": "",
+   "nick": "Bluebirds"
+  },
+  "BRR": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Bristol Rovers",
+    "BRR",
+    "Bristol",
+    "#0050A0",
+    "#FFFFFF",
+    "historic",
+    42,
+    "Memorial Stadium",
+    9832
+   ],
+   "short": "",
+   "nick": "Pirates"
+  },
+  "BRO": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Bromley",
+    "BRO",
+    "London",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    37,
+    "Hayes Lane",
+    5000
+   ],
+   "short": "",
+   "nick": "Lilywhites"
+  },
+  "CAMU": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Cambridge United",
+    "CAMU",
+    "Cambridge",
+    "#F9A01B",
+    "#000000",
+    "fan",
+    40,
+    "Abbey Stadium",
+    8127
+   ],
+   "short": "CAM",
+   "nick": "U's"
+  },
+  "CHT": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Cheltenham Town",
+    "CHT",
+    "Cheltenham",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    37,
+    "Whaddon Road",
+    7066
+   ],
+   "short": "",
+   "nick": "Robins"
+  },
+  "CHF": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Chesterfield",
+    "CHF",
+    "Chesterfield",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    40,
+    "SMH Group Stadium",
+    10504
+   ],
+   "short": "",
+   "nick": "Spireites"
+  },
+  "COL": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Colchester United",
+    "COL",
+    "Colchester",
+    "#0045A0",
+    "#FFFFFF",
+    "fan",
+    38,
+    "JobServe Community Stadium",
+    10105
+   ],
+   "short": "",
+   "nick": "U's"
+  },
+  "CRAW": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Crawley Town",
+    "CRAW",
+    "Crawley",
+    "#C8102E",
+    "#FFFFFF",
+    "fan",
+    39,
+    "Broadfield Stadium",
+    6134
+   ],
+   "short": "CRA",
+   "nick": "Red Devils"
+  },
+  "CREW": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Crewe Alexandra",
+    "CREW",
+    "Crewe",
+    "#E2001A",
+    "#FFFFFF",
+    "youth",
+    38,
+    "Gresty Road",
+    10153
+   ],
+   "short": "CRE",
+   "nick": "Railwaymen"
+  },
+  "FLE": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Fleetwood Town",
+    "FLE",
+    "Fleetwood",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Highbury Stadium",
+    5327
+   ],
+   "short": "",
+   "nick": "Cod Army"
+  },
+  "GILL": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Gillingham",
+    "GILL",
+    "Gillingham",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    39,
+    "Priestfield Stadium",
+    11582
+   ],
+   "short": "GIL",
+   "nick": "Gills"
+  },
+  "GRI": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Grimsby Town",
+    "GRI",
+    "Cleethorpes",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    39,
+    "Blundell Park",
+    9052
+   ],
+   "short": "",
+   "nick": "Mariners"
+  },
+  "HARR": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Harrogate Town",
+    "HARR",
+    "Harrogate",
+    "#FFD700",
+    "#000000",
+    "fan",
+    35,
+    "Wetherby Road",
+    5000
+   ],
+   "short": "HAR",
+   "nick": "Sulphurites"
+  },
+  "MKD": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "MK Dons",
+    "MKD",
+    "Milton Keynes",
+    "#FFFFFF",
+    "#000000",
+    "selling",
+    41,
+    "Stadium MK",
+    30500
+   ],
+   "short": "",
+   "nick": "Dons"
+  },
+  "NWP": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Newport County",
+    "NWP",
+    "Newport",
+    "#F79A20",
+    "#000000",
+    "fan",
+    36,
+    "Rodney Parade",
+    7850
+   ],
+   "short": "",
+   "nick": "Exiles"
+  },
+  "NCO": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Notts County",
+    "NCO",
+    "Nottingham",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    41,
+    "Meadow Lane",
+    19841
+   ],
+   "short": "",
+   "nick": "Magpies"
+  },
+  "OLD": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Oldham Athletic",
+    "OLD",
+    "Oldham",
+    "#0033A0",
+    "#FFFFFF",
+    "fallen",
+    38,
+    "Boundary Park",
+    13512
+   ],
+   "short": "",
+   "nick": "Latics"
+  },
+  "SAL": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Salford City",
+    "SAL",
+    "Salford",
+    "#E2001A",
+    "#FFFFFF",
+    "oil",
+    40,
+    "Peninsula Stadium",
+    5108
+   ],
+   "short": "",
+   "nick": "Ammies"
+  },
+  "SHR": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Shrewsbury Town",
+    "SHR",
+    "Shrewsbury",
+    "#0033A0",
+    "#F9A01B",
+    "fan",
+    38,
+    "Croud Meadow",
+    9875
+   ],
+   "short": "",
+   "nick": "Shrews"
+  },
+  "SWI": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Swindon Town",
+    "SWI",
+    "Swindon",
+    "#E2001A",
+    "#FFFFFF",
+    "fallen",
+    39,
+    "County Ground",
+    15728
+   ],
+   "short": "",
+   "nick": "Robins"
+  },
+  "TRA": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Tranmere Rovers",
+    "TRA",
+    "Birkenhead",
+    "#FFFFFF",
+    "#0033A0",
+    "fallen",
+    37,
+    "Prenton Park",
+    16587
+   ],
+   "short": "",
+   "nick": "Rovers"
+  },
+  "WAL": {
+   "league": "D4",
+   "nat": "ENG",
+   "row": [
+    "Walsall",
+    "WAL",
+    "Walsall",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Bescot Stadium",
+    11300
+   ],
+   "short": "",
+   "nick": "Saddlers"
+  },
+  "RMA": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Real Madrid",
+    "RMA",
+    "Madrid",
+    "#FFFFFF",
+    "#FEBE10",
+    "giant",
+    89,
+    "Santiago Bernabéu",
+    83186
+   ],
+   "short": "",
+   "nick": "Los Blancos"
+  },
+  "FCB": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "FC Barcelona",
+    "FCB",
+    "Barcelona",
+    "#A50044",
+    "#004D98",
+    "giant",
+    88,
+    "Spotify Camp Nou",
+    99354
+   ],
+   "short": "BAR",
+   "nick": "Blaugrana"
+  },
+  "ATM": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Atlético Madrid",
+    "ATM",
+    "Madrid",
+    "#CB3524",
+    "#272E61",
+    "historic",
+    82,
+    "Metropolitano",
+    70460
+   ],
+   "short": "",
+   "nick": "Colchoneros"
+  },
+  "ATH": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Athletic Club",
+    "ATH",
+    "Bilbao",
+    "#EE2523",
+    "#FFFFFF",
+    "youth",
+    76,
+    "San Mamés",
+    53289
+   ],
+   "short": "",
+   "nick": "Lions"
+  },
+  "VIL": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Villarreal",
+    "VIL",
+    "Villarreal",
+    "#FFE667",
+    "#005187",
+    "selling",
+    74,
+    "Estadio de la Cerámica",
+    23500
+   ],
+   "short": "",
+   "nick": "Yellow Submarine"
+  },
+  "RSO": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Real Sociedad",
+    "RSO",
+    "San Sebastián",
+    "#143C8B",
+    "#FFFFFF",
+    "youth",
+    73,
+    "Reale Arena",
+    39313
+   ],
+   "short": "SOC",
+   "nick": "La Real"
+  },
+  "BET": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Real Betis",
+    "BET",
+    "Seville",
+    "#0BB363",
+    "#FFFFFF",
+    "historic",
+    72,
+    "Benito Villamarín",
+    60721
+   ],
+   "short": "",
+   "nick": "Verdiblancos"
+  },
+  "SEV": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Sevilla",
+    "SEV",
+    "Seville",
+    "#FFFFFF",
+    "#D81E05",
+    "fallen",
+    68,
+    "Ramón Sánchez-Pizjuán",
+    43883
+   ],
+   "short": "",
+   "nick": "Nervionenses"
+  },
+  "GIR": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Girona",
+    "GIR",
+    "Girona",
+    "#CD2534",
+    "#FFFFFF",
+    "oil",
+    66,
+    "Montilivi",
+    14624
+   ],
+   "short": "",
+   "nick": "Blanquivermells"
+  },
+  "VAL": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Valencia",
+    "VAL",
+    "Valencia",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    66,
+    "Mestalla",
+    49430
+   ],
+   "short": "",
+   "nick": "Los Che"
+  },
+  "CEL": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Celta Vigo",
+    "CEL",
+    "Vigo",
+    "#8AC3EE",
+    "#FFFFFF",
+    "selling",
+    64,
+    "Balaídos",
+    24870
+   ],
+   "short": "",
+   "nick": "Celestes"
+  },
+  "OSA": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Osasuna",
+    "OSA",
+    "Pamplona",
+    "#D91A21",
+    "#0A346F",
+    "fan",
+    64,
+    "El Sadar",
+    23576
+   ],
+   "short": "",
+   "nick": "Los Rojillos"
+  },
+  "MLL": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Mallorca",
+    "MLL",
+    "Palma",
+    "#E20613",
+    "#000000",
+    "fan",
+    62,
+    "Estadi Mallorca Son Moix",
+    26020
+   ],
+   "short": "",
+   "nick": "Bermellones"
+  },
+  "RCD": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Espanyol",
+    "RCD",
+    "Barcelona",
+    "#007FC8",
+    "#FFFFFF",
+    "fallen",
+    62,
+    "RCDE Stadium",
+    40000
+   ],
+   "short": "ESP",
+   "nick": "Periquitos"
+  },
+  "RAY": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Rayo Vallecano",
+    "RAY",
+    "Madrid",
+    "#FFFFFF",
+    "#E53027",
+    "fan",
+    61,
+    "Estadio de Vallecas",
+    14708
+   ],
+   "short": "",
+   "nick": "Franjirrojos"
+  },
+  "GET": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Getafe",
+    "GET",
+    "Getafe",
+    "#005999",
+    "#FFFFFF",
+    "selling",
+    61,
+    "Coliseum",
+    16500
+   ],
+   "short": "",
+   "nick": "Azulones"
+  },
+  "ALA": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Alavés",
+    "ALA",
+    "Vitoria-Gasteiz",
+    "#0761AF",
+    "#FFFFFF",
+    "youth",
+    60,
+    "Mendizorroza",
+    19840
+   ],
+   "short": "",
+   "nick": "Babazorros"
+  },
+  "OVI": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Real Oviedo",
+    "OVI",
+    "Oviedo",
+    "#0033A0",
+    "#FFFFFF",
+    "fan",
+    59,
+    "Carlos Tartiere",
+    30500
+   ],
+   "short": "",
+   "nick": "Carbayones"
+  },
+  "LEV": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Levante",
+    "LEV",
+    "Valencia",
+    "#B5123E",
+    "#004F9F",
+    "fan",
+    59,
+    "Ciutat de València",
+    26354
+   ],
+   "short": "",
+   "nick": "Granotes"
+  },
+  "ELC": {
+   "league": "ES1",
+   "nat": "ESP",
+   "row": [
+    "Elche",
+    "ELC",
+    "Elche",
+    "#FFFFFF",
+    "#05642C",
+    "fan",
+    58,
+    "Martínez Valero",
+    31388
+   ],
+   "short": "",
+   "nick": "Franjiverdes"
+  },
+  "DEP": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Deportivo La Coruña",
+    "DEP",
+    "A Coruña",
+    "#0067B1",
+    "#FFFFFF",
+    "fallen",
+    56,
+    "Riazor",
+    32660
+   ],
+   "short": "",
+   "nick": "Super Depor"
+  },
+  "LPA": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Las Palmas",
+    "LPA",
+    "Las Palmas",
+    "#FFE400",
+    "#0055A5",
+    "fan",
+    56,
+    "Estadio Gran Canaria",
+    32400
+   ],
+   "short": "",
+   "nick": "Canarias"
+  },
+  "VLD": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Real Valladolid",
+    "VLD",
+    "Valladolid",
+    "#5B2C83",
+    "#FFFFFF",
+    "fallen",
+    56,
+    "José Zorrilla",
+    27618
+   ],
+   "short": "VLL",
+   "nick": "Pucela"
+  },
+  "MAL": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Málaga",
+    "MAL",
+    "Málaga",
+    "#0073CF",
+    "#FFFFFF",
+    "fallen",
+    55,
+    "La Rosaleda",
+    30044
+   ],
+   "short": "",
+   "nick": "Boquerones"
+  },
+  "ALM": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Almería",
+    "ALM",
+    "Almería",
+    "#EE1119",
+    "#FFFFFF",
+    "oil",
+    55,
+    "Estadio de los Juegos Mediterráneos",
+    15274
+   ],
+   "short": "",
+   "nick": "Indálicos"
+  },
+  "ZAR": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Real Zaragoza",
+    "ZAR",
+    "Zaragoza",
+    "#FFFFFF",
+    "#0A3A82",
+    "fallen",
+    54,
+    "La Romareda",
+    33608
+   ],
+   "short": "",
+   "nick": "Maños"
+  },
+  "LEG": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Leganés",
+    "LEG",
+    "Leganés",
+    "#FFFFFF",
+    "#0B3F8C",
+    "youth",
+    54,
+    "Butarque",
+    12454
+   ],
+   "short": "",
+   "nick": "Pepineros"
+  },
+  "GRA": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Granada",
+    "GRA",
+    "Granada",
+    "#C8102E",
+    "#FFFFFF",
+    "selling",
+    54,
+    "Nuevo Los Cármenes",
+    19336
+   ],
+   "short": "",
+   "nick": "Nazaríes"
+  },
+  "SPG": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Sporting Gijón",
+    "SPG",
+    "Gijón",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    53,
+    "El Molinón",
+    29371
+   ],
+   "short": "SPG",
+   "nick": "Mareona"
+  },
+  "RSA": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Racing Santander",
+    "RSA",
+    "Santander",
+    "#FFFFFF",
+    "#00843D",
+    "historic",
+    53,
+    "El Sardinero",
+    22222
+   ],
+   "short": "RAC",
+   "nick": "Racinguistas"
+  },
+  "CAD": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Cádiz",
+    "CAD",
+    "Cádiz",
+    "#FFE400",
+    "#0045A7",
+    "fan",
+    53,
+    "Nuevo Mirandilla",
+    20724
+   ],
+   "short": "",
+   "nick": "Submarino Amarillo"
+  },
+  "EIB": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Eibar",
+    "EIB",
+    "Eibar",
+    "#004F9F",
+    "#A6192E",
+    "youth",
+    51,
+    "Ipurua",
+    8164
+   ],
+   "short": "",
+   "nick": "Armeros"
+  },
+  "CAS": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Castellón",
+    "CAS",
+    "Castellón de la Plana",
+    "#FFFFFF",
+    "#000000",
+    "oil",
+    51,
+    "Nou Castàlia",
+    15500
+   ],
+   "short": "",
+   "nick": "Orelluts"
+  },
+  "AND": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Andorra",
+    "AND",
+    "Andorra la Vella",
+    "#0038A8",
+    "#FEDD00",
+    "oil",
+    50,
+    "Estadi Nacional",
+    3306
+   ],
+   "short": "",
+   "nick": "Tricolores"
+  },
+  "HUE": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Huesca",
+    "HUE",
+    "Huesca",
+    "#003DA5",
+    "#A6192E",
+    "youth",
+    49,
+    "El Alcoraz",
+    9128
+   ],
+   "short": "",
+   "nick": "Azulgranas"
+  },
+  "ALB": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Albacete",
+    "ALB",
+    "Albacete",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    49,
+    "Carlos Belmonte",
+    17524
+   ],
+   "short": "",
+   "nick": "Queso Mecánico"
+  },
+  "BGS": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Burgos",
+    "BGS",
+    "Burgos",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    48,
+    "El Plantío",
+    12200
+   ],
+   "short": "",
+   "nick": "Burgaleses"
+  },
+  "CCF": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Córdoba",
+    "CCF",
+    "Córdoba",
+    "#FFFFFF",
+    "#00843D",
+    "fan",
+    48,
+    "Nuevo Arcángel",
+    21822
+   ],
+   "short": "",
+   "nick": "Blanquiverdes"
+  },
+  "MIR": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Mirandés",
+    "MIR",
+    "Miranda de Ebro",
+    "#E30613",
+    "#000000",
+    "youth",
+    48,
+    "Anduva",
+    5759
+   ],
+   "short": "",
+   "nick": "Jabatos"
+  },
+  "RSS": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Real Sociedad B",
+    "RSS",
+    "San Sebastián",
+    "#143C8B",
+    "#FFFFFF",
+    "youth",
+    47,
+    "Estadio de Zubieta",
+    2500,
+    "RSO"
+   ],
+   "short": "RSB",
+   "nick": "Txuri-urdin"
+  },
+  "CYD": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Cultural Leonesa",
+    "CYD",
+    "León",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    46,
+    "Reino de León",
+    13346
+   ],
+   "short": "",
+   "nick": "Cultural"
+  },
+  "CEU": {
+   "league": "ES2",
+   "nat": "ESP",
+   "row": [
+    "Ceuta",
+    "CEU",
+    "Ceuta",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    45,
+    "Alfonso Murube",
+    6500
+   ],
+   "short": "",
+   "nick": "Caballas"
+  },
+  "RMC": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Real Madrid Castilla",
+    "RMC",
+    "Madrid",
+    "#FFFFFF",
+    "#FEBE10",
+    "youth",
+    45,
+    "Estadio Alfredo Di Stéfano",
+    6000,
+    "RMA"
+   ],
+   "short": "",
+   "nick": "Castilla"
+  },
+  "BAT": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Barça Atlètic",
+    "BAT",
+    "Barcelona",
+    "#A50044",
+    "#004D98",
+    "youth",
+    44,
+    "Estadi Johan Cruyff",
+    6000,
+    "FCB"
+   ],
+   "short": "",
+   "nick": "Barça Atlètic"
+  },
+  "BIA": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Bilbao Athletic",
+    "BIA",
+    "Bilbao",
+    "#EE2523",
+    "#FFFFFF",
+    "youth",
+    42,
+    "Lezama",
+    3250,
+    "ATH"
+   ],
+   "short": "BIL",
+   "nick": "Cachorros"
+  },
+  "ZAM": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Zamora CF",
+    "ZAM",
+    "Zamora",
+    "#FFFFFF",
+    "#E2001A",
+    "fan",
+    37,
+    "Ruta de la Plata",
+    7813
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ATB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Atlético Madrileño",
+    "ATB",
+    "Madrid",
+    "#CB3524",
+    "#272E61",
+    "youth",
+    42,
+    "Centro Deportivo Wanda",
+    2800,
+    "ATM"
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "VIB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Villarreal B",
+    "VIB",
+    "Villarreal",
+    "#FFE667",
+    "#005187",
+    "youth",
+    42,
+    "Ciudad Deportiva",
+    5000,
+    "VIL"
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SEB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Sevilla Atlético",
+    "SEB",
+    "Seville",
+    "#FFFFFF",
+    "#D81E05",
+    "youth",
+    40,
+    "Estadio Jesús Navas",
+    7000,
+    "SEV"
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "CEB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Celta Fortuna",
+    "CEB",
+    "Vigo",
+    "#8AC3EE",
+    "#FFFFFF",
+    "youth",
+    40,
+    "Barreiro",
+    4500,
+    "CEL"
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "BEB": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Betis Deportivo",
+    "BEB",
+    "Seville",
+    "#0BB363",
+    "#FFFFFF",
+    "youth",
+    39,
+    "Luis del Sol",
+    3000,
+    "BET"
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "TEN": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "CD Tenerife",
+    "TEN",
+    "Santa Cruz de Tenerife",
+    "#FFFFFF",
+    "#0046AD",
+    "fallen",
+    46,
+    "Heliodoro Rodríguez López",
+    22824
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "CTG": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "FC Cartagena",
+    "CTG",
+    "Cartagena",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    43,
+    "Cartagonova",
+    15105
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "PON": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "SD Ponferradina",
+    "PON",
+    "Ponferrada",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    41,
+    "El Toralín",
+    8400
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "NAS": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Gimnàstic de Tarragona",
+    "NAS",
+    "Tarragona",
+    "#C8102E",
+    "#000000",
+    "historic",
+    41,
+    "Nou Estadi Costa Daurada",
+    14591
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ALC": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "AD Alcorcón",
+    "ALC",
+    "Alcorcón",
+    "#FFD700",
+    "#003DA5",
+    "fan",
+    39,
+    "Santo Domingo",
+    5100
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "MUR": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Real Murcia",
+    "MUR",
+    "Murcia",
+    "#C8102E",
+    "#FFFFFF",
+    "fallen",
+    42,
+    "Enrique Roca",
+    31179
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "HERC": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Hércules CF",
+    "HERC",
+    "Alicante",
+    "#0033A0",
+    "#FFFFFF",
+    "fallen",
+    40,
+    "José Rico Pérez",
+    30000
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "IBI": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "UD Ibiza",
+    "IBI",
+    "Ibiza",
+    "#0057B8",
+    "#FFFFFF",
+    "oil",
+    40,
+    "Can Misses",
+    4500
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "CDLU": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "CD Lugo",
+    "CDLU",
+    "Lugo",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Anxo Carro",
+    7840
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "UNS": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Unionistas de Salamanca",
+    "UNS",
+    "Salamanca",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    37,
+    "Reina Sofía",
+    4000
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ALG": {
+   "league": "ES3",
+   "nat": "ESP",
+   "row": [
+    "Algeciras CF",
+    "ALG",
+    "Algeciras",
+    "#C8102E",
+    "#FFFFFF",
+    "fan",
+    37,
+    "Nuevo Mirador",
+    7100
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "BAY": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Bayern Munich",
+    "BAY",
+    "Munich",
+    "#DC052D",
+    "#FFFFFF",
+    "giant",
+    89,
+    "Allianz Arena",
+    75024
+   ],
+   "short": "FCB",
+   "nick": "Die Roten"
+  },
+  "BVB": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Borussia Dortmund",
+    "BVB",
+    "Dortmund",
+    "#FDE100",
+    "#000000",
+    "fan",
+    84,
+    "Signal Iduna Park",
+    81365
+   ],
+   "short": "",
+   "nick": "Die Schwarzgelben"
+  },
+  "B04": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Bayer Leverkusen",
+    "B04",
+    "Leverkusen",
+    "#E32221",
+    "#000000",
+    "historic",
+    81,
+    "BayArena",
+    30210
+   ],
+   "short": "",
+   "nick": "Werkself"
+  },
+  "RBL": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "RB Leipzig",
+    "RBL",
+    "Leipzig",
+    "#FFFFFF",
+    "#DD0741",
+    "oil",
+    78,
+    "Red Bull Arena",
+    47069
+   ],
+   "short": "",
+   "nick": "Die Roten Bullen"
+  },
+  "SGE": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Eintracht Frankfurt",
+    "SGE",
+    "Frankfurt",
+    "#000000",
+    "#E1000F",
+    "fan",
+    74,
+    "Deutsche Bank Park",
+    58000
+   ],
+   "short": "",
+   "nick": "Die Adler"
+  },
+  "VFB": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "VfB Stuttgart",
+    "VFB",
+    "Stuttgart",
+    "#FFFFFF",
+    "#E32219",
+    "historic",
+    74,
+    "MHPArena",
+    60449
+   ],
+   "short": "",
+   "nick": "Die Schwaben"
+  },
+  "SCF": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "SC Freiburg",
+    "SCF",
+    "Freiburg",
+    "#C00000",
+    "#000000",
+    "youth",
+    69,
+    "Europa-Park Stadion",
+    34700
+   ],
+   "short": "",
+   "nick": "Breisgau-Brasilianer"
+  },
+  "WOB": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "VfL Wolfsburg",
+    "WOB",
+    "Wolfsburg",
+    "#65B32E",
+    "#FFFFFF",
+    "selling",
+    66,
+    "Volkswagen Arena",
+    28917
+   ],
+   "short": "",
+   "nick": "Die Wölfe"
+  },
+  "BMG": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Borussia Mönchengladbach",
+    "BMG",
+    "Mönchengladbach",
+    "#FFFFFF",
+    "#000000",
+    "historic",
+    66,
+    "Borussia-Park",
+    54042
+   ],
+   "short": "",
+   "nick": "Die Fohlen"
+  },
+  "HSV": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Hamburger SV",
+    "HSV",
+    "Hamburg",
+    "#FFFFFF",
+    "#0A3E8C",
+    "fallen",
+    66,
+    "Volksparkstadion",
+    57000
+   ],
+   "short": "",
+   "nick": "Die Rothosen"
+  },
+  "KOE": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "1. FC Köln",
+    "KOE",
+    "Cologne",
+    "#FFFFFF",
+    "#ED1C24",
+    "fallen",
+    64,
+    "RheinEnergieStadion",
+    50000
+   ],
+   "short": "",
+   "nick": "Geißböcke"
+  },
+  "SVW": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Werder Bremen",
+    "SVW",
+    "Bremen",
+    "#1D9053",
+    "#FFFFFF",
+    "historic",
+    64,
+    "Weserstadion",
+    42100
+   ],
+   "short": "",
+   "nick": "Die Werderaner"
+  },
+  "M05": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Mainz 05",
+    "M05",
+    "Mainz",
+    "#C3141E",
+    "#FFFFFF",
+    "fan",
+    63,
+    "Mewa Arena",
+    33305
+   ],
+   "short": "",
+   "nick": "Nullfünfer"
+  },
+  "FCU": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "Union Berlin",
+    "FCU",
+    "Berlin",
+    "#EB1923",
+    "#FFFFFF",
+    "fan",
+    62,
+    "An der Alten Försterei",
+    22012
+   ],
+   "short": "",
+   "nick": "Die Eisernen"
+  },
+  "TSG": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "TSG Hoffenheim",
+    "TSG",
+    "Sinsheim",
+    "#1C63B7",
+    "#FFFFFF",
+    "selling",
+    62,
+    "PreZero Arena",
+    30150
+   ],
+   "short": "",
+   "nick": "Kraichgauer"
+  },
+  "AUG": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "FC Augsburg",
+    "AUG",
+    "Augsburg",
+    "#FFFFFF",
+    "#BA3733",
+    "fan",
+    61,
+    "WWK Arena",
+    30660
+   ],
+   "short": "FCA",
+   "nick": "Fuggerstädter"
+  },
+  "STP": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "FC St. Pauli",
+    "STP",
+    "Hamburg",
+    "#624839",
+    "#FFFFFF",
+    "fan",
+    60,
+    "Millerntor-Stadion",
+    29546
+   ],
+   "short": "",
+   "nick": "Kiezkicker"
+  },
+  "HDH": {
+   "league": "DE1",
+   "nat": "GER",
+   "row": [
+    "1. FC Heidenheim",
+    "HDH",
+    "Heidenheim",
+    "#E2001A",
+    "#003B79",
+    "youth",
+    58,
+    "Voith-Arena",
+    15000
+   ],
+   "short": "FCH",
+   "nick": "Die Schlossherren"
+  },
+  "BSC": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Hertha BSC",
+    "BSC",
+    "Berlin",
+    "#005CA9",
+    "#FFFFFF",
+    "fallen",
+    58,
+    "Olympiastadion",
+    74475
+   ],
+   "short": "",
+   "nick": "Die Alte Dame"
+  },
+  "S04": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "FC Schalke 04",
+    "S04",
+    "Gelsenkirchen",
+    "#004D9D",
+    "#FFFFFF",
+    "fallen",
+    60,
+    "Veltins-Arena",
+    62271
+   ],
+   "short": "",
+   "nick": "Knappen"
+  },
+  "KSV": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Holstein Kiel",
+    "KSV",
+    "Kiel",
+    "#0033A0",
+    "#FFFFFF",
+    "youth",
+    55,
+    "Holstein-Stadion",
+    15034
+   ],
+   "short": "",
+   "nick": "Störche"
+  },
+  "VFLB": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "VfL Bochum",
+    "VFLB",
+    "Bochum",
+    "#005CA9",
+    "#FFFFFF",
+    "historic",
+    56,
+    "Vonovia Ruhrstadion",
+    26000
+   ],
+   "short": "BOC",
+   "nick": "Die Unabsteigbaren"
+  },
+  "F95": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Fortuna Düsseldorf",
+    "F95",
+    "Düsseldorf",
+    "#E2001A",
+    "#FFFFFF",
+    "historic",
+    55,
+    "Merkur Spiel-Arena",
+    54600
+   ],
+   "short": "",
+   "nick": "Fortunen"
+  },
+  "H96": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Hannover 96",
+    "H96",
+    "Hannover",
+    "#00863D",
+    "#000000",
+    "historic",
+    55,
+    "Heinz-von-Heiden-Arena",
+    49000
+   ],
+   "short": "",
+   "nick": "Die Roten"
+  },
+  "FCKL": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "1. FC Kaiserslautern",
+    "FCKL",
+    "Kaiserslautern",
+    "#E2001A",
+    "#FFFFFF",
+    "fallen",
+    54,
+    "Fritz-Walter-Stadion",
+    49327
+   ],
+   "short": "FCK",
+   "nick": "Die Roten Teufel"
+  },
+  "SCPA": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "SC Paderborn 07",
+    "SCPA",
+    "Paderborn",
+    "#003DA5",
+    "#000000",
+    "selling",
+    51,
+    "Home Deluxe Arena",
+    15000
+   ],
+   "short": "SCP",
+   "nick": "Die Ostwestfalen"
+  },
+  "FCNB": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "1. FC Nürnberg",
+    "FCNB",
+    "Nuremberg",
+    "#9B1B30",
+    "#000000",
+    "fallen",
+    54,
+    "Max-Morlock-Stadion",
+    50000
+   ],
+   "short": "FCN",
+   "nick": "Der Club"
+  },
+  "KSC": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Karlsruher SC",
+    "KSC",
+    "Karlsruhe",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    52,
+    "BBBank Wildpark",
+    34302
+   ],
+   "short": "",
+   "nick": "Die Badener"
+  },
+  "D98": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "SV Darmstadt 98",
+    "D98",
+    "Darmstadt",
+    "#004D9D",
+    "#FFFFFF",
+    "fan",
+    52,
+    "Merck-Stadion am Böllenfalltor",
+    17810
+   ],
+   "short": "",
+   "nick": "Lilien"
+  },
+  "SGF": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "SpVgg Greuther Fürth",
+    "SGF",
+    "Fürth",
+    "#00863D",
+    "#FFFFFF",
+    "youth",
+    50,
+    "Sportpark Ronhof",
+    16626
+   ],
+   "short": "",
+   "nick": "Kleeblatt"
+  },
+  "FCMA": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "1. FC Magdeburg",
+    "FCMA",
+    "Magdeburg",
+    "#0033A0",
+    "#FFFFFF",
+    "fan",
+    50,
+    "MDCC-Arena",
+    30098
+   ],
+   "short": "FCM",
+   "nick": "Die Blau-Weißen"
+  },
+  "EBS": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Eintracht Braunschweig",
+    "EBS",
+    "Braunschweig",
+    "#FFD700",
+    "#004D9D",
+    "historic",
+    50,
+    "Eintracht-Stadion",
+    23325
+   ],
+   "short": "",
+   "nick": "Die Löwen"
+  },
+  "PRM": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "SC Preußen Münster",
+    "PRM",
+    "Münster",
+    "#00863D",
+    "#000000",
+    "fan",
+    48,
+    "Preußenstadion",
+    14300
+   ],
+   "short": "",
+   "nick": "Preußen"
+  },
+  "SVE": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "SV Elversberg",
+    "SVE",
+    "Spiesen-Elversberg",
+    "#000000",
+    "#FFFFFF",
+    "selling",
+    48,
+    "Ursapharm-Arena",
+    10000
+   ],
+   "short": "",
+   "nick": "Elfen"
+  },
+  "DSC": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Arminia Bielefeld",
+    "DSC",
+    "Bielefeld",
+    "#0033A0",
+    "#FFFFFF",
+    "fan",
+    50,
+    "SchücoArena",
+    26515
+   ],
+   "short": "",
+   "nick": "Die Arminen"
+  },
+  "SGD": {
+   "league": "DE2",
+   "nat": "GER",
+   "row": [
+    "Dynamo Dresden",
+    "SGD",
+    "Dresden",
+    "#FFD700",
+    "#000000",
+    "fan",
+    50,
+    "Rudolf-Harbig-Stadion",
+    32066
+   ],
+   "short": "",
+   "nick": "Die Schwarz-Gelben"
+  },
+  "VFS": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "VfB Stuttgart II",
+    "VFS",
+    "Stuttgart",
+    "#FFFFFF",
+    "#E32219",
+    "youth",
+    42,
+    "Gazi-Stadion",
+    5000,
+    "VFB"
+   ],
+   "short": "VFS",
+   "nick": ""
+  },
+  "BVZ": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Borussia Dortmund II",
+    "BVZ",
+    "Dortmund",
+    "#FDE100",
+    "#000000",
+    "youth",
+    43,
+    "Stadion Rote Erde",
+    9999,
+    "BVB"
+   ],
+   "short": "BVZ",
+   "nick": ""
+  },
+  "TSZ": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "TSG Hoffenheim II",
+    "TSZ",
+    "Sinsheim",
+    "#1C63B7",
+    "#FFFFFF",
+    "youth",
+    41,
+    "Dietmar-Hopp-Stadion",
+    6350,
+    "TSG"
+   ],
+   "short": "TSZ",
+   "nick": ""
+  },
+  "M60": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "TSV 1860 München",
+    "M60",
+    "Munich",
+    "#6CABDD",
+    "#FFFFFF",
+    "fallen",
+    45,
+    "Grünwalder Stadion",
+    15000
+   ],
+   "short": "",
+   "nick": "Die Löwen"
+  },
+  "FCE": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Energie Cottbus",
+    "FCE",
+    "Cottbus",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    44,
+    "LEAG Energie Stadion",
+    22528
+   ],
+   "short": "",
+   "nick": "Lausitzer"
+  },
+  "FCH": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Hansa Rostock",
+    "FCH",
+    "Rostock",
+    "#0033A0",
+    "#FFFFFF",
+    "fallen",
+    45,
+    "Ostseestadion",
+    29000
+   ],
+   "short": "HRO",
+   "nick": "Kogge"
+  },
+  "SVWW": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SV Wehen Wiesbaden",
+    "SVWW",
+    "Wiesbaden",
+    "#E2001A",
+    "#000000",
+    "fan",
+    43,
+    "Brita-Arena",
+    15295
+   ],
+   "short": "WIE",
+   "nick": "Die Wehener"
+  },
+  "VKO": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Viktoria Köln",
+    "VKO",
+    "Cologne",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    40,
+    "Sportpark Höhenberg",
+    8343
+   ],
+   "short": "VIK",
+   "nick": ""
+  },
+  "SVM": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SV Waldhof Mannheim",
+    "SVM",
+    "Mannheim",
+    "#0033A0",
+    "#000000",
+    "fan",
+    42,
+    "Carl-Benz-Stadion",
+    24302
+   ],
+   "short": "SVM",
+   "nick": "Die Buwe"
+  },
+  "AUE": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Erzgebirge Aue",
+    "AUE",
+    "Aue",
+    "#6A0DAD",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Erzgebirgsstadion",
+    16485
+   ],
+   "short": "",
+   "nick": "Veilchen"
+  },
+  "AAC": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Alemannia Aachen",
+    "AAC",
+    "Aachen",
+    "#FFD700",
+    "#000000",
+    "historic",
+    43,
+    "Tivoli",
+    32960
+   ],
+   "short": "",
+   "nick": "Kartoffelkäfer"
+  },
+  "SCV": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SC Verl",
+    "SCV",
+    "Verl",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    39,
+    "Sportclub Arena",
+    5207
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "OSN": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "VfL Osnabrück",
+    "OSN",
+    "Osnabrück",
+    "#6A0DAD",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Bremer Brücke",
+    15741
+   ],
+   "short": "",
+   "nick": "Die Lila-Weißen"
+  },
+  "RWE": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "Rot-Weiss Essen",
+    "RWE",
+    "Essen",
+    "#E2001A",
+    "#FFFFFF",
+    "historic",
+    44,
+    "Stadion an der Hafenstraße",
+    20650
+   ],
+   "short": "",
+   "nick": "Die Rot-Weißen"
+  },
+  "JAH": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SSV Jahn Regensburg",
+    "JAH",
+    "Regensburg",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    43,
+    "Jahnstadion",
+    15210
+   ],
+   "short": "",
+   "nick": "Jahn"
+  },
+  "ULM": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "SSV Ulm 1846",
+    "ULM",
+    "Ulm",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    42,
+    "Donaustadion",
+    17000
+   ],
+   "short": "",
+   "nick": "Spatzen"
+  },
+  "MSV": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "MSV Duisburg",
+    "MSV",
+    "Duisburg",
+    "#005CA9",
+    "#FFFFFF",
+    "fallen",
+    44,
+    "Schauinsland-Reisen-Arena",
+    31500
+   ],
+   "short": "",
+   "nick": "Zebras"
+  },
+  "FCS": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "1. FC Saarbrücken",
+    "FCS",
+    "Saarbrücken",
+    "#0033A0",
+    "#000000",
+    "fan",
+    43,
+    "Ludwigsparkstadion",
+    16003
+   ],
+   "short": "",
+   "nick": "Die Blauschwarzen"
+  },
+  "FCI": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "FC Ingolstadt 04",
+    "FCI",
+    "Ingolstadt",
+    "#E2001A",
+    "#000000",
+    "selling",
+    42,
+    "Audi Sportpark",
+    15800
+   ],
+   "short": "",
+   "nick": "Schanzer"
+  },
+  "S05": {
+   "league": "DE3",
+   "nat": "GER",
+   "row": [
+    "1. FC Schweinfurt 05",
+    "S05",
+    "Schweinfurt",
+    "#00863D",
+    "#FFFFFF",
+    "fan",
+    38,
+    "Sachs-Stadion",
+    15060
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "PSG": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Paris Saint-Germain",
+    "PSG",
+    "Paris",
+    "#004170",
+    "#DA291C",
+    "oil",
+    90,
+    "Parc des Princes",
+    47929
+   ],
+   "short": "",
+   "nick": "Les Parisiens"
+  },
+  "OMA": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Olympique de Marseille",
+    "OMA",
+    "Marseille",
+    "#FFFFFF",
+    "#2FAEE0",
+    "giant",
+    82,
+    "Orange Vélodrome",
+    67394
+   ],
+   "short": "OM",
+   "nick": "Les Phocéens"
+  },
+  "ASM": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "AS Monaco",
+    "ASM",
+    "Monaco",
+    "#E30613",
+    "#FFFFFF",
+    "oil",
+    78,
+    "Stade Louis II",
+    18523
+   ],
+   "short": "MON",
+   "nick": "Les Monégasques"
+  },
+  "OLY": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Olympique Lyonnais",
+    "OLY",
+    "Lyon",
+    "#FFFFFF",
+    "#DA291C",
+    "fallen",
+    74,
+    "Groupama Stadium",
+    59186
+   ],
+   "short": "OL",
+   "nick": "Les Gones"
+  },
+  "LIL": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "LOSC Lille",
+    "LIL",
+    "Lille",
+    "#E01E13",
+    "#1B2C5A",
+    "selling",
+    74,
+    "Stade Pierre-Mauroy",
+    50186
+   ],
+   "short": "",
+   "nick": "Les Dogues"
+  },
+  "NIC": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "OGC Nice",
+    "NIC",
+    "Nice",
+    "#CE1126",
+    "#000000",
+    "oil",
+    70,
+    "Allianz Riviera",
+    36178
+   ],
+   "short": "",
+   "nick": "Les Aiglons"
+  },
+  "REN": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Stade Rennais",
+    "REN",
+    "Rennes",
+    "#E2001A",
+    "#000000",
+    "youth",
+    70,
+    "Roazhon Park",
+    29778
+   ],
+   "short": "",
+   "nick": "Les Rouge et Noir"
+  },
+  "RCL": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "RC Lens",
+    "RCL",
+    "Lens",
+    "#FFD100",
+    "#E30613",
+    "fan",
+    69,
+    "Stade Bollaert-Delelis",
+    38223
+   ],
+   "short": "LEN",
+   "nick": "Les Sang et Or"
+  },
+  "RCS": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "RC Strasbourg",
+    "RCS",
+    "Strasbourg",
+    "#0056A6",
+    "#FFFFFF",
+    "oil",
+    66,
+    "Stade de la Meinau",
+    29230
+   ],
+   "short": "STR",
+   "nick": "Le Racing"
+  },
+  "SBR": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Stade Brestois",
+    "SBR",
+    "Brest",
+    "#E30613",
+    "#FFFFFF",
+    "selling",
+    62,
+    "Stade Francis-Le Blé",
+    15220
+   ],
+   "short": "BRE",
+   "nick": "Les Pirates"
+  },
+  "TFC": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Toulouse FC",
+    "TFC",
+    "Toulouse",
+    "#6B2C91",
+    "#FFFFFF",
+    "youth",
+    62,
+    "Stadium de Toulouse",
+    33150
+   ],
+   "short": "TOU",
+   "nick": "Les Violets"
+  },
+  "NAN": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "FC Nantes",
+    "NAN",
+    "Nantes",
+    "#FCD405",
+    "#009A44",
+    "historic",
+    61,
+    "Stade de la Beaujoire",
+    35322
+   ],
+   "short": "",
+   "nick": "Les Canaris"
+  },
+  "PFC": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Paris FC",
+    "PFC",
+    "Paris",
+    "#1B2C5A",
+    "#FFFFFF",
+    "oil",
+    60,
+    "Stade Jean-Bouin",
+    20000
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "LOR": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "FC Lorient",
+    "LOR",
+    "Lorient",
+    "#F58025",
+    "#000000",
+    "fan",
+    59,
+    "Stade du Moustoir",
+    18110
+   ],
+   "short": "",
+   "nick": "Les Merlus"
+  },
+  "AUX": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "AJ Auxerre",
+    "AUX",
+    "Auxerre",
+    "#FFFFFF",
+    "#0033A0",
+    "fan",
+    58,
+    "Stade de l'Abbé-Deschamps",
+    18541
+   ],
+   "short": "",
+   "nick": "Les Auxerrois"
+  },
+  "HAC": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Le Havre AC",
+    "HAC",
+    "Le Havre",
+    "#1D5EAE",
+    "#89CFF0",
+    "historic",
+    58,
+    "Stade Océane",
+    25178
+   ],
+   "short": "HAV",
+   "nick": "Les Ciel et Marine"
+  },
+  "ANG": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "Angers SCO",
+    "ANG",
+    "Angers",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    58,
+    "Stade Raymond-Kopa",
+    18752
+   ],
+   "short": "",
+   "nick": "Les Scoistes"
+  },
+  "FCM": {
+   "league": "FR1",
+   "nat": "FRA",
+   "row": [
+    "FC Metz",
+    "FCM",
+    "Metz",
+    "#8E1B3A",
+    "#FFFFFF",
+    "historic",
+    57,
+    "Stade Saint-Symphorien",
+    28786
+   ],
+   "short": "MET",
+   "nick": "Les Grenats"
+  },
+  "MHS": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Montpellier HSC",
+    "MHS",
+    "Montpellier",
+    "#F58025",
+    "#1B3A6B",
+    "selling",
+    56,
+    "Stade de la Mosson",
+    32900
+   ],
+   "short": "",
+   "nick": "Les Pailladins"
+  },
+  "STE": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "AS Saint-Étienne",
+    "STE",
+    "Saint-Étienne",
+    "#009A44",
+    "#FFFFFF",
+    "fallen",
+    58,
+    "Stade Geoffroy-Guichard",
+    41965
+   ],
+   "short": "ASSE",
+   "nick": "Les Verts"
+  },
+  "SDR": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Stade de Reims",
+    "SDR",
+    "Reims",
+    "#E2001A",
+    "#FFFFFF",
+    "selling",
+    56,
+    "Stade Auguste-Delaune",
+    21029
+   ],
+   "short": "REI",
+   "nick": "Les Rouge et Blanc"
+  },
+  "EAG": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "EA Guingamp",
+    "EAG",
+    "Guingamp",
+    "#E2001A",
+    "#000000",
+    "fan",
+    50,
+    "Stade du Roudourou",
+    18378
+   ],
+   "short": "GUI",
+   "nick": "Les Rouge et Noir"
+  },
+  "PAU": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Pau FC",
+    "PAU",
+    "Pau",
+    "#FFD700",
+    "#005CA9",
+    "fan",
+    47,
+    "Nouste Camp",
+    4031
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ANN": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "FC Annecy",
+    "ANN",
+    "Annecy",
+    "#E2001A",
+    "#FFFFFF",
+    "fan",
+    47,
+    "Parc des Sports",
+    15660
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "LAV": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Stade Lavallois",
+    "LAV",
+    "Laval",
+    "#F58025",
+    "#000000",
+    "fan",
+    47,
+    "Stade Francis-Le Basser",
+    18467
+   ],
+   "short": "",
+   "nick": "Les Tangos"
+  },
+  "GRE2": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Grenoble Foot 38",
+    "GRE2",
+    "Grenoble",
+    "#005CA9",
+    "#FFFFFF",
+    "fan",
+    47,
+    "Stade des Alpes",
+    20068
+   ],
+   "short": "GF38",
+   "nick": "Les Isérois"
+  },
+  "AMI": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Amiens SC",
+    "AMI",
+    "Amiens",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    48,
+    "Stade de la Licorne",
+    12097
+   ],
+   "short": "",
+   "nick": "Les Licornes"
+  },
+  "RSF": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Red Star FC",
+    "RSF",
+    "Saint-Ouen",
+    "#00863D",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Stade Bauer",
+    10000
+   ],
+   "short": "",
+   "nick": "Les Audoniens"
+  },
+  "ROD": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Rodez AF",
+    "ROD",
+    "Rodez",
+    "#E2001A",
+    "#FFD700",
+    "fan",
+    46,
+    "Stade Paul-Lignon",
+    5955
+   ],
+   "short": "",
+   "nick": "Les Ruthénois"
+  },
+  "CF63": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Clermont Foot",
+    "CF63",
+    "Clermont-Ferrand",
+    "#E2001A",
+    "#005CA9",
+    "fan",
+    49,
+    "Stade Gabriel-Montpied",
+    11980
+   ],
+   "short": "CLE",
+   "nick": "Les Clermontois"
+  },
+  "USL": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "USL Dunkerque",
+    "USL",
+    "Dunkirk",
+    "#005CA9",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Stade Marcel-Tribut",
+    4933
+   ],
+   "short": "DUN",
+   "nick": "Les Dunkerquois"
+  },
+  "SCBA": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "SC Bastia",
+    "SCBA",
+    "Bastia",
+    "#005CA9",
+    "#FFFFFF",
+    "historic",
+    47,
+    "Stade Armand-Cesari",
+    16078
+   ],
+   "short": "BAS",
+   "nick": "Les Corses"
+  },
+  "LMF": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "Le Mans FC",
+    "LMF",
+    "Le Mans",
+    "#E2001A",
+    "#FFD700",
+    "fallen",
+    47,
+    "MMArena",
+    25064
+   ],
+   "short": "",
+   "nick": "Les Sang et Or"
+  },
+  "ASN": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "AS Nancy-Lorraine",
+    "ASN",
+    "Nancy",
+    "#FFFFFF",
+    "#E2001A",
+    "fallen",
+    48,
+    "Stade Marcel-Picot",
+    20087
+   ],
+   "short": "ASNL",
+   "nick": "Les Chardons"
+  },
+  "USB": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "US Boulogne",
+    "USB",
+    "Boulogne-sur-Mer",
+    "#E2001A",
+    "#000000",
+    "fan",
+    44,
+    "Stade de la Libération",
+    9534
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ETA": {
+   "league": "FR2",
+   "nat": "FRA",
+   "row": [
+    "ES Troyes AC",
+    "ETA",
+    "Troyes",
+    "#005CA9",
+    "#FFFFFF",
+    "fallen",
+    50,
+    "Stade de l'Aube",
+    21877
+   ],
+   "short": "ETR",
+   "nick": "Les Troyens"
+  },
+  "FLA": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Flamengo",
+    "FLA",
+    "Rio de Janeiro",
+    "#C4122E",
+    "#000000",
+    "giant",
+    85,
+    "Maracanã",
+    78838
+   ],
+   "short": "",
+   "nick": "Mengão"
+  },
+  "PAL": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Palmeiras",
+    "PAL",
+    "São Paulo",
+    "#006437",
+    "#FFFFFF",
+    "giant",
+    84,
+    "Allianz Parque",
+    43713
+   ],
+   "short": "",
+   "nick": "Verdão"
+  },
+  "COR": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Corinthians",
+    "COR",
+    "São Paulo",
+    "#FFFFFF",
+    "#000000",
+    "historic",
+    79,
+    "Neo Química Arena",
+    49205
+   ],
+   "short": "",
+   "nick": "Timão"
+  },
+  "SAO": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "São Paulo",
+    "SAO",
+    "São Paulo",
+    "#FFFFFF",
+    "#E4002B",
+    "historic",
+    78,
+    "MorumBIS",
+    66795
+   ],
+   "short": "",
+   "nick": "Tricolor Paulista"
+  },
+  "BOT": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Botafogo",
+    "BOT",
+    "Rio de Janeiro",
+    "#000000",
+    "#FFFFFF",
+    "oil",
+    77,
+    "Estádio Nilton Santos",
+    46831
+   ],
+   "short": "",
+   "nick": "Fogão"
+  },
+  "CAM": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Atlético Mineiro",
+    "CAM",
+    "Belo Horizonte",
+    "#000000",
+    "#FFFFFF",
+    "oil",
+    76,
+    "Arena MRV",
+    46000
+   ],
+   "short": "",
+   "nick": "Galo"
+  },
+  "GRE": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Grêmio",
+    "GRE",
+    "Porto Alegre",
+    "#0D80BF",
+    "#000000",
+    "historic",
+    75,
+    "Arena do Grêmio",
+    55662
+   ],
+   "short": "",
+   "nick": "Imortal"
+  },
+  "SCI": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Internacional",
+    "SCI",
+    "Porto Alegre",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    75,
+    "Beira-Rio",
+    50128
+   ],
+   "short": "INT",
+   "nick": "Colorado"
+  },
+  "FLU": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Fluminense",
+    "FLU",
+    "Rio de Janeiro",
+    "#7A1F3D",
+    "#00613C",
+    "historic",
+    74,
+    "Maracanã",
+    78838
+   ],
+   "short": "",
+   "nick": "Tricolor das Laranjeiras"
+  },
+  "CRU": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Cruzeiro",
+    "CRU",
+    "Belo Horizonte",
+    "#0033A0",
+    "#FFFFFF",
+    "fallen",
+    73,
+    "Mineirão",
+    61846
+   ],
+   "short": "",
+   "nick": "Raposa"
+  },
+  "VAS": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Vasco da Gama",
+    "VAS",
+    "Rio de Janeiro",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    72,
+    "São Januário",
+    21880
+   ],
+   "short": "",
+   "nick": "Gigante da Colina"
+  },
+  "SAN": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Santos",
+    "SAN",
+    "Santos",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    71,
+    "Vila Belmiro",
+    16068
+   ],
+   "short": "",
+   "nick": "Peixe"
+  },
+  "BAH": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Bahia",
+    "BAH",
+    "Salvador",
+    "#004A99",
+    "#E30613",
+    "oil",
+    70,
+    "Arena Fonte Nova",
+    47907
+   ],
+   "short": "",
+   "nick": "Esquadrão"
+  },
+  "FTZ": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Fortaleza",
+    "FTZ",
+    "Fortaleza",
+    "#1F3B8E",
+    "#E30613",
+    "fan",
+    68,
+    "Arena Castelão",
+    63903
+   ],
+   "short": "FOR",
+   "nick": "Leão do Pici"
+  },
+  "RBB": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Red Bull Bragantino",
+    "RBB",
+    "Bragança Paulista",
+    "#FFFFFF",
+    "#D1001F",
+    "oil",
+    67,
+    "Estádio Nabi Abi Chedid",
+    17022
+   ],
+   "short": "",
+   "nick": "Massa Bruta"
+  },
+  "CEA": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Ceará",
+    "CEA",
+    "Fortaleza",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    64,
+    "Arena Castelão",
+    63903
+   ],
+   "short": "",
+   "nick": "Vozão"
+  },
+  "SPT": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Sport Recife",
+    "SPT",
+    "Recife",
+    "#E30613",
+    "#000000",
+    "fan",
+    64,
+    "Ilha do Retiro",
+    32983
+   ],
+   "short": "",
+   "nick": "Leão da Ilha"
+  },
+  "VIT": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Vitória",
+    "VIT",
+    "Salvador",
+    "#E30613",
+    "#000000",
+    "fan",
+    63,
+    "Barradão",
+    30793
+   ],
+   "short": "",
+   "nick": "Leão da Barra"
+  },
+  "JVD": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Juventude",
+    "JVD",
+    "Caxias do Sul",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    62,
+    "Alfredo Jaconi",
+    19924
+   ],
+   "short": "JUV",
+   "nick": "Ju"
+  },
+  "MSL": {
+   "league": "BR1",
+   "nat": "BRA",
+   "row": [
+    "Mirassol",
+    "MSL",
+    "Mirassol",
+    "#FFE600",
+    "#00843D",
+    "youth",
+    62,
+    "Estádio José Maria de Campos Maia",
+    15000
+   ],
+   "short": "MIR",
+   "nick": "Leão Caipira"
+  },
+  "INT": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Inter",
+    "INT",
+    "Milan",
+    "#0068A8",
+    "#000000",
+    "giant",
+    86,
+    "San Siro",
+    75817
+   ],
+   "short": "",
+   "nick": "Nerazzurri"
+  },
+  "JUV": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Juventus",
+    "JUV",
+    "Turin",
+    "#FFFFFF",
+    "#000000",
+    "giant",
+    84,
+    "Allianz Stadium",
+    41507
+   ],
+   "short": "",
+   "nick": "Bianconeri"
+  },
+  "NAP": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Napoli",
+    "NAP",
+    "Naples",
+    "#12A0D7",
+    "#FFFFFF",
+    "historic",
+    83,
+    "Stadio Diego Armando Maradona",
+    54726
+   ],
+   "short": "",
+   "nick": "Partenopei"
+  },
+  "ACM": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "AC Milan",
+    "ACM",
+    "Milan",
+    "#FB090B",
+    "#000000",
+    "giant",
+    82,
+    "San Siro",
+    75817
+   ],
+   "short": "MIL",
+   "nick": "Rossoneri"
+  },
+  "ATA": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Atalanta",
+    "ATA",
+    "Bergamo",
+    "#1E71B8",
+    "#000000",
+    "selling",
+    78,
+    "Gewiss Stadium",
+    24950
+   ],
+   "short": "",
+   "nick": "La Dea"
+  },
+  "ROM": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "AS Roma",
+    "ROM",
+    "Rome",
+    "#8E1F2F",
+    "#F0BC42",
+    "historic",
+    78,
+    "Stadio Olimpico",
+    70634
+   ],
+   "short": "",
+   "nick": "Giallorossi"
+  },
+  "LAZ": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Lazio",
+    "LAZ",
+    "Rome",
+    "#87D8F7",
+    "#FFFFFF",
+    "historic",
+    74,
+    "Stadio Olimpico",
+    70634
+   ],
+   "short": "",
+   "nick": "Biancocelesti"
+  },
+  "BOL": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Bologna",
+    "BOL",
+    "Bologna",
+    "#A21C26",
+    "#1A2F48",
+    "youth",
+    73,
+    "Stadio Renato Dall'Ara",
+    36462
+   ],
+   "short": "",
+   "nick": "Rossoblù"
+  },
+  "FIO": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Fiorentina",
+    "FIO",
+    "Florence",
+    "#482E92",
+    "#FFFFFF",
+    "historic",
+    73,
+    "Stadio Artemio Franchi",
+    43147
+   ],
+   "short": "",
+   "nick": "Viola"
+  },
+  "COM": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Como",
+    "COM",
+    "Como",
+    "#0E3E8C",
+    "#FFFFFF",
+    "oil",
+    70,
+    "Stadio Giuseppe Sinigaglia",
+    13602
+   ],
+   "short": "",
+   "nick": "Lariani"
+  },
+  "TOR": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Torino",
+    "TOR",
+    "Turin",
+    "#8A1E03",
+    "#FFFFFF",
+    "historic",
+    66,
+    "Stadio Olimpico Grande Torino",
+    28177
+   ],
+   "short": "",
+   "nick": "Granata"
+  },
+  "UDI": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Udinese",
+    "UDI",
+    "Udine",
+    "#FFFFFF",
+    "#000000",
+    "selling",
+    64,
+    "Bluenergy Stadium",
+    25144
+   ],
+   "short": "",
+   "nick": "Friulani"
+  },
+  "GEN": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Genoa",
+    "GEN",
+    "Genoa",
+    "#A6192E",
+    "#002E5D",
+    "fan",
+    64,
+    "Stadio Luigi Ferraris",
+    36599
+   ],
+   "short": "",
+   "nick": "Grifone"
+  },
+  "PAR": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Parma",
+    "PAR",
+    "Parma",
+    "#FFFFFF",
+    "#FFD100",
+    "fan",
+    62,
+    "Stadio Ennio Tardini",
+    22352
+   ],
+   "short": "",
+   "nick": "Crociati"
+  },
+  "CAG": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Cagliari",
+    "CAG",
+    "Cagliari",
+    "#A6192E",
+    "#002E5D",
+    "fan",
+    62,
+    "Unipol Domus",
+    16416
+   ],
+   "short": "",
+   "nick": "Isolani"
+  },
+  "SAS": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Sassuolo",
+    "SAS",
+    "Sassuolo",
+    "#00A650",
+    "#000000",
+    "youth",
+    61,
+    "Mapei Stadium",
+    21584
+   ],
+   "short": "",
+   "nick": "Neroverdi"
+  },
+  "VER": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Hellas Verona",
+    "VER",
+    "Verona",
+    "#FFD100",
+    "#003DA5",
+    "youth",
+    60,
+    "Stadio Marcantonio Bentegodi",
+    39211
+   ],
+   "short": "",
+   "nick": "Gialloblù"
+  },
+  "LEC": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Lecce",
+    "LEC",
+    "Lecce",
+    "#FFD100",
+    "#E30613",
+    "youth",
+    60,
+    "Stadio Via del Mare",
+    31533
+   ],
+   "short": "",
+   "nick": "Salentini"
+  },
+  "CRE": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Cremonese",
+    "CRE",
+    "Cremona",
+    "#E30613",
+    "#9A9A9A",
+    "fan",
+    58,
+    "Stadio Giovanni Zini",
+    16003
+   ],
+   "short": "",
+   "nick": "Grigiorossi"
+  },
+  "PIS": {
+   "league": "IT1",
+   "nat": "ITA",
+   "row": [
+    "Pisa",
+    "PIS",
+    "Pisa",
+    "#000000",
+    "#0033A0",
+    "fan",
+    58,
+    "Arena Garibaldi",
+    25000
+   ],
+   "short": "",
+   "nick": "Nerazzurri"
+  },
+  "MNZ": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "AC Monza",
+    "MNZ",
+    "Monza",
+    "#E2001A",
+    "#FFFFFF",
+    "selling",
+    58,
+    "U-Power Stadium",
+    16917
+   ],
+   "short": "MON",
+   "nick": "Biancorossi"
+  },
+  "VEN": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Venezia",
+    "VEN",
+    "Venice",
+    "#000000",
+    "#F18A00",
+    "selling",
+    57,
+    "Stadio Pier Luigi Penzo",
+    11150
+   ],
+   "short": "",
+   "nick": "Arancioneroverdi"
+  },
+  "EMP": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Empoli",
+    "EMP",
+    "Empoli",
+    "#005CA9",
+    "#FFFFFF",
+    "youth",
+    57,
+    "Stadio Carlo Castellani",
+    16284
+   ],
+   "short": "",
+   "nick": "Azzurri"
+  },
+  "PAL2": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Palermo",
+    "PAL2",
+    "Palermo",
+    "#F4A6C1",
+    "#000000",
+    "oil",
+    56,
+    "Stadio Renzo Barbera",
+    36365
+   ],
+   "short": "PAL",
+   "nick": "Rosanero"
+  },
+  "SAM": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Sampdoria",
+    "SAM",
+    "Genoa",
+    "#1B5EA6",
+    "#FFFFFF",
+    "fallen",
+    55,
+    "Stadio Luigi Ferraris",
+    36599
+   ],
+   "short": "",
+   "nick": "Blucerchiati"
+  },
+  "BARI": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Bari",
+    "BARI",
+    "Bari",
+    "#FFFFFF",
+    "#E2001A",
+    "fallen",
+    52,
+    "Stadio San Nicola",
+    58270
+   ],
+   "short": "BAI",
+   "nick": "Galletti"
+  },
+  "SPE": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Spezia",
+    "SPE",
+    "La Spezia",
+    "#FFFFFF",
+    "#000000",
+    "selling",
+    53,
+    "Stadio Alberto Picco",
+    10336
+   ],
+   "short": "",
+   "nick": "Aquilotti"
+  },
+  "MOD": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Modena",
+    "MOD",
+    "Modena",
+    "#FFD700",
+    "#0033A0",
+    "fan",
+    51,
+    "Stadio Alberto Braglia",
+    21151
+   ],
+   "short": "",
+   "nick": "Canarini"
+  },
+  "CTZ": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Catanzaro",
+    "CTZ",
+    "Catanzaro",
+    "#FFD700",
+    "#E2001A",
+    "fan",
+    50,
+    "Stadio Nicola Ceravolo",
+    14650
+   ],
+   "short": "",
+   "nick": "Aquile"
+  },
+  "CES": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Cesena",
+    "CES",
+    "Cesena",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    50,
+    "Orogel Stadium Dino Manuzzi",
+    23860
+   ],
+   "short": "",
+   "nick": "Cavallucci Marini"
+  },
+  "JST": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Juve Stabia",
+    "JST",
+    "Castellammare di Stabia",
+    "#FFD700",
+    "#0033A0",
+    "fan",
+    48,
+    "Stadio Romeo Menti",
+    12800
+   ],
+   "short": "JUS",
+   "nick": "Vespe"
+  },
+  "SUD2": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Südtirol",
+    "SUD2",
+    "Bolzano",
+    "#FFFFFF",
+    "#E2001A",
+    "selling",
+    48,
+    "Stadio Druso",
+    5539
+   ],
+   "short": "SUD",
+   "nick": "Biancorossi"
+  },
+  "REG": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Reggiana",
+    "REG",
+    "Reggio Emilia",
+    "#8B0000",
+    "#FFFFFF",
+    "fan",
+    49,
+    "Mapei Stadium",
+    21525
+   ],
+   "short": "",
+   "nick": "Granata"
+  },
+  "CAR2": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Carrarese",
+    "CAR2",
+    "Carrara",
+    "#FFD700",
+    "#0033A0",
+    "fan",
+    46,
+    "Stadio dei Marmi",
+    9500
+   ],
+   "short": "CAR",
+   "nick": "Apuani"
+  },
+  "PAD": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Padova",
+    "PAD",
+    "Padua",
+    "#FFFFFF",
+    "#E2001A",
+    "historic",
+    47,
+    "Stadio Euganeo",
+    32336
+   ],
+   "short": "",
+   "nick": "Biancoscudati"
+  },
+  "MAN": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Mantova",
+    "MAN",
+    "Mantua",
+    "#FFFFFF",
+    "#E2001A",
+    "fan",
+    46,
+    "Stadio Danilo Martelli",
+    14844
+   ],
+   "short": "",
+   "nick": "Virgiliani"
+  },
+  "ENT": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Virtus Entella",
+    "ENT",
+    "Chiavari",
+    "#005CA9",
+    "#FFFFFF",
+    "fan",
+    45,
+    "Stadio Comunale",
+    5535
+   ],
+   "short": "",
+   "nick": "Diavoli Neri"
+  },
+  "AVE": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Avellino",
+    "AVE",
+    "Avellino",
+    "#00863D",
+    "#FFFFFF",
+    "fan",
+    46,
+    "Stadio Partenio",
+    26308
+   ],
+   "short": "",
+   "nick": "Lupi"
+  },
+  "PES": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Pescara",
+    "PES",
+    "Pescara",
+    "#005CA9",
+    "#FFFFFF",
+    "fan",
+    47,
+    "Stadio Adriatico",
+    20476
+   ],
+   "short": "",
+   "nick": "Delfini"
+  },
+  "FRO": {
+   "league": "IT2",
+   "nat": "ITA",
+   "row": [
+    "Frosinone",
+    "FRO",
+    "Frosinone",
+    "#FFD700",
+    "#005CA9",
+    "selling",
+    51,
+    "Stadio Benito Stirpe",
+    16227
+   ],
+   "short": "",
+   "nick": "Giallazzurri"
+  },
+  "BEN": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Benfica",
+    "BEN",
+    "Lisbon",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    83,
+    "Estádio da Luz",
+    64642
+   ],
+   "short": "SLB",
+   "nick": "Águias"
+  },
+  "FCP": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "FC Porto",
+    "FCP",
+    "Porto",
+    "#003893",
+    "#FFFFFF",
+    "giant",
+    82,
+    "Estádio do Dragão",
+    50033
+   ],
+   "short": "",
+   "nick": "Dragões"
+  },
+  "SCP": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Sporting CP",
+    "SCP",
+    "Lisbon",
+    "#008057",
+    "#FFFFFF",
+    "historic",
+    82,
+    "Estádio José Alvalade",
+    50095
+   ],
+   "short": "",
+   "nick": "Leões"
+  },
+  "SCB": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "SC Braga",
+    "SCB",
+    "Braga",
+    "#E30613",
+    "#FFFFFF",
+    "selling",
+    74,
+    "Estádio Municipal de Braga",
+    30286
+   ],
+   "short": "",
+   "nick": "Arsenalistas"
+  },
+  "VSC": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Vitória de Guimarães",
+    "VSC",
+    "Guimarães",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    66,
+    "Estádio D. Afonso Henriques",
+    30029
+   ],
+   "short": "",
+   "nick": "Conquistadores"
+  },
+  "SCL": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Santa Clara",
+    "SCL",
+    "Ponta Delgada",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    60,
+    "Estádio de São Miguel",
+    13277
+   ],
+   "short": "",
+   "nick": "Santa"
+  },
+  "FAM": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Famalicão",
+    "FAM",
+    "Vila Nova de Famalicão",
+    "#FFFFFF",
+    "#003DA5",
+    "selling",
+    60,
+    "Estádio Municipal 22 de Junho",
+    5307
+   ],
+   "short": "",
+   "nick": "Famalicenses"
+  },
+  "EST": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Estoril Praia",
+    "EST",
+    "Estoril",
+    "#FFDD00",
+    "#0038A8",
+    "youth",
+    60,
+    "Estádio António Coimbra da Mota",
+    8000
+   ],
+   "short": "",
+   "nick": "Canarinhos"
+  },
+  "GIL": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Gil Vicente",
+    "GIL",
+    "Barcelos",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    58,
+    "Estádio Cidade de Barcelos",
+    12046
+   ],
+   "short": "",
+   "nick": "Galos"
+  },
+  "ARO": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Arouca",
+    "ARO",
+    "Arouca",
+    "#FFD100",
+    "#0033A0",
+    "fan",
+    58,
+    "Estádio Municipal de Arouca",
+    5600
+   ],
+   "short": "",
+   "nick": "Arouquenses"
+  },
+  "RAV": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Rio Ave",
+    "RAV",
+    "Vila do Conde",
+    "#00843D",
+    "#FFFFFF",
+    "oil",
+    57,
+    "Estádio dos Arcos",
+    9065
+   ],
+   "short": "",
+   "nick": "Rioavistas"
+  },
+  "MOR": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Moreirense",
+    "MOR",
+    "Moreira de Cónegos",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Parque de Jogos Comendador Joaquim de Almeida Freitas",
+    6153
+   ],
+   "short": "",
+   "nick": "Cónegos"
+  },
+  "CPI": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Casa Pia",
+    "CPI",
+    "Lisbon",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Estádio Pina Manique",
+    3000
+   ],
+   "short": "",
+   "nick": "Gansos"
+  },
+  "CDN": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Nacional",
+    "CDN",
+    "Funchal",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    55,
+    "Estádio da Madeira",
+    5132
+   ],
+   "short": "NAC",
+   "nick": "Alvinegros"
+  },
+  "AVS": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "AVS",
+    "AVS",
+    "Vila das Aves",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    54,
+    "Estádio do CD Aves",
+    8560
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "EAM": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Estrela da Amadora",
+    "EAM",
+    "Amadora",
+    "#E30613",
+    "#00843D",
+    "fan",
+    54,
+    "Estádio José Gomes",
+    9288
+   ],
+   "short": "AMA",
+   "nick": "Tricolores"
+  },
+  "ALV": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Alverca",
+    "ALV",
+    "Alverca do Ribatejo",
+    "#E30613",
+    "#FFFFFF",
+    "selling",
+    54,
+    "Complexo Desportivo do FC Alverca",
+    7705
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "TON": {
+   "league": "PT1",
+   "nat": "POR",
+   "row": [
+    "Tondela",
+    "TON",
+    "Tondela",
+    "#FFD100",
+    "#00843D",
+    "fan",
+    53,
+    "Estádio João Cardoso",
+    5000
+   ],
+   "short": "",
+   "nick": "Auriverdes"
+  },
+  "AJA": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Ajax",
+    "AJA",
+    "Amsterdam",
+    "#FFFFFF",
+    "#D2122E",
+    "giant",
+    81,
+    "Johan Cruijff ArenA",
+    55865
+   ],
+   "short": "",
+   "nick": "Godenzonen"
+  },
+  "PSV": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "PSV Eindhoven",
+    "PSV",
+    "Eindhoven",
+    "#ED1C24",
+    "#FFFFFF",
+    "historic",
+    80,
+    "Philips Stadion",
+    35119
+   ],
+   "short": "",
+   "nick": "Boeren"
+  },
+  "FEY": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Feyenoord",
+    "FEY",
+    "Rotterdam",
+    "#FF0000",
+    "#FFFFFF",
+    "fan",
+    79,
+    "De Kuip",
+    47500
+   ],
+   "short": "",
+   "nick": "De Club van het Zuiden"
+  },
+  "AZA": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "AZ Alkmaar",
+    "AZA",
+    "Alkmaar",
+    "#DB0021",
+    "#FFFFFF",
+    "selling",
+    72,
+    "AFAS Stadion",
+    19478
+   ],
+   "short": "AZ",
+   "nick": "Kaaskoppen"
+  },
+  "TWE": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "FC Twente",
+    "TWE",
+    "Enschede",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    68,
+    "De Grolsch Veste",
+    30205
+   ],
+   "short": "",
+   "nick": "Tukkers"
+  },
+  "UTR": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "FC Utrecht",
+    "UTR",
+    "Utrecht",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    66,
+    "Stadion Galgenwaard",
+    23750
+   ],
+   "short": "",
+   "nick": "Domstedelingen"
+  },
+  "GAE": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Go Ahead Eagles",
+    "GAE",
+    "Deventer",
+    "#E30613",
+    "#FFD100",
+    "fan",
+    62,
+    "De Adelaarshorst",
+    10400
+   ],
+   "short": "",
+   "nick": "Deventenaren"
+  },
+  "NEC": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "NEC Nijmegen",
+    "NEC",
+    "Nijmegen",
+    "#E30613",
+    "#00843D",
+    "fan",
+    62,
+    "Goffertstadion",
+    12500
+   ],
+   "short": "",
+   "nick": "Nijmegenaren"
+  },
+  "HEE": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "SC Heerenveen",
+    "HEE",
+    "Heerenveen",
+    "#0055A4",
+    "#FFFFFF",
+    "youth",
+    61,
+    "Abe Lenstra Stadion",
+    26100
+   ],
+   "short": "",
+   "nick": "Superfriezen"
+  },
+  "GRO": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "FC Groningen",
+    "GRO",
+    "Groningen",
+    "#008000",
+    "#FFFFFF",
+    "historic",
+    60,
+    "Euroborg",
+    22525
+   ],
+   "short": "",
+   "nick": "Trots van het Noorden"
+  },
+  "SPR": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Sparta Rotterdam",
+    "SPR",
+    "Rotterdam",
+    "#E4002B",
+    "#FFFFFF",
+    "youth",
+    58,
+    "Het Kasteel",
+    11026
+   ],
+   "short": "SPA",
+   "nick": "Het Kasteel"
+  },
+  "PEC": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "PEC Zwolle",
+    "PEC",
+    "Zwolle",
+    "#0055A4",
+    "#FFFFFF",
+    "fan",
+    58,
+    "MAC³PARK Stadion",
+    14000
+   ],
+   "short": "",
+   "nick": "Blauwvingers"
+  },
+  "FSI": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Fortuna Sittard",
+    "FSI",
+    "Sittard",
+    "#FFD100",
+    "#00843D",
+    "fan",
+    57,
+    "Fortuna Sittard Stadion",
+    12500
+   ],
+   "short": "FOR",
+   "nick": "Limburgers"
+  },
+  "NAC": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "NAC Breda",
+    "NAC",
+    "Breda",
+    "#FFD100",
+    "#000000",
+    "fan",
+    57,
+    "Rat Verlegh Stadion",
+    19000
+   ],
+   "short": "",
+   "nick": "Mat Kleur"
+  },
+  "HER": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Heracles Almelo",
+    "HER",
+    "Almelo",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    56,
+    "Asito Stadion",
+    12080
+   ],
+   "short": "",
+   "nick": "Superboeren"
+  },
+  "VOL": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "FC Volendam",
+    "VOL",
+    "Volendam",
+    "#FF7F00",
+    "#000000",
+    "youth",
+    55,
+    "Kras Stadion",
+    7384
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "EXC": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Excelsior",
+    "EXC",
+    "Rotterdam",
+    "#E30613",
+    "#000000",
+    "fan",
+    55,
+    "Van Donge & De Roo Stadion",
+    4500
+   ],
+   "short": "",
+   "nick": "Kralingers"
+  },
+  "TEL": {
+   "league": "NL1",
+   "nat": "NED",
+   "row": [
+    "Telstar",
+    "TEL",
+    "Velsen",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    54,
+    "BUKO Stadion",
+    5200
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RIV": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "River Plate",
+    "RIV",
+    "Buenos Aires",
+    "#FFFFFF",
+    "#E30613",
+    "giant",
+    79,
+    "Estadio Monumental",
+    85018
+   ],
+   "short": "",
+   "nick": "Millonarios"
+  },
+  "BOC": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Boca Juniors",
+    "BOC",
+    "Buenos Aires",
+    "#0033A0",
+    "#FFD100",
+    "giant",
+    78,
+    "La Bombonera",
+    54000
+   ],
+   "short": "",
+   "nick": "Xeneizes"
+  },
+  "RAC": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Racing Club",
+    "RAC",
+    "Avellaneda",
+    "#6CACE4",
+    "#FFFFFF",
+    "historic",
+    70,
+    "Estadio Presidente Perón",
+    51389
+   ],
+   "short": "",
+   "nick": "La Academia"
+  },
+  "IND": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Independiente",
+    "IND",
+    "Avellaneda",
+    "#E30613",
+    "#FFFFFF",
+    "fallen",
+    67,
+    "Estadio Libertadores de América",
+    48069
+   ],
+   "short": "",
+   "nick": "Rojos"
+  },
+  "ELP": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Estudiantes",
+    "ELP",
+    "La Plata",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    66,
+    "Estadio Jorge Luis Hirschi",
+    30018
+   ],
+   "short": "EST",
+   "nick": "Pincharratas"
+  },
+  "SLO": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "San Lorenzo",
+    "SLO",
+    "Buenos Aires",
+    "#0033A0",
+    "#E30613",
+    "historic",
+    65,
+    "Estadio Pedro Bidegain",
+    47964
+   ],
+   "short": "",
+   "nick": "Cuervos"
+  },
+  "VEL": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Vélez Sarsfield",
+    "VEL",
+    "Buenos Aires",
+    "#FFFFFF",
+    "#0033A0",
+    "youth",
+    64,
+    "Estadio José Amalfitani",
+    49540
+   ],
+   "short": "",
+   "nick": "El Fortín"
+  },
+  "TAL": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Talleres",
+    "TAL",
+    "Córdoba",
+    "#0033A0",
+    "#FFFFFF",
+    "selling",
+    63,
+    "Estadio Mario Alberto Kempes",
+    57000
+   ],
+   "short": "",
+   "nick": "La T"
+  },
+  "ROS": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Rosario Central",
+    "ROS",
+    "Rosario",
+    "#003DA5",
+    "#FFD100",
+    "fan",
+    63,
+    "Gigante de Arroyito",
+    41654
+   ],
+   "short": "",
+   "nick": "Canallas"
+  },
+  "LAN": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Lanús",
+    "LAN",
+    "Lanús",
+    "#8A1538",
+    "#FFFFFF",
+    "selling",
+    63,
+    "Estadio Ciudad de Lanús",
+    47027
+   ],
+   "short": "",
+   "nick": "Granate"
+  },
+  "ARJ": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Argentinos Juniors",
+    "ARJ",
+    "Buenos Aires",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    62,
+    "Estadio Diego Armando Maradona",
+    26000
+   ],
+   "short": "ARG",
+   "nick": "El Bicho"
+  },
+  "NOB": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Newell's Old Boys",
+    "NOB",
+    "Rosario",
+    "#E30613",
+    "#000000",
+    "fan",
+    61,
+    "Estadio Marcelo Bielsa",
+    42000
+   ],
+   "short": "",
+   "nick": "Leprosos"
+  },
+  "HUR": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Huracán",
+    "HUR",
+    "Buenos Aires",
+    "#FFFFFF",
+    "#E30613",
+    "fan",
+    60,
+    "Estadio Tomás Adolfo Ducó",
+    48314
+   ],
+   "short": "",
+   "nick": "El Globo"
+  },
+  "DYJ": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Defensa y Justicia",
+    "DYJ",
+    "Florencio Varela",
+    "#FFD100",
+    "#00843D",
+    "selling",
+    60,
+    "Estadio Norberto Tomaghello",
+    20000
+   ],
+   "short": "",
+   "nick": "El Halcón"
+  },
+  "BEL": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Belgrano",
+    "BEL",
+    "Córdoba",
+    "#6CACE4",
+    "#FFFFFF",
+    "fan",
+    60,
+    "Estadio Julio César Villagra",
+    30000
+   ],
+   "short": "",
+   "nick": "Piratas"
+  },
+  "GLP": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Gimnasia y Esgrima La Plata",
+    "GLP",
+    "La Plata",
+    "#FFFFFF",
+    "#1B2C5A",
+    "fan",
+    58,
+    "Estadio Juan Carmelo Zerillo",
+    24544
+   ],
+   "short": "",
+   "nick": "El Lobo"
+  },
+  "GOD": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Godoy Cruz",
+    "GOD",
+    "Mendoza",
+    "#0033A0",
+    "#FFFFFF",
+    "youth",
+    58,
+    "Estadio Malvinas Argentinas",
+    42000
+   ],
+   "short": "",
+   "nick": "El Tomba"
+  },
+  "TIG": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Tigre",
+    "TIG",
+    "Victoria",
+    "#0033A0",
+    "#E30613",
+    "fan",
+    57,
+    "Estadio José Dellagiovanna",
+    26282
+   ],
+   "short": "",
+   "nick": "El Matador"
+  },
+  "UNI": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Unión",
+    "UNI",
+    "Santa Fe",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Estadio 15 de Abril",
+    22852
+   ],
+   "short": "",
+   "nick": "Tatengues"
+  },
+  "INS": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Instituto",
+    "INS",
+    "Córdoba",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    57,
+    "Estadio Juan Domingo Perón",
+    26535
+   ],
+   "short": "",
+   "nick": "La Gloria"
+  },
+  "BAN": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Banfield",
+    "BAN",
+    "Banfield",
+    "#00843D",
+    "#FFFFFF",
+    "youth",
+    57,
+    "Estadio Florencio Sola",
+    34901
+   ],
+   "short": "",
+   "nick": "El Taladro"
+  },
+  "IRI": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Independiente Rivadavia",
+    "IRI",
+    "Mendoza",
+    "#0033A0",
+    "#FFFFFF",
+    "fan",
+    56,
+    "Estadio Bautista Gargantini",
+    24000
+   ],
+   "short": "",
+   "nick": "La Leonera"
+  },
+  "ATU": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Atlético Tucumán",
+    "ATU",
+    "San Miguel de Tucumán",
+    "#6CACE4",
+    "#FFFFFF",
+    "fan",
+    56,
+    "Estadio Monumental José Fierro",
+    35200
+   ],
+   "short": "",
+   "nick": "El Decano"
+  },
+  "PLA": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Platense",
+    "PLA",
+    "Vicente López",
+    "#FFFFFF",
+    "#6B3F1F",
+    "fan",
+    56,
+    "Estadio Ciudad de Vicente López",
+    28530
+   ],
+   "short": "",
+   "nick": "Calamares"
+  },
+  "BAR": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Barracas Central",
+    "BAR",
+    "Buenos Aires",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Estadio Claudio Chiqui Tapia",
+    4500
+   ],
+   "short": "",
+   "nick": "El Guapo"
+  },
+  "CCD": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Central Córdoba",
+    "CCD",
+    "Santiago del Estero",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Estadio Único Madre de Ciudades",
+    30000
+   ],
+   "short": "",
+   "nick": "Ferroviario"
+  },
+  "SAR": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Sarmiento",
+    "SAR",
+    "Junín",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    54,
+    "Estadio Eva Perón",
+    22000
+   ],
+   "short": "",
+   "nick": "El Verde"
+  },
+  "RIE": {
+   "league": "AR1",
+   "nat": "ARG",
+   "row": [
+    "Deportivo Riestra",
+    "RIE",
+    "Buenos Aires",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    53,
+    "Estadio Guillermo Laza",
+    3000
+   ],
+   "short": "",
+   "nick": "El Malevo"
+  },
+  "MIA": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Inter Miami",
+    "MIA",
+    "Miami",
+    "#F7B5CD",
+    "#231F20",
+    "oil",
+    67,
+    "Chase Stadium",
+    21550
+   ],
+   "short": "",
+   "nick": "Herons"
+  },
+  "LAF": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Los Angeles FC",
+    "LAF",
+    "Los Angeles",
+    "#000000",
+    "#C39E6D",
+    "oil",
+    66,
+    "BMO Stadium",
+    22000
+   ],
+   "short": "LAFC",
+   "nick": "Black and Gold"
+  },
+  "LAG": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "LA Galaxy",
+    "LAG",
+    "Los Angeles",
+    "#FFFFFF",
+    "#00245D",
+    "historic",
+    65,
+    "Dignity Health Sports Park",
+    27000
+   ],
+   "short": "",
+   "nick": "Galaxy"
+  },
+  "SEA": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Seattle Sounders",
+    "SEA",
+    "Seattle",
+    "#5D9741",
+    "#005595",
+    "fan",
+    64,
+    "Lumen Field",
+    37722
+   ],
+   "short": "",
+   "nick": "Sounders"
+  },
+  "CIN": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "FC Cincinnati",
+    "CIN",
+    "Cincinnati",
+    "#003087",
+    "#FE5000",
+    "youth",
+    63,
+    "TQL Stadium",
+    26000
+   ],
+   "short": "",
+   "nick": "Orange and Blue"
+  },
+  "CLB": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Columbus Crew",
+    "CLB",
+    "Columbus",
+    "#FEDD00",
+    "#000000",
+    "historic",
+    62,
+    "Lower.com Field",
+    20371
+   ],
+   "short": "",
+   "nick": "Black and Gold"
+  },
+  "PHI": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Philadelphia Union",
+    "PHI",
+    "Philadelphia",
+    "#071B2C",
+    "#B19B69",
+    "youth",
+    62,
+    "Subaru Park",
+    18500
+   ],
+   "short": "",
+   "nick": "Union"
+  },
+  "NYC": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "New York City FC",
+    "NYC",
+    "New York",
+    "#6CACE4",
+    "#041E42",
+    "oil",
+    62,
+    "Yankee Stadium",
+    28743
+   ],
+   "short": "",
+   "nick": "Pigeons"
+  },
+  "ATL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Atlanta United",
+    "ATL",
+    "Atlanta",
+    "#80000A",
+    "#A19060",
+    "fan",
+    61,
+    "Mercedes-Benz Stadium",
+    42500
+   ],
+   "short": "",
+   "nick": "Five Stripes"
+  },
+  "NYR": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "New York Red Bulls",
+    "NYR",
+    "New York",
+    "#FFFFFF",
+    "#BA0C2F",
+    "oil",
+    60,
+    "Sports Illustrated Stadium",
+    25000
+   ],
+   "short": "RBNY",
+   "nick": "Red Bulls"
+  },
+  "NSH": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Nashville SC",
+    "NSH",
+    "Nashville",
+    "#ECE83A",
+    "#1F1646",
+    "fan",
+    60,
+    "Geodis Park",
+    30000
+   ],
+   "short": "",
+   "nick": "Boys in Gold"
+  },
+  "ORL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Orlando City",
+    "ORL",
+    "Orlando",
+    "#633492",
+    "#FDE192",
+    "fan",
+    60,
+    "Inter&Co Stadium",
+    25500
+   ],
+   "short": "",
+   "nick": "Lions"
+  },
+  "VAN": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Vancouver Whitecaps",
+    "VAN",
+    "Vancouver",
+    "#FFFFFF",
+    "#00245E",
+    "youth",
+    60,
+    "BC Place",
+    22120
+   ],
+   "short": "",
+   "nick": "Whitecaps"
+  },
+  "PTI": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Portland Timbers",
+    "PTI",
+    "Portland",
+    "#00482B",
+    "#D69A00",
+    "fan",
+    59,
+    "Providence Park",
+    25218
+   ],
+   "short": "POR",
+   "nick": "Timbers"
+  },
+  "MIN": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Minnesota United",
+    "MIN",
+    "Saint Paul",
+    "#585958",
+    "#8CD2F4",
+    "fan",
+    58,
+    "Allianz Field",
+    19400
+   ],
+   "short": "",
+   "nick": "Loons"
+  },
+  "SDG": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "San Diego FC",
+    "SDG",
+    "San Diego",
+    "#1B1F23",
+    "#6E4C9F",
+    "oil",
+    58,
+    "Snapdragon Stadium",
+    35000
+   ],
+   "short": "SD",
+   "nick": "Black and Blue"
+  },
+  "RSL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Real Salt Lake",
+    "RSL",
+    "Salt Lake City",
+    "#B30838",
+    "#013A81",
+    "youth",
+    58,
+    "America First Field",
+    20213
+   ],
+   "short": "",
+   "nick": "Claret and Cobalt"
+  },
+  "DAL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "FC Dallas",
+    "DAL",
+    "Dallas",
+    "#E81F3E",
+    "#2A4076",
+    "youth",
+    58,
+    "Toyota Stadium",
+    20500
+   ],
+   "short": "",
+   "nick": "Burn"
+  },
+  "CLT": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Charlotte FC",
+    "CLT",
+    "Charlotte",
+    "#1A85C8",
+    "#000000",
+    "fan",
+    57,
+    "Bank of America Stadium",
+    38000
+   ],
+   "short": "",
+   "nick": "Crown"
+  },
+  "HOU": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Houston Dynamo",
+    "HOU",
+    "Houston",
+    "#FF6B00",
+    "#101820",
+    "fan",
+    57,
+    "Shell Energy Stadium",
+    22039
+   ],
+   "short": "",
+   "nick": "Dynamo"
+  },
+  "SKC": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Sporting Kansas City",
+    "SKC",
+    "Kansas City",
+    "#91B0D5",
+    "#002F65",
+    "fan",
+    57,
+    "Children's Mercy Park",
+    18467
+   ],
+   "short": "",
+   "nick": "Wizards"
+  },
+  "STL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "St. Louis City SC",
+    "STL",
+    "St. Louis",
+    "#DD004A",
+    "#0A1E2C",
+    "fan",
+    57,
+    "Energizer Park",
+    22423
+   ],
+   "short": "",
+   "nick": "Citys"
+  },
+  "RAP": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Colorado Rapids",
+    "RAP",
+    "Denver",
+    "#960A2C",
+    "#9CC2EA",
+    "youth",
+    56,
+    "Dick's Sporting Goods Park",
+    18061
+   ],
+   "short": "COL",
+   "nick": "Rapids"
+  },
+  "AUS": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Austin FC",
+    "AUS",
+    "Austin",
+    "#00B140",
+    "#000000",
+    "fan",
+    56,
+    "Q2 Stadium",
+    20738
+   ],
+   "short": "ATX",
+   "nick": "Verde and Black"
+  },
+  "CHI": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Chicago Fire",
+    "CHI",
+    "Chicago",
+    "#7CCDEF",
+    "#FF0000",
+    "fan",
+    56,
+    "Soldier Field",
+    61500
+   ],
+   "short": "",
+   "nick": "Fire"
+  },
+  "DCU": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "D.C. United",
+    "DCU",
+    "Washington",
+    "#000000",
+    "#EF3E42",
+    "fan",
+    56,
+    "Audi Field",
+    20000
+   ],
+   "short": "DC",
+   "nick": "Black-and-Red"
+  },
+  "NER": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "New England Revolution",
+    "NER",
+    "Foxborough",
+    "#0A2240",
+    "#CE0E2D",
+    "fan",
+    56,
+    "Gillette Stadium",
+    65878
+   ],
+   "short": "NE",
+   "nick": "Revs"
+  },
+  "TRT": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "Toronto FC",
+    "TRT",
+    "Toronto",
+    "#B81137",
+    "#455560",
+    "fan",
+    57,
+    "BMO Field",
+    30991
+   ],
+   "short": "TOR",
+   "nick": "Reds"
+  },
+  "MTL": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "CF Montréal",
+    "MTL",
+    "Montreal",
+    "#000000",
+    "#0033A1",
+    "fan",
+    55,
+    "Stade Saputo",
+    19619
+   ],
+   "short": "",
+   "nick": "Les Bleus"
+  },
+  "SJE": {
+   "league": "US1",
+   "nat": "USA",
+   "row": [
+    "San Jose Earthquakes",
+    "SJE",
+    "San Jose",
+    "#0067B1",
+    "#000000",
+    "fan",
+    55,
+    "PayPal Park",
+    18000
+   ],
+   "short": "SJ",
+   "nick": "Quakes"
+  },
+  "VIS": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Vissel Kobe",
+    "VIS",
+    "Kobe",
+    "#8B0000",
+    "#FFFFFF",
+    "oil",
+    64,
+    "Noevir Stadium Kobe",
+    30132
+   ],
+   "short": "",
+   "nick": "Vissel"
+  },
+  "KAS": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Kashima Antlers",
+    "KAS",
+    "Kashima",
+    "#B8002D",
+    "#1D2088",
+    "historic",
+    64,
+    "Kashima Soccer Stadium",
+    40728
+   ],
+   "short": "KSM",
+   "nick": "Antlers"
+  },
+  "URA": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Urawa Red Diamonds",
+    "URA",
+    "Saitama",
+    "#E60012",
+    "#000000",
+    "giant",
+    63,
+    "Saitama Stadium 2002",
+    63700
+   ],
+   "short": "",
+   "nick": "Reds"
+  },
+  "SFH": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Sanfrecce Hiroshima",
+    "SFH",
+    "Hiroshima",
+    "#50318F",
+    "#FFFFFF",
+    "youth",
+    63,
+    "Edion Peace Wing Hiroshima",
+    28520
+   ],
+   "short": "HIR",
+   "nick": "Purple Archers"
+  },
+  "KAW": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Kawasaki Frontale",
+    "KAW",
+    "Kawasaki",
+    "#1E90FF",
+    "#000000",
+    "historic",
+    62,
+    "Todoroki Stadium",
+    26827
+   ],
+   "short": "",
+   "nick": "Frontale"
+  },
+  "YFM": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Yokohama F. Marinos",
+    "YFM",
+    "Yokohama",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    61,
+    "Nissan Stadium",
+    72327
+   ],
+   "short": "",
+   "nick": "Tricolor"
+  },
+  "GAM": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Gamba Osaka",
+    "GAM",
+    "Osaka",
+    "#1A3D8F",
+    "#000000",
+    "historic",
+    60,
+    "Panasonic Stadium Suita",
+    39694
+   ],
+   "short": "",
+   "nick": "Blue and Blacks"
+  },
+  "MAC": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "FC Machida Zelvia",
+    "MAC",
+    "Machida",
+    "#002E6E",
+    "#C8A200",
+    "oil",
+    60,
+    "Machida GION Stadium",
+    15489
+   ],
+   "short": "",
+   "nick": "Zelvia"
+  },
+  "FCT": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "FC Tokyo",
+    "FCT",
+    "Tokyo",
+    "#0033A0",
+    "#E60012",
+    "fan",
+    60,
+    "Ajinomoto Stadium",
+    49970
+   ],
+   "short": "TOK",
+   "nick": "Tokyo"
+  },
+  "KSW": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Kashiwa Reysol",
+    "KSW",
+    "Kashiwa",
+    "#FFF000",
+    "#000000",
+    "selling",
+    58,
+    "Sankyo Frontier Kashiwa Stadium",
+    15109
+   ],
+   "short": "KSR",
+   "nick": "Sun Kings"
+  },
+  "NAG": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Nagoya Grampus",
+    "NAG",
+    "Nagoya",
+    "#D6000F",
+    "#F9A61A",
+    "fan",
+    58,
+    "Toyota Stadium",
+    44380
+   ],
+   "short": "NGO",
+   "nick": "Grampus"
+  },
+  "CER": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Cerezo Osaka",
+    "CER",
+    "Osaka",
+    "#EC6A9E",
+    "#0A1F5C",
+    "historic",
+    58,
+    "Yodoko Sakura Stadium",
+    24481
+   ],
+   "short": "C-O",
+   "nick": "Sakura"
+  },
+  "AVI": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Avispa Fukuoka",
+    "AVI",
+    "Fukuoka",
+    "#1C1C7C",
+    "#AAAAAA",
+    "youth",
+    56,
+    "Best Denki Stadium",
+    21562
+   ],
+   "short": "FUK",
+   "nick": "Avispa"
+  },
+  "KYO": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Kyoto Sanga",
+    "KYO",
+    "Kyoto",
+    "#6A1B9A",
+    "#FFFFFF",
+    "fan",
+    56,
+    "Sanga Stadium by Kyocera",
+    21600
+   ],
+   "short": "",
+   "nick": "Purple Sanga"
+  },
+  "NII": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Albirex Niigata",
+    "NII",
+    "Niigata",
+    "#FF6600",
+    "#003DA5",
+    "youth",
+    55,
+    "Denka Big Swan Stadium",
+    42300
+   ],
+   "short": "",
+   "nick": "Swans"
+  },
+  "SBM": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Shonan Bellmare",
+    "SBM",
+    "Hiratsuka",
+    "#8CC63F",
+    "#003DA5",
+    "youth",
+    55,
+    "Lemon Gas Stadium Hiratsuka",
+    15380
+   ],
+   "short": "SHO",
+   "nick": "Bellmare"
+  },
+  "TVE": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Tokyo Verdy",
+    "TVE",
+    "Tokyo",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    55,
+    "Ajinomoto Stadium",
+    49970
+   ],
+   "short": "TKV",
+   "nick": "Verdy"
+  },
+  "SHI": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Shimizu S-Pulse",
+    "SHI",
+    "Shizuoka",
+    "#FF8200",
+    "#003DA5",
+    "fan",
+    55,
+    "IAI Stadium Nihondaira",
+    19594
+   ],
+   "short": "SHM",
+   "nick": "S-Pulse"
+  },
+  "OKA": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Fagiano Okayama",
+    "OKA",
+    "Okayama",
+    "#9E1B32",
+    "#FFFFFF",
+    "fan",
+    53,
+    "JFE Harenokuni Stadium",
+    15479
+   ],
+   "short": "",
+   "nick": "Fagiano"
+  },
+  "YFC": {
+   "league": "JP1",
+   "nat": "JPN",
+   "row": [
+    "Yokohama FC",
+    "YFC",
+    "Yokohama",
+    "#00A0E9",
+    "#FFFFFF",
+    "fan",
+    53,
+    "NHK Spring Mitsuzawa Football Stadium",
+    15440
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "AME": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Club América",
+    "AME",
+    "Mexico City",
+    "#FFE600",
+    "#0A1F5C",
+    "giant",
+    70
+   ],
+   "short": "",
+   "nick": "Águilas"
+  },
+  "MTY": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "CF Monterrey",
+    "MTY",
+    "Monterrey",
+    "#0B2240",
+    "#FFFFFF",
+    "oil",
+    68
+   ],
+   "short": "",
+   "nick": "Rayados"
+  },
+  "TGR": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Tigres UANL",
+    "TGR",
+    "San Nicolás de los Garza",
+    "#FDB913",
+    "#003DA5",
+    "oil",
+    68
+   ],
+   "short": "TIG",
+   "nick": "Felinos"
+  },
+  "CHV": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Guadalajara",
+    "CHV",
+    "Guadalajara",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    67
+   ],
+   "short": "GUA",
+   "nick": "Rebaño Sagrado"
+  },
+  "CAZ": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Cruz Azul",
+    "CAZ",
+    "Mexico City",
+    "#0033A0",
+    "#FFFFFF",
+    "historic",
+    66
+   ],
+   "short": "",
+   "nick": "La Máquina"
+  },
+  "TOL": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Toluca",
+    "TOL",
+    "Toluca",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    64
+   ],
+   "short": "",
+   "nick": "Diablos Rojos"
+  },
+  "PUM": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Pumas UNAM",
+    "PUM",
+    "Mexico City",
+    "#0B2240",
+    "#C5A45A",
+    "youth",
+    63
+   ],
+   "short": "",
+   "nick": "Pumas"
+  },
+  "PAC": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Pachuca",
+    "PAC",
+    "Pachuca",
+    "#FFFFFF",
+    "#0033A0",
+    "selling",
+    63
+   ],
+   "short": "",
+   "nick": "Tuzos"
+  },
+  "LEO": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Club León",
+    "LEO",
+    "León",
+    "#00843D",
+    "#FFFFFF",
+    "selling",
+    62
+   ],
+   "short": "",
+   "nick": "La Fiera"
+  },
+  "SLA": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Santos Laguna",
+    "SLA",
+    "Torreón",
+    "#00843D",
+    "#FFFFFF",
+    "youth",
+    60
+   ],
+   "short": "SAN",
+   "nick": "Guerreros"
+  },
+  "ATS": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Atlas",
+    "ATS",
+    "Guadalajara",
+    "#E30613",
+    "#000000",
+    "fan",
+    60
+   ],
+   "short": "",
+   "nick": "Rojinegros"
+  },
+  "TIJ": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Tijuana",
+    "TIJ",
+    "Tijuana",
+    "#E30613",
+    "#000000",
+    "fan",
+    58
+   ],
+   "short": "",
+   "nick": "Xolos"
+  },
+  "NCX": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Necaxa",
+    "NCX",
+    "Aguascalientes",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    57
+   ],
+   "short": "NEC",
+   "nick": "Rayos"
+  },
+  "QRO": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Querétaro",
+    "QRO",
+    "Querétaro",
+    "#0033A0",
+    "#000000",
+    "fan",
+    56
+   ],
+   "short": "",
+   "nick": "Gallos Blancos"
+  },
+  "PUE": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Puebla",
+    "PUE",
+    "Puebla",
+    "#FFFFFF",
+    "#0033A0",
+    "fan",
+    56
+   ],
+   "short": "",
+   "nick": "La Franja"
+  },
+  "JUA": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "FC Juárez",
+    "JUA",
+    "Ciudad Juárez",
+    "#00843D",
+    "#E30613",
+    "fan",
+    56
+   ],
+   "short": "",
+   "nick": "Bravos"
+  },
+  "ASL": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Atlético San Luis",
+    "ASL",
+    "San Luis Potosí",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    56
+   ],
+   "short": "",
+   "nick": "Atlético"
+  },
+  "MAZ": {
+   "league": "MX1",
+   "nat": "MEX",
+   "row": [
+    "Mazatlán",
+    "MAZ",
+    "Mazatlán",
+    "#6A1B9A",
+    "#FFFFFF",
+    "fan",
+    55
+   ],
+   "short": "",
+   "nick": "Cañoneros"
+  },
+  "ULS": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Ulsan HD",
+    "ULS",
+    "Ulsan",
+    "#003DA5",
+    "#FFD100",
+    "oil",
+    60
+   ],
+   "short": "",
+   "nick": "Tigers"
+  },
+  "JBH": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Jeonbuk Hyundai Motors",
+    "JBH",
+    "Jeonju",
+    "#00843D",
+    "#FFD100",
+    "giant",
+    60
+   ],
+   "short": "JEO",
+   "nick": "Green Motors"
+  },
+  "POH": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Pohang Steelers",
+    "POH",
+    "Pohang",
+    "#E30613",
+    "#000000",
+    "historic",
+    57
+   ],
+   "short": "",
+   "nick": "Steelers"
+  },
+  "SEO": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "FC Seoul",
+    "SEO",
+    "Seoul",
+    "#E30613",
+    "#000000",
+    "historic",
+    57
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "DJN": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Daejeon Hana Citizen",
+    "DJN",
+    "Daejeon",
+    "#6A1B9A",
+    "#00843D",
+    "oil",
+    55
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "GWA": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Gwangju FC",
+    "GWA",
+    "Gwangju",
+    "#FFD100",
+    "#E30613",
+    "youth",
+    54
+   ],
+   "short": "",
+   "nick": "Penguins"
+  },
+  "GAN": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Gangwon FC",
+    "GAN",
+    "Chuncheon",
+    "#FF7F00",
+    "#003DA5",
+    "fan",
+    53
+   ],
+   "short": "",
+   "nick": "Orange"
+  },
+  "GIM": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Gimcheon Sangmu",
+    "GIM",
+    "Gimcheon",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "JEJ": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Jeju SK",
+    "JEJ",
+    "Jeju",
+    "#FF6600",
+    "#000000",
+    "fan",
+    52
+   ],
+   "short": "",
+   "nick": "Mandarins"
+  },
+  "DGU": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Daegu FC",
+    "DGU",
+    "Daegu",
+    "#87CEEB",
+    "#1C2B4F",
+    "youth",
+    52
+   ],
+   "short": "DAE",
+   "nick": "Sky Blue"
+  },
+  "SUW": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "Suwon FC",
+    "SUW",
+    "Suwon",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ANY": {
+   "league": "KR1",
+   "nat": "KOR",
+   "row": [
+    "FC Anyang",
+    "ANY",
+    "Anyang",
+    "#5B2C83",
+    "#FFFFFF",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "BRU": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Buriram United",
+    "BRU",
+    "Buriram",
+    "#003DA5",
+    "#FFD100",
+    "oil",
+    56
+   ],
+   "short": "BUR",
+   "nick": "Thunder Castle"
+  },
+  "BGP": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "BG Pathum United",
+    "BGP",
+    "Pathum Thani",
+    "#0A1E5E",
+    "#FFFFFF",
+    "oil",
+    52
+   ],
+   "short": "",
+   "nick": "The Rabbits"
+  },
+  "BKU": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Bangkok United",
+    "BKU",
+    "Bangkok",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "PRT": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Port FC",
+    "PRT",
+    "Bangkok",
+    "#FF7F00",
+    "#003DA5",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": "Dockers"
+  },
+  "MTU": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Muangthong United",
+    "MTU",
+    "Nonthaburi",
+    "#E30613",
+    "#000000",
+    "historic",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "CRA": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Chiangrai United",
+    "CRA",
+    "Chiang Rai",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    48
+   ],
+   "short": "CRU",
+   "nick": "Beetles"
+  },
+  "CHB": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Chonburi FC",
+    "CHB",
+    "Chonburi",
+    "#0055A4",
+    "#FFFFFF",
+    "historic",
+    48
+   ],
+   "short": "CHO",
+   "nick": "Sharks"
+  },
+  "RAT": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Ratchaburi FC",
+    "RAT",
+    "Ratchaburi",
+    "#E30613",
+    "#FFD100",
+    "youth",
+    47
+   ],
+   "short": "",
+   "nick": "Dragons"
+  },
+  "UTH": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Uthai Thani",
+    "UTH",
+    "Uthai Thani",
+    "#FF7F00",
+    "#000000",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "PRA": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Prachuap FC",
+    "PRA",
+    "Prachuap Khiri Khan",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SKT": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Sukhothai FC",
+    "SKT",
+    "Sukhothai",
+    "#FFD100",
+    "#000000",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KBP": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Kanchanaburi Power",
+    "KBP",
+    "Kanchanaburi",
+    "#003DA5",
+    "#E30613",
+    "oil",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "LPW": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Lamphun Warriors",
+    "LPW",
+    "Lamphun",
+    "#6A1B9A",
+    "#FFFFFF",
+    "fan",
+    45
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "AYU": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Ayutthaya United",
+    "AYU",
+    "Ayutthaya",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    45
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RYG": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Rayong FC",
+    "RYG",
+    "Rayong",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    44
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "NRS": {
+   "league": "TH1",
+   "nat": "THA",
+   "row": [
+    "Nakhon Ratchasima",
+    "NRS",
+    "Nakhon Ratchasima",
+    "#FF7F00",
+    "#6A1B9A",
+    "fan",
+    44
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ENY": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Enyimba",
+    "ENY",
+    "Aba",
+    "#003DA5",
+    "#FFFFFF",
+    "giant",
+    55
+   ],
+   "short": "",
+   "nick": "People's Elephant"
+  },
+  "RAN": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Enugu Rangers",
+    "RAN",
+    "Enugu",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    52
+   ],
+   "short": "ENR",
+   "nick": "Flying Antelopes"
+  },
+  "RVU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Rivers United",
+    "RVU",
+    "Port Harcourt",
+    "#0369A1",
+    "#F59E0B",
+    "oil",
+    52
+   ],
+   "short": "",
+   "nick": "Pride of Rivers"
+  },
+  "REM": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Remo Stars",
+    "REM",
+    "Ikenne",
+    "#15803D",
+    "#FFFFFF",
+    "selling",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KPI": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Kano Pillars",
+    "KPI",
+    "Kano",
+    "#FFD100",
+    "#006400",
+    "historic",
+    51
+   ],
+   "short": "KAN",
+   "nick": "Sai Masu Gida"
+  },
+  "SSC": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Shooting Stars",
+    "SSC",
+    "Ibadan",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "LOB": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Lobi Stars",
+    "LOB",
+    "Makurdi",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": "Pride of Benue"
+  },
+  "PLU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Plateau United",
+    "PLU",
+    "Jos",
+    "#E30613",
+    "#FFD100",
+    "youth",
+    48
+   ],
+   "short": "",
+   "nick": "Peace Boys"
+  },
+  "BDI": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Bendel Insurance",
+    "BDI",
+    "Benin City",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "HRT": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Heartland",
+    "HRT",
+    "Owerri",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "IKC": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Ikorodu City",
+    "IKC",
+    "Ikorodu",
+    "#003DA5",
+    "#FFD100",
+    "oil",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ABW": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Abia Warriors",
+    "ABW",
+    "Umuahia",
+    "#00843D",
+    "#FFD100",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "AKW": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Akwa United",
+    "AKW",
+    "Uyo",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KWU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Kwara United",
+    "KWU",
+    "Ilorin",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "NSU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Nasarawa United",
+    "NSU",
+    "Lafia",
+    "#FFD100",
+    "#00843D",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "NIT": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Niger Tornadoes",
+    "NIT",
+    "Minna",
+    "#FFD100",
+    "#003DA5",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "BYU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Bayelsa United",
+    "BYU",
+    "Yenagoa",
+    "#003DA5",
+    "#E30613",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "EKW": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "El-Kanemi Warriors",
+    "EKW",
+    "Maiduguri",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KTU": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Katsina United",
+    "KTU",
+    "Katsina",
+    "#E30613",
+    "#00843D",
+    "fan",
+    45
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SUS": {
+   "league": "NG1",
+   "nat": "NGA",
+   "row": [
+    "Sunshine Stars",
+    "SUS",
+    "Akure",
+    "#FFD100",
+    "#003DA5",
+    "fan",
+    45
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "WAC": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Wydad Casablanca",
+    "WAC",
+    "Casablanca",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    59
+   ],
+   "short": "",
+   "nick": "Les Rouges"
+  },
+  "RCA": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Raja Casablanca",
+    "RCA",
+    "Casablanca",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    59
+   ],
+   "short": "",
+   "nick": "Les Verts"
+  },
+  "FAR": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "AS FAR",
+    "FAR",
+    "Rabat",
+    "#E30613",
+    "#000000",
+    "historic",
+    57
+   ],
+   "short": "",
+   "nick": "Les Militaires"
+  },
+  "RSB": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "RS Berkane",
+    "RSB",
+    "Berkane",
+    "#FF7F00",
+    "#000000",
+    "oil",
+    56
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "FUS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "FUS Rabat",
+    "FUS",
+    "Rabat",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    54
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "MAS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Maghreb Fès",
+    "MAS",
+    "Fès",
+    "#FFD100",
+    "#000000",
+    "historic",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "HAG": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Hassania Agadir",
+    "HAG",
+    "Agadir",
+    "#E30613",
+    "#FFD100",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "IRT": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Ittihad Tanger",
+    "IRT",
+    "Tangier",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "MAT": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Moghreb Tétouan",
+    "MAT",
+    "Tétouan",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "OCS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Olympic Safi",
+    "OCS",
+    "Safi",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "DHJ": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Difaâ El Jadidi",
+    "DHJ",
+    "El Jadida",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RSZ": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Renaissance Zemamra",
+    "RSZ",
+    "Zemamra",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "UTS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Union Touarga",
+    "UTS",
+    "Rabat",
+    "#FF7F00",
+    "#000000",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "COD": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "CODM Meknès",
+    "COD",
+    "Meknès",
+    "#E30613",
+    "#00843D",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SCC": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "Chabab Mohammédia",
+    "SCC",
+    "Mohammédia",
+    "#E30613",
+    "#000000",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "JSS": {
+   "league": "MA1",
+   "nat": "MAR",
+   "row": [
+    "JS Soualem",
+    "JSS",
+    "Soualem",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "CZV": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Red Star Belgrade",
+    "CZV",
+    "Belgrade",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    64
+   ],
+   "short": "",
+   "nick": "Crveno-beli"
+  },
+  "FKP": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Partizan",
+    "FKP",
+    "Belgrade",
+    "#000000",
+    "#FFFFFF",
+    "giant",
+    61
+   ],
+   "short": "PAR",
+   "nick": "Crno-beli"
+  },
+  "VOJ": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Vojvodina",
+    "VOJ",
+    "Novi Sad",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    57
+   ],
+   "short": "",
+   "nick": "Vojvoda"
+  },
+  "TSC": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "TSC Bačka Topola",
+    "TSC",
+    "Bačka Topola",
+    "#003DA5",
+    "#FFFFFF",
+    "oil",
+    56
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "CUK": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Čukarički",
+    "CUK",
+    "Belgrade",
+    "#000000",
+    "#FFD100",
+    "youth",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RAD": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Radnički 1923",
+    "RAD",
+    "Kragujevac",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "NPZ": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Novi Pazar",
+    "NPZ",
+    "Novi Pazar",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "OFK": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "OFK Beograd",
+    "OFK",
+    "Belgrade",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "IMT": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "IMT Novi Beograd",
+    "IMT",
+    "Belgrade",
+    "#1F2937",
+    "#E5E7EB",
+    "youth",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SPS": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Spartak Subotica",
+    "SPS",
+    "Subotica",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RNI": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Radnički Niš",
+    "RNI",
+    "Niš",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ZEL": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Železničar Pančevo",
+    "ZEL",
+    "Pančevo",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "NKR": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Napredak Kruševac",
+    "NKR",
+    "Kruševac",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "MLU": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Mladost Lučani",
+    "MLU",
+    "Lučani",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "JUB": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Jedinstvo Ub",
+    "JUB",
+    "Ub",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "TEK": {
+   "league": "RS1",
+   "nat": "SRB",
+   "row": [
+    "Tekstilac Odžaci",
+    "TEK",
+    "Odžaci",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "CLB2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Club Brugge",
+    "CLB2",
+    "Bruges",
+    "#0E4DA4",
+    "#000000",
+    "giant",
+    68
+   ],
+   "short": "CLU",
+   "nick": "Blauw-Zwart"
+  },
+  "USG": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Union Saint-Gilloise",
+    "USG",
+    "Brussels",
+    "#FFDD00",
+    "#0033A0",
+    "selling",
+    64
+   ],
+   "short": "",
+   "nick": "Les Unionistes"
+  },
+  "AND2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Anderlecht",
+    "AND2",
+    "Brussels",
+    "#4B2C85",
+    "#FFFFFF",
+    "giant",
+    65
+   ],
+   "short": "AND",
+   "nick": "Mauves"
+  },
+  "GNK": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "KRC Genk",
+    "GNK",
+    "Genk",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    63
+   ],
+   "short": "",
+   "nick": "Smurfen"
+  },
+  "GNT": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "KAA Gent",
+    "GNT",
+    "Ghent",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    61
+   ],
+   "short": "",
+   "nick": "Buffalo's"
+  },
+  "ANT": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Royal Antwerp",
+    "ANT",
+    "Antwerp",
+    "#E30613",
+    "#FFFFFF",
+    "oil",
+    61
+   ],
+   "short": "",
+   "nick": "The Great Old"
+  },
+  "STL2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Standard Liège",
+    "STL2",
+    "Liège",
+    "#E30613",
+    "#FFFFFF",
+    "fallen",
+    59
+   ],
+   "short": "STA",
+   "nick": "Rouches"
+  },
+  "CER2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Cercle Brugge",
+    "CER2",
+    "Bruges",
+    "#00843D",
+    "#000000",
+    "youth",
+    56
+   ],
+   "short": "CER",
+   "nick": "Groen-Zwart"
+  },
+  "KVM": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "KV Mechelen",
+    "KVM",
+    "Mechelen",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    56
+   ],
+   "short": "MEC",
+   "nick": "Malinwa"
+  },
+  "WES": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "KVC Westerlo",
+    "WES",
+    "Westerlo",
+    "#FFDD00",
+    "#003DA5",
+    "oil",
+    55
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "CHL": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Sporting Charleroi",
+    "CHL",
+    "Charleroi",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    55
+   ],
+   "short": "CHA",
+   "nick": "Zebras"
+  },
+  "OHL": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "OH Leuven",
+    "OHL",
+    "Leuven",
+    "#FFFFFF",
+    "#00843D",
+    "fan",
+    54
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "STV2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Sint-Truiden",
+    "STV2",
+    "Sint-Truiden",
+    "#FFDD00",
+    "#003DA5",
+    "selling",
+    53
+   ],
+   "short": "STV",
+   "nick": "Kanaries"
+  },
+  "DEN2": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "FCV Dender",
+    "DEN2",
+    "Denderleeuw",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ZWA": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "Zulte Waregem",
+    "ZWA",
+    "Waregem",
+    "#E30613",
+    "#00843D",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": "Essevee"
+  },
+  "RAAL": {
+   "league": "BE1",
+   "nat": "BEL",
+   "row": [
+    "RAAL La Louvière",
+    "RAAL",
+    "La Louvière",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "GAL": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Galatasaray",
+    "GAL",
+    "Istanbul",
+    "#A90432",
+    "#FDB912",
+    "giant",
+    72
+   ],
+   "short": "GS",
+   "nick": "Aslanlar"
+  },
+  "FEN": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Fenerbahçe",
+    "FEN",
+    "Istanbul",
+    "#FFED00",
+    "#004A9F",
+    "giant",
+    71
+   ],
+   "short": "FB",
+   "nick": "Sarı Kanaryalar"
+  },
+  "BJK": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Beşiktaş",
+    "BJK",
+    "Istanbul",
+    "#000000",
+    "#FFFFFF",
+    "giant",
+    67
+   ],
+   "short": "",
+   "nick": "Kara Kartallar"
+  },
+  "TS": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Trabzonspor",
+    "TS",
+    "Trabzon",
+    "#7A1E3A",
+    "#6CABDD",
+    "historic",
+    63
+   ],
+   "short": "",
+   "nick": "Bordo Mavililer"
+  },
+  "IBFK": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "İstanbul Başakşehir",
+    "IBFK",
+    "Istanbul",
+    "#F47920",
+    "#0B1F4B",
+    "oil",
+    60
+   ],
+   "short": "IBB",
+   "nick": "Turuncu-Lacivertliler"
+  },
+  "SAM2": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Samsunspor",
+    "SAM2",
+    "Samsun",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    57
+   ],
+   "short": "SAM",
+   "nick": "Kızıl-Beyazlılar"
+  },
+  "GOZ": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Göztepe",
+    "GOZ",
+    "İzmir",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    56
+   ],
+   "short": "GÖZ",
+   "nick": "Göz-Göz"
+  },
+  "EYP": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Eyüpspor",
+    "EYP",
+    "Istanbul",
+    "#6A1B9A",
+    "#FFDD00",
+    "oil",
+    55
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KAS2": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Kasımpaşa",
+    "KAS2",
+    "Istanbul",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    54
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RIZ": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Çaykur Rizespor",
+    "RIZ",
+    "Rize",
+    "#00843D",
+    "#003DA5",
+    "fan",
+    54
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KON": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Konyaspor",
+    "KON",
+    "Konya",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    54
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ANT2": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Antalyaspor",
+    "ANT2",
+    "Antalya",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ALY": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Alanyaspor",
+    "ALY",
+    "Alanya",
+    "#F47920",
+    "#00843D",
+    "fan",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "GAZ": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Gaziantep FK",
+    "GAZ",
+    "Gaziantep",
+    "#E30613",
+    "#000000",
+    "fan",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KAY": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Kayserispor",
+    "KAY",
+    "Kayseri",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KOC": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Kocaelispor",
+    "KOC",
+    "İzmit",
+    "#00843D",
+    "#000000",
+    "fan",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "GEN2": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Gençlerbirliği",
+    "GEN2",
+    "Ankara",
+    "#E30613",
+    "#000000",
+    "youth",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "FKG": {
+   "league": "TR1",
+   "nat": "TUR",
+   "row": [
+    "Fatih Karagümrük",
+    "FKG",
+    "Istanbul",
+    "#E30613",
+    "#000000",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SLA2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Slavia Prague",
+    "SLA2",
+    "Prague",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    64
+   ],
+   "short": "SLA",
+   "nick": "Sešívaní"
+  },
+  "SPA": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Sparta Prague",
+    "SPA",
+    "Prague",
+    "#8A1538",
+    "#FFFFFF",
+    "giant",
+    63
+   ],
+   "short": "",
+   "nick": "Letenští"
+  },
+  "PLZ": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Viktoria Plzeň",
+    "PLZ",
+    "Plzeň",
+    "#E30613",
+    "#003DA5",
+    "historic",
+    61
+   ],
+   "short": "",
+   "nick": "Viktoria"
+  },
+  "BAN2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Baník Ostrava",
+    "BAN2",
+    "Ostrava",
+    "#6CABDD",
+    "#FFFFFF",
+    "fan",
+    56
+   ],
+   "short": "BAN",
+   "nick": "Slezané"
+  },
+  "SIG": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Sigma Olomouc",
+    "SIG",
+    "Olomouc",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "LIB2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Slovan Liberec",
+    "LIB2",
+    "Liberec",
+    "#FFFFFF",
+    "#003DA5",
+    "youth",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "HKR": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Hradec Králové",
+    "HKR",
+    "Hradec Králové",
+    "#000000",
+    "#FFDD00",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "MBO": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Mladá Boleslav",
+    "MBO",
+    "Mladá Boleslav",
+    "#003DA5",
+    "#FFFFFF",
+    "selling",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "BOH": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Bohemians 1905",
+    "BOH",
+    "Prague",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "JAB": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "FK Jablonec",
+    "JAB",
+    "Jablonec nad Nisou",
+    "#00843D",
+    "#000000",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "TEP": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "FK Teplice",
+    "TEP",
+    "Teplice",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "PAR2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "FK Pardubice",
+    "PAR2",
+    "Pardubice",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KAR": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "MFK Karviná",
+    "KAR",
+    "Karviná",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SLO2": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "1. FC Slovácko",
+    "SLO2",
+    "Uherské Hradiště",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "DUK": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "Dukla Prague",
+    "DUK",
+    "Prague",
+    "#FFDD00",
+    "#8A1538",
+    "historic",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ZLN": {
+   "league": "CZ1",
+   "nat": "CZE",
+   "row": [
+    "FC Zlín",
+    "ZLN",
+    "Zlín",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "OLY2": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Olympiacos",
+    "OLY2",
+    "Piraeus",
+    "#E30613",
+    "#FFFFFF",
+    "giant",
+    68
+   ],
+   "short": "OLY",
+   "nick": "Thrylos"
+  },
+  "PAO": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Panathinaikos",
+    "PAO",
+    "Athens",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    64
+   ],
+   "short": "",
+   "nick": "Prasini"
+  },
+  "AEK": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "AEK Athens",
+    "AEK",
+    "Athens",
+    "#FFDD00",
+    "#000000",
+    "giant",
+    64
+   ],
+   "short": "",
+   "nick": "Enosis"
+  },
+  "PAOK": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "PAOK",
+    "PAOK",
+    "Thessaloniki",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    65
+   ],
+   "short": "",
+   "nick": "Dikefalos Aetos"
+  },
+  "ARI": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Aris Thessaloniki",
+    "ARI",
+    "Thessaloniki",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    57
+   ],
+   "short": "",
+   "nick": "Kitrini"
+  },
+  "OFI": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "OFI Crete",
+    "OFI",
+    "Heraklion",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ATR": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Atromitos",
+    "ATR",
+    "Peristeri",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "AST": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Asteras Tripolis",
+    "AST",
+    "Tripoli",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "PNT": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Panetolikos",
+    "PNT",
+    "Agrinio",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "VOL2": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Volos NFC",
+    "VOL2",
+    "Volos",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "LEV2": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Levadiakos",
+    "LEV2",
+    "Livadeia",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KIF": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Kifisia",
+    "KIF",
+    "Kifisia",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "AEL": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "AEL Larissa",
+    "AEL",
+    "Larissa",
+    "#8A1538",
+    "#FFFFFF",
+    "historic",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "PSR": {
+   "league": "GR1",
+   "nat": "GRE",
+   "row": [
+    "Panserraikos",
+    "PSR",
+    "Serres",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "BOD": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Bodø/Glimt",
+    "BOD",
+    "Bodø",
+    "#FFDD00",
+    "#000000",
+    "youth",
+    63
+   ],
+   "short": "",
+   "nick": "Glimt"
+  },
+  "BRA2": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "SK Brann",
+    "BRA2",
+    "Bergen",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    58
+   ],
+   "short": "BRA",
+   "nick": "Brann"
+  },
+  "VIK": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Viking FK",
+    "VIK",
+    "Stavanger",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    57
+   ],
+   "short": "",
+   "nick": "Vikings"
+  },
+  "RBK": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Rosenborg",
+    "RBK",
+    "Trondheim",
+    "#FFFFFF",
+    "#000000",
+    "giant",
+    58
+   ],
+   "short": "",
+   "nick": "Troillongan"
+  },
+  "MOL": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Molde",
+    "MOL",
+    "Molde",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    58
+   ],
+   "short": "",
+   "nick": "Moldejuvelene"
+  },
+  "S08": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Sarpsborg 08",
+    "S08",
+    "Sarpsborg",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "FFK": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Fredrikstad",
+    "FFK",
+    "Fredrikstad",
+    "#FFFFFF",
+    "#E30613",
+    "historic",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "TIL": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Tromsø IL",
+    "TIL",
+    "Tromsø",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SAF2": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Sandefjord",
+    "SAF2",
+    "Sandefjord",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KFU": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "KFUM Oslo",
+    "KFU",
+    "Oslo",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "HAM": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "HamKam",
+    "HAM",
+    "Hamar",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KBK": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Kristiansund",
+    "KBK",
+    "Kristiansund",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "VIF": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Vålerenga",
+    "VIF",
+    "Oslo",
+    "#003DA5",
+    "#E30613",
+    "historic",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "BRY": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Bryne",
+    "BRY",
+    "Bryne",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SIF": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "Strømsgodset",
+    "SIF",
+    "Drammen",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "FKH": {
+   "league": "NO1",
+   "nat": "NOR",
+   "row": [
+    "FK Haugesund",
+    "FKH",
+    "Haugesund",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "LPO": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Lech Poznań",
+    "LPO",
+    "Poznań",
+    "#003DA5",
+    "#FFFFFF",
+    "giant",
+    60
+   ],
+   "short": "",
+   "nick": "Kolejorz"
+  },
+  "RAK": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Raków Częstochowa",
+    "RAK",
+    "Częstochowa",
+    "#E30613",
+    "#003DA5",
+    "oil",
+    59
+   ],
+   "short": "",
+   "nick": "Medalicy"
+  },
+  "JAG": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Jagiellonia Białystok",
+    "JAG",
+    "Białystok",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    58
+   ],
+   "short": "",
+   "nick": "Duma Podlasia"
+  },
+  "LEG2": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Legia Warsaw",
+    "LEG2",
+    "Warsaw",
+    "#FFFFFF",
+    "#00843D",
+    "giant",
+    60
+   ],
+   "short": "LEG",
+   "nick": "Legioniści"
+  },
+  "POG": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Pogoń Szczecin",
+    "POG",
+    "Szczecin",
+    "#003DA5",
+    "#8A1538",
+    "fan",
+    55
+   ],
+   "short": "",
+   "nick": "Portowcy"
+  },
+  "GOR": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Górnik Zabrze",
+    "GOR",
+    "Zabrze",
+    "#FFFFFF",
+    "#003DA5",
+    "historic",
+    54
+   ],
+   "short": "",
+   "nick": "Trójkolorowi"
+  },
+  "CRA2": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Cracovia",
+    "CRA2",
+    "Kraków",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    53
+   ],
+   "short": "CRA",
+   "nick": "Pasy"
+  },
+  "WID": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Widzew Łódź",
+    "WID",
+    "Łódź",
+    "#E30613",
+    "#FFFFFF",
+    "oil",
+    53
+   ],
+   "short": "",
+   "nick": "Widzewiacy"
+  },
+  "GKS": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "GKS Katowice",
+    "GKS",
+    "Katowice",
+    "#FFDD00",
+    "#00843D",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ZAG": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Zagłębie Lubin",
+    "ZAG",
+    "Lubin",
+    "#F47920",
+    "#00843D",
+    "youth",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "PIA": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Piast Gliwice",
+    "PIA",
+    "Gliwice",
+    "#003DA5",
+    "#E30613",
+    "fan",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "MOT": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Motor Lublin",
+    "MOT",
+    "Lublin",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KOR": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Korona Kielce",
+    "KOR",
+    "Kielce",
+    "#FFDD00",
+    "#E30613",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RAD2": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Radomiak Radom",
+    "RAD2",
+    "Radom",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "LGD": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Lechia Gdańsk",
+    "LGD",
+    "Gdańsk",
+    "#00843D",
+    "#FFFFFF",
+    "fallen",
+    50
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ARK": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Arka Gdynia",
+    "ARK",
+    "Gdynia",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "WPL": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Wisła Płock",
+    "WPL",
+    "Płock",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "TER": {
+   "league": "PL1",
+   "nat": "POL",
+   "row": [
+    "Termalica Nieciecza",
+    "TER",
+    "Nieciecza",
+    "#F47920",
+    "#000000",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "FCK": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "FC Copenhagen",
+    "FCK",
+    "Copenhagen",
+    "#FFFFFF",
+    "#003DA5",
+    "giant",
+    64
+   ],
+   "short": "",
+   "nick": "Løverne"
+  },
+  "FCM2": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "FC Midtjylland",
+    "FCM2",
+    "Herning",
+    "#000000",
+    "#E30613",
+    "selling",
+    62
+   ],
+   "short": "FCM",
+   "nick": "Ulvene"
+  },
+  "BIF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Brøndby IF",
+    "BIF",
+    "Brøndby",
+    "#FFDD00",
+    "#003DA5",
+    "historic",
+    58
+   ],
+   "short": "",
+   "nick": "Drengene fra Vestegnen"
+  },
+  "AGF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "AGF",
+    "AGF",
+    "Aarhus",
+    "#FFFFFF",
+    "#003DA5",
+    "fan",
+    56
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "FCN": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "FC Nordsjælland",
+    "FCN",
+    "Farum",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    56
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RFC": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Randers FC",
+    "RFC",
+    "Randers",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SIL": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Silkeborg IF",
+    "SIL",
+    "Silkeborg",
+    "#E30613",
+    "#FFFFFF",
+    "youth",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "VFF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Viborg FF",
+    "VFF",
+    "Viborg",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "OB": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Odense BK",
+    "OB",
+    "Odense",
+    "#003DA5",
+    "#FFFFFF",
+    "fallen",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SJF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Sønderjyske",
+    "SJF",
+    "Haderslev",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "VBK": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "Vejle BK",
+    "VBK",
+    "Vejle",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "FCF": {
+   "league": "DK1",
+   "nat": "DEN",
+   "row": [
+    "FC Fredericia",
+    "FCF",
+    "Fredericia",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RBS": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Red Bull Salzburg",
+    "RBS",
+    "Salzburg",
+    "#FFFFFF",
+    "#E30613",
+    "oil",
+    64
+   ],
+   "short": "",
+   "nick": "Die Roten Bullen"
+  },
+  "STU": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Sturm Graz",
+    "STU",
+    "Graz",
+    "#000000",
+    "#FFFFFF",
+    "historic",
+    61
+   ],
+   "short": "",
+   "nick": "Blackies"
+  },
+  "RAP2": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Rapid Wien",
+    "RAP2",
+    "Vienna",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    58
+   ],
+   "short": "RAP",
+   "nick": "Die Grün-Weißen"
+  },
+  "FAK": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Austria Wien",
+    "FAK",
+    "Vienna",
+    "#6A1B9A",
+    "#FFFFFF",
+    "historic",
+    56
+   ],
+   "short": "",
+   "nick": "Veilchen"
+  },
+  "LASK": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "LASK",
+    "LASK",
+    "Linz",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    56
+   ],
+   "short": "LAS",
+   "nick": "Die Linzer"
+  },
+  "WAC2": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Wolfsberger AC",
+    "WAC2",
+    "Wolfsberg",
+    "#000000",
+    "#F47920",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "HAR": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "TSV Hartberg",
+    "HAR",
+    "Hartberg",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "BWL": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Blau-Weiß Linz",
+    "BWL",
+    "Linz",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "WSG": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "WSG Tirol",
+    "WSG",
+    "Wattens",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ALT": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "SCR Altach",
+    "ALT",
+    "Altach",
+    "#000000",
+    "#FFDD00",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "GAK": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "Grazer AK",
+    "GAK",
+    "Graz",
+    "#E30613",
+    "#FFFFFF",
+    "fallen",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "RIE2": {
+   "league": "AT1",
+   "nat": "AUT",
+   "row": [
+    "SV Ried",
+    "RIE2",
+    "Ried im Innkreis",
+    "#000000",
+    "#00843D",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "BAS": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FC Basel",
+    "BAS",
+    "Basel",
+    "#E30613",
+    "#003DA5",
+    "giant",
+    62
+   ],
+   "short": "",
+   "nick": "Rotblau"
+  },
+  "YB": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "BSC Young Boys",
+    "YB",
+    "Bern",
+    "#FFDD00",
+    "#000000",
+    "giant",
+    62
+   ],
+   "short": "",
+   "nick": "Gelb-Schwarze"
+  },
+  "SER": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "Servette FC",
+    "SER",
+    "Geneva",
+    "#8A1538",
+    "#FFFFFF",
+    "historic",
+    56
+   ],
+   "short": "",
+   "nick": "Grenat"
+  },
+  "LUG": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FC Lugano",
+    "LUG",
+    "Lugano",
+    "#000000",
+    "#FFFFFF",
+    "oil",
+    56
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "LUZ": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FC Luzern",
+    "LUZ",
+    "Lucerne",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "STG": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FC St. Gallen",
+    "STG",
+    "St. Gallen",
+    "#00843D",
+    "#FFFFFF",
+    "fan",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "FCZ": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FC Zürich",
+    "FCZ",
+    "Zurich",
+    "#FFFFFF",
+    "#003DA5",
+    "historic",
+    54
+   ],
+   "short": "",
+   "nick": "Stadtzürcher"
+  },
+  "GCZ": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "Grasshopper Club",
+    "GCZ",
+    "Zurich",
+    "#003DA5",
+    "#FFFFFF",
+    "fallen",
+    51
+   ],
+   "short": "",
+   "nick": "Hoppers"
+  },
+  "LS": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "Lausanne-Sport",
+    "LS",
+    "Lausanne",
+    "#003DA5",
+    "#FFFFFF",
+    "oil",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SIO": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FC Sion",
+    "SIO",
+    "Sion",
+    "#FFFFFF",
+    "#E30613",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "WIN": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FC Winterthur",
+    "WIN",
+    "Winterthur",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "THU": {
+   "league": "CH1",
+   "nat": "SUI",
+   "row": [
+    "FC Thun",
+    "THU",
+    "Thun",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "CEL2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Celtic",
+    "CEL2",
+    "Glasgow",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    70
+   ],
+   "short": "CEL",
+   "nick": "Bhoys"
+  },
+  "RAN2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Rangers",
+    "RAN2",
+    "Glasgow",
+    "#1B458F",
+    "#FFFFFF",
+    "giant",
+    68
+   ],
+   "short": "RAN",
+   "nick": "Gers"
+  },
+  "HEA": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Heart of Midlothian",
+    "HEA",
+    "Edinburgh",
+    "#8A1538",
+    "#FFFFFF",
+    "historic",
+    56
+   ],
+   "short": "",
+   "nick": "Jambos"
+  },
+  "ABE": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Aberdeen",
+    "ABE",
+    "Aberdeen",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    56
+   ],
+   "short": "",
+   "nick": "Dons"
+  },
+  "HIB": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Hibernian",
+    "HIB",
+    "Edinburgh",
+    "#00843D",
+    "#FFFFFF",
+    "historic",
+    55
+   ],
+   "short": "",
+   "nick": "Hibees"
+  },
+  "MOT2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Motherwell",
+    "MOT2",
+    "Motherwell",
+    "#FFB81C",
+    "#8A1538",
+    "fan",
+    50
+   ],
+   "short": "MOT",
+   "nick": "Well"
+  },
+  "DUN2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Dundee United",
+    "DUN2",
+    "Dundee",
+    "#F47920",
+    "#000000",
+    "fan",
+    51
+   ],
+   "short": "DUN",
+   "nick": "Terrors"
+  },
+  "KIL": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Kilmarnock",
+    "KIL",
+    "Kilmarnock",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    50
+   ],
+   "short": "",
+   "nick": "Killie"
+  },
+  "SMI": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "St Mirren",
+    "SMI",
+    "Paisley",
+    "#000000",
+    "#FFFFFF",
+    "fan",
+    50
+   ],
+   "short": "STM",
+   "nick": "Buddies"
+  },
+  "DND": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Dundee",
+    "DND",
+    "Dundee",
+    "#0B1F4B",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": "Dark Blues"
+  },
+  "LIV2": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Livingston",
+    "LIV2",
+    "Livingston",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    47
+   ],
+   "short": "LIV",
+   "nick": "Lions"
+  },
+  "FAL": {
+   "league": "SC1",
+   "nat": "SCO",
+   "row": [
+    "Falkirk",
+    "FAL",
+    "Falkirk",
+    "#0B1F4B",
+    "#FFFFFF",
+    "fan",
+    47
+   ],
+   "short": "",
+   "nick": "Bairns"
+  },
+  "MCY": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Melbourne City",
+    "MCY",
+    "Melbourne",
+    "#6CABDD",
+    "#FFFFFF",
+    "oil",
+    57
+   ],
+   "short": "",
+   "nick": "Cityzens"
+  },
+  "SYD": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Sydney FC",
+    "SYD",
+    "Sydney",
+    "#6CACE4",
+    "#0B1F4B",
+    "giant",
+    57
+   ],
+   "short": "",
+   "nick": "Sky Blues"
+  },
+  "MVC": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Melbourne Victory",
+    "MVC",
+    "Melbourne",
+    "#0B1F4B",
+    "#FFFFFF",
+    "giant",
+    55
+   ],
+   "short": "",
+   "nick": "Big V"
+  },
+  "WSW": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Western Sydney Wanderers",
+    "WSW",
+    "Sydney",
+    "#E30613",
+    "#000000",
+    "fan",
+    53
+   ],
+   "short": "",
+   "nick": "Wanderers"
+  },
+  "CCM": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Central Coast Mariners",
+    "CCM",
+    "Gosford",
+    "#FFDD00",
+    "#0B1F4B",
+    "youth",
+    52
+   ],
+   "short": "",
+   "nick": "Mariners"
+  },
+  "BRQ": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Brisbane Roar",
+    "BRQ",
+    "Brisbane",
+    "#F47920",
+    "#000000",
+    "historic",
+    51
+   ],
+   "short": "BRI",
+   "nick": "Roar"
+  },
+  "AUC": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Auckland FC",
+    "AUC",
+    "Auckland",
+    "#0B1F4B",
+    "#00A3E0",
+    "oil",
+    51
+   ],
+   "short": "AUK",
+   "nick": ""
+  },
+  "ADU": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Adelaide United",
+    "ADU",
+    "Adelaide",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    50
+   ],
+   "short": "ADE",
+   "nick": "Reds"
+  },
+  "WPX": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Wellington Phoenix",
+    "WPX",
+    "Wellington",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    49
+   ],
+   "short": "WEL",
+   "nick": "Nix"
+  },
+  "MAF": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Macarthur FC",
+    "MAF",
+    "Campbelltown",
+    "#000000",
+    "#FFFFFF",
+    "selling",
+    48
+   ],
+   "short": "MAC",
+   "nick": "Bulls"
+  },
+  "NJE": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Newcastle Jets",
+    "NJE",
+    "Newcastle",
+    "#003DA5",
+    "#E30613",
+    "fan",
+    48
+   ],
+   "short": "NEW",
+   "nick": "Jets"
+  },
+  "PGL": {
+   "league": "AU1",
+   "nat": "AUS",
+   "row": [
+    "Perth Glory",
+    "PGL",
+    "Perth",
+    "#6A1B9A",
+    "#FFFFFF",
+    "fallen",
+    47
+   ],
+   "short": "PER",
+   "nick": "Glory"
+  },
+  "FTC": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Ferencváros",
+    "FTC",
+    "Budapest",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    62
+   ],
+   "short": "",
+   "nick": "Fradi"
+  },
+  "PAK": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Paksi FC",
+    "PAK",
+    "Paks",
+    "#00843D",
+    "#FFFFFF",
+    "selling",
+    53
+   ],
+   "short": "",
+   "nick": "Atomvárosiak"
+  },
+  "ETO": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Győri ETO",
+    "ETO",
+    "Győr",
+    "#00843D",
+    "#FFFFFF",
+    "historic",
+    52
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "DVS": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Debreceni VSC",
+    "DVS",
+    "Debrecen",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    53
+   ],
+   "short": "",
+   "nick": "Loki"
+  },
+  "PUS": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Puskás Akadémia",
+    "PUS",
+    "Felcsút",
+    "#003DA5",
+    "#FFFFFF",
+    "youth",
+    53
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "ZTE": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Zalaegerszegi TE",
+    "ZTE",
+    "Zalaegerszeg",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    51
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "UJP": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Újpest FC",
+    "UJP",
+    "Budapest",
+    "#6A1B9A",
+    "#FFFFFF",
+    "historic",
+    52
+   ],
+   "short": "",
+   "nick": "Lilák"
+  },
+  "DIO": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Diósgyőri VTK",
+    "DIO",
+    "Miskolc",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    49
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KIS": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Kisvárda FC",
+    "KIS",
+    "Kisvárda",
+    "#E30613",
+    "#003DA5",
+    "fan",
+    48
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "MTK": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "MTK Budapest",
+    "MTK",
+    "Budapest",
+    "#003DA5",
+    "#FFFFFF",
+    "historic",
+    49
+   ],
+   "short": "",
+   "nick": "Kékek"
+  },
+  "NYI": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Nyíregyháza Spartacus",
+    "NYI",
+    "Nyíregyháza",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "KTE": {
+   "league": "HU1",
+   "nat": "HUN",
+   "row": [
+    "Kecskeméti TE",
+    "KTE",
+    "Kecskemét",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    46
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "SHL": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Shelbourne",
+    "SHL",
+    "Dublin",
+    "#E30613",
+    "#FFFFFF",
+    "historic",
+    51
+   ],
+   "short": "SHE",
+   "nick": "Reds"
+  },
+  "SRO": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Shamrock Rovers",
+    "SRO",
+    "Dublin",
+    "#00843D",
+    "#FFFFFF",
+    "giant",
+    51
+   ],
+   "short": "SRFC",
+   "nick": "Hoops"
+  },
+  "DRY": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Derry City",
+    "DRY",
+    "Derry",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    48
+   ],
+   "short": "DER",
+   "nick": "Candystripes"
+  },
+  "BHI": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Bohemians",
+    "BHI",
+    "Dublin",
+    "#E30613",
+    "#000000",
+    "fan",
+    47
+   ],
+   "short": "BOH",
+   "nick": "Gypsies"
+  },
+  "SPAT": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "St Patrick's Athletic",
+    "SPAT",
+    "Dublin",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    47
+   ],
+   "short": "STP",
+   "nick": "Saints"
+  },
+  "DRO": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Drogheda United",
+    "DRO",
+    "Drogheda",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    44
+   ],
+   "short": "",
+   "nick": "Drogs"
+  },
+  "GAU": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Galway United",
+    "GAU",
+    "Galway",
+    "#8A1538",
+    "#FFFFFF",
+    "fan",
+    43
+   ],
+   "short": "GAL",
+   "nick": "Tribesmen"
+  },
+  "SLR": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Sligo Rovers",
+    "SLR",
+    "Sligo",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    43
+   ],
+   "short": "SLI",
+   "nick": "Bit o' Red"
+  },
+  "WFI": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Waterford FC",
+    "WFI",
+    "Waterford",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    42
+   ],
+   "short": "WAT",
+   "nick": "Blues"
+  },
+  "DDK": {
+   "league": "IE1",
+   "nat": "IRL",
+   "row": [
+    "Dundalk",
+    "DDK",
+    "Dundalk",
+    "#FFFFFF",
+    "#000000",
+    "fallen",
+    44
+   ],
+   "short": "DUN",
+   "nick": "Lilywhites"
+  },
+  "TNS": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "The New Saints",
+    "TNS",
+    "Oswestry",
+    "#00843D",
+    "#FFFFFF",
+    "oil",
+    49
+   ],
+   "short": "",
+   "nick": "Saints"
+  },
+  "BAL": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Bala Town",
+    "BAL",
+    "Bala",
+    "#FFFFFF",
+    "#000000",
+    "fan",
+    42
+   ],
+   "short": "",
+   "nick": "Lakesiders"
+  },
+  "CQN": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Connah's Quay Nomads",
+    "CQN",
+    "Connah's Quay",
+    "#FFFFFF",
+    "#003DA5",
+    "fan",
+    41
+   ],
+   "short": "",
+   "nick": "Nomads"
+  },
+  "PEN": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Penybont",
+    "PEN",
+    "Bridgend",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    41
+   ],
+   "short": "",
+   "nick": ""
+  },
+  "HAV": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Haverfordwest County",
+    "HAV",
+    "Haverfordwest",
+    "#003DA5",
+    "#FFFFFF",
+    "fan",
+    40
+   ],
+   "short": "",
+   "nick": "Bluebirds"
+  },
+  "BTU": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Barry Town United",
+    "BTU",
+    "Barry",
+    "#FFDD00",
+    "#000000",
+    "fan",
+    40
+   ],
+   "short": "",
+   "nick": "Dragons"
+  },
+  "CMU": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Cardiff Met",
+    "CMU",
+    "Cardiff",
+    "#FFDD00",
+    "#000000",
+    "youth",
+    40
+   ],
+   "short": "",
+   "nick": "Archers"
+  },
+  "LLA": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Llanelli Town",
+    "LLA",
+    "Llanelli",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    38
+   ],
+   "short": "",
+   "nick": "Reds"
+  },
+  "CAE": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Caernarfon Town",
+    "CAE",
+    "Caernarfon",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    38
+   ],
+   "short": "",
+   "nick": "Canaries"
+  },
+  "NEW2": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Newtown AFC",
+    "NEW2",
+    "Newtown",
+    "#E30613",
+    "#FFFFFF",
+    "fan",
+    38
+   ],
+   "short": "NEW",
+   "nick": "Robins"
+  },
+  "COL2": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Colwyn Bay",
+    "COL2",
+    "Colwyn Bay",
+    "#FFDD00",
+    "#003DA5",
+    "fan",
+    38
+   ],
+   "short": "COL",
+   "nick": "Seagulls"
+  },
+  "FLI": {
+   "league": "WA1",
+   "nat": "WAL",
+   "row": [
+    "Flint Town United",
+    "FLI",
+    "Flint",
+    "#FFFFFF",
+    "#E30613",
+    "fan",
+    37
+   ],
+   "short": "",
+   "nick": "Silkmen"
+  }
+ },
+ "leagues": {
+  "D1": {
+   "nat": "ENG",
+   "tier": 1,
+   "name": "Premier League",
+   "short": "PL"
+  },
+  "D2": {
+   "nat": "ENG",
+   "tier": 2,
+   "name": "EFL Championship",
+   "short": "CH"
+  },
+  "D3": {
+   "nat": "ENG",
+   "tier": 3,
+   "name": "EFL League One",
+   "short": "LO"
+  },
+  "D4": {
+   "nat": "ENG",
+   "tier": 4,
+   "name": "EFL League Two",
+   "short": "L2"
+  },
+  "ES1": {
+   "nat": "ESP",
+   "tier": 1,
+   "name": "LaLiga",
+   "short": "LL"
+  },
+  "ES2": {
+   "nat": "ESP",
+   "tier": 2,
+   "name": "Segunda División",
+   "short": "SD"
+  },
+  "ES3": {
+   "nat": "ESP",
+   "tier": 3,
+   "name": "Primera Federación",
+   "short": "1RF"
+  },
+  "DE1": {
+   "nat": "GER",
+   "tier": 1,
+   "name": "Bundesliga",
+   "short": "BL"
+  },
+  "DE2": {
+   "nat": "GER",
+   "tier": 2,
+   "name": "2. Bundesliga",
+   "short": "2BL"
+  },
+  "DE3": {
+   "nat": "GER",
+   "tier": 3,
+   "name": "3. Liga",
+   "short": "3L"
+  },
+  "FR1": {
+   "nat": "FRA",
+   "tier": 1,
+   "name": "Ligue 1",
+   "short": "L1"
+  },
+  "FR2": {
+   "nat": "FRA",
+   "tier": 2,
+   "name": "Ligue 2",
+   "short": "L2F"
+  },
+  "BR1": {
+   "nat": "BRA",
+   "tier": 1,
+   "name": "Brasileirão Série A",
+   "short": "BSA"
+  },
+  "IT1": {
+   "nat": "ITA",
+   "tier": 1,
+   "name": "Serie A",
+   "short": "SA"
+  },
+  "IT2": {
+   "nat": "ITA",
+   "tier": 2,
+   "name": "Serie B",
+   "short": "SB"
+  },
+  "PT1": {
+   "nat": "POR",
+   "tier": 1,
+   "name": "Primeira Liga",
+   "short": "PRL"
+  },
+  "NL1": {
+   "nat": "NED",
+   "tier": 1,
+   "name": "Eredivisie",
+   "short": "ERE"
+  },
+  "AR1": {
+   "nat": "ARG",
+   "tier": 1,
+   "name": "Liga Profesional",
+   "short": "LPF"
+  },
+  "US1": {
+   "nat": "USA",
+   "tier": 1,
+   "name": "Major League Soccer",
+   "short": "MLS"
+  },
+  "JP1": {
+   "nat": "JPN",
+   "tier": 1,
+   "name": "J1 League",
+   "short": "J1"
+  },
+  "MX1": {
+   "nat": "MEX",
+   "tier": 1,
+   "name": "Liga MX",
+   "short": "LMX"
+  },
+  "KR1": {
+   "nat": "KOR",
+   "tier": 1,
+   "name": "K League 1",
+   "short": "K1"
+  },
+  "TH1": {
+   "nat": "THA",
+   "tier": 1,
+   "name": "Thai League 1",
+   "short": "T1"
+  },
+  "NG1": {
+   "nat": "NGA",
+   "tier": 1,
+   "name": "Nigeria Premier Football League",
+   "short": "NPFL"
+  },
+  "MA1": {
+   "nat": "MAR",
+   "tier": 1,
+   "name": "Botola Pro",
+   "short": "BP"
+  },
+  "RS1": {
+   "nat": "SRB",
+   "tier": 1,
+   "name": "Serbian SuperLiga",
+   "short": "SSL"
+  },
+  "BE1": {
+   "nat": "BEL",
+   "tier": 1,
+   "name": "Belgian Pro League",
+   "short": "JPL"
+  },
+  "TR1": {
+   "nat": "TUR",
+   "tier": 1,
+   "name": "Süper Lig",
+   "short": "SL"
+  },
+  "CZ1": {
+   "nat": "CZE",
+   "tier": 1,
+   "name": "Czech First League",
+   "short": "CFL"
+  },
+  "GR1": {
+   "nat": "GRE",
+   "tier": 1,
+   "name": "Super League Greece",
+   "short": "SLG"
+  },
+  "NO1": {
+   "nat": "NOR",
+   "tier": 1,
+   "name": "Eliteserien",
+   "short": "ES"
+  },
+  "PL1": {
+   "nat": "POL",
+   "tier": 1,
+   "name": "Ekstraklasa",
+   "short": "EKS"
+  },
+  "DK1": {
+   "nat": "DEN",
+   "tier": 1,
+   "name": "Danish Superliga",
+   "short": "DSL"
+  },
+  "AT1": {
+   "nat": "AUT",
+   "tier": 1,
+   "name": "Austrian Bundesliga",
+   "short": "ABL"
+  },
+  "CH1": {
+   "nat": "SUI",
+   "tier": 1,
+   "name": "Swiss Super League",
+   "short": "SSL2"
+  },
+  "SC1": {
+   "nat": "SCO",
+   "tier": 1,
+   "name": "Scottish Premiership",
+   "short": "SPFL"
+  },
+  "AU1": {
+   "nat": "AUS",
+   "tier": 1,
+   "name": "A-League Men",
+   "short": "ALM"
+  },
+  "HU1": {
+   "nat": "HUN",
+   "tier": 1,
+   "name": "Nemzeti Bajnokság I",
+   "short": "NB1"
+  },
+  "IE1": {
+   "nat": "IRL",
+   "tier": 1,
+   "name": "League of Ireland Premier Division",
+   "short": "LOI"
+  },
+  "WA1": {
+   "nat": "WAL",
+   "tier": 1,
+   "name": "Cymru Premier",
+   "short": "CP"
+  }
+ },
+ "continentals": {
+  "CC": {
+   "region": "Europe",
+   "tier": 1,
+   "name": "UEFA Champions League",
+   "short": "UCL"
+  },
+  "CL": {
+   "region": "South America",
+   "tier": 1,
+   "name": "Copa Libertadores",
+   "short": "LIB"
+  },
+  "AC": {
+   "region": "Asia",
+   "tier": 1,
+   "name": "AFC Champions League Elite",
+   "short": "ACLE"
+  },
+  "AF": {
+   "region": "Africa",
+   "tier": 1,
+   "name": "CAF Champions League",
+   "short": "CAF"
+  },
+  "NC": {
+   "region": "North America",
+   "tier": 1,
+   "name": "CONCACAF Champions Cup",
+   "short": "CCC"
+  },
+  "EL": {
+   "region": "Europe",
+   "tier": 2,
+   "name": "UEFA Europa League",
+   "short": "UEL"
+  },
+  "SA": {
+   "region": "South America",
+   "tier": 2,
+   "name": "CONMEBOL Copa Sudamericana",
+   "short": "SUD"
+  },
+  "UC": {
+   "region": "Europe",
+   "tier": 3,
+   "name": "UEFA Conference League",
+   "short": "UECL"
+  },
+  "A2": {
+   "region": "Asia",
+   "tier": 2,
+   "name": "AFC Champions League Two",
+   "short": "ACL2"
+  },
+  "AX": {
+   "region": "Africa",
+   "tier": 2,
+   "name": "CAF Confederation Cup",
+   "short": "CAFCC"
+  }
+ },
+ "cups": {
+  "CUPENG": {
+   "nat": "ENG",
+   "name": "FA Cup",
+   "short": "FAC"
+  },
+  "CUPESP": {
+   "nat": "ESP",
+   "name": "Copa del Rey",
+   "short": "CDR"
+  },
+  "CUPGER": {
+   "nat": "GER",
+   "name": "DFB-Pokal",
+   "short": "DFB"
+  },
+  "CUPFRA": {
+   "nat": "FRA",
+   "name": "Coupe de France",
+   "short": "CDF"
+  },
+  "CUPBRA": {
+   "nat": "BRA",
+   "name": "Copa do Brasil",
+   "short": "CDB"
+  },
+  "CUPITA": {
+   "nat": "ITA",
+   "name": "Coppa Italia",
+   "short": "CIT"
+  },
+  "CUPPOR": {
+   "nat": "POR",
+   "name": "Taça de Portugal",
+   "short": "TDP"
+  },
+  "CUPNED": {
+   "nat": "NED",
+   "name": "KNVB Cup",
+   "short": "KNVB"
+  },
+  "CUPARG": {
+   "nat": "ARG",
+   "name": "Copa Argentina",
+   "short": "CAR"
+  },
+  "CUPUSA": {
+   "nat": "USA",
+   "name": "U.S. Open Cup",
+   "short": "USOC"
+  },
+  "CUPJPN": {
+   "nat": "JPN",
+   "name": "Emperor's Cup",
+   "short": "EMP"
+  }
+ },
+ "rivals": [
+  [
+   "MCI",
+   "MUN",
+   "Manchester Derby"
+  ],
+  [
+   "LIV",
+   "EVE",
+   "Merseyside Derby"
+  ],
+  [
+   "ARS",
+   "TOT",
+   "North London Derby"
+  ],
+  [
+   "CHE",
+   "FUL",
+   "West London Derby"
+  ],
+  [
+   "NEW",
+   "SUN",
+   "Tyne–Wear Derby"
+  ],
+  [
+   "AVL",
+   "BIR",
+   "Second City Derby"
+  ],
+  [
+   "NFO",
+   "DER",
+   "East Midlands Derby"
+  ],
+  [
+   "BHA",
+   "CRY",
+   "M23 Derby"
+  ],
+  [
+   "WHU",
+   "MIL",
+   "Dockers Derby"
+  ],
+  [
+   "WOL",
+   "WBA",
+   "Black Country Derby"
+  ],
+  [
+   "LEE",
+   "HUD",
+   "West Yorkshire Derby"
+  ],
+  [
+   "SOU",
+   "POM",
+   "South Coast Derby"
+  ],
+  [
+   "BRE",
+   "QPR",
+   "West London Derby"
+  ],
+  [
+   "BUR",
+   "BLB",
+   "East Lancashire Derby"
+  ],
+  [
+   "SHU",
+   "SHW",
+   "Steel City Derby"
+  ],
+  [
+   "IPS",
+   "NCI",
+   "East Anglian Derby"
+  ],
+  [
+   "LEI",
+   "COV",
+   "M69 Derby"
+  ],
+  [
+   "STK",
+   "PVA",
+   "Potteries Derby"
+  ],
+  [
+   "SWA",
+   "CAR",
+   "South Wales Derby"
+  ],
+  [
+   "PNE",
+   "BLP",
+   "West Lancashire Derby"
+  ],
+  [
+   "WAT",
+   "LUT",
+   "M1 Derby"
+  ],
+  [
+   "BWA",
+   "WIG",
+   "Lancashire Derby"
+  ],
+  [
+   "BNS",
+   "ROT",
+   "South Yorkshire Derby"
+  ],
+  [
+   "PLY",
+   "EXE",
+   "Devon Derby"
+  ],
+  [
+   "PBO",
+   "NTN",
+   "Nene Derby"
+  ],
+  [
+   "RMA",
+   "FCB",
+   "El Clásico"
+  ],
+  [
+   "ATM",
+   "GET",
+   "Derbi del Sur de Madrid"
+  ],
+  [
+   "ATH",
+   "RSO",
+   "Derbi vasco"
+  ],
+  [
+   "BET",
+   "SEV",
+   "Gran Derbi"
+  ],
+  [
+   "VAL",
+   "LEV",
+   "Derbi valenciano"
+  ],
+  [
+   "VIL",
+   "CAS",
+   "Derbi de La Plana"
+  ],
+  [
+   "CEL",
+   "DEP",
+   "Derbi gallego"
+  ],
+  [
+   "RCD",
+   "GIR",
+   "Derbi catalán"
+  ],
+  [
+   "OVI",
+   "SPG",
+   "Derbi asturiano"
+  ],
+  [
+   "RAY",
+   "LEG",
+   "Derbi del sur"
+  ],
+  [
+   "MAL",
+   "GRA",
+   "Derbi andaluz oriental"
+  ],
+  [
+   "LPA",
+   "TEN",
+   "Derbi canario"
+  ],
+  [
+   "ZAR",
+   "HUE",
+   "Derbi aragonés"
+  ],
+  [
+   "ALA",
+   "EIB",
+   "Derbi alavés-guipuzcoano"
+  ],
+  [
+   "VLD",
+   "BGS",
+   "Derbi castellano"
+  ],
+  [
+   "BAY",
+   "BVB",
+   "Der Klassiker"
+  ],
+  [
+   "B04",
+   "KOE",
+   "Rheinderby"
+  ],
+  [
+   "SVW",
+   "HSV",
+   "Nordderby"
+  ],
+  [
+   "SGE",
+   "M05",
+   "Rhein-Main-Derby"
+  ],
+  [
+   "VFB",
+   "SCF",
+   "Baden-Württemberg-Derby"
+  ],
+  [
+   "RBL",
+   "FCU",
+   "Ost-Derby"
+  ],
+  [
+   "PSG",
+   "OMA",
+   "Le Classique"
+  ],
+  [
+   "LIL",
+   "RCL",
+   "Derby du Nord"
+  ],
+  [
+   "NIC",
+   "ASM",
+   "Derby de la Côte d'Azur"
+  ],
+  [
+   "REN",
+   "NAN",
+   "Derby de l'Ouest"
+  ],
+  [
+   "OLY",
+   "STE",
+   "Derby du Rhône"
+  ],
+  [
+   "RCS",
+   "FCM",
+   "Derby de l'Est"
+  ],
+  [
+   "SBR",
+   "LOR",
+   "Derby breton"
+  ],
+  [
+   "PFC",
+   "HAC",
+   "Derby de la Seine"
+  ],
+  [
+   "FLA",
+   "FLU",
+   "Fla-Flu"
+  ],
+  [
+   "PAL",
+   "COR",
+   "Derby Paulista"
+  ],
+  [
+   "GRE",
+   "SCI",
+   "Grenal"
+  ],
+  [
+   "CAM",
+   "CRU",
+   "Clássico Mineiro"
+  ],
+  [
+   "SAO",
+   "SAN",
+   "San-São"
+  ],
+  [
+   "BOT",
+   "VAS",
+   "Clássico da Amizade"
+  ],
+  [
+   "BAH",
+   "VIT",
+   "Ba-Vi"
+  ],
+  [
+   "FTZ",
+   "CEA",
+   "Clássico-Rei"
+  ],
+  [
+   "INT",
+   "ACM",
+   "Derby della Madonnina"
+  ],
+  [
+   "ROM",
+   "LAZ",
+   "Derby della Capitale"
+  ],
+  [
+   "JUV",
+   "TOR",
+   "Derby della Mole"
+  ],
+  [
+   "FIO",
+   "BOL",
+   "Derby dell'Appennino"
+  ],
+  [
+   "GEN",
+   "PIS",
+   "Derby del Tirreno"
+  ],
+  [
+   "AJA",
+   "FEY",
+   "De Klassieker"
+  ],
+  [
+   "TWE",
+   "HER",
+   "Twentse derby"
+  ],
+  [
+   "GRO",
+   "HEE",
+   "Derby van het Noorden"
+  ],
+  [
+   "GAE",
+   "PEC",
+   "IJsselderby"
+  ],
+  [
+   "SPR",
+   "EXC",
+   "Rotterdamse derby"
+  ],
+  [
+   "BEN",
+   "SCP",
+   "Dérbi de Lisboa"
+  ],
+  [
+   "VSC",
+   "SCB",
+   "Dérbi do Minho"
+  ],
+  [
+   "RIV",
+   "BOC",
+   "Superclásico"
+  ],
+  [
+   "RAC",
+   "IND",
+   "Clásico de Avellaneda"
+  ],
+  [
+   "ROS",
+   "NOB",
+   "Clásico Rosarino"
+  ],
+  [
+   "SLO",
+   "HUR",
+   "Clásico de barrios"
+  ],
+  [
+   "ELP",
+   "GLP",
+   "Clásico Platense"
+  ],
+  [
+   "TAL",
+   "BEL",
+   "Clásico Cordobés"
+  ],
+  [
+   "LAN",
+   "BAN",
+   "Clásico del Sur"
+  ],
+  [
+   "GOD",
+   "IRI",
+   "Clásico Mendocino"
+  ],
+  [
+   "LAG",
+   "LAF",
+   "El Tráfico"
+  ],
+  [
+   "SEA",
+   "PTI",
+   "Cascadia Cup"
+  ],
+  [
+   "NYC",
+   "NYR",
+   "Hudson River Derby"
+  ],
+  [
+   "TRT",
+   "MTL",
+   "Canadian Classique"
+  ],
+  [
+   "HOU",
+   "DAL",
+   "Texas Derby"
+  ],
+  [
+   "RAP",
+   "RSL",
+   "Rocky Mountain Cup"
+  ],
+  [
+   "CIN",
+   "CLB",
+   "Hell Is Real"
+  ],
+  [
+   "ATL",
+   "ORL",
+   "Southern Derby"
+  ],
+  [
+   "GAM",
+   "CER",
+   "Osaka Derby"
+  ],
+  [
+   "YFM",
+   "KAW",
+   "Kanagawa Derby"
+  ],
+  [
+   "FCT",
+   "TVE",
+   "Tokyo Derby"
+  ],
+  [
+   "URA",
+   "KAS",
+   "Kanto Classico"
+  ],
+  [
+   "AME",
+   "CHV",
+   "Clásico Nacional"
+  ],
+  [
+   "MTY",
+   "TGR",
+   "Clásico Regiomontano"
+  ],
+  [
+   "CAZ",
+   "PUM",
+   "Clásico Capitalino"
+  ],
+  [
+   "ULS",
+   "POH",
+   "Donghae Derby"
+  ],
+  [
+   "SEO",
+   "ANY",
+   "Anyang–Seoul Derby"
+  ],
+  [
+   "BKU",
+   "PRT",
+   "Bangkok Derby"
+  ],
+  [
+   "ENY",
+   "RAN",
+   "Oriental Derby"
+  ],
+  [
+   "WAC",
+   "RCA",
+   "Derby de Casablanca"
+  ],
+  [
+   "FAR",
+   "FUS",
+   "Derby de Rabat"
+  ],
+  [
+   "MAT",
+   "IRT",
+   "Derby du Nord"
+  ],
+  [
+   "CZV",
+   "FKP",
+   "Večiti derbi"
+  ],
+  [
+   "VOJ",
+   "SPS",
+   "Vojvođanski derbi"
+  ],
+  [
+   "CLB2",
+   "CER2",
+   "Brugse derby"
+  ],
+  [
+   "AND2",
+   "STL2",
+   "Classique"
+  ],
+  [
+   "GAL",
+   "FEN",
+   "Kıtalararası Derbi"
+  ],
+  [
+   "BJK",
+   "TS",
+   "Beşiktaş–Trabzon"
+  ],
+  [
+   "SLA2",
+   "SPA",
+   "Pražské derby"
+  ],
+  [
+   "OLY2",
+   "PAO",
+   "Derby of the Eternal Enemies"
+  ],
+  [
+   "PAOK",
+   "ARI",
+   "Thessaloniki derby"
+  ],
+  [
+   "RBK",
+   "MOL",
+   "Norwegian Clásico"
+  ],
+  [
+   "VIF",
+   "KFU",
+   "Oslo derby"
+  ],
+  [
+   "LEG2",
+   "LPO",
+   "Polish Classic"
+  ],
+  [
+   "CRA2",
+   "WID",
+   "Holy war rivals"
+  ],
+  [
+   "FCK",
+   "BIF",
+   "New Firm"
+  ],
+  [
+   "RAP2",
+   "FAK",
+   "Vienna derby"
+  ],
+  [
+   "STU",
+   "GAK",
+   "Graz derby"
+  ],
+  [
+   "BAS",
+   "FCZ",
+   "Klassiker"
+  ],
+  [
+   "GCZ",
+   "YB",
+   "Swiss classic"
+  ],
+  [
+   "CEL2",
+   "RAN2",
+   "Old Firm"
+  ],
+  [
+   "HEA",
+   "HIB",
+   "Edinburgh derby"
+  ],
+  [
+   "DUN2",
+   "DND",
+   "Dundee derby"
+  ],
+  [
+   "MCY",
+   "MVC",
+   "Melbourne derby"
+  ],
+  [
+   "SYD",
+   "WSW",
+   "Sydney derby"
+  ],
+  [
+   "SYD",
+   "MVC",
+   "The Big Blue"
+  ],
+  [
+   "FTC",
+   "UJP",
+   "Örök derbi"
+  ],
+  [
+   "FTC",
+   "MTK",
+   "Budapest derby"
+  ],
+  [
+   "SHL",
+   "BHI",
+   "Dublin derby"
+  ],
+  [
+   "SRO",
+   "SPAT",
+   "Dublin rivals"
+  ],
+  [
+   "DRY",
+   "SRO",
+   "Derry–Rovers"
+  ],
+  [
+   "TNS",
+   "BAL",
+   "Welsh rivals"
+  ],
+  [
+   "CQN",
+   "FLI",
+   "Deeside derby"
+  ]
+ ],
+ "nations": {
+  "ENG": "England",
+  "BRA": "Brazil",
+  "ARG": "Argentina",
+  "JPN": "Japan",
+  "KOR": "South Korea",
+  "THA": "Thailand",
+  "SRB": "Serbia",
+  "FRA": "France",
+  "ESP": "Spain",
+  "NGA": "Nigeria",
+  "POR": "Portugal",
+  "NED": "Netherlands",
+  "GER": "Germany",
+  "BEL": "Belgium",
+  "IRL": "Ireland",
+  "SCO": "Scotland",
+  "WAL": "Wales",
+  "URU": "Uruguay",
+  "COL": "Colombia",
+  "SEN": "Senegal",
+  "GHA": "Ghana",
+  "CIV": "Ivory Coast",
+  "MAR": "Morocco",
+  "USA": "United States",
+  "DEN": "Denmark",
+  "NOR": "Norway",
+  "CRO": "Croatia",
+  "ITA": "Italy",
+  "MEX": "Mexico",
+  "TUR": "Turkey",
+  "CZE": "Czechia",
+  "GRE": "Greece",
+  "POL": "Poland",
+  "AUT": "Austria",
+  "SUI": "Switzerland",
+  "AUS": "Australia",
+  "HUN": "Hungary",
+  "SWE": "Sweden",
+  "UKR": "Ukraine",
+  "ROU": "Romania",
+  "SVK": "Slovakia",
+  "SVN": "Slovenia",
+  "BIH": "Bosnia and Herzegovina",
+  "ALB": "Albania",
+  "MKD": "North Macedonia",
+  "MNE": "Montenegro",
+  "BUL": "Bulgaria",
+  "FIN": "Finland",
+  "ISL": "Iceland",
+  "NIR": "Northern Ireland",
+  "GEO": "Georgia",
+  "ISR": "Israel",
+  "RUS": "Russia",
+  "CYP": "Cyprus",
+  "ALG": "Algeria",
+  "TUN": "Tunisia",
+  "EGY": "Egypt",
+  "CMR": "Cameroon",
+  "COD": "DR Congo",
+  "MLI": "Mali",
+  "BFA": "Burkina Faso",
+  "GUI": "Guinea",
+  "CPV": "Cape Verde",
+  "RSA": "South Africa",
+  "ANG": "Angola",
+  "CAN": "Canada",
+  "CHI": "Chile",
+  "PAR": "Paraguay",
+  "ECU": "Ecuador",
+  "PER": "Peru",
+  "VEN": "Venezuela",
+  "CRC": "Costa Rica",
+  "JAM": "Jamaica",
+  "HON": "Honduras",
+  "PAN": "Panama",
+  "IRN": "Iran",
+  "KSA": "Saudi Arabia",
+  "UZB": "Uzbekistan",
+  "CHN": "China",
+  "NZL": "New Zealand",
+  "IRQ": "Iraq"
+ },
+ "format": "touchline-names",
+ "version": 1,
+ "note": "Club, league, cup and derby names as they were in the game source. Keyed by club code (the part of the id after c_). Apply with: node tools/realworld.mjs apply"
+}

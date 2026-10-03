@@ -91,22 +91,24 @@
         el.setAttribute('role', 'button');
         if (!el.hasAttribute('tabindex')) el.tabIndex = 0;
       }
-      if (el.dataset.al)
-        el.removeAttribute('aria-label'); // (ours from an earlier pass: worked out again)
-      else if (el.hasAttribute('aria-label')) return;
+      // a label of ours from an earlier pass is worked out again (the button may have gained words since); one set
+      // by the screen itself is left alone
+      if (!el.dataset.al && el.hasAttribute('aria-label')) return;
       const t = (el.textContent || '').trim();
       if (WORDS.test(t) && !ICON_ONLY.test(t)) {
-        delete el.dataset.al; // it has words: those are its name
+        if (el.dataset.al) {
+          delete el.dataset.al; // it has words now: those are its name
+          el.removeAttribute('aria-label');
+        }
         return;
       }
       const label =
         el.getAttribute('title') ||
         ICONS[t] ||
         (el.dataset.act === 'tab' ? words(el.dataset.tab || '') : el.dataset.act ? words(el.dataset.act) : '');
-      if (label) {
-        el.setAttribute('aria-label', label);
-        el.dataset.al = '1';
-      }
+      // (only written when it changes: a screen reader hears nothing for a label that stays the same)
+      if (label && el.getAttribute('aria-label') !== label) el.setAttribute('aria-label', label);
+      if (label) el.dataset.al = '1';
     });
     root.querySelectorAll('.sheet:not([role])').forEach((el) => {
       el.setAttribute('role', 'dialog');

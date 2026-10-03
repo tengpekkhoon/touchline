@@ -276,6 +276,9 @@ Every feature from the game design document, with what is playable in the protot
 | Players | Squad numbers: every player at a club has one (a keeper 1, a striker 9, teenagers from 30), kept on a move when free at the new club; shown on rows, profiles and line-ups | Playtest round 9 |
 | Platform | Text size setting (small to largest); screen-reader labels on icon-only buttons and keyboard activation; tertiary and status text meets 4.5:1 contrast in both themes | Platform batch |
 | Platform | First-time tutorial after a new career (six cards, replayable from Settings); a local error log carried by "Report a problem"; five save slots | Platform batch |
+| Players | A "Story so far" card on every profile: where he started, each move and what it cost, his totals, caps, honours and longest layoff | Alpha 2 |
+| Media | Great players who retire become pundits on the Touchline Tonight panel, with a short bio, and talk about the clubs they played for | Alpha 2 |
+| Career | A fictional football world on the real structure and rules: generated club, town, stadium, league, cup and derby names in the sound of each country, nicknames from kit colours; the real names kept in a database file to bring back later | Alpha 2 |
 | Media | A Press room under Club: five outlets (tabloid, broadsheet, local paper, television panel, radio phone-in) with their own voices report on your matches, runs, signings, sales and seasons, each with a view of you that moves at its own speed; a Press filter in the feed; the press mood moves the board and fans a little every match | Playtest round 8 |
 | Settings | Club colours: use your club's colours as the app's accent, or switch it off for the standard accent | Playtest round 8 |
 | UI | Bottom bar: six equal columns, icons and labels on one line (International is Nations) | Playtest round 7 |

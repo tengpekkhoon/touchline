@@ -11,3 +11,5 @@ package-lock.json
 package.json
 js/changelog.js
 .devtools/
+data/real-world.json
+data/fictional-world.json

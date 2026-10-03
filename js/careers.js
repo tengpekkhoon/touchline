@@ -381,8 +381,10 @@
     if (sp) sp.to = S.year - 1;
     const notable = p.career.apps >= 380 || p.career.spells.some((s) => s.apps >= 60);
     if (notable) {
-      S.retired.push(Sea.retiredEntry(p));
+      const entry = Sea.retiredEntry(p);
+      S.retired.push(entry);
       FM.Stories.retirement(p);
+      if (entry.great && FM.Media) FM.Media.addPundit(p, entry);
     }
     delete S.players[p.id];
   };

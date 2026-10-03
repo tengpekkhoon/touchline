@@ -666,6 +666,11 @@
     return out;
   };
   const simOfLeague = (l, locked) => (locked.has(l.id) ? 'full' : NG.sims[l.id] || l.sim);
+  // The leagues at a simulation tier, by name (the "wider world" text on the new-career screen reads the data)
+  const tierList = (sim) => {
+    const n = D.LEAGUES.filter((l) => (NG.sims[l.id] || l.sim) === sim).map((l) => l.name);
+    return n.length > 1 ? `${n.slice(0, -1).join(', ')} and ${n[n.length - 1]}` : n[0] || 'none';
+  };
   UI.simSetup = function () {
     const locked = lockedLeagues();
     const load = (f) => D.LEAGUES.reduce((t, l) => t + D[l.clubs].length * TIERS.find((x) => x[0] === f(l))[2], 0);
@@ -858,7 +863,7 @@
             : '<div class="small" style="color:#c9d4e3;margin-top:16px;line-height:1.6">Three points for a win and five substitutions, as everywhere today. Each league has its own promotion and relegation, continental places and foreign-player rules; you will see your league\'s when you take a job. Knockout ties go to extra time and penalties, with no away-goals rule.</div>';
         })()}
         ${UI.simSetup()}
-        <details style="margin-top:16px"><summary class="tiny" style="color:#6f7f96;cursor:pointer">The wider world</summary><div class="tiny" style="color:#6f7f96;margin-top:8px;line-height:1.5">${D.facts().clubs} clubs in ${D.facts().leagues} leagues across ${D.facts().nations} nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One and League Two, the Segunda División and Primera Federación, 2. and 3. Liga, Serie A and Serie B, Ligue 2, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Hungary, Ireland, Wales, Australia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. ${D.facts().continentalCups} continental cups, the Europa and Conference Leagues and Copa Sudamericana among them, feed a Club World Cup, and ${D.facts().domesticCups} domestic cups run alongside them. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div></details>
+        <details style="margin-top:16px"><summary class="tiny" style="color:#6f7f96;cursor:pointer">The wider world</summary><div class="tiny" style="color:#6f7f96;margin-top:8px;line-height:1.5">${D.facts().clubs} clubs in ${D.facts().leagues} leagues across ${D.facts().nations} nations, in three simulation tiers. Full: ${tierList('full')} — every match in the engine. Light: ${tierList('light')} — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: ${tierList('minimal')} — scores only, squads for scouting. ${D.facts().continentalCups} continental cups, feed a Club World Cup, and ${D.facts().domesticCups} domestic cups run alongside them. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div></details>
         ${NG.club === 'none' ? '<div class="small" style="color:#c8ff3d;margin-top:14px;line-height:1.5">🧳 You start out of work, with a modest reputation. Clubs in your range will make offers over the first weeks — the struggling ones first.</div>' : ''}
         <div class="actions"><button class="btn pri block" data-act="ngStart">${NG.club === 'none' ? 'Start career — no club yet 🧳' : 'Start career ⚽'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     }
