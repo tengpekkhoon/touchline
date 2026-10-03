@@ -79,12 +79,14 @@
     }
     return (S && S.user && S.user.lastComp) || 'D1';
   };
-  let lvlCache = { key: null, S: null, v: 0 };
+  // (one entry per league: work-permit checks ask about three leagues in turn, thousands of times a season)
+  let lvlCache = { stamp: null, S: null, v: new Map() };
   // What a typical starter in a league is worth: the best eleven of each club, averaged over the league
   W.leagueLevel = function (compId) {
     const S = FM.S,
-      key = `${compId}.${S.year}.${Math.floor(S.day / 10)}`;
-    if (lvlCache.key === key && lvlCache.S === S) return lvlCache.v;
+      stamp = `${S.year}.${Math.floor(S.day / 10)}`;
+    if (lvlCache.stamp !== stamp || lvlCache.S !== S) lvlCache = { stamp, S, v: new Map() };
+    if (lvlCache.v.has(compId)) return lvlCache.v.get(compId);
     const comp = S.comps[compId];
     let v = 0;
     if (comp && comp.clubs && comp.clubs.length) {
@@ -97,8 +99,9 @@
       });
       v = U.avg(xs.filter((x) => x > 0));
     }
-    lvlCache = { key, S, v: v || 66 };
-    return lvlCache.v;
+    v = v || 66;
+    lvlCache.v.set(compId, v);
+    return v;
   };
   W.stars = (ca) =>
     U.clamp(Math.round((3 + (ca - W.leagueLevel(W.refComp()) + W.STAR_SHIFT) / W.STAR_STEP) * 2) / 2, 0.5, 5); // 0.5–5
