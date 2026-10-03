@@ -487,7 +487,7 @@
     const dots = slots
       .map((sl, i) => {
         const p = pv.xi[i];
-        return `<div class="slot-dot" style="left:${sl.y * 100}%;top:${6 + (1 - (sl.x - 0.04) / 0.76) * 80}%"><div class="d" style="background:${c.colors[0]};color:${U.ink(c.colors[0])}">${p ? Math.round(p.ca) : '—'}</div><div class="n">${p ? esc(p.ln) : ''}</div></div>`;
+        return `<div class="slot-dot" style="left:${sl.y * 100}%;top:${6 + (1 - (sl.x - 0.04) / 0.76) * 80}%"><div class="d" style="background:${c.colors[0]};color:${U.ink(c.colors[0])}">${p ? W.stars(p.ca) : '—'}</div><div class="n">${p ? esc(p.ln) : ''}</div></div>`;
       })
       .join('');
     const objs = FM.Season.objectives(c);

@@ -68,12 +68,31 @@ The Club World Cup is single matches at neutral grounds.
 
 ## Squad registration (real leagues; `js/registration.js`)
 
-- **England (all four divisions), Italy:** 25-man list of over-21s with 8 homegrown players; Italy also limits non-EU
-  signings from abroad to 2 a season.
-- **Spain:** 3 non-EU players. **France:** 4 non-EU. **Turkey:** 14 foreign registered. **Mexico:** 9. **Thailand:** 7.
+- **England (all four divisions), Italy, Germany (Bundesliga and 2. Bundesliga):** 25-man list of over-21s with 8
+  homegrown players (three seasons at the nation's clubs between 15 and 21); Italy also limits non-EU signings from
+  abroad to 2 a season.
+- **Spain:** 3 non-EU players. **France:** 4 non-EU. In both, players from Cotonou-agreement states (Nigeria, Ghana,
+  Senegal and Ivory Coast in the game) and Euro-Med partners (Morocco) count as EU. **Turkey:** 14 foreign registered. **Mexico:** 9. **Thailand:** 7.
   **Korea:** 6. **Argentina:** 6 registered, 5 in a matchday squad. **MLS:** 8 international slots. **A-League:** 5 visa
   players. **Brazil:** 9 foreign in a matchday squad. **J1:** 5 in a matchday squad (Thai players exempt).
 - Leagues with a matchday cap also keep the squad within five of it, so a team can always field a legal side.
+
+### Work permits in Britain (Governing Body Endorsement)
+
+A player from outside the British Isles needs a work permit to sign for a club in England, Scotland or Wales, from the
+EU as well since Brexit, unless he already plays, or has played, at a club in Britain. Irish players are exempt. Two
+ways through, as the Football Association applies it:
+
+1. **Automatic:** he has played enough of his national team's games over the last two years. The share needed depends on
+   where that team stands in the world ranking: 30% for the top ten, 40% to 20th, 50% to 30th, 60% to 50th, 70% to
+   70th. Teams ranked outside the top 70 have no automatic route.
+2. **Points:** 15 needed, up to 8 for international games (in proportion to the share required) and up to 8 for his
+   minutes at his clubs over two seasons, counted at what the league he plays in is worth next to the top flight's.
+
+A player rated far above the league's best (about 14 ability points above its typical starter) is endorsed as an
+exceptional talent whatever his numbers. The game simplifies the real points table, which weighs more factors (the
+quality of the selling club among them); the structure and the automatic thresholds follow the real rule. A refused
+signing says how far short he fell.
 - Other leagues have no foreign-player limit in the game.
 
 ## Where the game simplifies

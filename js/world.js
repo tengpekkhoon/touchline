@@ -63,7 +63,45 @@
     if (p.hid.cons >= 15) v *= 1.05;
     return v;
   };
-  W.stars = (ca) => U.clamp(Math.round(((ca - 30) / 55) * 10) / 2, 0.5, 5); // 0.5–5
+  // Star ratings are measured against the league you manage in: three and a half stars is a typical starter there, five
+  // the best players in the league, two a fringe player. A Championship regular is four or five stars in League Two and two or
+  // three in the Premier League. (The old absolute scale is W.starsAbs.) Out of work: the league you last managed in,
+  // or the top flight.
+  W.starsAbs = (ca) => U.clamp(Math.round(((ca - 30) / 55) * 10) / 2, 0.5, 5);
+  W.STAR_STEP = 8; // ability points per star
+  W.STAR_SHIFT = 3; // a typical starter sits a little above the league's average eleven
+  W.refComp = function () {
+    const S = FM.S,
+      c = S && S.user && S.user.clubId && S.clubs[S.user.clubId];
+    if (c && c.comp) {
+      S.user.lastComp = c.comp;
+      return c.comp;
+    }
+    return (S && S.user && S.user.lastComp) || 'D1';
+  };
+  let lvlCache = { key: null, S: null, v: 0 };
+  // What a typical starter in a league is worth: the best eleven of each club, averaged over the league
+  W.leagueLevel = function (compId) {
+    const S = FM.S,
+      key = `${compId}.${S.year}.${Math.floor(S.day / 10)}`;
+    if (lvlCache.key === key && lvlCache.S === S) return lvlCache.v;
+    const comp = S.comps[compId];
+    let v = 0;
+    if (comp && comp.clubs && comp.clubs.length) {
+      const xs = comp.clubs.map((id) => {
+        const top = W.squad(id)
+          .map((p) => p.ca)
+          .sort((a, b) => b - a)
+          .slice(0, 11);
+        return top.length ? U.avg(top) : 0;
+      });
+      v = U.avg(xs.filter((x) => x > 0));
+    }
+    lvlCache = { key, S, v: v || 66 };
+    return lvlCache.v;
+  };
+  W.stars = (ca) =>
+    U.clamp(Math.round((3 + (ca - W.leagueLevel(W.refComp()) + W.STAR_SHIFT) / W.STAR_STEP) * 2) / 2, 0.5, 5); // 0.5–5
   // How well a player fits a slot (0–1): his natural position's table, or a second position he has learned
   // (p.alt). Given the slot itself, its side counts on the flanks: a full-back or wing-back is at home on the side
   // of his stronger foot, a winger too unless his role cuts inside (inv), when he wants the other flank.
@@ -390,16 +428,35 @@
     'Héctor Moreno',
     'Miguel Layún',
   ]);
+  // Family heritage: most players are of their nation's own culture (no heritage set); the rest descend from elsewhere,
+  // in roughly the proportions of their country's professional players (D.DEMOGRAPHICS, js/names.js)
+  W.pickHeritage = function (nat) {
+    const t = D.DEMOGRAPHICS && D.DEMOGRAPHICS[nat];
+    if (!t) return null;
+    let r = Math.random() * t.reduce((s, x) => s + x[1], 0);
+    for (const [k, w] of t) if ((r -= w) < 0) return k === 'native' ? null : k;
+    return null;
+  };
+  // A name for a player of this nation and heritage: a first name from his heritage's pool, a surname from it (most of
+  // the time) or from the nation's (families that have settled)
+  W.rollName = function (nat, heritage) {
+    const N = D.NATIONS[nat];
+    const pool = heritage && D.heritagePool ? D.heritagePool(heritage, Math.random) : null;
+    if (pool) return { fn: U.pick(pool.fn), ln: Math.random() < 0.7 ? U.pick(pool.ln) : U.pick(N.ln) };
+    return { fn: U.pick(N.fn), ln: U.pick(N.ln) };
+  };
   W.genPlayer = function ({ nat, pos, age, ca, pa, clubId = null, youthClub = null }) {
     const N = D.NATIONS[nat];
+    const heritage = W.pickHeritage(nat),
+      nm = W.rollName(nat, heritage);
     const hid = {};
     ['cons', 'inj', 'prof', 'amb', 'loy', 'temp', 'big', 'lead'].forEach(
       (k) => (hid[k] = Math.round(U.clamp(U.gauss(11, 4), 1, 20))),
     );
     const p = {
       id: FM.nextId('p'),
-      fn: U.pick(N.fn),
-      ln: U.pick(N.ln),
+      fn: nm.fn,
+      ln: nm.ln,
       nat,
       born: FM.S.year - age,
       pos,
@@ -428,14 +485,16 @@
     // Unique names (and never a famous real player). Retry combinations, then fall back to a second surname.
     let tries = 0;
     while ((REAL_NAMES.has(`${p.fn} ${p.ln}`) || W.nameTaken(`${p.fn} ${p.ln}`)) && tries++ < 60) {
-      p.fn = U.pick(N.fn);
-      p.ln = U.pick(N.ln);
+      const again = W.rollName(nat, heritage);
+      p.fn = again.fn;
+      p.ln = again.ln;
     }
     while (REAL_NAMES.has(`${p.fn} ${p.ln}`) || W.nameTaken(`${p.fn} ${p.ln}`)) {
       const second = U.pick(N.ln.filter((x) => x !== p.ln));
       p.ln = D.TWO_SURNAMES.includes(nat) ? `${p.ln.split(' ')[0]} ${second}` : `${p.ln.split('-')[0]}-${second}`;
     }
     W.claimName(`${p.fn} ${p.ln}`);
+    if (heritage) p.heritage = heritage;
     p.traits = genTraits(p);
     p.personality = W.personality(hid);
     // Plausible prior career for older players (so "600 games" veterans can exist)

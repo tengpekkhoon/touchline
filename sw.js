@@ -11,6 +11,7 @@ const FILES = [
   './css/fonts.css',
   './js/core.js',
   './js/data.js',
+  './js/names.js',
   './js/clubs.js',
   './js/world.js',
   './js/realstats.js',

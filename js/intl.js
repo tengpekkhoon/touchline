@@ -79,7 +79,32 @@
       t.coef = Math.round(50 + (I.rating(t.code) - 62) * 2.2 * 10) / 10;
       t.rep = I.repFromCoef(t.coef);
     });
+    I.seedCaps();
     I.newSeason();
+  };
+  // A new world starts with national teams that have been playing: the best players of each nation have caps, and the
+  // regulars have played most of the last year's games (work permits and the call-up stories read these)
+  I.seedCaps = function () {
+    const s = S(),
+      games = 12;
+    s.intlGames = s.intlGames || {};
+    for (const code in D.NATIONS) {
+      s.intlGames[code] = { [s.year - 1]: games };
+      I.pool(code)
+        .slice(0, 23)
+        .forEach((p, i) => {
+          if (p.intl && p.intl.caps) return;
+          const regular = i < 14,
+            share = regular ? U.rand(0.5, 0.95) : U.rand(0.05, 0.35),
+            seasons = Math.max(0, W.age(p) - 19);
+          p.intl = {
+            caps: Math.round(seasons * games * share * U.rand(0.6, 1)) + Math.round(share * games),
+            goals: 0,
+            first: s.year - seasons,
+            by: { [s.year - 1]: Math.round(share * games) },
+          };
+        });
+    }
   };
   // The ranking is a coefficient: points (about 50 for an average nation, 90 and over for the best) that every
   // match moves, by how much it was worth and how surprising the result was (the Elo method, on a smaller scale)
@@ -382,11 +407,15 @@
       goals: r.goals.map((g) => ({ pid: g.pid, side: g.side, min: g.min })),
     };
     m.sides.forEach((sd, k) => {
+      // each national team's games a year, so a player's share of them can be worked out (work permits use it)
+      const gm = ((s.intlGames = s.intlGames || {})[sd.club.code] = s.intlGames[sd.club.code] || {});
+      gm[s.year] = (gm[s.year] || 0) + 1;
       for (const pid in sd.mins) {
         const p = s.players[pid];
         p.intl = p.intl || { caps: 0, goals: 0, first: s.year };
         const first = p.intl.caps === 0;
         p.intl.caps++;
+        (p.intl.by = p.intl.by || {})[s.year] = (p.intl.by[s.year] || 0) + 1;
         if (!tourn) {
           // players come back tired, occasionally injured, and happier for the call-up
           p.fitness = Math.max(45, Math.round(sd.st[pid] ?? p.fitness) - 6);

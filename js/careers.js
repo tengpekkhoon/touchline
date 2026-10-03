@@ -124,7 +124,7 @@
             FM.News.add({
               type: 'club',
               title: `${W.name(p)} has outgrown the training ground`,
-              body: `At level ${club.facilities.training} it can take a player to about ${cap}; he is ${Math.round(p.ca)} with room to grow. A better training ground would let him keep developing.`,
+              body: `At level ${club.facilities.training} it can take a player to about ${W.stars(cap)}★; he is ${W.stars(p.ca)}★ with room to grow. A better training ground would let him keep developing.`,
               pid: p.id,
               clubId: club.id,
             });

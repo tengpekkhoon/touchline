@@ -8,6 +8,17 @@
     C = UI.C;
   const esc = U.esc;
   const MV = (FM.MatchView = {});
+  // The view's own random numbers (where a shot is placed, how far a player carries): a stream of their own, so what is
+  // drawn on screen can never change how the match itself plays out. The same match plays the same on the pitch, as text
+  // and as an instant result.
+  let vs = (Date.now() ^ 0x9e3779b9) >>> 0;
+  MV.vr = () => {
+    vs = (vs + 0x6d2b79f5) | 0;
+    let t = Math.imul(vs ^ (vs >>> 15), 1 | vs);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  MV.vrange = (a, b) => a + MV.vr() * (b - a);
   const CL = (id) => FM.clubOf(id);
   const P = (id) => FM.S.players[id];
 
@@ -219,15 +230,18 @@
       return MV.post();
     }
     const [H, A] = m.sides;
+    // Text only: the same simulation, with commentary in place of the pitch (lighter on the battery and the processor)
+    const text = FM.S.settings.matchView === 'text';
+    MV.text = text;
     const ov = document.createElement('div');
-    ov.className = 'match';
+    ov.className = 'match' + (text ? ' text' : '');
     ov.id = 'matchOv';
     ov.innerHTML = `<div class="m-top"><div class="m-team">${C.crest(H.club, 30)}<span class="ellip">${esc(H.club.name)}</span></div><div class="m-score" id="mScore">0–0</div><div class="m-team away">${C.crest(A.club, 30)}<span class="ellip">${esc(A.club.name)}</span></div></div>
       <div class="m-clock" id="mClock">KICK-OFF · ${m.weather[1]} ${m.weather[0]}${m.derby ? ' · ⚔️ DERBY' : ''}</div>${m.agg ? `<div class="m-clock" id="mAgg" style="margin-top:-6px;opacity:.8">Aggregate ${m.agg[0]}–${m.agg[1]}</div>` : ''}
       <div class="m-xg"><span id="mXgH">xG 0.00</span><span id="mPoss">Possession 50% – 50%</span><span id="mXgA">xG 0.00</span></div>
-      <div class="m-pitchwrap" id="mWrap"><canvas id="mCanvas"></canvas><div class="m-goalflash" id="mFlash"></div></div>
+      ${text ? '<div class="m-pitchwrap m-textwrap" id="mWrap"><div class="m-goalflash" id="mFlash"></div></div>' : '<div class="m-pitchwrap" id="mWrap"><canvas id="mCanvas"></canvas><div class="m-goalflash" id="mFlash"></div></div>'}
       <div class="m-mom"><svg id="mMom" viewBox="0 0 120 36" preserveAspectRatio="none"></svg></div>
-      <div class="m-ticker" id="mTicker"><div>The teams are out${capt ? `, ${esc(W.short(capt))} wearing the armband` : ''}. ${esc(H.club.name)} vs ${esc(A.club.name)}.</div>${talkMsg ? `<div>🗣️ ${esc(talkMsg)}</div>` : ''}</div>
+      <div class="m-ticker${text ? ' m-feed' : ''}" id="mTicker"><div>The teams are out${capt ? `, ${esc(W.short(capt))} wearing the armband` : ''}. ${esc(H.club.name)} vs ${esc(A.club.name)}.</div>${talkMsg ? `<div>🗣️ ${esc(talkMsg)}</div>` : ''}</div>
       <div class="m-ctrl"><button id="mPause" data-act="mPause">⏸</button><button id="mSpeed" data-act="mSpeed">${FM.S.settings.speed || 1}×</button><button data-act="mTactics">Tactics</button><button data-act="mSubs">Subs</button><button data-act="mSim">⏭ End</button></div>`;
     document.getElementById('app').appendChild(ov);
     MV.st = {
@@ -244,12 +258,15 @@
       ball: { x: 0.5, y: 0.5, side: 0, slot: m.kickoffSlot(H), h: 0 },
       bannerT: 0,
       trail: [],
+      text,
     };
-    MV.initDots();
-    MV.resize();
-    MV._raf && cancelAnimationFrame(MV._raf);
+    if (!text) {
+      MV.initDots();
+      MV.resize();
+    }
+    MV.stopLoop();
     MV._last = performance.now();
-    MV._raf = requestAnimationFrame(MV.frame);
+    MV.nextFrame();
     window.addEventListener('resize', MV.resize);
   };
 
@@ -297,12 +314,23 @@
   MV.frame = function (now) {
     const st = MV.st;
     if (!st || !document.getElementById('matchOv')) return;
-    const dt = U.clamp((now - MV._last) / 1000, 0, 0.05);
+    // (text only: the clock is checked a few times a second rather than every frame, so a long match costs little)
+    const dt = st.text ? U.clamp((now - MV._last) / 1000, 0, 1) : U.clamp((now - MV._last) / 1000, 0, 0.05);
     MV._last = now;
     if (!st.paused && !st.prompt && !st.done) MV.tick(dt * 1000);
-    MV.moveDots(dt);
-    MV.draw();
-    MV._raf = requestAnimationFrame(MV.frame);
+    if (!st.text) {
+      MV.moveDots(dt);
+      MV.draw();
+    }
+    MV.nextFrame();
+  };
+  MV.nextFrame = () => {
+    MV._raf =
+      MV.st && MV.st.text ? setTimeout(() => MV.frame(performance.now()), 250) : requestAnimationFrame(MV.frame);
+  };
+  MV.stopLoop = () => {
+    cancelAnimationFrame(MV._raf);
+    clearTimeout(MV._raf);
   };
 
   MV.tick = function (ms) {
@@ -349,7 +377,7 @@
       if (a.fast) d *= 0.8;
     } else if (a.k === 'shot') {
       const outcome = a.outcome;
-      const gy = 0.5 + U.rand(-0.035, 0.035);
+      const gy = 0.5 + MV.vrange(-0.035, 0.035);
       let gx = 1.005,
         fy = gy;
       if (outcome === 'saved' && a.gk != null) {
@@ -359,12 +387,12 @@
       }
       if (outcome === 'wide') {
         gx = 1.03;
-        fy = 0.5 + (Math.random() < 0.5 ? -1 : 1) * U.rand(0.06, 0.14);
+        fy = 0.5 + (MV.vr() < 0.5 ? -1 : 1) * MV.vrange(0.06, 0.14);
       }
       if (outcome === 'blocked') {
         const f = MV.toFrame(a.side, b.x, b.y);
         gx = f.x + 0.05;
-        fy = f.y + U.rand(-0.05, 0.05);
+        fy = f.y + MV.vrange(-0.05, 0.05);
       }
       const g = MV.toGlobal(a.side, gx, fy);
       x1 = g.x;
@@ -438,9 +466,10 @@
       return;
     }
     const big = out.events.some((e) => (e.k === 'chance' || e.k === 'goal') && e.big);
-    st.minuteMs = (1150 / st.speed) * (big ? 2.4 : 1);
+    st.minuteMs = ((st.text ? 600 : 1150) / st.speed) * (big ? 2.4 : 1);
     st.minuteT = 0;
-    MV.planActions(out.script);
+    if (st.text) st.actions = [];
+    else MV.planActions(out.script);
     const chanceEvs = out.events.filter((e) => e.k === 'chance' || e.k === 'goal');
     st.pendingEv = chanceEvs;
     MV.pendingChanceText = chanceEvs.length
@@ -490,7 +519,7 @@
     const el = document.getElementById('mTicker');
     if (!el) return;
     el.insertAdjacentHTML('afterbegin', `<div>${MV.teamTag(MV.m, side)}${esc(t)}</div>`);
-    while (el.children.length > 2) el.lastChild.remove();
+    while (el.children.length > (MV.text ? 80 : 2)) el.lastChild.remove();
   };
   MV.updateHUD = function () {
     const m = MV.m,
@@ -902,7 +931,7 @@
       MV.applied = true;
       UI.save();
     }
-    cancelAnimationFrame(MV._raf);
+    MV.stopLoop();
     window.removeEventListener('resize', MV.resize);
     document.getElementById('matchOv')?.remove();
     UI.closeAllSheets();

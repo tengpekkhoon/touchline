@@ -87,22 +87,24 @@
     const p = pot != null ? (Math.round(pot * 2) / 2 / 5) * 100 : b;
     return `<span class="stars" style="background:linear-gradient(90deg,var(--gold) ${a}%,color-mix(in srgb,var(--gold) 55%,transparent) ${a}% ${Math.max(b, a)}%,color-mix(in srgb,var(--gold) 28%,transparent) ${Math.max(b, a)}% ${Math.max(p, b)}%,var(--line2) ${Math.max(p, b)}%);-webkit-background-clip:text;background-clip:text;color:transparent">★★★★★</span>`;
   };
-  // His overall: the number (1–100) the stars are drawn from. A scouted player's is a range.
+  // His rating in stars against the league you manage in (no numbers): a scouted player's is a range.
   C.playerOverall = function (p) {
     const v = FM.Scouting.view(p);
-    if (v.own) return String(Math.round(p.ca));
+    if (v.own) return `${W.stars(p.ca)}★`;
     if (!v.ca) return '?';
-    const lo = Math.round(v.ca[0]),
-      hi = Math.round(v.ca[1]);
-    return lo === hi ? String(lo) : `${lo}–${hi}`;
+    const lo = W.stars(v.ca[0]),
+      hi = W.stars(v.ca[1]);
+    return lo === hi ? `${lo}★` : `${lo}–${hi}★`;
   };
+  // Stars for an ability value, as text ("3.5★")
+  C.starText = (ca) => `${W.stars(ca)}★`;
   // Overall at each position he can play (his own first), when his attributes are known
   C.posOveralls = function (p) {
     if (p.pos === 'GK') return '';
     return W.positionTable(p, 0.8)
       .map(
         (x) =>
-          `${x.t === p.pos ? W.posLabel(p) : W.altLabel(p, x.t)} ${x.ovr}${x.fam === 'natural' ? '' : ` (${x.fam})`}`,
+          `${x.t === p.pos ? W.posLabel(p) : W.altLabel(p, x.t)} ${C.starText(x.ovr)}${x.fam === 'natural' ? '' : ` (${x.fam})`}`,
       )
       .join(' · ');
   };
@@ -192,7 +194,7 @@
     const f = own && FM.People ? FM.People.moodFactors(p)[0] : null;
     const why =
       f && (Math.abs(f.d) >= 8 || p.morale <= 50) ? ` · ${esc(f.t)} (${f.d > 0 ? '+' : '−'}${Math.abs(f.d)})` : '';
-    return `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${C.flag(p.nat)} ${esc(W.name(p))} ${tags.join(' ')}</div><div class="small dim ellip">${W.age(p)} yrs · ${own ? `${me} ${ml}${why}` : club ? esc(club.name) : 'Free agent'}${extra}</div></div><div class="col" style="align-items:flex-end;gap:4px"><div class="row" style="gap:6px">${C.playerStars(p)}${own ? `<b class="carate" title="Current ability">${Math.round(p.ca)}</b>${Math.round(p.lastGrowth || 0) ? `<span class="tiny b" title="Change this season" style="color:${p.lastGrowth > 0 ? 'var(--good)' : 'var(--bad)'}">${p.lastGrowth > 0 ? '▲' : '▼'}${Math.abs(Math.round(p.lastGrowth))}</span>` : ''}` : ''}</div>${own ? C.fitTag(p.fitness) : ''}${right}</div></div>`;
+    return `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${C.flag(p.nat)} ${esc(W.name(p))} ${tags.join(' ')}</div><div class="small dim ellip">${W.age(p)} yrs · ${own ? `${me} ${ml}${why}` : club ? esc(club.name) : 'Free agent'}${extra}</div></div><div class="col" style="align-items:flex-end;gap:4px"><div class="row" style="gap:6px">${C.playerStars(p)}${own && Math.round(p.lastGrowth || 0) ? `<span class="tiny b" title="Grown or slipped this season" style="color:${p.lastGrowth > 0 ? 'var(--good)' : 'var(--bad)'}">${p.lastGrowth > 0 ? '▲' : '▼'}</span>` : ''}</div>${own ? C.fitTag(p.fitness) : ''}${right}</div></div>`;
   };
   C.heat = function (canvas, grid, cols = 12, rows = 8, color = [61, 200, 255]) {
     const ctx = canvas.getContext('2d'),
@@ -530,7 +532,7 @@
   // Out of work, only actions that make sense without a club run (anything club-bound — offers, talks, tactics,
   // old feed decisions — would reach for a club that isn't there). A whitelist fails safe: a toast, never a crash.
   const OUT_OF_WORK_OK =
-    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|warmPick|follow|leagueGo|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|speedDef|saveNow|exportSave|importSave|dev[A-Z]w*|reportProblem|sendReport|sendFeedback|sendFeedbackGo|whatsNew|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|roundupAll|currency|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqStat|sqAlt|sqFilter)$/;
+    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|warmPick|follow|leagueGo|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|setMatchView|speedDef|saveNow|exportSave|importSave|dev[A-Z]w*|reportProblem|sendReport|sendFeedback|sendFeedbackGo|whatsNew|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|roundupAll|currency|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqStat|sqAlt|sqFilter)$/;
   // A club badge anywhere opens that club's overview, except where choosing the club is the point of the button,
   // and not during a match
   const CREST_KEEP = /^(ngClub|ngRandom|clubView|clubGoMine|takeJob)$/;
@@ -670,6 +672,52 @@
     NG.slot = free || 1;
     UI.newCareer();
   };
+  // The rules of one league, from the game's own data: format, tiebreakers, promotion and relegation, continental
+  // places, cups and the squad and foreign-player rules (the new-career screen shows the league you picked)
+  UI.leagueRules = function (l) {
+    const R = FM.Reg,
+      nat = D.NATIONS[l.nat],
+      lname = (id) => (D.LEAGUES.find((x) => x.id === id) || {}).name || id;
+    const n = D[l.clubs].length;
+    const TB = { gd: 'goal difference', gf: 'goals scored', h2h: 'head-to-head record', wins: 'number of wins' };
+    const tb = (D.TIEBREAK[l.id] || D.TIEBREAK_DEFAULT).map((k) => TB[k]).join(', then ');
+    const r = l.rules || {};
+    const move = [];
+    if (r.promote) {
+      move.push(`The top ${r.promote.auto} go up to the ${lname(r.promote.to)}.`);
+      if (r.promote.playoff)
+        move.push(
+          `Places ${r.promote.playoff[0]}–${r.promote.playoff[1]} play off for a further place (semi-finals over two legs, the final ${r.promote.finalLegs === 2 ? 'over two legs' : 'a single match'}).`,
+        );
+    } else move.push(l.tier === 1 ? 'The top division: no promotion.' : 'No promotion from here.');
+    if (r.relegate)
+      move.push(
+        `The bottom ${r.relegate.n} go down to the ${lname(r.relegate.to)}${r.relegate.playoff ? `, and the club just above them plays a two-legged play-off against the ${lname(r.relegate.to)}'s third-placed side` : ''}.`,
+      );
+    else move.push('No relegation from here.');
+    const europe = [];
+    if (r.qualify) {
+      const cc = D.CONTINENTALS.find((c) => c.id === r.qualify.to);
+      if (cc) europe.push(`The top ${r.qualify.n} qualify for the ${cc.name}.`);
+    }
+    for (const cc of D.CONTINENTALS) {
+      const k = cc.feeders && cc.feeders[l.id];
+      if (k)
+        europe.push(k === 1 ? `The next place goes to the ${cc.name}.` : `The next ${k} places go to the ${cc.name}.`);
+    }
+    const cups = D.DOMESTIC_CUPS.filter((c) => c[1] === l.nat).map((c) => c[2]);
+    const block = (title, lines) =>
+      lines.length
+        ? `<div class="ng-rules"><div class="ng-label" style="margin-top:14px">${esc(title)}</div>${lines.map((x) => `<div class="small" style="color:#c9d4e3;line-height:1.55;margin-top:4px">• ${esc(x)}</div>`).join('')}</div>`
+        : '';
+    return `<div class="h3" style="margin-top:14px;color:#c8ff3d">${nat.flag} ${esc(l.name)} · ${esc(nat.name)}</div>
+      ${block('Format', [`${n} clubs, each playing every other home and away: ${(n - 1) * 2} matches.`, '3 points for a win, 1 for a draw.', `Level on points: ${tb}.`])}
+      ${block('Promotion and relegation', move)}
+      ${block('Continental places', europe.length ? europe : ['No continental places from this league.'])}
+      ${block('Domestic cups', cups.length ? [`${cups.join(', ')}: one-off ties with extra time and penalties.`] : ['No domestic cup is played.'])}
+      ${block('Squad and foreign-player rules', R.describe(l.id))}
+      ${block('Matchday', ['Five substitutions from a bench of nine.', 'Knockout ties: extra time, then penalties; no away-goals rule.'])}`;
+  };
   UI.newCareer = function () {
     const app = $('#app');
     let body = '';
@@ -733,8 +781,14 @@
     } else {
       // Your world: what's in it and the rules it plays by (each competition's real ones; not chosen here)
       body = `<div class="h1" style="margin-top:4vh">Your world</div><div class="tag">Real football, played by its real rules.</div>
-        <div class="small" style="color:#c9d4e3;margin-top:16px;line-height:1.6">Three points for a win and five substitutions, as everywhere today. Each league's own foreign-player rules: homegrown quotas in England and Italy, non-EU limits in Spain, Italy and France, international slots in MLS, foreign-player caps in Brazil, Japan, Mexico and more. Continental knockouts and promotion play-off semi-finals over two legs, finals as one match, and no away-goals rule. Domestic cups are one-off ties, with extra time and penalties.</div>
-        <div class="tiny" style="color:#6f7f96;margin-top:14px;line-height:1.5">${D.facts().clubs} clubs in ${D.facts().leagues} leagues across ${D.facts().nations} nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One and League Two, the Segunda División and Primera Federación, 2. and 3. Liga, Serie A and Serie B, Ligue 2, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Hungary, Ireland, Wales, Australia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. ${D.facts().continentalCups} continental cups, the Europa and Conference Leagues and Copa Sudamericana among them, feed a Club World Cup, and ${D.facts().domesticCups} domestic cups run alongside them. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div>
+        ${(() => {
+          const code = NG.club && NG.club !== 'none' ? String(NG.club).replace(/^c_/, '') : null;
+          const lg = code && D.LEAGUES.find((l) => D[l.clubs].some((r) => r[1] === code));
+          return lg
+            ? `<div class="tiny" style="color:#6f7f96;margin-top:14px">The rules of the league you will manage in, as in real life:</div>${UI.leagueRules(lg)}`
+            : '<div class="small" style="color:#c9d4e3;margin-top:16px;line-height:1.6">Three points for a win and five substitutions, as everywhere today. Each league has its own promotion and relegation, continental places and foreign-player rules; you will see your league\'s when you take a job. Knockout ties go to extra time and penalties, with no away-goals rule.</div>';
+        })()}
+        <details style="margin-top:16px"><summary class="tiny" style="color:#6f7f96;cursor:pointer">The wider world</summary><div class="tiny" style="color:#6f7f96;margin-top:8px;line-height:1.5">${D.facts().clubs} clubs in ${D.facts().leagues} leagues across ${D.facts().nations} nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One and League Two, the Segunda División and Primera Federación, 2. and 3. Liga, Serie A and Serie B, Ligue 2, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Hungary, Ireland, Wales, Australia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. ${D.facts().continentalCups} continental cups, the Europa and Conference Leagues and Copa Sudamericana among them, feed a Club World Cup, and ${D.facts().domesticCups} domestic cups run alongside them. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div></details>
         ${NG.club === 'none' ? '<div class="small" style="color:#c8ff3d;margin-top:14px;line-height:1.5">🧳 You start out of work, with a modest reputation. Clubs in your range will make offers over the first weeks — the struggling ones first.</div>' : ''}
         <div class="actions"><button class="btn pri block" data-act="ngStart">${NG.club === 'none' ? 'Start career — no club yet 🧳' : 'Start career ⚽'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     }

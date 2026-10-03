@@ -2,6 +2,10 @@
 window.FM = window.FM || {};
 window.FM.CHANGELOG = [
   {
+    "build": "Playtest feedback, round 9",
+    "text": "Your world screen shows the rules of the league you picked (format, tiebreakers, promotion and relegation, continental places, cups, squad and foreign-player rules). Bigger name pools, a few hundred names per culture, and a family heritage for each player (a Frenchman of Algerian descent has a Maghrebi first name), shown on the profile. Star ratings instead of overall numbers, measured against the league you manage in: a Championship regular is two stars in the Premier League and four and a half in League Two. Real work-permit rules: the Governing Body Endorsement for England, Scotland and Wales (automatic by share of national-team games and ranking band, otherwise 15 points), Germany's eight locally trained players, and Cotonou and Euro-Med players counting as EU in Spain and France. A text-only match view that plays exactly the same match as the pitch, compared with it in the design document. The tagline: The deepest football management experience built for mobile. Your club. Your stories. Your history."
+  },
+  {
     "build": "Playtest feedback, round 8",
     "text": "Comparative-review feedback. A training ground that caps development (a player who has outgrown it develops slowly until it is upgraded). Position percentiles on scouting cards, a contract cost table in talks, and a backfilled player history for new worlds. Real-life club abbreviations and nicknames, and overall shown at the slot and per position. A \"What's new\" list in Settings, built from this table. A Positions card on the player profile and an Other positions switch on the squad list. A standout stat in words on squad and shortlist rows. A Press room with five outlets that report on your club in their own voices, and a switch for your club's colours as the accent. Developer tools (left out of public builds) and a wonderkid test: over 10 seasons 8/8 measures in range. Calibration 49/50."
   },
@@ -36,9 +40,5 @@ window.FM.CHANGELOG = [
   {
     "build": "World expansion and dynamic tiers",
     "text": "Your league, the one above and the one below always play in the full engine: relegated from the Premier League, League One switches from light to full; out of work, every league returns to its own tier. Ten more leagues in minimal simulation, in UEFA coefficient order: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland and Scotland (146 real clubs, 19 derbies such as the Old Firm and the Kıtalararası Derbi), with six new nations (Turkey, Czechia, Greece, Poland, Austria, Switzerland) and national teams. Name pools at least doubled for most nations (every nation 40+ first names and 43+ surnames), with more real-player combinations blocked. The world is now 547 clubs in 30 leagues, about 10,600 players and 35 national teams"
-  },
-  {
-    "build": "Manager profile and lighter lower leagues",
-    "text": "New careers start with a full manager profile: first and last name, country (your own national team is more likely to offer you a job and will take a chance on a lower reputation), favourite club (managing them is a homecoming with warmer fans and a more patient board; managing their rival starts frostier; their job offers come more often and their trophies, promotions and relegations reach your feed) and an avatar (24 faces, 8 colours) shown on the manager card and out-of-work header. League One and the Segunda División now use the light simulation: clubs take their league's tier on promotion and relegation, the club you manage is always fully simulated, and both still play in the FA Cup and Copa del Rey"
   }
 ];

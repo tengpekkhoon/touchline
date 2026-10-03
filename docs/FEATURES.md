@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-262 features are playable in the web prototype today. Build = the build that added it.
+267 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -265,6 +265,11 @@ Every feature from the game design document, with what is playable in the protot
 | Settings | What's new: the newest builds and what each added, read from the roadmap, in Settings | Playtest round 8 |
 | Scouting | Standout stat in words on squad and shortlist rows ("Finishing: outstanding"), against his position in his league; a switch on the squad list; blank until you know the player well enough | Playtest round 8 |
 | Players | Positions card on the profile: every position he could be put in, how at home he is there in words (natural, accomplished, competent, unconvincing, awkward) and his overall in it; an Other positions switch on the squad list | Playtest round 8 |
+| Career | Your world screen shows the rules of the league you picked before the save starts: format, tiebreakers, promotion and relegation, continental places, cups, and its squad and foreign-player rules | Playtest round 9 |
+| Players | Bigger name pools and family heritage: a player's heritage (a Frenchman of Algerian descent, an Englishman of Caribbean descent) shapes his name and shows on his profile | Playtest round 9 |
+| Players | Star ratings in place of overall numbers, measured against the league you manage in (a Championship regular is 2 stars in the Premier League, 4½ in League Two); potential in fainter stars | Playtest round 9 |
+| Contracts | Work permits as in real life: Britain's Governing Body Endorsement (automatic by share of national-team games and ranking band, otherwise 15 points), Germany's eight locally trained players, Cotonou and Euro-Med players counting as EU in Spain and France; a refused signing says how far short he fell | Playtest round 9 |
+| Matches | Match view: the pitch, or text only (commentary with the score, xG, possession and every prompt); the same match either way, lighter on the battery as text | Playtest round 9 |
 | Media | A Press room under Club: five outlets (tabloid, broadsheet, local paper, television panel, radio phone-in) with their own voices report on your matches, runs, signings, sales and seasons, each with a view of you that moves at its own speed; a Press filter in the feed; the press mood moves the board and fans a little every match | Playtest round 8 |
 | Settings | Club colours: use your club's colours as the app's accent, or switch it off for the standard accent | Playtest round 8 |
 | UI | Bottom bar: six equal columns, icons and labels on one line (International is Nations) | Playtest round 7 |

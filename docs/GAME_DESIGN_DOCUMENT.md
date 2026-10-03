@@ -6,6 +6,8 @@ Oct 3, 2026 · Source: [Claude Docs version](https://claude.ai/code/artifact/db0
 
 Touchline is a premium, mobile-only football management game that gives Football Manager players a proper long-term save on their phone without losing immersion.
 
+**Tagline:** "The deepest football management experience built for mobile. Your club. Your stories. Your history."
+
 **Positioning:** "The deepest football management experience built for mobile — not a watered-down PC port." It is the game people play when they can't sit at their PC but still want to lose themselves in a 40-year save.
 
 **Elevator pitch:** A premium football management game built exclusively for mobile, combining Football Manager-level immersion with a modern touch-first interface, rich historical season databases from 1992 onward, and a living football archive that remembers every legend, rivalry and trophy your save creates.
@@ -107,6 +109,19 @@ Staff voice the prompts, and staff with strong personalities sometimes disagree 
 - Shot map sized by xG, a cumulative xG race with goal markers, and a chance-type table for both sides.
 - Player stats: minutes, passes, key passes, shots, possession won, end-of-match energy and rating.
 
+**Pitch or text.** A match can be watched on a top-down pitch (players, ball and runs animated at 60 frames a second) or as text (a running commentary with the score, clock, xG, possession, momentum and every tactical prompt), chosen in Settings. Both views play the identical simulation: the view only decides how the scripted events look, and it draws its random numbers from a stream of its own, so a seeded match ends the same on the pitch and as text (checked on three seeds: the same score, xG, shots and events). What differs is the cost and the way it reads:
+
+| | Pitch | Text |
+| --- | --- | --- |
+| Work per frame (desktop, 308 × 476 px canvas) | about 1 ms, 60 times a second | about 0.01 ms, four checks a second |
+| Battery and heat | highest: the canvas is redrawn constantly | lowest |
+| Length of a match at 1× | about two minutes | about one minute |
+| What it shows well | shape, pressing, gaps, a run being made | every moment in words, with a scrollable history |
+| Accessibility | needs a clear view of a small pitch | works with screen readers and large text |
+| Best for | cup finals, derbies, learning how your shape plays | a long league run, a low battery, an older phone |
+
+The instant result plays the same match with the assistant making the in-match decisions, and takes no time at all.
+
 ## Tactical system
 
 The tactics offer enough depth for enthusiasts and no unnecessary complexity: four decisions plus roles, each with a visible effect on the pitch.
@@ -131,7 +146,9 @@ Players are remembered for who they are, not their rating. Personality is what c
 | Field | Notes |
 | --- | --- |
 | Key attributes | Pace, vision, dribbling, stamina and others |
+| Rating | Stars, no overall number, measured against the league you manage in: three and a half is a typical starter there and five is among its best, so a Championship regular is two stars in the Premier League and four and a half in League Two |
 | Potential | Shown as a range; certainty depends on scouting |
+| Heritage | Where a player's family comes from when that differs from the nation he plays for (a Frenchman of Algerian descent), which shapes his name; shown on his profile |
 | Morale | Driven by results, minutes, bids, team talks, press |
 | Wage and contract | Negotiated; mercenaries demand more |
 | Transfer value | Moves with age, form, potential and contract length |

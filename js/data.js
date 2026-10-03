@@ -2173,7 +2173,7 @@
     continentalCups: FM.D.CONTINENTALS.length,
   });
   // The one line the title screen and the store page lead with
-  FM.D.HOOK = 'A living football world: every club has a story, and the world remembers yours.';
+  FM.D.HOOK = 'The deepest football management experience built for mobile. Your club. Your stories. Your history.';
   // Domestic cups: single-leg knockouts for every club of the nation that is fully or lightly simulated
   // [id, nation, name, short, format]. Format, as in real life: legs = the rounds (by clubs left: 4 = semi-finals)
   // played over two legs, neutral = the rounds played at a neutral ground ('all' for every round). The rest are

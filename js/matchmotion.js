@@ -26,8 +26,8 @@
         const d = from && to ? dist(from, to) : 0.2;
         // Take a touch / dribble first (more often after receiving, less when first-timing it)
         // a patient side takes a touch and looks up; a counter or a direct side plays it first time
-        if (!a.fast && Math.random() < (prevWasPass ? (a.slow ? 0.6 : 0.5) : 0.3))
-          acts.push({ k: 'carry', side: a.side, slot: a.from, nat: U.rand(220, 420) * (a.slow ? 1.2 : 1) });
+        if (!a.fast && MV.vr() < (prevWasPass ? (a.slow ? 0.6 : 0.5) : 0.3))
+          acts.push({ k: 'carry', side: a.side, slot: a.from, nat: MV.vrange(220, 420) * (a.slow ? 1.2 : 1) });
         const lofted = a.k === 'cross' || d > 0.36;
         acts.push({
           ...a,
@@ -38,7 +38,7 @@
       } else if (a.k === 'shot') {
         if (a.dead)
           acts.push({ k: 'spot', side: a.side, slot: a.from, dead: a.dead, nat: 900 }); // the ball placed, the run-up
-        else if (Math.random() < 0.6) acts.push({ k: 'carry', side: a.side, slot: a.from, nat: 240, pre: true });
+        else if (MV.vr() < 0.6) acts.push({ k: 'carry', side: a.side, slot: a.from, nat: 240, pre: true });
         acts.push({ ...a, nat: a.type === 'longshot' ? 520 : 380 });
         prevWasPass = false;
       } else if (a.k === 'win') {
@@ -102,7 +102,7 @@
     }
     if (a.k === 'spot') {
       // A dead ball: on the penalty spot (or where the free kick was given), the taker a few steps behind it
-      const f = a.dead === 'pen' ? { x: 0.885, y: 0.5 } : { x: U.rand(0.68, 0.76), y: U.rand(0.3, 0.7) };
+      const f = a.dead === 'pen' ? { x: 0.885, y: 0.5 } : { x: MV.vrange(0.68, 0.76), y: MV.vrange(0.3, 0.7) };
       const g = MV.toGlobal(a.side, f.x, f.y),
         t = MV.toGlobal(a.side, f.x - 0.035, f.y + 0.01);
       b.x = g.x;
@@ -117,9 +117,9 @@
     if (a.k === 'carry') {
       // Dribble: carrier pushes forward (and a little sideways) with the ball at his feet
       const d = st.dots[a.side][a.slot];
-      const fwd = U.rand(0.02, a.pre ? 0.03 : 0.065) * dir(a.side);
+      const fwd = MV.vrange(0.02, a.pre ? 0.03 : 0.065) * dir(a.side);
       const tx = U.clamp(d.x + fwd, 0.03, 0.97),
-        ty = U.clamp(d.y + U.rand(-0.035, 0.035), 0.05, 0.95);
+        ty = U.clamp(d.y + MV.vrange(-0.035, 0.035), 0.05, 0.95);
       st.override[`${a.side}:${a.slot}`] = { x: tx, y: ty, sprint: true };
       b.side = a.side;
       b.slot = a.slot;
@@ -149,33 +149,33 @@
       if (lofted) arc = 0.02 + Math.min(0.05, dist(b, { x: x1, y: y1 }) * 0.09);
       if (a.k === 'cross') {
         arc = 0.045;
-        curve = 0.03 * (Math.random() < 0.5 ? -1 : 1);
+        curve = 0.03 * (MV.vr() < 0.5 ? -1 : 1);
       }
     } else if (a.k === 'shot') {
       shot = true;
-      const gy = 0.5 + U.rand(-0.035, 0.035);
+      const gy = 0.5 + MV.vrange(-0.035, 0.035);
       let gx = 1.012,
         fy = gy;
       const gk = a.gk != null ? st.dots[1 - a.side][a.gk] : null;
       if (a.outcome === 'saved' && gk) {
         const g = MV.toFrame(a.side, gk.x, gk.y);
         gx = Math.min(0.99, g.x + 0.006);
-        fy = U.clamp(gy + U.rand(-0.02, 0.02), 0.44, 0.56);
+        fy = U.clamp(gy + MV.vrange(-0.02, 0.02), 0.44, 0.56);
       }
       if (a.outcome === 'wide') {
         gx = 1.03;
-        fy = 0.5 + (Math.random() < 0.5 ? -1 : 1) * U.rand(0.06, 0.14);
+        fy = 0.5 + (MV.vr() < 0.5 ? -1 : 1) * MV.vrange(0.06, 0.14);
       }
       if (a.outcome === 'blocked') {
         const f = MV.toFrame(a.side, b.x, b.y);
         gx = f.x + 0.045;
-        fy = f.y + U.rand(-0.05, 0.05);
+        fy = f.y + MV.vrange(-0.05, 0.05);
       }
       const g = MV.toGlobal(a.side, gx, fy);
       x1 = g.x;
       y1 = g.y;
       arc = a.type === 'longshot' ? 0.03 : a.type === 'cross' ? 0.015 : 0.006;
-      curve = a.type === 'longshot' ? 0.02 * (Math.random() < 0.5 ? -1 : 1) : 0;
+      curve = a.type === 'longshot' ? 0.02 * (MV.vr() < 0.5 ? -1 : 1) : 0;
       // Keeper reacts: shuffles and dives toward where the ball is going
       if (gk && a.gk != null)
         st.override[`${1 - a.side}:${a.gk}`] = {

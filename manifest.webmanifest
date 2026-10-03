@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Touchline — Football Manager",
   "short_name": "Touchline",
-  "description": "A mobile-first football management game. Your club. Your stories. Your history.",
+  "description": "The deepest football management experience built for mobile. Your club. Your stories. Your history.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

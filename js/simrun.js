@@ -8,6 +8,7 @@
   R.SCRIPTS = [
     'core',
     'data',
+    'names',
     'clubs',
     'world',
     'realstats',

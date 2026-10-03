@@ -600,7 +600,7 @@
       FM.News.add({
         type: 'club',
         title: `${rs.fn} ${rs.ln} was right about ${W.name(p)}`,
-        body: `${ready ? 'He was ready' : 'He needed more time'}: ${W.short(p)} is ${p.ca} now (${d.ca0} then)${apps ? `, with ${apps} appearances at ${(p.season.rsum / apps).toFixed(1)}` : ''}. ${ROLE[right]} ${rs.ln} had it; ${ROLE[wrong].toLowerCase()} ${ws.ln} didn't.${d.choice ? ` You backed ${d.choice === (ready ? 'up' : 'hold') ? 'the right call' : 'the other side'}.` : ''}`,
+        body: `${ready ? 'He was ready' : 'He needed more time'}: ${W.short(p)} is ${W.stars(p.ca)}★ now (${W.stars(d.ca0)}★ then)${apps ? `, with ${apps} appearances at ${(p.season.rsum / apps).toFixed(1)}` : ''}. ${ROLE[right]} ${rs.ln} had it; ${ROLE[wrong].toLowerCase()} ${ws.ln} didn't.${d.choice ? ` You backed ${d.choice === (ready ? 'up' : 'hold') ? 'the right call' : 'the other side'}.` : ''}`,
         pid: p.id,
         clubId: c.id,
       });

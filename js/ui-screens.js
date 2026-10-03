@@ -302,7 +302,7 @@
         .filter((id) => P(id) && W.isUser(P(id).clubId))
         .map(
           (id) =>
-            `<button class="chip ${P(id).contract > S().year ? 'on' : ''}" data-act="renew" data-id="${id}">${P(id).contract > S().year ? '✅' : '✍️'} ${esc(W.short(P(id)))} · ${Math.round(P(id).ca)}</button>`,
+            `<button class="chip ${P(id).contract > S().year ? 'on' : ''}" data-act="renew" data-id="${id}">${P(id).contract > S().year ? '✅' : '✍️'} ${esc(W.short(P(id)))} · ${C.starText(P(id).ca)}</button>`,
         )
         .join('')}</div>`;
     if (n.type === 'youth' && n.pids)
@@ -760,7 +760,7 @@
       .map((s, i) => {
         const p = xi[i];
         const fit = p ? W.fitAt(p, s.t, s, T.roles[i]) : 0;
-        return `<div class="slot-dot ${sel === i ? 'sel' : ''}" style="left:${U.clamp(s.y * 100, 11, 89)}%;top:${s.t === 'GK' ? 90 : Math.min(74, 6 + (1 - (s.x - 0.04) / 0.76) * 80)}%" data-act="slot" data-i="${i}"><div class="d" style="background:${c.colors[0]};color:${U.ink(c.colors[0])};${fit < 0.8 ? 'border-color:var(--warn)' : ''}">${p ? W.slotOverall(p, s.t, s, T.roles[i]) : '—'}</div><div class="n">${p && p === arm ? '<b class="capt">C</b>' : ''}${p ? esc(p.ln) : 'Empty'}</div>${p ? `<div class="fr"><div class="f"><i style="width:${Math.round(p.fitness)}%;background:${C.fitColor(p.fitness)}"></i></div><span style="color:${C.fitColor(p.fitness)}">${Math.round(p.fitness)}%</span></div>` : ''}<div class="r">${D.slotLabel(s)} · ${esc(T.roles[i])}</div></div>`;
+        return `<div class="slot-dot ${sel === i ? 'sel' : ''}" style="left:${U.clamp(s.y * 100, 11, 89)}%;top:${s.t === 'GK' ? 90 : Math.min(74, 6 + (1 - (s.x - 0.04) / 0.76) * 80)}%" data-act="slot" data-i="${i}"><div class="d" style="background:${c.colors[0]};color:${U.ink(c.colors[0])};${fit < 0.8 ? 'border-color:var(--warn)' : ''}">${p ? W.stars(W.slotOverall(p, s.t, s, T.roles[i])) : '—'}</div><div class="n">${p && p === arm ? '<b class="capt">C</b>' : ''}${p ? esc(p.ln) : 'Empty'}</div>${p ? `<div class="fr"><div class="f"><i style="width:${Math.round(p.fitness)}%;background:${C.fitColor(p.fitness)}"></i></div><span style="color:${C.fitColor(p.fitness)}">${Math.round(p.fitness)}%</span></div>` : ''}<div class="r">${D.slotLabel(s)} · ${esc(T.roles[i])}</div></div>`;
       })
       .join('');
     const seg = (k, vals) =>
@@ -775,7 +775,7 @@
         (f) => `<button class="chip ${T.formation === f ? 'on' : ''}" data-act="formation" data-v="${f}">${f}</button>`,
       )
       .join('')}</div>
-      <div class="row small dim" style="margin:-4px 2px 8px"><span>${D.shapeOf(T.formation)}</span><span>·</span><span>XI avg ${Math.round(U.avg(xi.filter(Boolean), (p) => p.ca))}</span><span>·</span><span>Familiarity ${Math.round(T.fam ?? 60)}%</span><span class="grow"></span><button class="btn sm" data-act="autoXI">Auto-pick</button></div>
+      <div class="row small dim" style="margin:-4px 2px 8px"><span>${D.shapeOf(T.formation)}</span><span>·</span><span>XI ${C.starText(U.avg(xi.filter(Boolean), (p) => p.ca))}</span><span>·</span><span>Familiarity ${Math.round(T.fam ?? 60)}%</span><span class="grow"></span><button class="btn sm" data-act="autoXI">Auto-pick</button></div>
       <div class="tpitch noswipe">${dots}</div>
       <div class="small dim center" style="margin:6px 0 12px">Tap a player to change him or his role. Orange ring = out of position. Bar = match fitness — auto-pick rests tired players.</div>
       <div class="card"><div class="h3">Build-up</div>${seg('buildup', D.BUILDUP)}
@@ -815,7 +815,7 @@
           sl = D.FORMATIONS[f];
         const ovr = xi.map((p, i) => (p ? W.slotOverall(p, sl[i].t, sl[i], t2.roles[i]) : 0));
         const weak = ovr.reduce((m, v, i) => (i > 0 && v < ovr[m] ? i : m), 1);
-        return { f, avg: U.avg(ovr), weak: `${D.slotLabel(sl[weak])} ${ovr[weak]}` };
+        return { f, avg: U.avg(ovr), weak: `${D.slotLabel(sl[weak])} ${C.starText(ovr[weak])}` };
       })
       .sort((a, b) => b.avg - a.avg);
     const cur = fits.find((x) => x.f === T.formation);
@@ -826,10 +826,10 @@
         .slice(0, 6)
         .map(
           (x) =>
-            `<div class="row small" style="padding:5px 0;border-top:1px solid var(--line)"><span class="grow">${x.f}${x.f === T.formation ? ' <span class="pill acc">now</span>' : ''}</span><span class="dim" style="margin-right:10px">weakest ${esc(x.weak)}</span><b>${x.avg.toFixed(1)}</b></div>`,
+            `<div class="row small" style="padding:5px 0;border-top:1px solid var(--line)"><span class="grow">${x.f}${x.f === T.formation ? ' <span class="pill acc">now</span>' : ''}</span><span class="dim" style="margin-right:10px">weakest ${esc(x.weak)}</span><b>${C.starText(x.avg)}</b></div>`,
         )
         .join('')}
-      ${cur && fits[0].f !== T.formation ? `<div class="tiny dim" style="margin-top:6px">${esc(fits[0].f)} suits this squad better (${(fits[0].avg - cur.avg).toFixed(1)} points on the XI average).</div>` : ''}</div>`;
+      ${cur && fits[0].f !== T.formation ? `<div class="tiny dim" style="margin-top:6px">${esc(fits[0].f)} suits this squad better (about ${(Math.round(((fits[0].avg - cur.avg) / W.STAR_STEP) * 20) / 20).toFixed(2)} of a star on the XI).</div>` : ''}</div>`;
   }
   function tacticHint(T) {
     const b = {
@@ -1085,10 +1085,10 @@
     const rows = W.positionTable(p, 0.5).filter((x) => x.t !== 'GK');
     if (rows.length < 2) return '';
     const cls = { natural: 'good', accomplished: 'good', competent: '', unconvincing: 'warn', awkward: 'bad' };
-    return `<div class="card"><div class="h3">Positions</div><div class="tiny dim" style="margin-bottom:4px">How at home he is in each position and his overall there${own ? '. Playing and training in a position raises it; a position left alone fades.' : ''}</div>${rows
+    return `<div class="card"><div class="h3">Positions</div><div class="tiny dim" style="margin-bottom:4px">How at home he is in each position and his rating there${own ? '. Playing and training in a position raises it; a position left alone fades.' : ''}</div>${rows
       .map(
         (x) =>
-          `<div class="row small" style="padding:3px 0"><b style="width:44px">${esc(x.t === p.pos ? W.posLabel(p) : W.altLabel(p, x.t))}</b><span class="grow" style="${cls[x.fam] ? `color:var(--${cls[x.fam]})` : ''}">${x.fam}</span><b>${x.ovr}</b></div>`,
+          `<div class="row small" style="padding:3px 0"><b style="width:44px">${esc(x.t === p.pos ? W.posLabel(p) : W.altLabel(p, x.t))}</b><span class="grow" style="${cls[x.fam] ? `color:var(--${cls[x.fam]})` : ''}">${x.fam}</span><b>${C.starText(x.ovr)}</b></div>`,
       )
       .join('')}</div>`;
   };
@@ -1189,8 +1189,8 @@
       nt
         ? `<span class="tap" data-act="nation" data-id="${nt.id}" style="text-decoration:underline dotted">${html}</span>`
         : html;
-    return `<div class="pcard-hero" style="--c1:${U.heroShade(col)}"><div class="row" style="align-items:flex-start"><div class="grow"><div class="tiny b" style="opacity:.85;letter-spacing:1px;text-transform:uppercase">${D.POS_NAME[p.pos]}${altLine(p)} · ${p.foot} foot</div><div class="h1" style="margin-top:6px">${esc(p.fn)}<br>${esc(p.ln)}</div>${own ? '' : `<div style="margin-top:6px">${UI.followBtn('player', p.id, true)}</div>`}<div class="small" style="margin-top:8px;opacity:.9">${natLink(`${C.flag(p.nat)} ${D.NATIONS[p.nat].name}`)} · ${age} yrs${c ? ' · ' + esc(c.name) : ''}</div></div>${c ? C.crest(c, 48) : ''}</div>
-      <div class="row" style="margin-top:14px;gap:14px"><div><div class="tiny" style="opacity:.75">ABILITY</div>${C.playerStars(p)}<div class="tiny" style="opacity:.85" title="Overall (1–100): half a star is about 5½ points, 30 is ½★ and 85 is 5★. The faded stars are his potential.">Overall <b>${C.playerOverall(p)}</b>${own || v.k >= 40 ? ` · ${C.posOveralls(p)}` : ''}</div></div><div><div class="tiny" style="opacity:.75">VALUE</div><b>${own || v.k >= 30 ? U.money(p.value) : '?'}</b></div><div><div class="tiny" style="opacity:.75">WAGE</div><b>${own || v.k >= 30 ? U.money(p.wage) + '/wk' : '?'}</b></div>${own ? `<div><div class="tiny" style="opacity:.75">MORALE</div><b>${me} ${ml}</b></div>` : ''}</div></div>
+    return `<div class="pcard-hero" style="--c1:${U.heroShade(col)}"><div class="row" style="align-items:flex-start"><div class="grow"><div class="tiny b" style="opacity:.85;letter-spacing:1px;text-transform:uppercase">${D.POS_NAME[p.pos]}${altLine(p)} · ${p.foot} foot</div><div class="h1" style="margin-top:6px">${esc(p.fn)}<br>${esc(p.ln)}</div>${own ? '' : `<div style="margin-top:6px">${UI.followBtn('player', p.id, true)}</div>`}<div class="small" style="margin-top:8px;opacity:.9">${natLink(`${C.flag(p.nat)} ${D.NATIONS[p.nat].name}`)}${p.heritage && D.HERITAGE_LABEL[p.heritage] ? ` · ${esc(D.HERITAGE_LABEL[p.heritage])} heritage` : ''} · ${age} yrs${c ? ' · ' + esc(c.name) : ''}</div></div>${c ? C.crest(c, 48) : ''}</div>
+      <div class="row" style="margin-top:14px;gap:14px"><div><div class="tiny" style="opacity:.75">RATING</div>${C.playerStars(p)}<div class="tiny" style="opacity:.85" title="Stars are measured against ${esc(S().comps[W.refComp()].name)}, the league you manage in: three and a half is a typical starter there, five among the best. In a lower league the same player rates higher. The faded stars are his potential.">${C.playerOverall(p)} in the ${esc(S().comps[W.refComp()].short || S().comps[W.refComp()].name)}${own || v.k >= 40 ? ` · ${C.posOveralls(p)}` : ''}</div></div><div><div class="tiny" style="opacity:.75">VALUE</div><b>${own || v.k >= 30 ? U.money(p.value) : '?'}</b></div><div><div class="tiny" style="opacity:.75">WAGE</div><b>${own || v.k >= 30 ? U.money(p.wage) + '/wk' : '?'}</b></div>${own ? `<div><div class="tiny" style="opacity:.75">MORALE</div><b>${me} ${ml}</b></div>` : ''}</div></div>
       <div class="sp"></div>
       ${ownActions}
       ${FM.Season.isIcon(p) ? `<div style="margin-bottom:6px"><span class="trait" title="${esc(`${p.career.spells.at(-1).apps} appearances for ${CL(p.clubId).name}`)}">⭐ Club icon</span></div>` : ''}
@@ -2454,6 +2454,7 @@
     const s = S();
     return `<div class="card"><div class="row"><div class="grow"><div class="h3">Theme</div><div class="small dim">Dark or light UI</div></div><div class="seg" style="width:160px"><button class="${s.settings.theme === 'dark' ? 'on' : ''}" data-act="theme" data-v="dark">Dark</button><button class="${s.settings.theme === 'light' ? 'on' : ''}" data-act="theme" data-v="light">Light</button></div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Club colours</div><div class="small dim">Use your club's colours as the app's accent (buttons, highlights); off keeps the standard accent</div></div><div class="seg" style="width:120px"><button class="${!s.settings.noClubAccent ? 'on' : ''}" data-act="setFlag" data-k="noClubAccent" data-v="0">On</button><button class="${s.settings.noClubAccent ? 'on' : ''}" data-act="setFlag" data-k="noClubAccent" data-v="1">Off</button></div></div></div>
+      <div class="card"><div class="row"><div class="grow"><div class="h3">Match view</div><div class="small dim">The pitch with moving players, or commentary only: the same match, lighter on the battery</div></div><div class="seg" style="width:150px"><button class="${s.settings.matchView !== 'text' ? 'on' : ''}" data-act="setMatchView" data-v="pitch">Pitch</button><button class="${s.settings.matchView === 'text' ? 'on' : ''}" data-act="setMatchView" data-v="text">Text</button></div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Default match speed</div></div><div class="seg" style="width:160px">${[1, 2, 4].map((v) => `<button class="${s.settings.speed === v ? 'on' : ''}" data-act="speedDef" data-v="${v}">${v}×</button>`).join('')}</div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Season preview popup</div><div class="small dim">Show it automatically in pre-season (it's always on the Home screen)</div></div><div class="seg" style="width:120px"><button class="${!s.settings.skipPreview ? 'on' : ''}" data-act="setFlag" data-k="skipPreview" data-v="0">On</button><button class="${s.settings.skipPreview ? 'on' : ''}" data-act="setFlag" data-k="skipPreview" data-v="1">Off</button></div></div></div>
       <div class="card"><div class="row"><div class="grow"><div class="h3">Haptics</div><div class="small dim">A light tap on every button (phones that support it)</div></div><div class="seg" style="width:120px"><button class="${!s.settings.noHaptics ? 'on' : ''}" data-act="setFlag" data-k="noHaptics" data-v="0">On</button><button class="${s.settings.noHaptics ? 'on' : ''}" data-act="setFlag" data-k="noHaptics" data-v="1">Off</button></div></div></div>
@@ -2497,6 +2498,11 @@
   UI.acts.setFlag = (d) => {
     S().settings[d.k] = d.v === '1';
     if (d.k === 'noClubAccent') UI.applyClubTheme();
+    UI.save();
+    UI.render();
+  };
+  UI.acts.setMatchView = (d) => {
+    S().settings.matchView = d.v === 'text' ? 'text' : 'pitch';
     UI.save();
     UI.render();
   };
