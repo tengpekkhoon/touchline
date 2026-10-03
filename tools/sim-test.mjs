@@ -427,6 +427,20 @@ check(S.news.length > 0 && S.news.length <= 2 * FM.News.CAP, `feed has ${S.news.
   });
   check(off.length === 0, `${off.length} clubs whose squad index disagrees with their players (e.g. ${off[0]})`);
 }
+// squad numbers: everyone at a club has one, and no two players at a club share one
+{
+  const seen = new Set();
+  let none = 0,
+    dup = 0;
+  for (const p of Object.values(S.players)) {
+    if (!p.clubId || p.retired) continue;
+    if (!(p.no > 0)) none++;
+    else if (seen.has(`${p.clubId}:${p.no}`)) dup++;
+    else seen.add(`${p.clubId}:${p.no}`);
+  }
+  check(none === 0, `${none} players at clubs without a squad number`);
+  check(dup === 0, `${dup} players sharing a squad number with a team-mate`);
+}
 // club news survives the world's transfer noise (counting every club the test manager has had: a late sacking can
 // leave him at a new club with little news of its own yet)
 const everManaged = new Set(S.user.history.map((h) => h.club).concat(S.user.clubId || []));

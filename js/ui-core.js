@@ -194,7 +194,7 @@
     const f = own && FM.People ? FM.People.moodFactors(p)[0] : null;
     const why =
       f && (Math.abs(f.d) >= 8 || p.morale <= 50) ? ` · ${esc(f.t)} (${f.d > 0 ? '+' : '−'}${Math.abs(f.d)})` : '';
-    return `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${C.flag(p.nat)} ${esc(W.name(p))} ${tags.join(' ')}</div><div class="small dim ellip">${W.age(p)} yrs · ${own ? `${me} ${ml}${why}` : club ? esc(club.name) : 'Free agent'}${extra}</div></div><div class="col" style="align-items:flex-end;gap:4px"><div class="row" style="gap:6px">${C.playerStars(p)}${own && Math.round(p.lastGrowth || 0) ? `<span class="tiny b" title="Grown or slipped this season" style="color:${p.lastGrowth > 0 ? 'var(--good)' : 'var(--bad)'}">${p.lastGrowth > 0 ? '▲' : '▼'}</span>` : ''}</div>${own ? C.fitTag(p.fitness) : ''}${right}</div></div>`;
+    return `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${p.clubId && p.no ? `<span class="sqno">${p.no}</span>` : ''}${C.flag(p.nat)} ${esc(W.name(p))} ${tags.join(' ')}</div><div class="small dim ellip">${W.age(p)} yrs · ${own ? `${me} ${ml}${why}` : club ? esc(club.name) : 'Free agent'}${extra}</div></div><div class="col" style="align-items:flex-end;gap:4px"><div class="row" style="gap:6px">${C.playerStars(p)}${own && Math.round(p.lastGrowth || 0) ? `<span class="tiny b" title="Grown or slipped this season" style="color:${p.lastGrowth > 0 ? 'var(--good)' : 'var(--bad)'}">${p.lastGrowth > 0 ? '▲' : '▼'}</span>` : ''}</div>${own ? C.fitTag(p.fitness) : ''}${right}</div></div>`;
   };
   C.heat = function (canvas, grid, cols = 12, rows = 8, color = [61, 200, 255]) {
     const ctx = canvas.getContext('2d'),

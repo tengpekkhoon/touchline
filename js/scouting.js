@@ -282,6 +282,7 @@
               )
               .join('\n'),
             pid: top.p.id,
+            pids: graded.map(({ p }) => p.id), // every player named in the blurb is tappable
             quiet: !star,
           });
         }

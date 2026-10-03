@@ -98,6 +98,8 @@
       fixRoles(s.user.tactic);
       fixRoles(s.user.tactic2);
     }
+    // squad numbers arrived later: number every club's players (existing numbers stay)
+    if (s.players && FM.W) FM.W.numberAll(s.players);
     // wing-backs arrived as a position: each club's most attacking full-backs become wing-backs, as many as its
     // squad now carries (two at full-tier clubs, one at light), and free agents clearly better there (once)
     if ((s.wbPos || 0) < 2 && s.players && FM.W) {

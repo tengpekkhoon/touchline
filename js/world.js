@@ -589,6 +589,67 @@
       sqIdx.ver = W.rosterVer; // still complete: squads filter out anyone who has since left
     }
     p.career.spells.push({ c: clubId, from: FM.S.year, to: null, apps: 0, goals: 0 });
+    W.assignNo(p, clubId);
+  };
+  // Squad numbers: a player keeps his number when it is free at his new club, otherwise takes one that suits his
+  // position (a keeper 1, a striker 9, a left-back 3...). Teenagers start from 30.
+  const NO_PREF = {
+    GK: [1, 13, 12, 25],
+    CB: [4, 5, 6, 15, 16, 26],
+    FB: [2, 3, 12, 15, 16, 22],
+    WB: [3, 2, 15, 16, 17, 21],
+    DM: [6, 4, 8, 14, 18, 24],
+    CM: [8, 6, 4, 14, 16, 18, 20],
+    AM: [10, 8, 14, 20, 21, 22],
+    WM: [11, 7, 17, 19, 20, 21],
+    W: [7, 11, 17, 19, 21, 22],
+    ST: [9, 10, 19, 18, 20, 23, 25],
+  };
+  W.pickNo = function (p, taken) {
+    let list = NO_PREF[p.pos] || [];
+    if (p.pos === 'FB' || p.pos === 'WB')
+      list = p.side === 'L' || p.foot === 'Left' ? [3, 2, ...list] : [2, 3, ...list];
+    const senior = W.age(p) > 18;
+    if (senior) for (const n of list) if (!taken.has(n)) return n;
+    let n = senior ? 2 : 30;
+    while (taken.has(n)) n++;
+    return n;
+  };
+  // Number a whole squad at once, best players choosing first; existing unique numbers stay
+  W.numberSquad = function (list) {
+    const taken = new Set(),
+      todo = [];
+    for (const p of list) {
+      if (p.no > 0 && !taken.has(p.no)) taken.add(p.no);
+      else todo.push(p);
+    }
+    todo.sort((a, b) => b.ca - a.ca);
+    for (const p of todo) {
+      p.no = W.pickNo(p, taken);
+      taken.add(p.no);
+    }
+  };
+  // Everyone at a club who has no number yet (new academy players and regens, old saves): club by club, from a full
+  // scan so it doesn't depend on the squad index
+  W.numberAll = function (players) {
+    const by = {},
+      dirty = new Set();
+    for (const id in players) {
+      const p = players[id];
+      if (!p.clubId || p.retired) continue;
+      (by[p.clubId] = by[p.clubId] || []).push(p);
+      if (!(p.no > 0)) dirty.add(p.clubId);
+    }
+    for (const c of dirty) W.numberSquad(by[c]);
+    if (dirty.size) W.rosterVer++; // (players made straight into a club are not in the squad index until it is rebuilt)
+  };
+  W.assignNo = function (p, clubId) {
+    const taken = new Set(
+      W.squad(clubId)
+        .filter((x) => x !== p && x.no)
+        .map((x) => x.no),
+    );
+    if (!(p.no > 0 && !taken.has(p.no))) p.no = W.pickNo(p, taken);
   };
   W.spell = (p) => p.career.spells[p.career.spells.length - 1];
   // A past for a player of a new world: his last three seasons as history rows (appearances by how good he is for his
@@ -704,6 +765,7 @@
   // Move a player within a club family (a parent and its B team): no transfer, no new career spell
   W.moveWithin = function (p, clubId) {
     p.clubId = clubId;
+    W.assignNo(p, clubId);
     const fresh = sqIdx.S === FM.S && sqIdx.ver === W.rosterVer;
     W.rosterVer++;
     if (fresh) {
@@ -808,7 +870,8 @@
       made.push({ nat: n, age });
       return n;
     };
-    const sidesMade = {};
+    const sidesMade = {},
+      mine = [];
     positions.forEach((pos, i) => {
       // a B team is a young side: mostly 18 to 23, with a few older heads
       const age = club.parent ? (Math.random() < 0.85 ? U.randi(18, 23) : U.randi(24, 27)) : pickAge(pos);
@@ -836,6 +899,7 @@
           p.foot = p.side === 'L' ? 'Left' : 'Right';
       }
       FM.S.players[p.id] = p;
+      mine.push(p);
     });
     // Academy prospects
     for (let i = 0; i < (D.ACADEMY_TIER[club.sim] ?? 2); i++) {
@@ -852,7 +916,10 @@
         youthClub: club.id,
       });
       FM.S.players[p.id] = p;
+      mine.push(p);
     }
+    W.numberSquad(mine);
+    W.rosterVer++; // (these players went straight into the club: any squad index built before now is out of date)
   }
 
   // Squads come from an index rebuilt whenever someone joins a club (W.startSpell bumps rosterVer).

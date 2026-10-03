@@ -73,7 +73,7 @@
           .filter(Boolean)
           .map(
             (p) =>
-              `${C.pname(p, p.ln)}${p.fitness < 75 ? ' <span style="color:var(--warn)">(' + Math.round(p.fitness) + '%)</span>' : ''}`,
+              `${C.pname(p, (p.no ? p.no + ' ' : '') + p.ln)}${p.fitness < 75 ? ' <span style="color:var(--warn)">(' + Math.round(p.fitness) + '%)</span>' : ''}`,
           )
           .join(' · ')}</div>
         ${unavailable.length ? `<div class="small" style="margin-top:8px;color:var(--bad)">Unavailable: ${unavailable.map((p) => C.pname(p, p.ln) + (p.inj ? ' 🚑' : ' 🟥')).join(', ')}</div>` : ''}</div>

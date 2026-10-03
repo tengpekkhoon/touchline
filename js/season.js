@@ -881,6 +881,7 @@
       FM.Market.newDay(); // deadline, trials, loanees, payments
       FM.Stories.preMatchPress(); // a big game today: the press want a word first
     }
+    W.numberAll(S.players); // squad numbers for anyone the day brought in (academy intakes, regens)
     return summary;
   };
 

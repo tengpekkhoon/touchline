@@ -2176,3 +2176,17 @@ main {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.sqno {
+  display: inline-block;
+  min-width: 1.5em;
+  margin-right: 4px;
+  text-align: center;
+  font-size: 0.72em;
+  font-weight: 800;
+  color: var(--ink3);
+  border: 1px solid var(--line2);
+  border-radius: 4px;
+  padding: 0 3px;
+  vertical-align: 1px;
+}
