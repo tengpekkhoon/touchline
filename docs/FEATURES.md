@@ -274,6 +274,8 @@ Every feature from the game design document, with what is playable in the protot
 | Players | Season by season includes the current season, with a line per club when a player has moved mid-season; a goalkeeper's international record shows clean sheets, not goals | Playtest round 9 |
 | Career | Choose which leagues are simulated in full, lightly or minimally before the save starts, with a presets row (default, faster, deeper) and an estimate of the simulation load; your league and the two next to it are always full | Playtest round 9 |
 | Players | Squad numbers: every player at a club has one (a keeper 1, a striker 9, teenagers from 30), kept on a move when free at the new club; shown on rows, profiles and line-ups | Playtest round 9 |
+| Platform | Text size setting (small to largest); screen-reader labels on icon-only buttons and keyboard activation; tertiary and status text meets 4.5:1 contrast in both themes | Platform batch |
+| Platform | First-time tutorial after a new career (six cards, replayable from Settings); a local error log carried by "Report a problem"; five save slots | Platform batch |
 | Media | A Press room under Club: five outlets (tabloid, broadsheet, local paper, television panel, radio phone-in) with their own voices report on your matches, runs, signings, sales and seasons, each with a view of you that moves at its own speed; a Press filter in the feed; the press mood moves the board and fans a little every match | Playtest round 8 |
 | Settings | Club colours: use your club's colours as the app's accent, or switch it off for the standard accent | Playtest round 8 |
 | UI | Bottom bar: six equal columns, icons and labels on one line (International is Nations) | Playtest round 7 |

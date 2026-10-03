@@ -5,6 +5,7 @@
   const FM = window.FM,
     W = FM.W;
   const Sv = (FM.Save = {});
+  Sv.SLOTS = [1, 2, 3, 4, 5]; // (three until the extra slots arrived: the save keys are per slot, so nothing else changes)
   Sv.VERSION = FM.SAVE_VERSION;
   // Saves older than this predate the 20-league world; they cannot be rebuilt into it
   Sv.OLDEST = 4;
@@ -503,7 +504,7 @@
   };
   Sv.syncMeta = async function () {
     if (!Sv.native()) return;
-    for (const n of [1, 2, 3]) {
+    for (const n of Sv.SLOTS) {
       try {
         const m = await FILES.get(META(n));
         if (m) ls.set(META(n), m);

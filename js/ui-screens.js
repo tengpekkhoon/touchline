@@ -2476,13 +2476,14 @@
         )
         .join('')}</div></div>
       <div class="card"><div class="h3">World rules</div><div class="small muted" style="margin-top:6px;line-height:1.6">Points for a win: <b>${s.rules.win}</b> · Subs: <b>${s.rules.subs}</b> · Foreign players in squad: <b>${W.foreignLimitText()}</b><br>Rules may change as the football world evolves.</div></div>
+      ${UI.textSizeCard()}
       ${UI.installCard()}
       <div class="card"><div class="row"><div class="grow"><div class="h3">Save slot ${UI.slot}</div><div class="small dim">Autosaves after every matchday and whenever you leave the app · ${esc(FM.Save.backend())}</div></div><button class="btn sm" data-act="saveNow">Save now</button></div>
         <div class="row" style="gap:8px;margin-top:12px"><button class="btn sm grow" data-act="exportSave">⬆️ Export backup</button><button class="btn sm grow" data-act="importSave">⬇️ Import backup</button></div>
         <div class="tiny dim" style="margin-top:8px;line-height:1.5">${backupLine(s)} A backup is one compressed .touchline file. Keep it somewhere safe, or move your career to another device.</div></div>
       <div class="card"><div class="h3">Help</div><div class="small dim" style="margin-top:4px">Something wrong, or an idea? Tell us — a report carries your game's version and a copy of your save, nothing else.</div>
         <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm grow" data-act="reportProblem">🐞 Report a problem</button><button class="btn sm grow" data-act="sendFeedback">💬 Send feedback</button></div>
-        <button class="btn sm block" style="margin-top:8px" data-act="whatsNew">🆕 What's new</button>${FM.Dev ? '<button class="btn sm block" style="margin-top:8px" data-act="devPanel">🛠 Developer tools</button>' : ''}</div>
+        <button class="btn sm block" style="margin-top:8px" data-act="whatsNew">🆕 What's new</button>${UI.helpExtras()}${FM.Dev ? '<button class="btn sm block" style="margin-top:8px" data-act="devPanel">🛠 Developer tools</button>' : ''}</div>
       <button class="btn block" data-act="toTitle" style="margin-bottom:10px">Main menu</button>
       <div class="tiny dim center" style="margin-top:14px;line-height:1.6">TOUCHLINE prototype · one-time purchase · no energy · no packs · no pay-to-win</div>`;
   }
@@ -2659,12 +2660,10 @@
     UI.sheet(
       `<div class="card row">${C.crest(c, 36)}<div class="grow"><div class="b">${esc(c.name)}</div><div class="small dim">${esc(st.user.name)} · ${st.year} · day ${st.day + 1}${res.from < FM.Save.VERSION ? ` · upgraded from v${res.from}` : ''}</div></div></div>
       <div class="h3" style="margin:10px 0 6px">Import into</div>
-      <div class="list">${[1, 2, 3]
-        .map((n) => {
-          const m = UI.slotMeta(n);
-          return `<div class="prow tap" data-act="importTo" data-n="${n}"><b style="width:52px">Slot ${n}</b><div class="grow small ${m ? '' : 'dim'}">${m ? `${esc(m.club.name)} · ${m.year} — <span style="color:var(--bad)">will be replaced</span>` : 'Empty'}</div><span class="dim">›</span></div>`;
-        })
-        .join('')}</div>`,
+      <div class="list">${FM.Save.SLOTS.map((n) => {
+        const m = UI.slotMeta(n);
+        return `<div class="prow tap" data-act="importTo" data-n="${n}"><b style="width:52px">Slot ${n}</b><div class="grow small ${m ? '' : 'dim'}">${m ? `${esc(m.club.name)} · ${m.year} — <span style="color:var(--bad)">will be replaced</span>` : 'Empty'}</div><span class="dim">›</span></div>`;
+      }).join('')}</div>`,
       { title: 'Import backup' },
     );
   };
