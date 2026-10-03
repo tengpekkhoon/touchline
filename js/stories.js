@@ -972,7 +972,10 @@
         type: 'club',
         title: `${called.length} ${uc.short} players on international duty`,
         body: called
-          .map((p) => `${D.NATIONS[p.nat].flag} ${W.name(p)} — ${p.intl.caps} caps, ${p.intl.goals} goals`)
+          .map(
+            (p) =>
+              `${D.NATIONS[p.nat].flag} ${W.name(p)} — ${p.intl.caps} caps, ${p.pos === 'GK' ? `${p.intl.cs || 0} clean sheets` : `${p.intl.goals} goals`}`,
+          )
           .join('\n'),
         clubId: uc.id,
       });

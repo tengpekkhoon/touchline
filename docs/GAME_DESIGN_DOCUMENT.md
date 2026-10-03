@@ -405,7 +405,7 @@ Gameplay updates are free.
 
 ## Prototype status and roadmap
 
-Four prototype builds, Alpha 1, the polish and small-features backlogs, mobile readiness step 2 and playtest feedback batches 1–6 are done: 710 real clubs in 40 real leagues across 31 nations in three simulation tiers, B teams and U21/U18 sides, eleven domestic cups, ten continental cups (including the Europa League, Conference League and Copa Sudamericana) and a Club World Cup, international football with 37 national teams, contract clauses and agents, player promises, board meetings, club records and rivalries that grow, and an installable app with save upgrades and backups. The full breakdown lives in [FEATURES.md](FEATURES.md), the phased plan in [ROADMAP.md](ROADMAP.md) and each competition's real rules in [COMPETITION_RULES.md](COMPETITION_RULES.md).
+Four prototype builds, Alpha 1, the polish and small-features backlogs, mobile readiness step 2 and playtest feedback batches 1–6 are done: 710 real clubs in 40 real leagues across 31 nations in three simulation tiers, B teams and U21/U18 sides, eleven domestic cups, ten continental cups (including the Europa League, Conference League and Copa Sudamericana) and a Club World Cup, international football with 81 national teams, contract clauses and agents, player promises, board meetings, club records and rivalries that grow, and an installable app with save upgrades and backups. The full breakdown lives in [FEATURES.md](FEATURES.md), the phased plan in [ROADMAP.md](ROADMAP.md) and each competition's real rules in [COMPETITION_RULES.md](COMPETITION_RULES.md).
 
 | Area | In the prototype | Yet to be added |
 | --- | --- | --- |

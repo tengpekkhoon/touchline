@@ -565,15 +565,20 @@
       ['westafrican', 1],
     ],
   };
-  // The nation's own culture widens its first-name and surname pools (no duplicates)
+  D.mkPool = P;
+  // The nation's own culture widens its first-name and surname pools (no duplicates); nations added later (js/nations.js)
+  // call it again
   const dedupe = (a) => [...new Set(a)];
-  for (const [nat, N] of Object.entries(D.NATIONS)) {
-    const own = D.NAME_POOLS[D.NATIVE_POOL[nat]],
-      extra = (D.NATIVE_EXTRA[nat] || []).map((k) => D.NAME_POOLS[k]).filter(Boolean);
-    if (!own) continue;
-    N.fn = dedupe(N.fn.concat(own.fn, ...extra.map((e) => e.fn.slice(0, 40))));
-    N.ln = dedupe(N.ln.concat(own.ln, ...extra.map((e) => e.ln.slice(0, 60))));
-  }
+  D.widenNames = function () {
+    for (const [nat, N] of Object.entries(D.NATIONS)) {
+      const own = D.NAME_POOLS[D.NATIVE_POOL[nat]],
+        extra = (D.NATIVE_EXTRA[nat] || []).map((k) => D.NAME_POOLS[k]).filter(Boolean);
+      if (!own) continue;
+      N.fn = dedupe(N.fn.concat(own.fn, ...extra.map((e) => e.fn.slice(0, 40))));
+      N.ln = dedupe(N.ln.concat(own.ln, ...extra.map((e) => e.ln.slice(0, 60))));
+    }
+  };
+  D.widenNames();
   // Pools of a heritage (a region may draw on several cultures)
   D.heritagePool = function (key, rnd) {
     const keys = D.HERITAGE_POOL[key] || [key];

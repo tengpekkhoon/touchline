@@ -1182,7 +1182,12 @@
           : '<div class="small dim" style="margin-top:6px">Nothing in particular: he is settled.</div>'
       }<div class="tiny dim" style="margin-top:6px">The biggest things moving his mood, with a rough size. Promises and minutes are where you can act.</div></div>`;
     };
-    const history = (p.history || []).slice().reverse();
+    // this season so far comes first, a row for each club he has played for in it (a mid-season move gets two), then the
+    // finished seasons, newest first
+    const current = W.seasonRows(p, S().year)
+      .reverse()
+      .map((r) => ({ ...r, now: true }));
+    const history = current.concat((p.history || []).slice().reverse());
     // The nation opens its national-team overview (nations without a national team in the world stay plain text)
     const nt = S().nteams && S().nteams['n_' + p.nat];
     const natLink = (html) =>
@@ -1212,7 +1217,7 @@
               `<div class="row small" style="padding:6px 0;border-top:1px solid var(--line)">${CL(sp.c) ? C.crest(CL(sp.c), 18) : ''}<span class="grow">${esc(CL(sp.c) ? CL(sp.c).name : '—')}</span><span class="dim">${sp.loan ? 'Loan · ' : sp.fee != null ? `${sp.fee ? U.money(sp.fee) : 'Free'} · ` : ''}${sp.from}–${sp.to || 'now'}</span><b style="margin-left:8px">${sp.apps}/${sp.goals}</b></div>`,
           )
           .join('')}
-        ${p.intl && p.intl.caps ? `<div class="row small" style="margin-top:8px"><span class="grow muted">International</span><b>${natLink(`${C.flag(p.nat)} ${p.intl.caps} caps · ${p.intl.goals} goals`)}</b></div>` : ''}
+        ${p.intl && p.intl.caps ? `<div class="row small" style="margin-top:8px"><span class="grow muted">International</span><b>${natLink(`${C.flag(p.nat)} ${p.intl.caps} caps · ${p.pos === 'GK' ? `${p.intl.cs ?? '—'} clean sheets` : `${p.intl.goals} goals`}`)}</b></div>` : ''}
         ${p.honours && p.honours.length ? `<div class="row small" style="margin-top:8px"><span class="grow muted">Honours</span><b>${honoursLine(p)}</b></div>` : ''}
         <div class="row small" style="margin-top:8px"><span class="grow muted">Contract</span><b>until ${p.contract}</b></div></div>
       ${UI.seasonsCard(p, history)}
@@ -1257,7 +1262,7 @@
       <div class="kpis" style="grid-template-columns:repeat(4,1fr);margin-top:8px">${cells.join('')}</div>
       <div class="tiny dim" style="margin-top:6px">Shots, chances, tackles, minutes and keeper numbers come from fully simulated matches.</div></div>`;
   };
-  // Every season he has played, a row per club (a mid-season move gets two)
+  // This season so far and every season he has played, a row per club (a mid-season move gets two)
   UI.seasonsCard = function (p, history) {
     if (!history.length) return '';
     const gk = p.pos === 'GK';
@@ -1267,7 +1272,7 @@
       const v = gk
         ? [h.apps, h.cs || 0, h.ga || 0, h.r ? h.r.toFixed(2) : '—']
         : [h.apps, h.g, h.a || 0, h.r ? h.r.toFixed(2) : '—'];
-      return `<tr><td class="l">${h.y}/${String((h.y + 1) % 100).padStart(2, '0')}</td><td class="l"><span class="row" style="gap:6px">${c ? C.crest(c, 16) : ''}<span class="ellip" style="max-width:110px">${c ? esc(c.short) : '—'}</span></span></td>${v.map((x) => `<td>${x}</td>`).join('')}</tr>`;
+      return `<tr><td class="l">${h.y}/${String((h.y + 1) % 100).padStart(2, '0')}${h.now ? ' <span class="tiny" style="color:var(--acc)" title="This season so far">now</span>' : ''}</td><td class="l"><span class="row" style="gap:6px">${c ? C.crest(c, 16) : ''}<span class="ellip" style="max-width:110px">${c ? esc(c.short) : '—'}</span></span></td>${v.map((x) => `<td>${x}</td>`).join('')}</tr>`;
     };
     const tot = history.reduce(
       (t, h) => ({

@@ -1434,8 +1434,14 @@
       },
       user: null,
       settings: FM.S?.settings || { theme: 'dark', speed: 1 },
+      // how much of the world each league is simulated in (full, light, minimal) where the player chose it before the
+      // save began; a league not listed runs at its default tier from the data
+      simPrefs: Object.fromEntries(
+        Object.entries(opts.sims || {}).filter(([, v]) => ['full', 'light', 'minimal'].includes(v)),
+      ),
     };
     const S = FM.S;
+    const simOf = (l) => S.simPrefs[l.id] || l.sim;
     // Competitions are data: relationships (relegate/promote/qualify) drive the season, nothing is hardcoded
     D.LEAGUES.forEach(
       (l) =>
@@ -1446,7 +1452,7 @@
           name: l.name,
           short: l.short,
           tier: l.tier,
-          sim: l.sim,
+          sim: simOf(l),
           repBand: l.repBand,
           clubs: [],
           rules: JSON.parse(JSON.stringify(l.rules)),
@@ -1522,7 +1528,7 @@
       genSquad(club);
       return club;
     };
-    D.LEAGUES.forEach((l) => D[l.clubs].forEach((r) => mkClub(r, l.id, l.nat, l.sim)));
+    D.LEAGUES.forEach((l) => D[l.clubs].forEach((r) => mkClub(r, l.id, l.nat, simOf(l))));
     D.RIVALS.forEach(([a, b, name]) => {
       if (!S.clubs['c_' + a] || !S.clubs['c_' + b]) return;
       S.clubs['c_' + a].rival = 'c_' + b;
@@ -1691,7 +1697,8 @@
       if (r.relegate) focus.add(r.relegate.to);
     }
     for (const c of W.leagues()) {
-      if (!c.baseSim) c.baseSim = (D.LEAGUES.find((l) => l.id === c.id) || {}).sim || c.sim;
+      if (!c.baseSim)
+        c.baseSim = (S.simPrefs && S.simPrefs[c.id]) || (D.LEAGUES.find((l) => l.id === c.id) || {}).sim || c.sim;
       c.sim = focus.has(c.id) && c.baseSim !== 'minimal' ? 'full' : c.baseSim;
     }
     Object.values(S.clubs).forEach(W.syncSim);

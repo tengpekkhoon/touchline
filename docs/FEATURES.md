@@ -6,7 +6,7 @@ Every feature from the game design document, with what is playable in the protot
 
 ## In the game
 
-267 features are playable in the web prototype today. Build = the build that added it.
+270 features are playable in the web prototype today. Build = the build that added it.
 
 | Area | Feature | Build |
 | --- | --- | --- |
@@ -270,6 +270,9 @@ Every feature from the game design document, with what is playable in the protot
 | Players | Star ratings in place of overall numbers, measured against the league you manage in (a Championship regular is 2 stars in the Premier League, 4½ in League Two); potential in fainter stars | Playtest round 9 |
 | Contracts | Work permits as in real life: Britain's Governing Body Endorsement (automatic by share of national-team games and ranking band, otherwise 15 points), Germany's eight locally trained players, Cotonou and Euro-Med players counting as EU in Spain and France; a refused signing says how far short he fell | Playtest round 9 |
 | Matches | Match view: the pitch, or text only (commentary with the score, xG, possession and every prompt); the same match either way, lighter on the battery as text | Playtest round 9 |
+| Players | Forty-three more nationalities (81 in all): players from Sweden to Uzbekistan, each nation with its own names, play style and national team (where it has enough players), spread through the leagues by where emigrants really go | Playtest round 9 |
+| Players | Season by season includes the current season, with a line per club when a player has moved mid-season; a goalkeeper's international record shows clean sheets, not goals | Playtest round 9 |
+| Career | Choose which leagues are simulated in full, lightly or minimally before the save starts, with a presets row (default, faster, deeper) and an estimate of the simulation load; your league and the two next to it are always full | Playtest round 9 |
 | Media | A Press room under Club: five outlets (tabloid, broadsheet, local paper, television panel, radio phone-in) with their own voices report on your matches, runs, signings, sales and seasons, each with a view of you that moves at its own speed; a Press filter in the feed; the press mood moves the board and fans a little every match | Playtest round 8 |
 | Settings | Club colours: use your club's colours as the app's accent, or switch it off for the standard accent | Playtest round 8 |
 | UI | Bottom bar: six equal columns, icons and labels on one line (International is Nations) | Playtest round 7 |

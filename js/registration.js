@@ -29,11 +29,22 @@
     'POL',
     'AUT',
     'HUN',
+    // the rest of the EU, and the EEA and Switzerland, whose players count as EU for the non-EU limits
+    'SWE',
+    'FIN',
+    'ROU',
+    'SVK',
+    'SVN',
+    'BUL',
+    'CYP',
+    'NOR',
+    'ISL',
+    'SUI',
   ]);
   // Nations whose players Spanish and French clubs do not count against the non-EU limit: the Cotonou Agreement's
   // African, Caribbean and Pacific states, and the Euro-Mediterranean partners
-  R.COTONOU = new Set(['NGA', 'GHA', 'SEN', 'CIV']);
-  R.EUROMED = new Set(['MAR']);
+  R.COTONOU = new Set(['NGA', 'GHA', 'SEN', 'CIV', 'CMR', 'COD', 'MLI', 'BFA', 'GUI', 'CPV', 'RSA', 'ANG', 'JAM']);
+  R.EUROMED = new Set(['MAR', 'ALG', 'TUN', 'EGY', 'ISR']);
   const HG = { squad: 25, hg: 8 };
   // By league id. domestic: nations that count as local; exempt: partner nations that don't use a foreign place
   R.RULES = {

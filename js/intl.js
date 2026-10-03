@@ -56,6 +56,8 @@
     s.intlLog = [];
     for (const code in D.NATIONS) {
       const N = D.NATIONS[code];
+      // a nation too thin in players to field a squad has no national team in this world (its players still play)
+      if (I.pool(code).length < 16) continue;
       s.nteams['n_' + code] = {
         id: 'n_' + code,
         code,
@@ -103,6 +105,7 @@
             first: s.year - seasons,
             by: { [s.year - 1]: Math.round(share * games) },
           };
+          if (p.pos === 'GK') p.intl.cs = Math.round(p.intl.caps * U.rand(0.25, 0.45)); // (about a third of a keeper's games are shut-outs)
         });
     }
   };
@@ -416,6 +419,8 @@
         const first = p.intl.caps === 0;
         p.intl.caps++;
         (p.intl.by = p.intl.by || {})[s.year] = (p.intl.by[s.year] || 0) + 1;
+        // a goalkeeper's record is clean sheets, not goals: kept for a full game (an hour or more) without conceding
+        if (p.pos === 'GK' && m.sides[1 - k].goals === 0 && (sd.mins[pid] || 0) >= 60) p.intl.cs = (p.intl.cs || 0) + 1;
         if (!tourn) {
           // players come back tired, occasionally injured, and happier for the call-up
           p.fitness = Math.max(45, Math.round(sd.st[pid] ?? p.fitness) - 6);

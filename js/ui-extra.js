@@ -1365,7 +1365,7 @@
               .slice(0, 12)
               .map(
                 (p) =>
-                  `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${C.flag(p.nat)} ${esc(W.name(p))} ${called.has(p.id) ? '<span class="pill acc">In squad</span>' : ''}</div><div class="tiny dim">${esc(D.NATIONS[p.nat].name)} · since ${p.intl.first}</div></div><b>${p.intl.caps}</b><span class="dim tiny" style="margin-left:4px">caps · ${p.intl.goals} gls</span></div>`,
+                  `<div class="prow tap" data-act="player" data-id="${p.id}">${C.pos(p)}<div class="grow"><div class="b ellip">${C.flag(p.nat)} ${esc(W.name(p))} ${called.has(p.id) ? '<span class="pill acc">In squad</span>' : ''}</div><div class="tiny dim">${esc(D.NATIONS[p.nat].name)} · since ${p.intl.first}</div></div><b>${p.intl.caps}</b><span class="dim tiny" style="margin-left:4px">caps · ${p.pos === 'GK' ? `${p.intl.cs ?? '—'} cs` : `${p.intl.goals} gls`}</span></div>`,
               )
               .join('')
           : '<div class="empty">None of your players have been capped yet.</div>'

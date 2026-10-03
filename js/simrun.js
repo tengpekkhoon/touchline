@@ -9,6 +9,7 @@
     'core',
     'data',
     'names',
+    'nations',
     'clubs',
     'world',
     'realstats',

@@ -532,7 +532,7 @@
   // Out of work, only actions that make sense without a club run (anything club-bound — offers, talks, tactics,
   // old feed decisions — would reach for a club that isn't there). A whitelist fails safe: a toast, never a crash.
   const OUT_OF_WORK_OK =
-    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|warmPick|follow|leagueGo|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|setMatchView|speedDef|saveNow|exportSave|importSave|dev[A-Z]w*|reportProblem|sendReport|sendFeedback|sendFeedbackGo|whatsNew|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|roundupAll|currency|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqStat|sqAlt|sqFilter)$/;
+    /^(tab|sub|openSettings|closeSheet|player|clubView|takeJob|advance|skipToMatch|preview|kickoff|instant|talkPick|warmPick|follow|leagueGo|post[A-Z]\w*|m[A-Z]\w*|theme|setFlag|ngSim|ngSimPreset|setMatchView|speedDef|saveNow|exportSave|importSave|dev[A-Z]w*|reportProblem|sendReport|sendFeedback|sendFeedbackGo|whatsNew|importTo|toTitle|continue|newCareer|ng(Slot|Back|Next|Club|Random|Rule|Start|Unemployed|Avatar|AvatarBg)|matchReport|share|clearRead|roundupAll|currency|statsComp|cupsView|digestTable|goCups|goNation|nation|nt[A-Z]\w*|course|installApp|sqSort|sqStat|sqAlt|sqFilter)$/;
   // A club badge anywhere opens that club's overview, except where choosing the club is the point of the button,
   // and not during a match
   const CREST_KEEP = /^(ngClub|ngRandom|clubView|clubGoMine|takeJob)$/;
@@ -643,6 +643,75 @@
     q: '', // club picker search
     lg: 'all', // club picker league filter
     slot: 1,
+    sims: {}, // leagues whose simulation tier was changed from the default: { id: 'full' | 'light' | 'minimal' }
+  };
+  // The simulation tiers a world can run each league in (the new-career screen lets you choose before the save starts).
+  // load: the work a club costs a day next to a fully simulated one
+  const TIERS = [
+    ['full', 'Full', 1, 'every match in the engine, with finances, transfers and cups'],
+    ['light', 'Light', 0.1, 'every fixture played by a fast statistical model, with honest player numbers'],
+    ['minimal', 'Minimal', 0.02, 'scores only, with squads kept for scouting and the market'],
+  ];
+  // Your league and the leagues just above and below it always run in full
+  const lockedLeagues = () => {
+    const code = NG.club && NG.club !== 'none' ? String(NG.club).replace(/^c_/, '') : null,
+      mine = code && D.LEAGUES.find((l) => D[l.clubs].some((r) => r[1] === code)),
+      out = new Set();
+    if (mine) {
+      out.add(mine.id);
+      const r = mine.rules || {};
+      if (r.promote) out.add(r.promote.to);
+      if (r.relegate) out.add(r.relegate.to);
+    }
+    return out;
+  };
+  const simOfLeague = (l, locked) => (locked.has(l.id) ? 'full' : NG.sims[l.id] || l.sim);
+  UI.simSetup = function () {
+    const locked = lockedLeagues();
+    const load = (f) => D.LEAGUES.reduce((t, l) => t + D[l.clubs].length * TIERS.find((x) => x[0] === f(l))[2], 0);
+    const mine = load((l) => simOfLeague(l, locked)),
+      base = load((l) => (locked.has(l.id) ? 'full' : l.sim));
+    const counts = { full: 0, light: 0, minimal: 0 };
+    D.LEAGUES.forEach((l) => (counts[simOfLeague(l, locked)] += D[l.clubs].length));
+    const pct = Math.round((100 * mine) / base);
+    const seg = (l) =>
+      `<div class="seg" style="width:174px">${TIERS.map(([k, label]) => {
+        const on = simOfLeague(l, locked) === k;
+        return `<button class="${on ? 'on' : ''}" ${locked.has(l.id) && k !== 'full' ? 'disabled style="opacity:.35"' : ''} data-act="ngSim" data-id="${l.id}" data-v="${k}">${label}</button>`;
+      }).join('')}</div>`;
+    const nations = [...new Set(D.LEAGUES.map((l) => l.nat))];
+    return `<details id="ng-sim" ${NG.simOpen ? 'open' : ''} style="margin-top:16px"><summary class="small" style="color:#c9d4e3;cursor:pointer">Choose how much of the world is simulated <span class="dim" style="color:#6f7f96">· ${counts.full} clubs in full, ${counts.light} light, ${counts.minimal} minimal</span></summary>
+      <div class="tiny" style="color:#6f7f96;margin-top:8px;line-height:1.5">${TIERS.map(([, label, , d]) => `<b style="color:#c9d4e3">${label}</b>: ${d}.`).join(' ')} Your league and the ones just above and below it are always full. More full leagues means a richer world but slower days and bigger saves; simulation load ${pct}% of the default.</div>
+      <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm" data-act="ngSimPreset" data-v="default">Default</button><button class="btn sm" data-act="ngSimPreset" data-v="fast">Faster</button><button class="btn sm" data-act="ngSimPreset" data-v="deep">Deeper</button></div>
+      ${nations
+        .map((nat) => {
+          const ls = D.LEAGUES.filter((l) => l.nat === nat);
+          return `<div class="small b" style="margin:12px 0 4px;color:#c8ff3d">${D.NATIONS[nat].flag} ${esc(D.NATIONS[nat].name)}</div>${ls.map((l) => `<div class="row" style="padding:5px 0;align-items:center"><div class="grow small" style="color:#c9d4e3">${esc(l.name)} <span style="color:#6f7f96">· ${D[l.clubs].length} clubs${locked.has(l.id) ? ' · always full' : ''}</span></div>${seg(l)}</div>`).join('')}`;
+        })
+        .join('')}</details>`;
+  };
+  // The screen is drawn again after each choice, where you were (the list is long) and with the list still open
+  const redrawKeepingPlace = () => {
+    NG.simOpen = true;
+    const y = window.scrollY,
+      t = document.querySelector('.title'),
+      ty = t ? t.scrollTop : 0;
+    UI.newCareer();
+    window.scrollTo(0, y);
+    const t2 = document.querySelector('.title');
+    if (t2) t2.scrollTop = ty;
+  };
+  UI.acts.ngSim = (d) => {
+    if (lockedLeagues().has(d.id)) return;
+    const l = D.LEAGUES.find((x) => x.id === d.id);
+    if (d.v === l.sim) delete NG.sims[d.id];
+    else NG.sims[d.id] = d.v;
+    redrawKeepingPlace();
+  };
+  UI.acts.ngSimPreset = (d) => {
+    NG.sims = {};
+    if (d.v !== 'default') for (const l of D.LEAGUES) NG.sims[l.id] = d.v === 'fast' ? 'minimal' : 'full';
+    redrawKeepingPlace();
   };
   // A career needs a manager's name: flag the empty fields and say which (updates as you type once shown)
   const nameError = () => {
@@ -788,11 +857,14 @@
             ? `<div class="tiny" style="color:#6f7f96;margin-top:14px">The rules of the league you will manage in, as in real life:</div>${UI.leagueRules(lg)}`
             : '<div class="small" style="color:#c9d4e3;margin-top:16px;line-height:1.6">Three points for a win and five substitutions, as everywhere today. Each league has its own promotion and relegation, continental places and foreign-player rules; you will see your league\'s when you take a job. Knockout ties go to extra time and penalties, with no away-goals rule.</div>';
         })()}
+        ${UI.simSetup()}
         <details style="margin-top:16px"><summary class="tiny" style="color:#6f7f96;cursor:pointer">The wider world</summary><div class="tiny" style="color:#6f7f96;margin-top:8px;line-height:1.5">${D.facts().clubs} clubs in ${D.facts().leagues} leagues across ${D.facts().nations} nations, in three simulation tiers. Full: the Premier League, Championship, LaLiga, Bundesliga, Ligue 1 and Brasileirão — every match in the engine. Light: League One and League Two, the Segunda División and Primera Federación, 2. and 3. Liga, Serie A and Serie B, Ligue 2, the Primeira Liga, the Eredivisie, Argentina, MLS and the J1 League — every fixture played by a fast statistical model (your own league, and the leagues just above and below it, always play in the full engine). Minimal: Belgium, Turkey, Czechia, Greece, Norway, Poland, Denmark, Austria, Switzerland, Scotland, Serbia, Hungary, Ireland, Wales, Australia, Mexico, Korea, Thailand, Nigeria and Morocco — scores only, squads for scouting. ${D.facts().continentalCups} continental cups, the Europa and Conference Leagues and Copa Sudamericana among them, feed a Club World Cup, and ${D.facts().domesticCups} domestic cups run alongside them. National teams play qualifiers and friendlies in two double-header breaks, with the World Cup every four years and continental championships in between.</div></details>
         ${NG.club === 'none' ? '<div class="small" style="color:#c8ff3d;margin-top:14px;line-height:1.5">🧳 You start out of work, with a modest reputation. Clubs in your range will make offers over the first weeks — the struggling ones first.</div>' : ''}
         <div class="actions"><button class="btn pri block" data-act="ngStart">${NG.club === 'none' ? 'Start career — no club yet 🧳' : 'Start career ⚽'}</button><button class="btn block" data-act="ngBack">Back</button></div>`;
     }
     app.innerHTML = `<div class="title">${body}</div>`;
+    const simBox = $('#ng-sim');
+    if (simBox) simBox.addEventListener('toggle', () => (NG.simOpen = simBox.open));
     // Profile fields update as you type; the preview line follows along
     const preview = () => {
       const el = $('#ng-preview');
@@ -897,7 +969,10 @@
     setTimeout(() => {
       const theme = (FM.S && FM.S.settings) || { theme: document.documentElement.dataset.theme || 'dark', speed: 1 };
       FM.S = null;
-      W.newWorld(W.REAL_RULES);
+      // your league and the two next to it are fully simulated whatever else was chosen
+      const sims = { ...NG.sims };
+      lockedLeagues().forEach((id) => (sims[id] = 'full'));
+      W.newWorld({ ...W.REAL_RULES, sims });
       FM.S.settings = theme;
       FM.Season.init();
       if (NG.club === 'none') {
